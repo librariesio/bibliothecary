@@ -20,14 +20,4 @@ module Bibliothecary
   def self.ignored_files
     ['.git'].join('|')
   end
-
-  def self.checkout
-    # clone repository
-
-    # git clone https://<token>@github.com/owner/repo.git
-
-    # check out correct branch
-
-    # git checkout branch
-  end
 end
