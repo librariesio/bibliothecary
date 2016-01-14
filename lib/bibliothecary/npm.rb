@@ -2,8 +2,8 @@ require 'json'
 
 module Bibliothecary
   class NPM
-    def self.analyse(file_list)
-      path = file_list.find{|path| path.match(/^package\.json$/) }
+    def self.analyse(folder_path, file_list)
+      path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^package\.json$/) }
       return unless path
 
       manifest = JSON.parse File.open(path).read
