@@ -5,8 +5,9 @@ require "bibliothecary/bower"
 module Bibliothecary
   def self.analyse(path)
     cmd = `find #{path} -type f | grep -vE "#{ignored_files}"`
-    file_list = cmd.split("\n").map{|l| l[2..-1] }
-
+    p path
+    file_list = cmd.split("\n").map{|l| l.gsub(path, '') }
+    p file_list
     package_managers.map{|pm| pm.analyse(file_list) }.compact.flatten
   end
 
