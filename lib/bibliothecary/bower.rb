@@ -16,17 +16,16 @@ module Bibliothecary
     end
 
     def self.parse_manifest(manifest)
-      manifest.fetch('dependencies',[]).map do |name, requirement|
+      map_dependencies(manifest, 'dependencies', 'runtime') +
+      map_dependencies(manifest, 'devDependencies', 'development')
+    end
+
+    def self.map_dependencies(hash, key, type)
+      hash.fetch(key,[]).map do |name, requirement|
         {
           name: name,
           requirement: requirement,
-          type: 'runtime'
-        }
-      end + manifest.fetch('devDependencies',[]).map do |name, requirement|
-        {
-          name: name,
-          requirement: requirement,
-          type: 'development'
+          type: type
         }
       end
     end
