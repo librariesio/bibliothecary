@@ -2,6 +2,7 @@ require "bibliothecary/version"
 require "bibliothecary/npm"
 require "bibliothecary/bower"
 require "bibliothecary/packagist"
+require "bibliothecary/cpan"
 
 module Bibliothecary
   def self.analyse(path)
@@ -14,7 +15,8 @@ module Bibliothecary
     [
       NPM,
       Bower,
-      Packagist
+      Packagist,
+      CPAN
     ]
   end
 
