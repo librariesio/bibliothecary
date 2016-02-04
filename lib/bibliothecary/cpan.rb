@@ -1,4 +1,5 @@
 require 'yaml'
+require 'json'
 
 module Bibliothecary
   class CPAN
