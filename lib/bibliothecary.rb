@@ -5,6 +5,7 @@ require "bibliothecary/packagist"
 require "bibliothecary/cpan"
 require "bibliothecary/meteor"
 require "bibliothecary/cargo"
+require "bibliothecary/pub"
 
 module Bibliothecary
   def self.analyse(path)
@@ -20,7 +21,8 @@ module Bibliothecary
       Packagist,
       CPAN,
       Meteor,
-      Cargo
+      Cargo,
+      Pub
     ]
   end
 
