@@ -27,7 +27,7 @@ module Bibliothecary
     end
 
     def self.analyse_gemspec(folder_path, file_list)
-      path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^Gemfile$|^gems\.rb$/) }
+      path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^[A-Za-z0-9_-]+\.gemspec$/) }
       return unless path
 
       manifest = Gemnasium::Parser.send(:gemspec, File.open(path).read)
