@@ -7,6 +7,7 @@ require "bibliothecary/meteor"
 require "bibliothecary/cargo"
 require "bibliothecary/pub"
 require "bibliothecary/rubygems"
+require "bibliothecary/cocoapods"
 
 module Bibliothecary
   def self.analyse(path)
@@ -24,7 +25,8 @@ module Bibliothecary
       Meteor,
       Cargo,
       Pub,
-      Rubygems
+      Rubygems,
+      CocoaPods
     ]
   end
 
