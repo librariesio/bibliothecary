@@ -6,6 +6,7 @@ require "bibliothecary/cpan"
 require "bibliothecary/meteor"
 require "bibliothecary/cargo"
 require "bibliothecary/pub"
+require "bibliothecary/rubygems"
 
 module Bibliothecary
   def self.analyse(path)
@@ -22,7 +23,8 @@ module Bibliothecary
       CPAN,
       Meteor,
       Cargo,
-      Pub
+      Pub,
+      Rubygems
     ]
   end
 
