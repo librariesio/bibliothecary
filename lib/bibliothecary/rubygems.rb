@@ -1,4 +1,4 @@
-require 'gemnasium-parser'
+require 'gemnasium/parser'
 
 module Bibliothecary
   class Rubygems
