@@ -57,7 +57,7 @@ module Bibliothecary
         match = line.match(NAME_VERSION_4)
         next unless match
         name = match[1]
-        version = match[2].replace(/\(|\)/g,'')
+        version = match[2].gsub(/\(|\)/,'')
         {
           name: name,
           version: version,
