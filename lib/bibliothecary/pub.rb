@@ -3,8 +3,10 @@ require 'yaml'
 module Bibliothecary
   class Pub
     def self.analyse(folder_path, file_list)
-      [analyse_yaml(folder_path, file_list)],
-      analyse_lockfile(folder_path, file_list)]
+      [
+        analyse_yaml(folder_path, file_list),
+        analyse_lockfile(folder_path, file_list)
+      ]
     end
 
     def self.analyse_yaml(folder_path, file_list)
