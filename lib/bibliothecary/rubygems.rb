@@ -60,7 +60,7 @@ module Bibliothecary
         version = match[2].gsub(/\(|\)/,'')
         {
           name: name,
-          version: version,
+          requirement: version,
           type: 'runtime'
         }
       end.compact
@@ -70,9 +70,8 @@ module Bibliothecary
       manifest.dependencies.inject([]) do |deps, dep|
         deps.push({
           name: dep.name,
-          version: dep.requirement.to_s,
-          type: dep.type,
-          groups: dep.groups
+          requirement: dep.requirement.to_s,
+          type: dep.type
         })
       end.uniq
     end
