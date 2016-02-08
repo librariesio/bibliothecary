@@ -53,7 +53,7 @@ module Bibliothecary
     end
 
     def self.parse_gemfile_lock(manifest)
-      manifest.split('\n').map do |line|
+      manifest.split("\n").map do |line|
         match = line.match(NAME_VERSION_4)
         next unless match
         name = match[1]
