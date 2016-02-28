@@ -1,0 +1,10 @@
+Desired=Unknown/Install/Remove/Purge/Hold
+| Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
+|/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
+||/ Name                             Version                           Description
++++-================================-=================================-==========================================================================
+ii  accountsservice                  0.6.15-2ubuntu9.6                 query and manipulate user account information
+ii  acpid                            1:2.0.10-1ubuntu3                 Advanced Configuration and Power Interface event daemon
+ii  adduser                          3.113ubuntu2                      add and remove users and groups
+ii  apparmor                         2.7.102-0ubuntu3.9                User-space parser utility for AppArmor
+ii  apt                              0.8.16~exp12ubuntu10.12           commandline package manager

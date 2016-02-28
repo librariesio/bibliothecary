@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>Bottles</id>
+    <version>0.0.0</version>
+    <authors>Jeremy D. Miller, Dru Sellers, et al.</authors>
+    <owners>Jeremy D. Miller</owners>
+    <licenseUrl>https://github.com/DarthFubuMVC/bottles/raw/master/license.txt</licenseUrl>
+    <projectUrl>http://fubumvc.com</projectUrl>
+    <iconUrl>https://github.com/DarthFubuMVC/bottles/raw/master/doc/logo/FubuMVC_Logo_package_icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Shared libraries for runtime and deployment packaging of .Net applications</description>
+    <tags>packaging areas slices</tags>
+    <dependencies>
+      <dependency id="FubuCore" version="3.2.0.3001" />
+      <dependency id="HtmlTags"  version="[3.2.0.3001]" />
+      <dependency id="DotNetZip" />
+    </dependencies>
+  </metadata>
+  <files>
+	  <file src="..\..\build\Bottles.dll" target="lib" />
+	  <file src="..\..\build\Bottles.pdb" target="lib" />
+	  <file src="..\..\src\Bottles\**\*.cs" target="src" />
+  </files>
+</package>

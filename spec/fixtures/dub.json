@@ -1,0 +1,25 @@
+{
+	"name": "ddox",
+	"description": "Powerful alternative to DMD's DDOC engine.",
+	"homepage": "https://github.com/rejectedsoftware/ddox",
+	"license": "MIT",
+	"authors": [
+		"Sönke Ludwig"
+	],
+	"dependencies": {
+		"vibe-d": "~>0.7.22",
+		"libdparse": {"optional": true, "version": "~>0.2.0"}
+ 	},
+ 	"versions": ["JsonLineNumbers"],
+ 	"configurations": [
+	 	{
+	 		"name": "application",
+	 		"targetType": "executable",
+	 		"versions": ["VibeCustomMain"]
+	 	},
+	 	{
+			"name": "library",
+			"excludedSourceFiles": ["source/app.d"]
+		}
+	]
+}
