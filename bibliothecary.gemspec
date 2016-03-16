@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["andrewnez@gmail.com"]
 
   spec.summary       = "Find and parse manifests"
-  spec.homepage      = "https://github.com/andrew/bibliothecary"
+  spec.homepage      = "https://github.com/librariesio/bibliothecary"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
