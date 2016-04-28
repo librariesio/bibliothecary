@@ -3,6 +3,19 @@ require 'json'
 module Bibliothecary
   module Parsers
     class NPM
+      PLATFORM_NAME = 'npm'
+
+      def self.parse(filename, file_contents)
+        json = JSON.parse(file_contents)
+        if filename.match(/^package\.json$/)
+          parse_manifest(json)
+        elsif filename.match(/^npm-shrinkwrap\.json$/)
+          parse_shrinkwrap(json)
+        else
+          []
+        end
+      end
+
       def self.analyse(folder_path, file_list)
         [analyse_package_json(folder_path, file_list),
         analyse_shrinkwrap(folder_path, file_list)]
@@ -15,7 +28,7 @@ module Bibliothecary
         manifest = JSON.parse File.open(path).read
 
         {
-          platform: 'npm',
+          platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_manifest(manifest)
         }
@@ -28,7 +41,7 @@ module Bibliothecary
         manifest = JSON.parse File.open(path).read
 
         {
-          platform: 'npm',
+          platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_shrinkwrap(manifest)
         }
