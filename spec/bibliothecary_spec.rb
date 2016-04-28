@@ -7,15 +7,15 @@ describe Bibliothecary do
 
   it 'lists supported package managers' do
     expect(Bibliothecary.package_managers).to eq([
-          Bibliothecary::Parsers::NPM,
           Bibliothecary::Parsers::Bower,
-          Bibliothecary::Parsers::Packagist,
+          Bibliothecary::Parsers::Cargo,
+          Bibliothecary::Parsers::CocoaPods,
           Bibliothecary::Parsers::CPAN,
           Bibliothecary::Parsers::Meteor,
-          Bibliothecary::Parsers::Cargo,
+          Bibliothecary::Parsers::NPM,
+          Bibliothecary::Parsers::Packagist,
           Bibliothecary::Parsers::Pub,
-          Bibliothecary::Parsers::Rubygems,
-          Bibliothecary::Parsers::CocoaPods
+          Bibliothecary::Parsers::Rubygems
         ])
   end
 end

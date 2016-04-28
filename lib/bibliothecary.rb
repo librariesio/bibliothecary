@@ -12,17 +12,7 @@ module Bibliothecary
   end
 
   def self.package_managers
-    [
-      Parsers::NPM,
-      Parsers::Bower,
-      Parsers::Packagist,
-      Parsers::CPAN,
-      Parsers::Meteor,
-      Parsers::Cargo,
-      Parsers::Pub,
-      Parsers::Rubygems,
-      Parsers::CocoaPods
-    ]
+    Bibliothecary::Parsers.constants.map{|c| Bibliothecary::Parsers.const_get(c) }
   end
 
   def self.ignored_files
