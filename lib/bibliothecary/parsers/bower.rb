@@ -21,7 +21,7 @@ module Bibliothecary
         manifest = JSON.parse File.open(path).read
 
         {
-          platform: 'bower',
+          platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_manifest(manifest)
         }
