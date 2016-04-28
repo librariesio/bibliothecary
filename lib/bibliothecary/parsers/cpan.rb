@@ -4,6 +4,20 @@ require 'json'
 module Bibliothecary
   module Parsers
     class CPAN
+      PLATFORM_NAME = 'cpan'
+
+      def self.parse(filename, file_contents)
+        if filename.match(/^META\.json$/i)
+          json = JSON.parse file_contents
+          parse_json_manifest(json)
+        elsif filename.match(/^META\.yml$/i)
+          yaml = YAML.load file_contents
+          parse_yaml_manifest(yaml)
+        else
+          []
+        end
+      end
+
       def self.analyse(folder_path, file_list)
         [analyse_json(folder_path, file_list),
         analyse_yaml(folder_path, file_list)]
@@ -16,7 +30,7 @@ module Bibliothecary
         manifest = JSON.parse File.open(path).read
 
         {
-          platform: 'cpan',
+          platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_json_manifest(manifest)
         }
@@ -29,7 +43,7 @@ module Bibliothecary
         manifest = YAML.load File.open(path).read
 
         {
-          platform: 'cpan',
+          platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_yaml_manifest(manifest)
         }

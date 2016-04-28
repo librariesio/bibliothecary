@@ -28,11 +28,7 @@
       "runtime" : {
          "requires" : {
             "Getopt::Long" : "2.32",
-            "List::Util" : "1.07_00",
-            "Pod::Usage" : "1.14",
-            "Storable" : "2.04",
-            "Term::ANSIColor" : "1.04",
-            "perl" : "5.008"
+            "List::Util" : "1.07_00"
          }
       }
    },
