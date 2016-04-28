@@ -5,6 +5,21 @@ module Bibliothecary
     class Rubygems
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
+      PLATFORM_NAME = 'Rubygems'
+
+      def self.parse(filename, file_contents)
+        if filename.match(/^Gemfile$|^gems\.rb$/)
+          manifest = Gemnasium::Parser.send(:gemfile, file_contents)
+          parse_manifest(manifest)
+        elsif filename.match(/^[A-Za-z0-9_-]+\.gemspec$/)
+          manifest = Gemnasium::Parser.send(:gemspec, file_contents)
+          parse_manifest(manifest)
+        elsif filename.match(/^Gemfile\.lock$|^gems\.locked$/)
+          parse_gemfile_lock(file_contents)
+        else
+          []
+        end
+      end
 
       def self.analyse(folder_path, file_list)
         [
@@ -21,7 +36,7 @@ module Bibliothecary
         manifest = Gemnasium::Parser.send(:gemfile, File.open(path).read)
 
         {
-          platform: 'Rubygems',
+          platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_manifest(manifest)
         }
@@ -34,7 +49,7 @@ module Bibliothecary
         manifest = Gemnasium::Parser.send(:gemspec, File.open(path).read)
 
         {
-          platform: 'Rubygems',
+          platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_manifest(manifest)
         }
@@ -47,7 +62,7 @@ module Bibliothecary
         manifest = File.open(path).read
 
         {
-          platform: 'Rubygems',
+          platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_gemfile_lock(manifest)
         }
