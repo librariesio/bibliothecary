@@ -1,0 +1,27 @@
+name: registry
+version: 0.1.0
+description: Web registry for Crystal Shards
+
+authors:
+  - Julien Portalier <julien@portalier.com>
+
+dependencies:
+  frost:
+    github: ysbaddaden/frost
+    branch: master
+
+  shards:
+    github: ysbaddaden/shards
+
+  common_mark:
+    github: ysbaddaden/crystal-cmark
+
+development_dependencies:
+  minitest:
+    github: ysbaddaden/minitest.cr
+    version: ">= 0.2.0"
+
+  selenium-webdriver:
+    github: ysbaddaden/selenium-webdriver-crystal
+
+license: Apache-2.0
