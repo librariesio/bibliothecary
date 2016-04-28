@@ -7,6 +7,24 @@ module Bibliothecary
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
 
+      PLATFORM_NAME = 'CocoaPods'
+
+      def self.parse(filename, file_contents)
+
+        if filename.match(/^Podfile$/)
+          manifest = Gemnasium::Parser.send(:podfile, file_contents)
+          parse_manifest(manifest)
+        elsif filename.match(/^[A-Za-z0-9_-]+\.podspec$/)
+          manifest = Gemnasium::Parser.send(:podspec, file_contents)
+          parse_manifest(manifest)
+        elsif filename.match(/^Podfile\.lock$/)
+          manifest = YAML.load file_contents
+          parse_podfile_lock(manifest)
+        else
+          []
+        end
+      end
+
       def self.analyse(folder_path, file_list)
         [
           analyse_podfile(folder_path, file_list),
@@ -22,7 +40,7 @@ module Bibliothecary
         manifest = Gemnasium::Parser.send(:podfile, File.open(path).read)
 
         {
-          platform: 'CocoaPods',
+          platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_manifest(manifest)
         }
@@ -35,7 +53,7 @@ module Bibliothecary
         manifest = Gemnasium::Parser.send(:podspec, File.open(path).read)
 
         {
-          platform: 'CocoaPods',
+          platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_manifest(manifest)
         }
@@ -48,7 +66,7 @@ module Bibliothecary
         manifest = YAML.load File.open(path).read
 
         {
-          platform: 'CocoaPods',
+          platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_podfile_lock(manifest)
         }
