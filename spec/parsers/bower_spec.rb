@@ -5,7 +5,7 @@ describe Bibliothecary::Parsers::Bower do
     expect(Bibliothecary::Parsers::Bower::PLATFORM_NAME).to eq('bower')
   end
 
-  it 'parses dependencies from package.json' do
+  it 'parses dependencies from bower.json' do
     file = load_fixture('bower.json')
 
     expect(Bibliothecary::Parsers::Bower.parse('bower.json', file)).to eq([
