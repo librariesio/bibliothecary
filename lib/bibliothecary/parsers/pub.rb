@@ -3,6 +3,19 @@ require 'yaml'
 module Bibliothecary
   module Parsers
     class Pub
+      PLATFORM_NAME = 'Pub'
+
+      def self.parse(filename, file_contents)
+        yaml = YAML.load file_contents
+        if filename.match(/^pubspec\.yaml$/i)
+          parse_yaml_manifest(yaml)
+        elsif filename.match(/^pubspec\.lock$/i)
+          parse_yaml_lockfile(yaml)
+        else
+          []
+        end
+      end
+
       def self.analyse(folder_path, file_list)
         [
           analyse_yaml(folder_path, file_list),
@@ -17,7 +30,7 @@ module Bibliothecary
         manifest = YAML.load File.open(path).read
 
         {
-          platform: 'Pub',
+          platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_yaml_manifest(manifest)
         }
@@ -30,9 +43,9 @@ module Bibliothecary
         manifest = YAML.load File.open(path).read
 
         {
-          platform: 'Pub',
+          platform: PLATFORM_NAME,
           path: path,
-          dependencies: parse_yaml_manifest(manifest)
+          dependencies: parse_yaml_lockfile(manifest)
         }
       end
 
@@ -46,7 +59,7 @@ module Bibliothecary
           {
             name: name,
             requirement: dep['version'],
-            type: type
+            type: 'runtime'
           }
         end
       end
