@@ -1,13 +1,8 @@
 require "bibliothecary/version"
-require "bibliothecary/npm"
-require "bibliothecary/bower"
-require "bibliothecary/packagist"
-require "bibliothecary/cpan"
-require "bibliothecary/meteor"
-require "bibliothecary/cargo"
-require "bibliothecary/pub"
-require "bibliothecary/rubygems"
-require "bibliothecary/cocoapods"
+
+Dir[File.expand_path('../bibliothecary/parsers/*.rb', __FILE__)].each do |file|
+  require file
+end
 
 module Bibliothecary
   def self.analyse(path)
@@ -18,15 +13,15 @@ module Bibliothecary
 
   def self.package_managers
     [
-      NPM,
-      Bower,
-      Packagist,
-      CPAN,
-      Meteor,
-      Cargo,
-      Pub,
-      Rubygems,
-      CocoaPods
+      Parsers::NPM,
+      Parsers::Bower,
+      Parsers::Packagist,
+      Parsers::CPAN,
+      Parsers::Meteor,
+      Parsers::Cargo,
+      Parsers::Pub,
+      Parsers::Rubygems,
+      Parsers::CocoaPods
     ]
   end
 
