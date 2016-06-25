@@ -20,6 +20,9 @@ module Bibliothecary
         elsif filename.match(/^Podfile\.lock$/)
           manifest = YAML.load file_contents
           parse_podfile_lock(manifest)
+        elsif filename.match(/^[A-Za-z0-9_-]+\.podspec.json$/)
+          json = JSON.parse(file_contents)
+          parse_json_manifest(json)
         else
           []
         end
@@ -29,7 +32,8 @@ module Bibliothecary
         [
           analyse_podfile(folder_path, file_list),
           analyse_podspec(folder_path, file_list),
-          analyse_podfile_lock(folder_path, file_list)
+          analyse_podfile_lock(folder_path, file_list),
+          analyse_podspec_json(folder_path, file_list)
         ]
       end
 
@@ -56,6 +60,19 @@ module Bibliothecary
           platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_manifest(manifest)
+        }
+      end
+
+      def self.analyse_podspec_json(folder_path, file_list)
+        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^[A-Za-z0-9_-]+\.podspec.json$/) }
+        return unless path
+
+        manifest = JSON.parse File.open(path).read
+
+        {
+          platform: PLATFORM_NAME,
+          path: path,
+          dependencies: parse_json_manifest(manifest)
         }
       end
 
@@ -90,6 +107,16 @@ module Bibliothecary
             name: dep.name,
             requirement: dep.requirement.to_s,
             type: dep.type
+          })
+        end.uniq
+      end
+
+      def self.parse_json_manifest(manifest)
+        manifest['dependencies'].inject([]) do |deps, dep|
+          deps.push({
+            name: dep[0],
+            requirement: dep[1],
+            type: 'runtime'
           })
         end.uniq
       end

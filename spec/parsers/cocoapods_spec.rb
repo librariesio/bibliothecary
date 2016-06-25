@@ -97,4 +97,12 @@ describe Bibliothecary::Parsers::CocoaPods do
       {:name=>"CocoaLumberjack", :requirement=>">= 0", :type=>:runtime}
     ])
   end
+
+  it 'parses dependencies from example.podspec.json' do
+    file = load_fixture('example.podspec.json')
+
+    expect(Bibliothecary::Parsers::CocoaPods.parse('example.podspec.json', file)).to eq([
+      {:name=>"OpenSSL", :requirement=>["~> 1.0"], :type=>"runtime"}
+    ])
+  end
 end
