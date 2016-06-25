@@ -9,6 +9,7 @@ describe Bibliothecary do
     expect(Bibliothecary.package_managers).to eq([
           Bibliothecary::Parsers::Bower,
           Bibliothecary::Parsers::Cargo,
+          Bibliothecary::Parsers::Carthage,
           Bibliothecary::Parsers::CocoaPods,
           Bibliothecary::Parsers::CPAN,
           Bibliothecary::Parsers::Meteor,
