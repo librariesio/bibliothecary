@@ -3,7 +3,7 @@ module Bibliothecary
     class Pypi
       PLATFORM_NAME = 'pypi'
       INSTALL_REGEXP = /install_requires\s*=\s*\[([\s\S]*?)\]/
-      REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9-_\.]+)([><=\d\.,]+)?/
+      REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)([><=\d\.,]+)?/
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
 
       def self.parse(filename, file_contents)
