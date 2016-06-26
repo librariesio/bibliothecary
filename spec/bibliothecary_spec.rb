@@ -12,6 +12,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Carthage,
           Bibliothecary::Parsers::CocoaPods,
           Bibliothecary::Parsers::CPAN,
+          Bibliothecary::Parsers::Go,
           Bibliothecary::Parsers::Maven,
           Bibliothecary::Parsers::Meteor,
           Bibliothecary::Parsers::NPM,
