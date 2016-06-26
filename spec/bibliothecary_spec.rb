@@ -10,6 +10,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Bower,
           Bibliothecary::Parsers::Cargo,
           Bibliothecary::Parsers::Carthage,
+          Bibliothecary::Parsers::Clojars,
           Bibliothecary::Parsers::CocoaPods,
           Bibliothecary::Parsers::CPAN,
           Bibliothecary::Parsers::Go,
