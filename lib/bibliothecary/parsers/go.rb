@@ -68,7 +68,6 @@ module Bibliothecary
 
       def self.parse_godep_json(manifest)
         manifest.fetch('Deps',[]).map do |dependency|
-          p dependency
           {
             name: dependency['ImportPath'],
             requirement: dependency['Rev'],
@@ -79,14 +78,12 @@ module Bibliothecary
 
       def self.parse_glide_yaml(manifest)
         manifest.fetch('import',[]).map do |dependency|
-          p dependency
           {
             name: dependency['package'],
             requirement: dependency['version'] || '*',
             type: 'runtime'
           }
         end + manifest.fetch('devImports',[]).map do |dependency|
-          p dependency
           {
             name: dependency['package'],
             requirement: dependency['version'] || '*',
@@ -97,7 +94,6 @@ module Bibliothecary
 
       def self.parse_glide_lockfile(manifest)
         manifest.fetch('imports',[]).map do |dependency|
-          p dependency
           {
             name: dependency['name'],
             requirement: dependency['version'] || '*',
