@@ -17,6 +17,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::NPM,
           Bibliothecary::Parsers::Packagist,
           Bibliothecary::Parsers::Pub,
+          Bibliothecary::Parsers::Pypi,
           Bibliothecary::Parsers::Rubygems
         ])
   end
