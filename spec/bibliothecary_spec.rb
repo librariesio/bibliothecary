@@ -14,6 +14,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::CocoaPods,
           Bibliothecary::Parsers::CPAN,
           Bibliothecary::Parsers::CRAN,
+          Bibliothecary::Parsers::Dub,
           Bibliothecary::Parsers::Go,
           Bibliothecary::Parsers::Hex,
           Bibliothecary::Parsers::Julia,
