@@ -15,6 +15,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::CPAN,
           Bibliothecary::Parsers::CRAN,
           Bibliothecary::Parsers::Dub,
+          Bibliothecary::Parsers::Elm,
           Bibliothecary::Parsers::Go,
           Bibliothecary::Parsers::Hex,
           Bibliothecary::Parsers::Julia,
