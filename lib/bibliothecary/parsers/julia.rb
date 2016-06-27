@@ -13,8 +13,7 @@ module Bibliothecary
       end
 
       def self.analyse(folder_path, file_list)
-        [analyse_json(folder_path, file_list),
-        analyse_yaml(folder_path, file_list)]
+        [analyse_json(folder_path, file_list)]
       end
 
       def self.analyse_json(folder_path, file_list)
