@@ -13,6 +13,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Clojars,
           Bibliothecary::Parsers::CocoaPods,
           Bibliothecary::Parsers::CPAN,
+          Bibliothecary::Parsers::CRAN,
           Bibliothecary::Parsers::Go,
           Bibliothecary::Parsers::Hex,
           Bibliothecary::Parsers::Maven,
