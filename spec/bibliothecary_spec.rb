@@ -16,6 +16,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::CRAN,
           Bibliothecary::Parsers::Go,
           Bibliothecary::Parsers::Hex,
+          Bibliothecary::Parsers::Julia,
           Bibliothecary::Parsers::Maven,
           Bibliothecary::Parsers::Meteor,
           Bibliothecary::Parsers::NPM,
