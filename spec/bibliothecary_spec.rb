@@ -26,7 +26,8 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Packagist,
           Bibliothecary::Parsers::Pub,
           Bibliothecary::Parsers::Pypi,
-          Bibliothecary::Parsers::Rubygems
+          Bibliothecary::Parsers::Rubygems,
+          Bibliothecary::Parsers::Shard
         ])
   end
 end
