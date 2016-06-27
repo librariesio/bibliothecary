@@ -17,6 +17,11 @@ module Bibliothecary
         end
       end
 
+      def self.analyse(folder_path, file_list)
+        [analyse_json(folder_path, file_list),
+         analyse_sdl(folder_path, file_list)]
+      end
+
       def self.analyse_json(folder_path, file_list)
         path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^dub\.json$/) }
         return unless path
