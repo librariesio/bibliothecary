@@ -26,7 +26,7 @@ module Bibliothecary
           analyse_gemfile(folder_path, file_list),
           analyse_gemspec(folder_path, file_list),
           analyse_gemfile_lock(folder_path, file_list)
-        ]
+        ].flatten
       end
 
       def self.analyse_gemfile(folder_path, file_list)
@@ -43,16 +43,18 @@ module Bibliothecary
       end
 
       def self.analyse_gemspec(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/[A-Za-z0-9_-]+\.gemspec$/) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/[A-Za-z0-9_-]+\.gemspec$/) }
+        return unless paths.any?
 
-        manifest = Gemnasium::Parser.send(:gemspec, File.open(path).read)
+        paths.map do |path|
+          manifest = Gemnasium::Parser.send(:gemspec, File.open(path).read)
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_manifest(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_manifest(manifest)
+          }
+        end
       end
 
       def self.analyse_gemfile_lock(folder_path, file_list)
