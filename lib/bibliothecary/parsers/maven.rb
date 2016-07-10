@@ -93,7 +93,7 @@ module Bibliothecary
 
         return [] unless json['dependencies'] && json['dependencies']['compile']
         json['dependencies']['compile'].map do |dependency|
-          next unless dependency.split(':').length == 3
+          next unless dependency =~ (/[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+(\.[A-Za-z0-9_-])?\:[A-Za-z0-9_-]+\:/)
           version = dependency.split(':').last
           name = dependency.split(':')[0..-2].join(':')
           {

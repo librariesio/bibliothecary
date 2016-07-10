@@ -123,6 +123,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:customtabs:23.1.1'
+    compile files('android_libs/AdTechMobileSdk/ADTECHMobileSDK.jar')
 
     // :api is included as a transitive dependency from :android-client-common
     // compile project(':api')
