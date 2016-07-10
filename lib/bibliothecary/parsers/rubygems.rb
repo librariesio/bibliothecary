@@ -11,7 +11,7 @@ module Bibliothecary
         if filename.match(/^Gemfile$|^gems\.rb$/)
           manifest = Gemnasium::Parser.send(:gemfile, file_contents)
           parse_manifest(manifest)
-        elsif filename.match(/^[A-Za-z0-9_-]+\.gemspec$/)
+        elsif filename.match(/[A-Za-z0-9_-]+\.gemspec$/)
           manifest = Gemnasium::Parser.send(:gemspec, file_contents)
           parse_manifest(manifest)
         elsif filename.match(/^Gemfile\.lock$|^gems\.locked$/)
@@ -43,7 +43,7 @@ module Bibliothecary
       end
 
       def self.analyse_gemspec(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^[A-Za-z0-9_-]+\.gemspec$/) }
+        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/[A-Za-z0-9_-]+\.gemspec$/) }
         return unless path
 
         manifest = Gemnasium::Parser.send(:gemspec, File.open(path).read)
