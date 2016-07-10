@@ -12,14 +12,19 @@ module Bibliothecary
         elsif filename.match(/^pom\.xml$/i)
           xml = Ox.parse file_contents
           parse_pom_manifest(xml)
+        elsif filename.match(/^build.gradle$/i)
+          parse_gradle(file_contents)
         else
           []
         end
       end
 
       def self.analyse(folder_path, file_list)
-        [analyse_pom(folder_path, file_list),
-        analyse_ivy(folder_path, file_list)]
+        [
+          analyse_pom(folder_path, file_list),
+          analyse_ivy(folder_path, file_list),
+          analyse_gradle(folder_path, file_list),
+        ]
       end
 
       def self.analyse_pom(folder_path, file_list)
@@ -48,6 +53,18 @@ module Bibliothecary
         }
       end
 
+      def self.analyse_gradle(folder_path, file_list)
+        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^build.gradle$/i) }
+        return unless path
+        manifest = File.open(path).read
+
+        {
+          platform: PLATFORM_NAME,
+          path: path,
+          dependencies: parse_gradle(manifest)
+        }
+      end
+
       def self.parse_ivy_manifest(manifest)
         manifest.dependencies.locate('dependency').map do |dependency|
           attrs = dependency.attributes
@@ -68,6 +85,23 @@ module Bibliothecary
             type: extract_pom_dep_info(manifest, dependency, 'scope') || 'runtime'
           }
         end
+      end
+
+      def self.parse_gradle(manifest)
+        response = Typhoeus.post("https://gradle-parser.herokuapp.com/parse", body: manifest)
+        json = JSON.parse(response.body)
+
+        return [] unless json['dependencies'] && json['dependencies']['compile']
+        json['dependencies']['compile'].map do |dependency|
+          next unless dependency.split(':').length == 3
+          version = dependency.split(':').last
+          name = dependency.split(':')[0..-2].join(':')
+          {
+            name: name,
+            version: version,
+            type: 'runtime'
+          }
+        end.compact
       end
 
       def self.extract_pom_dep_info(manifest, dependency, name)
