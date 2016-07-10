@@ -38,7 +38,7 @@ module Bibliothecary
       def self.analyse_ivy(folder_path, file_list)
         path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^ivy.xml$/i) }
         return unless path
-        p path
+
         manifest = Ox.parse File.open(path).read
 
         {
