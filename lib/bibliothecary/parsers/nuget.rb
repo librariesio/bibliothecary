@@ -26,8 +26,7 @@ module Bibliothecary
           xml = Ox.parse file_contents
           parse_nuspec(xml)
         elsif filename.match(/paket\.lock$/)
-          # we want the lines, not the single string
-          parse_paket_lock(File.readlines(filename))
+          parse_paket_lock(file_contents.split("\n"))
         else
           []
         end
