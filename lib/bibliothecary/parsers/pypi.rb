@@ -7,7 +7,8 @@ module Bibliothecary
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
 
       def self.parse(filename, file_contents)
-        if filename.match(/require.*\.(txt|pip)$/) && !filename.match(/^node_modules/)
+        is_requirements_file = filename.match(/require.*\.(txt|pip)$/) or filename.match(/.*-requirements\.(txt|pip)$/)
+        if is_requirements_file && !filename.match(/^node_modules/)
           parse_requirements_txt(file_contents)
         elsif filename.match(/^setup\.py$/)
           parse_setup_py(file_contents)
