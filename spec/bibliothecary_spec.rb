@@ -22,12 +22,12 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Maven,
           Bibliothecary::Parsers::Meteor,
           Bibliothecary::Parsers::NPM,
-          Bibliothecary::Parsers::Nuget,
           Bibliothecary::Parsers::Packagist,
           Bibliothecary::Parsers::Pub,
           Bibliothecary::Parsers::Pypi,
           Bibliothecary::Parsers::Rubygems,
-          Bibliothecary::Parsers::Shard
+          Bibliothecary::Parsers::Shard,
+          Bibliothecary::Parsers::Nuget
         ])
   end
 end

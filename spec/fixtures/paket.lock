@@ -1,0 +1,10 @@
+FRAMEWORK: >= NET40
+NUGET
+  remote: https://www.nuget.org/api/v2
+    Argu (2.1)
+    Mono.Cecil (0.9.6.1)
+    Chessie (0.5.1)
+      FSharp.Core
+    FSharp.Core (4.0.0.1) - redirects: force
+    Mono.Cecil (0.9.6.1)
+    Newtonsoft.Json (9.0.1) - redirects: force
