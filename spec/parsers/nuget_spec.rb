@@ -553,9 +553,9 @@ describe Bibliothecary::Parsers::Nuget do
     file = load_fixture('paket.lock')
     expect(Bibliothecary::Parsers::Nuget.parse('paket.lock', file)).to eq([
       {:name=>"Argu", :version=>"2.1", :type=>"runtime"},
+      {:name=>"Mono.Cecil", :version=>"0.9.6.1", :type=>"runtime"},
       {:name=>"Chessie", :version=>"0.5.1", :type=>"runtime"},
       {:name=>"FSharp.Core", :version=>"4.0.0.1", :type=>"runtime"},
-      {:name=>"Mono.Cecil", :version=>"0.9.6.1", :type=>"runtime"},
       {:name=>"Newtonsoft.Json", :version=>"9.0.1", :type=>"runtime"}
     ])
   end
