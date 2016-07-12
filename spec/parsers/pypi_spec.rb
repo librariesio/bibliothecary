@@ -58,5 +58,7 @@ describe Bibliothecary::Parsers::Pypi do
       expect(Bibliothecary::Parsers::Pypi.is_requirements_file('requirements-test.pip')).to be true
       expect(Bibliothecary::Parsers::Pypi.is_requirements_file('test-requirements.txt')).to be true
       expect(Bibliothecary::Parsers::Pypi.is_requirements_file('test-requirements.pip')).to be true
+      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('test-invalid.pip')).to be false
+      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('some-random-file.txt')).to be false
   end
 end
