@@ -146,10 +146,10 @@ module Bibliothecary
       end
 
       def self.parse_paket_lock(lines)
-        package_version_re = /(?<name>.+)\s\((?<version>\d+\.\d+[\.\d+[\.\d+]*]*)\)/
+        package_version_re = /\s+(?<name>\S+)\s\((?<version>\d+\.\d+[\.\d+[\.\d+]*]*)\)/
         packages = lines.select { |line| package_version_re.match(line) }.map { |line| package_version_re.match(line) }.map do |match|
           {
-            name: match[:name],
+            name: match[:name].strip,
             version: match[:version],
             type: 'runtime'
           }
