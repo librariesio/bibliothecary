@@ -50,4 +50,13 @@ describe Bibliothecary::Parsers::Pypi do
       {:name=>"requests", :requirement=>"==0.11.1", :type=>"runtime"}
     ])
   end
+
+  it 'correctly detected different requirements.txt file names' do
+      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('requirements.txt')).to be true
+      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('requirements.pip')).to be true
+      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('requirements-test.txt')).to be true
+      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('requirements-test.pip')).to be true
+      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('test-requirements.txt')).to be true
+      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('test-requirements.pip')).to be true
+  end
 end
