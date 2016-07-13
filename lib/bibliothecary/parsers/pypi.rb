@@ -10,7 +10,7 @@ module Bibliothecary
         is_valid_requirements_file = is_requirements_file(filename)
         if is_valid_requirements_file
           parse_requirements_txt(file_contents)
-        elsif filename.match(/^setup\.py$/)
+        elsif filename.match(/setup\.py$/)
           parse_setup_py(file_contents)
         else
           []
@@ -39,7 +39,7 @@ module Bibliothecary
       end
 
       def self.analyse_setup_py(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^setup\.py$/) }
+        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/setup\.py$/) }
         return unless path
 
         manifest = File.open(path).read
