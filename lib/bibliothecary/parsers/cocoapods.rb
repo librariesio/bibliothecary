@@ -51,29 +51,33 @@ module Bibliothecary
       end
 
       def self.analyse_podspec(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^[A-Za-z0-9_-]+\.podspec$/) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^[A-Za-z0-9_-]+\.podspec$/) }
+        return unless paths.any?
 
-        manifest = Gemnasium::Parser.send(:podspec, File.open(path).read)
+        paths.map do |path|
+          manifest = Gemnasium::Parser.send(:podspec, File.open(path).read)
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_manifest(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_manifest(manifest)
+          }
+        end
       end
 
       def self.analyse_podspec_json(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^[A-Za-z0-9_-]+\.podspec.json$/) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^[A-Za-z0-9_-]+\.podspec.json$/) }
+        return unless paths.any?
 
-        manifest = JSON.parse File.open(path).read
+        paths.map do |path|
+          manifest = JSON.parse File.open(path).read
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_json_manifest(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_json_manifest(manifest)
+          }
+        end
       end
 
       def self.analyse_podfile_lock(folder_path, file_list)
