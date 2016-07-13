@@ -1,4 +1,3 @@
-# REQUIRE
 module Bibliothecary
   module Parsers
     class Julia

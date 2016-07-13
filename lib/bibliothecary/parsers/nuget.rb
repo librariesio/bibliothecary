@@ -1,9 +1,3 @@
-# packages.config
-# Project.json
-# Project.lock.json
-# *.nuspec
-# paket.lock
-
 require 'ox'
 require 'json'
 
