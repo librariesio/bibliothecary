@@ -34,7 +34,7 @@ module Bibliothecary
           analyse_podspec(folder_path, file_list),
           analyse_podfile_lock(folder_path, file_list),
           analyse_podspec_json(folder_path, file_list)
-        ]
+        ].flatten
       end
 
       def self.analyse_podfile(folder_path, file_list)
