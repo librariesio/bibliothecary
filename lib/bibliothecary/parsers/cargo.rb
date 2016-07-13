@@ -18,20 +18,22 @@ module Bibliothecary
 
       def self.analyse(folder_path, file_list)
         [analyse_cargo_toml(folder_path, file_list),
-          analyse_cargo_lock(folder_path, file_list)]
+          analyse_cargo_lock(folder_path, file_list)].flatten
       end
 
       def self.analyse_cargo_toml(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Cargo\.toml$/) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Cargo\.toml$/) }
+        return unless paths.any?
 
-        manifest = TOML.load_file(path)
+        paths.map do |path|
+          manifest = TOML.load_file(path)
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_manifest(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_manifest(manifest)
+          }
+        end
       end
 
       def self.parse_manifest(manifest)
@@ -45,16 +47,18 @@ module Bibliothecary
       end
 
       def self.analyse_cargo_lock(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Cargo\.lock$/) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Cargo\.lock$/) }
+        return unless paths.any?
 
-        manifest = TOML.load_file(path)
+        paths.map do |path|
+          manifest = TOML.load_file(path)
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_lockfile(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_lockfile(manifest)
+          }
+        end
       end
 
       def self.parse_lockfile(manifest)
