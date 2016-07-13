@@ -19,36 +19,40 @@ module Bibliothecary
 
       def self.analyse(folder_path, file_list)
         [analyse_requirements_txt(folder_path, file_list),
-        analyse_setup_py(folder_path, file_list)]
+        analyse_setup_py(folder_path, file_list)].flatten
       end
 
       def self.analyse_requirements_txt(folder_path, file_list)
-        path = file_list.find do |path|
+        paths = file_list.select do |path|
           p = path.gsub(folder_path, '').gsub(/^\//, '')
           p.match(/require.*\.(txt|pip)$/) && !path.match(/^node_modules/)
         end
-        return unless path
+        return unless paths.any?
 
-        manifest = File.open(path).read
+        paths.map do |path|
+          manifest = File.open(path).read
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_requirements_txt(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_requirements_txt(manifest)
+          }
+        end
       end
 
       def self.analyse_setup_py(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/setup\.py$/) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/setup\.py$/) }
+        return unless paths.any?
 
-        manifest = File.open(path).read
+        paths.map do |path|
+          manifest = File.open(path).read
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_setup_py(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_setup_py(manifest)
+          }
+        end
       end
 
       def self.parse_setup_py(manifest)
