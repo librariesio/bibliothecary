@@ -12,7 +12,7 @@ module Bibliothecary
   end
 
   def self.package_managers
-    Bibliothecary::Parsers.constants.map{|c| Bibliothecary::Parsers.const_get(c) }
+    Bibliothecary::Parsers.constants.map{|c| Bibliothecary::Parsers.const_get(c) }.sort_by{|c| c.to_s.downcase }
   end
 
   def self.ignored_files
