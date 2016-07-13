@@ -27,7 +27,8 @@ module Bibliothecary
       def self.analyse(folder_path, file_list)
         [analyse_glide_yaml(folder_path, file_list),
         analyse_glide_lockfile(folder_path, file_list),
-        analyse_godep_json(folder_path, file_list)]
+        analyse_godep_json(folder_path, file_list),
+        analyse_gb_manifest(folder_path, file_list)]
       end
 
       def self.analyse_godep_json(folder_path, file_list)
@@ -40,6 +41,19 @@ module Bibliothecary
           platform: PLATFORM_NAME,
           path: path,
           dependencies: parse_godep_json(manifest)
+        }
+      end
+
+      def self.analyse_gb_manifest(folder_path, file_list)
+        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^vendor\/manifest$/) }
+        return unless path
+
+        manifest = JSON.parse File.open(path).read
+
+        {
+          platform: PLATFORM_NAME,
+          path: path,
+          dependencies: parse_gb_manifest(manifest)
         }
       end
 
