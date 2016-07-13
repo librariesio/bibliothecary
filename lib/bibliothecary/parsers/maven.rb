@@ -6,13 +6,13 @@ module Bibliothecary
       PLATFORM_NAME = 'Maven'
 
       def self.parse(filename, file_contents)
-        if filename.match(/^ivy\.xml$/i)
+        if filename.match(/ivy\.xml$/i)
           xml = Ox.parse file_contents
           parse_ivy_manifest(xml)
-        elsif filename.match(/^pom\.xml$/i)
+        elsif filename.match(/pom\.xml$/i)
           xml = Ox.parse file_contents
           parse_pom_manifest(xml)
-        elsif filename.match(/^build.gradle$/i)
+        elsif filename.match(/build.gradle$/i)
           parse_gradle(file_contents)
         else
           []
@@ -24,45 +24,52 @@ module Bibliothecary
           analyse_pom(folder_path, file_list),
           analyse_ivy(folder_path, file_list),
           analyse_gradle(folder_path, file_list),
-        ]
+        ].flatten
       end
 
       def self.analyse_pom(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^pom\.xml$/i) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/pom\.xml$/i) }
+        return unless paths.any?
 
-        manifest = Ox.parse File.open(path).read
+        paths.map do |path|
+          manifest = Ox.parse File.open(path).read
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_pom_manifest(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_pom_manifest(manifest)
+          }
+        end
       end
 
       def self.analyse_ivy(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^ivy.xml$/i) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/ivy\.xml$/i) }
+        return unless paths.any?
 
-        manifest = Ox.parse File.open(path).read
+        paths.map do |path|
+          manifest = Ox.parse File.open(path).read
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_ivy_manifest(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_ivy_manifest(manifest)
+          }
+        end
       end
 
       def self.analyse_gradle(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^build.gradle$/i) }
-        return unless path
-        manifest = File.open(path).read
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/build\.gradle$/i) }
+        return unless paths.any?
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_gradle(manifest)
-        }
+        paths.map do |path|
+          manifest = File.open(path).read
+
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_gradle(manifest)
+          }
+        end
       end
 
       def self.parse_ivy_manifest(manifest)
