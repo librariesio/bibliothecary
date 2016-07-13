@@ -87,4 +87,14 @@ describe Bibliothecary::Parsers::Go do
        :type=>"runtime"}
     ])
   end
+
+  it 'parses dependencies from gb_manifest' do
+    file = load_fixture('gb_manifest')
+
+    expect(Bibliothecary::Parsers::Go.parse('vendor/manifest', file)).to eq([
+      {:name=>"github.com/gorilla/mux",
+       :requirement=>"9fa818a44c2bf1396a17f9d5a3c0f6dd39d2ff8e",
+       :type=>"runtime"}
+    ])
+  end
 end
