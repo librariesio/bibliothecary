@@ -31,71 +31,81 @@ module Bibliothecary
         analyse_project_lock_json(folder_path, file_list),
         analyse_packages_config(folder_path, file_list),
         analyse_nuspec(folder_path, file_list),
-        analyse_paket_lock(folder_path, file_list)]
+        analyse_paket_lock(folder_path, file_list)].flatten
       end
 
       def self.analyse_project_json(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Project\.json$/) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Project\.json$/i) }
+        return unless paths.any?
 
-        manifest = JSON.parse File.open(path).read
+        paths.map do |path|
+          manifest = JSON.parse File.open(path).read
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_project_json(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_project_json(manifest)
+          }
+        end
       end
 
       def self.analyse_project_lock_json(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Project\.lock\.json$/) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Project\.lock\.json$/) }
+        return unless paths.any?
 
-        manifest = JSON.parse File.open(path).read
+        paths.map do |path|
+          manifest = JSON.parse File.open(path).read
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_project_lock_json(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_project_lock_json(manifest)
+          }
+        end
       end
 
       def self.analyse_packages_config(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/packages\.config$/) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/packages\.config$/) }
+        return unless paths.any?
 
-        manifest = Ox.parse File.open(path).read
+        paths.map do |path|
+          manifest = Ox.parse File.open(path).read
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_packages_config(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_packages_config(manifest)
+          }
+        end
       end
 
       def self.analyse_nuspec(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^[A-Za-z0-9_-]+\.nuspec$/) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^[A-Za-z0-9_-]+\.nuspec$/) }
+        return unless paths.any?
 
-        manifest = Ox.parse File.open(path).read
+        paths.map do |path|
+          manifest = Ox.parse File.open(path).read
 
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_nuspec(manifest)
-        }
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_nuspec(manifest)
+          }
+        end
       end
 
       def self.analyse_paket_lock(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/paket\.lock$/) }
-        return unless path
+        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/paket\.lock$/) }
+        return unless paths.any?
 
-        lines = File.readlines(path)
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_paket_lock(lines)
-        }
+        paths.map do |path|
+          lines = File.readlines(path)
+          {
+            platform: PLATFORM_NAME,
+            path: path,
+            dependencies: parse_paket_lock(lines)
+          }
+        end
       end
 
       def self.parse_project_json(manifest)
