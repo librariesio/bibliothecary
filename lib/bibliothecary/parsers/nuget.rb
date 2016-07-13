@@ -2,6 +2,7 @@
 # Project.json
 # Project.lock.json
 # *.nuspec
+# paket.lock
 
 require 'ox'
 require 'json'
@@ -24,6 +25,8 @@ module Bibliothecary
         elsif filename.match(/^[A-Za-z0-9_-]+\.nuspec$/)
           xml = Ox.parse file_contents
           parse_nuspec(xml)
+        elsif filename.match(/paket\.lock$/)
+          parse_paket_lock(file_contents.split("\n"))
         else
           []
         end
@@ -33,7 +36,8 @@ module Bibliothecary
         [analyse_project_json(folder_path, file_list),
         analyse_project_lock_json(folder_path, file_list),
         analyse_packages_config(folder_path, file_list),
-        analyse_nuspec(folder_path, file_list)]
+        analyse_nuspec(folder_path, file_list),
+        analyse_paket_lock(folder_path, file_list)]
       end
 
       def self.analyse_project_json(folder_path, file_list)
@@ -88,6 +92,18 @@ module Bibliothecary
         }
       end
 
+      def self.analyse_paket_lock(folder_path, file_list)
+        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Project\.lock\.json$/) }
+        return unless path
+
+        lines = File.readlines(path)
+        {
+          platform: PLATFORM_NAME,
+          path: path,
+          dependencies: parse_paket_lock(lines)
+        }
+      end
+
       def self.parse_project_json(manifest)
         manifest.fetch('dependencies',[]).map do |name, requirement|
           {
@@ -127,6 +143,19 @@ module Bibliothecary
             type: 'runtime'
           }
         end
+      end
+
+      def self.parse_paket_lock(lines)
+        package_version_re = /\s+(?<name>\S+)\s\((?<version>\d+\.\d+[\.\d+[\.\d+]*]*)\)/
+        packages = lines.select { |line| package_version_re.match(line) }.map { |line| package_version_re.match(line) }.map do |match|
+          {
+            name: match[:name].strip,
+            version: match[:version],
+            type: 'runtime'
+          }
+        end
+        # we only have to enforce uniqueness by name because paket ensures that there is only the single version globally in the project
+        packages.uniq {|package| package[:name] }
       end
     end
   end
