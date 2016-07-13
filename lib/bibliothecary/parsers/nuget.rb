@@ -87,7 +87,7 @@ module Bibliothecary
       end
 
       def self.analyse_paket_lock(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Project\.lock\.json$/) }
+        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/paket\.lock$/) }
         return unless path
 
         lines = File.readlines(path)
