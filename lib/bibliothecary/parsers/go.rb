@@ -16,6 +16,9 @@ module Bibliothecary
         elsif filename.match(/^Godeps\/Godeps\.json$/)
           json = JSON.parse file_contents
           parse_godep_json(json)
+        elsif filename.match(/^vendor\/manifest$/)
+          json = JSON.parse file_contents
+          parse_gb_manifest(json)
         else
           []
         end
@@ -97,6 +100,16 @@ module Bibliothecary
           {
             name: dependency['name'],
             requirement: dependency['version'] || '*',
+            type: 'runtime'
+          }
+        end
+      end
+
+      def self.parse_gb_manifest(manifest)
+        manifest.fetch('dependencies',[]).map do |dependency|
+          {
+            name: dependency['importpath'],
+            requirement: dependency['revision'],
             type: 'runtime'
           }
         end
