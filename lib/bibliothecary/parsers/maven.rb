@@ -98,7 +98,7 @@ module Bibliothecary
         response = Typhoeus.post("https://gradle-parser.herokuapp.com/parse", body: manifest)
         json = JSON.parse(response.body)
 
-        return [] unless json['dependencies'] && json['dependencies']['compile']
+        return [] unless json['dependencies'] && json['dependencies']['compile'] && json['dependencies']['compile'].is_a?(Array)
         json['dependencies']['compile'].map do |dependency|
           next unless dependency =~ (/[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+(\.[A-Za-z0-9_-])?\:[A-Za-z0-9_-]+\:/)
           version = dependency.split(':').last
