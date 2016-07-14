@@ -57,6 +57,8 @@ module Bibliothecary
             type: "runtime"
           }
         end
+      rescue
+        []
       end
 
       def self.parse_mix_lock(manifest)
@@ -70,6 +72,8 @@ module Bibliothecary
             type: "runtime"
           }
         end
+      rescue
+        []
       end
     end
   end

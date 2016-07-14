@@ -34,6 +34,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_json_manifest(manifest)
         }
+      rescue
+        []
       end
 
       def self.analyse_yaml(folder_path, file_list)
@@ -47,6 +49,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_yaml_manifest(manifest)
         }
+      rescue
+        []
       end
 
       def self.parse_json_manifest(manifest)

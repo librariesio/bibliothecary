@@ -26,6 +26,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_require(manifest)
         }
+      rescue
+        []
       end
 
       def self.parse_require(manifest)

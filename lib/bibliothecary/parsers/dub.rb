@@ -33,6 +33,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_manifest(manifest)
         }
+      rescue
+        []
       end
 
       def self.analyse_sdl(folder_path, file_list)
@@ -46,6 +48,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_sdl_manifest(manifest)
         }
+      rescue
+        []
       end
 
       def self.parse_manifest(manifest)

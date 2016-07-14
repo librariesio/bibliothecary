@@ -30,6 +30,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_description(manifest)
         }
+      rescue
+        []
       end
 
       def self.parse_description(manifest)

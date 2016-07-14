@@ -32,6 +32,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_manifest(manifest)
         }
+      rescue
+        []
       end
 
       def self.analyse_shrinkwrap(folder_path, file_list)
@@ -45,6 +47,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_shrinkwrap(manifest)
         }
+      rescue
+        []
       end
 
       def self.parse_shrinkwrap(manifest)

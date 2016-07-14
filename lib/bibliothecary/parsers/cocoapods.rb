@@ -48,6 +48,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_manifest(manifest)
         }
+      rescue
+        []
       end
 
       def self.analyse_podspec(folder_path, file_list)
@@ -63,6 +65,8 @@ module Bibliothecary
             dependencies: parse_manifest(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.analyse_podspec_json(folder_path, file_list)
@@ -78,6 +82,8 @@ module Bibliothecary
             dependencies: parse_json_manifest(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.analyse_podfile_lock(folder_path, file_list)
@@ -91,6 +97,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_podfile_lock(manifest)
         }
+      rescue
+        []
       end
 
       def self.parse_podfile_lock(manifest)

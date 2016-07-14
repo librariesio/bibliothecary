@@ -34,6 +34,8 @@ module Bibliothecary
           path: path,
           dependencies: manifest.dependencies
         }
+      rescue
+        []
       end
 
       def self.analyse_cartfile_private(folder_path, file_list)
@@ -47,6 +49,8 @@ module Bibliothecary
           path: path,
           dependencies: manifest.dependencies
         }
+      rescue
+        []
       end
 
       def self.analyse_cartfile_resolved(folder_path, file_list)
@@ -60,6 +64,8 @@ module Bibliothecary
           path: path,
           dependencies: manifest.dependencies
         }
+      rescue
+        []
       end
 
       def self.parse_cartfile(manifest)

@@ -40,6 +40,8 @@ module Bibliothecary
             dependencies: parse_pom_manifest(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.analyse_ivy(folder_path, file_list)
@@ -55,6 +57,8 @@ module Bibliothecary
             dependencies: parse_ivy_manifest(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.analyse_gradle(folder_path, file_list)
@@ -70,6 +74,8 @@ module Bibliothecary
             dependencies: parse_gradle(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.parse_ivy_manifest(manifest)
@@ -85,7 +91,6 @@ module Bibliothecary
 
       def self.parse_pom_manifest(manifest)
         manifest.project.dependencies.locate('dependency').map do |dependency|
-
           {
             name: "#{extract_pom_dep_info(manifest, dependency, 'groupId')}:#{extract_pom_dep_info(manifest, dependency, 'artifactId')}",
             requirement: extract_pom_dep_info(manifest, dependency, 'version'),

@@ -34,6 +34,8 @@ module Bibliothecary
             dependencies: parse_manifest(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.parse_manifest(manifest)
@@ -59,6 +61,8 @@ module Bibliothecary
             dependencies: parse_lockfile(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.parse_lockfile(manifest)

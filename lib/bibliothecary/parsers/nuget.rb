@@ -47,6 +47,8 @@ module Bibliothecary
             dependencies: parse_project_json(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.analyse_project_lock_json(folder_path, file_list)
@@ -62,6 +64,8 @@ module Bibliothecary
             dependencies: parse_project_lock_json(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.analyse_packages_config(folder_path, file_list)
@@ -77,6 +81,8 @@ module Bibliothecary
             dependencies: parse_packages_config(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.analyse_nuspec(folder_path, file_list)
@@ -92,6 +98,8 @@ module Bibliothecary
             dependencies: parse_nuspec(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.analyse_paket_lock(folder_path, file_list)
@@ -106,6 +114,8 @@ module Bibliothecary
             dependencies: parse_paket_lock(lines)
           }
         end
+      rescue
+        []
       end
 
       def self.parse_project_json(manifest)

@@ -42,6 +42,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_godep_json(manifest)
         }
+      rescue
+        []
       end
 
       def self.analyse_gb_manifest(folder_path, file_list)
@@ -55,6 +57,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_gb_manifest(manifest)
         }
+      rescue
+        []
       end
 
       def self.analyse_glide_yaml(folder_path, file_list)
@@ -68,6 +72,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_glide_yaml(manifest)
         }
+      rescue
+        []
       end
 
       def self.analyse_glide_lockfile(folder_path, file_list)
@@ -81,6 +87,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_glide_lockfile(manifest)
         }
+      rescue
+        []
       end
 
       def self.parse_godep_json(manifest)

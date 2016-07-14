@@ -40,6 +40,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_manifest(manifest)
         }
+      rescue
+        []
       end
 
       def self.analyse_gemspec(folder_path, file_list)
@@ -55,6 +57,8 @@ module Bibliothecary
             dependencies: parse_manifest(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.analyse_gemfile_lock(folder_path, file_list)
@@ -68,6 +72,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_gemfile_lock(manifest)
         }
+      rescue
+        []
       end
 
       def self.parse_gemfile_lock(manifest)

@@ -32,6 +32,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_manifest(manifest)
         }
+      rescue
+        []
       end
 
       def self.analyse_composer_lock(folder_path, file_list)
@@ -45,6 +47,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_lockfile(manifest)
         }
+      rescue
+        []
       end
 
       def self.parse_lockfile(manifest)

@@ -38,6 +38,8 @@ module Bibliothecary
             dependencies: parse_requirements_txt(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.analyse_setup_py(folder_path, file_list)
@@ -53,6 +55,8 @@ module Bibliothecary
             dependencies: parse_setup_py(manifest)
           }
         end
+      rescue
+        []
       end
 
       def self.parse_setup_py(manifest)

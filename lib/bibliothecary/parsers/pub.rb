@@ -34,6 +34,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_yaml_manifest(manifest)
         }
+      rescue
+        []
       end
 
       def self.analyse_lockfile(folder_path, file_list)
@@ -47,6 +49,8 @@ module Bibliothecary
           path: path,
           dependencies: parse_yaml_lockfile(manifest)
         }
+      rescue
+        []
       end
 
       def self.parse_yaml_manifest(manifest)
