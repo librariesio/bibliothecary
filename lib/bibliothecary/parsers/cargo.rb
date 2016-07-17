@@ -3,39 +3,18 @@ require 'toml'
 module Bibliothecary
   module Parsers
     class Cargo
-      PLATFORM_NAME = 'cargo'
+      include Bibliothecary::Analyser
 
       def self.parse(filename, file_contents)
-        toml = TOML.parse(file_contents)
         if filename.match(/Cargo\.toml$/)
+          toml = TOML.parse(file_contents)
           parse_manifest(toml)
         elsif filename.match(/Cargo\.lock$/)
+          toml = TOML.parse(file_contents)
           parse_lockfile(toml)
         else
           []
         end
-      end
-
-      def self.analyse(folder_path, file_list)
-        [analyse_cargo_toml(folder_path, file_list),
-          analyse_cargo_lock(folder_path, file_list)].flatten
-      end
-
-      def self.analyse_cargo_toml(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Cargo\.toml$/) }
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = TOML.load_file(path)
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_manifest(manifest)
-          }
-        end
-      rescue
-        []
       end
 
       def self.parse_manifest(manifest)
