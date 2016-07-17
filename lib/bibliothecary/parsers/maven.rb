@@ -3,7 +3,7 @@ require 'ox'
 module Bibliothecary
   module Parsers
     class Maven
-      PLATFORM_NAME = 'Maven'
+      include Bibliothecary::Analyser
 
       def self.parse(filename, file_contents)
         if filename.match(/ivy\.xml$/i)
@@ -17,65 +17,6 @@ module Bibliothecary
         else
           []
         end
-      end
-
-      def self.analyse(folder_path, file_list)
-        [
-          analyse_pom(folder_path, file_list),
-          analyse_ivy(folder_path, file_list),
-          analyse_gradle(folder_path, file_list),
-        ].flatten
-      end
-
-      def self.analyse_pom(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/pom\.xml$/i) }
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = Ox.parse File.open(path).read
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_pom_manifest(manifest)
-          }
-        end
-      rescue
-        []
-      end
-
-      def self.analyse_ivy(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/ivy\.xml$/i) }
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = Ox.parse File.open(path).read
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_ivy_manifest(manifest)
-          }
-        end
-      rescue
-        []
-      end
-
-      def self.analyse_gradle(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/build\.gradle$/i) }
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = File.open(path).read
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_gradle(manifest)
-          }
-        end
-      rescue
-        []
       end
 
       def self.parse_ivy_manifest(manifest)

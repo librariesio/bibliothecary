@@ -4,7 +4,7 @@ require 'sdl_parser'
 module Bibliothecary
   module Parsers
     class Dub
-      PLATFORM_NAME = 'dub'
+      include Bibliothecary::Analyser
 
       def self.parse(filename, file_contents)
         if filename.match(/^dub\.json$/)
@@ -15,41 +15,6 @@ module Bibliothecary
         else
           []
         end
-      end
-
-      def self.analyse(folder_path, file_list)
-        [analyse_json(folder_path, file_list),
-         analyse_sdl(folder_path, file_list)]
-      end
-
-      def self.analyse_json(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^dub\.json$/) }
-        return unless path
-
-        manifest = JSON.parse File.open(path).read
-
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_manifest(manifest)
-        }
-      rescue
-        []
-      end
-
-      def self.analyse_sdl(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^dub\.sdl$/) }
-        return unless path
-
-        manifest = File.open(path).read
-
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_sdl_manifest(manifest)
-        }
-      rescue
-        []
       end
 
       def self.parse_manifest(manifest)

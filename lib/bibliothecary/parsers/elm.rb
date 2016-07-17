@@ -3,7 +3,7 @@ require 'json'
 module Bibliothecary
   module Parsers
     class Elm
-      PLATFORM_NAME = 'elm'
+      include Bibliothecary::Analyser
 
       def self.parse(filename, file_contents)
         if filename.match(/^elm-package\.json$|^elm_dependencies\.json$/)

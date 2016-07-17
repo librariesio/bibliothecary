@@ -1,7 +1,7 @@
 module Bibliothecary
   module Parsers
     class Julia
-      PLATFORM_NAME = 'julia'
+      include Bibliothecary::Analyser
 
       def self.parse(filename, file_contents)
         if filename.match(/^REQUIRE$/i)
@@ -9,25 +9,6 @@ module Bibliothecary
         else
           []
         end
-      end
-
-      def self.analyse(folder_path, file_list)
-        [analyse_json(folder_path, file_list)]
-      end
-
-      def self.analyse_json(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^REQUIRE$/i) }
-        return unless path
-
-        manifest = File.open(path).read
-
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_require(manifest)
-        }
-      rescue
-        []
       end
 
       def self.parse_require(manifest)

@@ -3,7 +3,8 @@ require 'deb_control'
 module Bibliothecary
   module Parsers
     class CRAN
-      PLATFORM_NAME = 'cran'
+      include Bibliothecary::Analyser
+
       REQUIRE_REGEXP = /([a-zA-Z0-9\-_\.]+)\s?\(?([><=\s\d\.,]+)?\)?/
 
       def self.parse(filename, file_contents)
@@ -13,25 +14,6 @@ module Bibliothecary
         else
           []
         end
-      end
-
-      def self.analyse(folder_path, file_list)
-        [analyse_description(folder_path, file_list)]
-      end
-
-      def self.analyse_description(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^DESCRIPTION$/i) }
-        return unless path
-
-        manifest = DebControl::ControlFileBase.parse File.open(path).read
-
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_description(manifest)
-        }
-      rescue
-        []
       end
 
       def self.parse_description(manifest)

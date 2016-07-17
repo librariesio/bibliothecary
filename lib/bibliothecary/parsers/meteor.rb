@@ -3,30 +3,15 @@ require 'json'
 module Bibliothecary
   module Parsers
     class Meteor
-      PLATFORM_NAME = 'meteor'
+      include Bibliothecary::Analyser
 
       def self.parse(filename, file_contents)
-        json = JSON.parse(file_contents)
         if filename.match(/^versions\.json$/)
+          json = JSON.parse(file_contents)
           parse_manifest(json)
         else
           []
         end
-      end
-
-      def self.analyse(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^versions\.json$/) }
-        return unless path
-
-        manifest = JSON.parse File.open(path).read
-
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_manifest(manifest)
-        }
-      rescue
-        []
       end
 
       def self.parse_manifest(manifest)
