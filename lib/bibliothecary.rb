@@ -1,4 +1,5 @@
 require "bibliothecary/version"
+require "bibliothecary/analyser"
 
 Dir[File.expand_path('../bibliothecary/parsers/*.rb', __FILE__)].each do |file|
   require file

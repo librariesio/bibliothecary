@@ -4,13 +4,12 @@ require 'yaml'
 module Bibliothecary
   module Parsers
     class CocoaPods
+      include Bibliothecary::Analyser
+
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
 
-      PLATFORM_NAME = 'CocoaPods'
-
       def self.parse(filename, file_contents)
-
         if filename.match(/^Podfile$/)
           manifest = Gemnasium::Parser.send(:podfile, file_contents)
           parse_manifest(manifest)
@@ -26,79 +25,6 @@ module Bibliothecary
         else
           []
         end
-      end
-
-      def self.analyse(folder_path, file_list)
-        [
-          analyse_podfile(folder_path, file_list),
-          analyse_podspec(folder_path, file_list),
-          analyse_podfile_lock(folder_path, file_list),
-          analyse_podspec_json(folder_path, file_list)
-        ].flatten
-      end
-
-      def self.analyse_podfile(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^Podfile$/) }
-        return unless path
-
-        manifest = Gemnasium::Parser.send(:podfile, File.open(path).read)
-
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_manifest(manifest)
-        }
-      rescue
-        []
-      end
-
-      def self.analyse_podspec(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^[A-Za-z0-9_-]+\.podspec$/) }
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = Gemnasium::Parser.send(:podspec, File.open(path).read)
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_manifest(manifest)
-          }
-        end
-      rescue
-        []
-      end
-
-      def self.analyse_podspec_json(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^[A-Za-z0-9_-]+\.podspec.json$/) }
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = JSON.parse File.open(path).read
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_json_manifest(manifest)
-          }
-        end
-      rescue
-        []
-      end
-
-      def self.analyse_podfile_lock(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^Podfile\.lock$/) }
-        return unless path
-
-        manifest = YAML.load File.open(path).read
-
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_podfile_lock(manifest)
-        }
-      rescue
-        []
       end
 
       def self.parse_podfile_lock(manifest)

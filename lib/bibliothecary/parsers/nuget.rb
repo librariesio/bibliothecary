@@ -4,7 +4,7 @@ require 'json'
 module Bibliothecary
   module Parsers
     class Nuget
-      PLATFORM_NAME = 'nuget'
+      include Bibliothecary::Analyser
 
       def self.parse(filename, file_contents)
         if filename.match(/Project\.json$/)
@@ -24,98 +24,6 @@ module Bibliothecary
         else
           []
         end
-      end
-
-      def self.analyse(folder_path, file_list)
-        [analyse_project_json(folder_path, file_list),
-        analyse_project_lock_json(folder_path, file_list),
-        analyse_packages_config(folder_path, file_list),
-        analyse_nuspec(folder_path, file_list),
-        analyse_paket_lock(folder_path, file_list)].flatten
-      end
-
-      def self.analyse_project_json(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Project\.json$/i) }
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = JSON.parse File.open(path).read
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_project_json(manifest)
-          }
-        end
-      rescue
-        []
-      end
-
-      def self.analyse_project_lock_json(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Project\.lock\.json$/) }
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = JSON.parse File.open(path).read
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_project_lock_json(manifest)
-          }
-        end
-      rescue
-        []
-      end
-
-      def self.analyse_packages_config(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/packages\.config$/) }
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = Ox.parse File.open(path).read
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_packages_config(manifest)
-          }
-        end
-      rescue
-        []
-      end
-
-      def self.analyse_nuspec(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^[A-Za-z0-9_-]+\.nuspec$/) }
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = Ox.parse File.open(path).read
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_nuspec(manifest)
-          }
-        end
-      rescue
-        []
-      end
-
-      def self.analyse_paket_lock(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/paket\.lock$/) }
-        return unless paths.any?
-
-        paths.map do |path|
-          lines = File.readlines(path)
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_paket_lock(lines)
-          }
-        end
-      rescue
-        []
       end
 
       def self.parse_project_json(manifest)

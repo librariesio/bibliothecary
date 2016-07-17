@@ -1,7 +1,7 @@
 module Bibliothecary
   module Parsers
     class Swift
-      PLATFORM_NAME = 'swift'
+      include Bibliothecary::Analyser
 
       def self.parse(filename, file_contents)
         if filename.match(/^Package\.swift$/i)
@@ -9,25 +9,6 @@ module Bibliothecary
         else
           []
         end
-      end
-
-      def self.analyse(folder_path, file_list)
-        [analyse_package_swift(folder_path, file_list)]
-      end
-
-      def self.analyse_package_swift(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^Package\.swift$/i) }
-        return unless path
-
-        manifest = File.open(path).read
-
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_package_swift(manifest)
-        }
-      rescue
-        []
       end
 
       def self.parse_package_swift(manifest)

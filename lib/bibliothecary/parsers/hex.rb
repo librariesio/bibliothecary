@@ -3,7 +3,7 @@ require 'json'
 module Bibliothecary
   module Parsers
     class Hex
-      PLATFORM_NAME = 'hex'
+      include Bibliothecary::Analyser
 
       def self.parse(filename, file_contents)
         if filename.match(/^mix\.exs$/)
@@ -13,37 +13,6 @@ module Bibliothecary
         else
           []
         end
-      end
-
-      def self.analyse(folder_path, file_list)
-        [analyse_mix(folder_path, file_list),
-        analyse_mix_lock(folder_path, file_list)]
-      end
-
-      def self.analyse_mix(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^mix\.exs$/) }
-        return unless path
-
-        manifest = File.open(path).read
-
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_mix(manifest)
-        }
-      end
-
-      def self.analyse_mix_lock(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^mix\.lock$/) }
-        return unless path
-
-        manifest = File.open(path).read
-
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_mix_lock(manifest)
-        }
       end
 
       def self.parse_mix(manifest)

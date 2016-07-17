@@ -1,7 +1,8 @@
 module Bibliothecary
   module Parsers
     class Pypi
-      PLATFORM_NAME = 'pypi'
+      include Bibliothecary::Analyser
+
       INSTALL_REGEXP = /install_requires\s*=\s*\[([\s\S]*?)\]/
       REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)([><=\d\.,]+)?/
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
@@ -15,48 +16,6 @@ module Bibliothecary
         else
           []
         end
-      end
-
-      def self.analyse(folder_path, file_list)
-        [analyse_requirements_txt(folder_path, file_list),
-        analyse_setup_py(folder_path, file_list)].flatten
-      end
-
-      def self.analyse_requirements_txt(folder_path, file_list)
-        paths = file_list.select do |path|
-          p = path.gsub(folder_path, '').gsub(/^\//, '')
-          p.match(/require.*\.(txt|pip)$/) && !path.match(/^node_modules/)
-        end
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = File.open(path).read
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_requirements_txt(manifest)
-          }
-        end
-      rescue
-        []
-      end
-
-      def self.analyse_setup_py(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/setup\.py$/) }
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = File.open(path).read
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_setup_py(manifest)
-          }
-        end
-      rescue
-        []
       end
 
       def self.parse_setup_py(manifest)
