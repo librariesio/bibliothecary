@@ -90,11 +90,16 @@ module Bibliothecary
       end
 
       def self.parse_pom_manifest(manifest)
-        manifest.project.dependencies.locate('dependency').map do |dependency|
+        if manifest.respond_to?('project')
+          xml = manifest.project
+        else
+          xml = manifest
+        end
+        xml.dependencies.locate('dependency').map do |dependency|
           {
-            name: "#{extract_pom_dep_info(manifest, dependency, 'groupId')}:#{extract_pom_dep_info(manifest, dependency, 'artifactId')}",
-            requirement: extract_pom_dep_info(manifest, dependency, 'version'),
-            type: extract_pom_dep_info(manifest, dependency, 'scope') || 'runtime'
+            name: "#{extract_pom_dep_info(xml, dependency, 'groupId')}:#{extract_pom_dep_info(xml, dependency, 'artifactId')}",
+            requirement: extract_pom_dep_info(xml, dependency, 'version'),
+            type: extract_pom_dep_info(xml, dependency, 'scope') || 'runtime'
           }
         end
       end
@@ -116,12 +121,12 @@ module Bibliothecary
         end.compact
       end
 
-      def self.extract_pom_dep_info(manifest, dependency, name)
+      def self.extract_pom_dep_info(xml, dependency, name)
         field = dependency.locate(name).first
         return nil if field.nil?
         value = field.nodes.first
         if match = value.match(/^\$\{(.+)\}/)
-          prop_field = manifest.project.properties.locate(match[1]).first
+          prop_field = xml.properties.locate(match[1]).first
           if prop_field
             return prop_field.nodes.first
           else

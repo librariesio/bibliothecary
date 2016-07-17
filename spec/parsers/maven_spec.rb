@@ -81,6 +81,34 @@ describe Bibliothecary::Parsers::Maven do
       {:name=>"org.mockito:mockito-all", :requirement=>"1.8.4", :type=>"test"}])
   end
 
+  it 'parses dependencies from pom2.xml' do
+    file = load_fixture('pom2.xml')
+
+    expect(Bibliothecary::Parsers::Maven.parse('pom.xml', file)).to eq([
+      {:name=>"org.apache.maven:maven-plugin-api",
+        :requirement=>"3.3.9",
+        :type=>"runtime"},
+       {:name=>"org.apache.maven:maven-core",
+        :requirement=>"3.3.9",
+        :type=>"runtime"},
+       {:name=>"org.apache.maven.plugin-tools:maven-plugin-annotations",
+        :requirement=>"3.4",
+        :type=>"provided"},
+       {:name=>"org.codehaus.jackson:jackson-core-lgpl",
+        :requirement=>"1.9.13",
+        :type=>"runtime"},
+       {:name=>"org.codehaus.jackson:jackson-mapper-lgpl",
+        :requirement=>"1.9.13",
+        :type=>"runtime"},
+       {:name=>"org.apache.httpcomponents:httpclient",
+        :requirement=>"4.5.2",
+        :type=>"runtime"},
+       {:name=>"org.apache.httpcomponents:httpmime",
+        :requirement=>"4.5.2",
+        :type=>"runtime"},
+       {:name=>"org.testng:testng", :requirement=>"6.9.12", :type=>"test"}])
+  end
+
   it 'parses dependencies from ivy.xml' do
     file = load_fixture('ivy.xml')
 
