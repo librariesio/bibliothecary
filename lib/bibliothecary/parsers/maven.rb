@@ -95,6 +95,7 @@ module Bibliothecary
         else
           xml = manifest
         end
+        return [] unless xml.respond_to?('dependencies')
         xml.dependencies.locate('dependency').map do |dependency|
           {
             name: "#{extract_pom_dep_info(xml, dependency, 'groupId')}:#{extract_pom_dep_info(xml, dependency, 'artifactId')}",
