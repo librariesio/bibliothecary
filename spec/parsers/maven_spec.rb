@@ -6,11 +6,9 @@ describe Bibliothecary::Parsers::Maven do
   end
 
   it 'parses dependencies from pom.xml' do
-    file = load_fixture('pom.xml')
-
-    expect(Bibliothecary::Parsers::Maven.analyse_file('pom.xml', file, 'pom.xml')).to eq({
+    expect(Bibliothecary::Parsers::Maven.analyse_file('pom.xml', fixture_path('pom.xml'))).to eq({
       :platform=>"maven",
-      :path=>"pom.xml",
+      :path=>"spec/fixtures/pom.xml",
       :dependencies=>[
         {:name=>"org.glassfish.jersey.core:jersey-server",
         :requirement=>"2.16",
@@ -87,11 +85,9 @@ describe Bibliothecary::Parsers::Maven do
   end
 
   it 'parses dependencies from pom2.xml' do
-    file = load_fixture('pom2.xml')
-
-    expect(Bibliothecary::Parsers::Maven.analyse_file('pom.xml', file, 'pom.xml')).to eq({
+    expect(Bibliothecary::Parsers::Maven.analyse_file('pom.xml', fixture_path('pom2.xml'))).to eq({
       :platform=>"maven",
-      :path=>"pom.xml",
+      :path=>"spec/fixtures/pom2.xml",
       :dependencies=>[
         {:name=>"org.apache.maven:maven-plugin-api",
           :requirement=>"3.3.9",
@@ -120,11 +116,9 @@ describe Bibliothecary::Parsers::Maven do
   end
 
   it 'parses dependencies from ivy.xml' do
-    file = load_fixture('ivy.xml')
-
-    expect(Bibliothecary::Parsers::Maven.analyse_file('ivy.xml', file, 'ivy.xml')).to eq({
+    expect(Bibliothecary::Parsers::Maven.analyse_file('ivy.xml', fixture_path('ivy.xml'))).to eq({
       :platform=>"maven",
-      :path=>"ivy.xml",
+      :path=>"spec/fixtures/ivy.xml",
       :dependencies=>[
         {:name=>"org.htmlparser:htmlparser", :requirement=>"2.1", :type=>"runtime"},
         {:name=>"org.apache.velocity:velocity",
@@ -153,11 +147,9 @@ describe Bibliothecary::Parsers::Maven do
   end
 
   it 'parses dependencies from build.gradle' do
-    file = load_fixture('build.gradle')
-
-    expect(Bibliothecary::Parsers::Maven.analyse_file('build.gradle', file, 'build.gradle')).to eq({
+    expect(Bibliothecary::Parsers::Maven.analyse_file('build.gradle', fixture_path('build.gradle'))).to eq({
       :platform=>"maven",
-      :path=>"build.gradle",
+      :path=>"spec/fixtures/build.gradle",
       :dependencies=>[
         {:name=>"com.squareup.okhttp:okhttp", :version=>"2.1.0", :type=>"runtime"},
         {:name=>"com.squareup.okhttp:okhttp-urlconnection", :version=>"2.1.0", :type=>"runtime"},

@@ -7,11 +7,13 @@ module Bibliothecary
       REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)([><=\d\.,]+)?/
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         is_valid_requirements_file = is_requirements_file(filename)
         if is_valid_requirements_file
+          file_contents = File.open(path).read
           parse_requirements_txt(file_contents)
         elsif filename.match(/setup\.py$/)
+          file_contents = File.open(path).read
           parse_setup_py(file_contents)
         else
           []

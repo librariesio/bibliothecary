@@ -6,11 +6,9 @@ describe Bibliothecary::Parsers::Rubygems do
   end
 
   it 'parses dependencies from Gemfile' do
-    file = load_fixture('Gemfile')
-
-    expect(Bibliothecary::Parsers::Rubygems.analyse_file('Gemfile', file, 'Gemfile')).to eq({
+    expect(Bibliothecary::Parsers::Rubygems.analyse_file('Gemfile', fixture_path('Gemfile'))).to eq({
       :platform=>"rubygems",
-      :path=>"Gemfile",
+      :path=>"spec/fixtures/Gemfile",
       :dependencies=>[
         {:name=>"oj", :requirement=>">= 0", :type=>:runtime},
         {:name=>"rails", :requirement=>"= 4.2.0", :type=>:runtime},
@@ -25,11 +23,9 @@ describe Bibliothecary::Parsers::Rubygems do
   end
 
   it 'parses dependencies from gems.rb' do
-    file = load_fixture('gems.rb')
-
-    expect(Bibliothecary::Parsers::Rubygems.analyse_file('gems.rb', file, 'gems.rb')).to eq({
+    expect(Bibliothecary::Parsers::Rubygems.analyse_file('gems.rb', fixture_path('gems.rb'))).to eq({
       :platform=>"rubygems",
-      :path=>"gems.rb",
+      :path=>"spec/fixtures/gems.rb",
       :dependencies=>[
         {:name=>"oj", :requirement=>">= 0", :type=>:runtime},
         {:name=>"rails", :requirement=>"= 4.2.0", :type=>:runtime},
@@ -44,11 +40,9 @@ describe Bibliothecary::Parsers::Rubygems do
   end
 
   it 'parses dependencies from devise.gemspec' do
-    file = load_fixture('devise.gemspec')
-
-    expect(Bibliothecary::Parsers::Rubygems.analyse_file('devise.gemspec', file, 'devise.gemspec')).to eq({
+    expect(Bibliothecary::Parsers::Rubygems.analyse_file('devise.gemspec', fixture_path('devise.gemspec'))).to eq({
       :platform=>"rubygems",
-      :path=>"devise.gemspec",
+      :path=>"spec/fixtures/devise.gemspec",
       :dependencies=>[
         {:name=>"warden", :requirement=>"~> 1.2.3", :type=>:runtime},
         {:name=>"orm_adapter", :requirement=>"~> 0.1", :type=>:development},
@@ -61,11 +55,9 @@ describe Bibliothecary::Parsers::Rubygems do
   end
 
   it 'parses dependencies from Gemfile.lock' do
-    file = load_fixture('Gemfile.lock')
-
-    expect(Bibliothecary::Parsers::Rubygems.analyse_file('Gemfile.lock', file, 'Gemfile.lock')).to eq({
+    expect(Bibliothecary::Parsers::Rubygems.analyse_file('Gemfile.lock', fixture_path('Gemfile.lock'))).to eq({
       :platform=>"rubygems",
-      :path=>"Gemfile.lock",
+      :path=>"spec/fixtures/Gemfile.lock",
       :dependencies=>[
         {:name=>"CFPropertyList", :requirement=>"2.3.1", :type=>"runtime"},
         {:name=>"actionmailer", :requirement=>"4.2.3", :type=>"runtime"},

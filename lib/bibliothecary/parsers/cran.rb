@@ -7,8 +7,9 @@ module Bibliothecary
 
       REQUIRE_REGEXP = /([a-zA-Z0-9\-_\.]+)\s?\(?([><=\s\d\.,]+)?\)?/
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/^DESCRIPTION$/i)
+          file_contents = File.open(path).read
           control = DebControl::ControlFileBase.parse(file_contents)
           parse_description(control)
         else

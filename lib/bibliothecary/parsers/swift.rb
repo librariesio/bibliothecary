@@ -3,8 +3,9 @@ module Bibliothecary
     class Swift
       include Bibliothecary::Analyser
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/^Package\.swift$/i)
+          file_contents = File.open(path).read
           parse_package_swift(file_contents)
         else
           []

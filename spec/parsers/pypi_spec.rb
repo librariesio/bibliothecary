@@ -6,11 +6,9 @@ describe Bibliothecary::Parsers::Pypi do
   end
 
   it 'parses dependencies from setup.py' do
-    file = load_fixture('setup.py')
-
-    expect(Bibliothecary::Parsers::Pypi.analyse_file('setup.py', file, 'setup.py')).to eq({
+    expect(Bibliothecary::Parsers::Pypi.analyse_file('setup.py', fixture_path('setup.py'))).to eq({
       :platform=>"pypi",
-      :path=>"setup.py",
+      :path=>"spec/fixtures/setup.py",
       :dependencies=>[
         {:name=>"Install", :requirement=>"*", :type=>"runtime"},
         {:name=>"django-bootstrap3", :requirement=>">=6.2,<6.3", :type=>"runtime"},
@@ -41,11 +39,9 @@ describe Bibliothecary::Parsers::Pypi do
   end
 
   it 'parses dependencies from requirements.txt' do
-    file = load_fixture('requirements.txt')
-
-    expect(Bibliothecary::Parsers::Pypi.analyse_file('requirements.txt', file, 'requirements.txt')).to eq({
+    expect(Bibliothecary::Parsers::Pypi.analyse_file('requirements.txt', fixture_path('requirements.txt'))).to eq({
       :platform=>"pypi",
-      :path=>"requirements.txt",
+      :path=>"spec/fixtures/requirements.txt",
       :dependencies=>[
         {:name=>"Flask", :requirement=>"==0.8", :type=>"runtime"},
         {:name=>"zope.component", :requirement=>"==4.2.2", :type=>"runtime"},

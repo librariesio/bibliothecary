@@ -5,11 +5,13 @@ module Bibliothecary
     class Shard
       include Bibliothecary::Analyser
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/^shard\.yml$/i)
+          file_contents = File.open(path).read
           yaml = YAML.load file_contents
           parse_yaml_manifest(yaml)
         elsif filename.match(/^shard\.lock$/i)
+          file_contents = File.open(path).read
           yaml = YAML.load file_contents
           parse_yaml_lockfile(yaml)
         else

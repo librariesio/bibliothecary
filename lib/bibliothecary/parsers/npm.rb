@@ -5,11 +5,13 @@ module Bibliothecary
     class NPM
       include Bibliothecary::Analyser
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/package\.json$/)
+          file_contents = File.open(path).read
           json = JSON.parse(file_contents)
           parse_manifest(json)
         elsif filename.match(/npm-shrinkwrap\.json$/)
+          file_contents = File.open(path).read
           json = JSON.parse(file_contents)
           parse_shrinkwrap(json)
         else

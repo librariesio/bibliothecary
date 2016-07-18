@@ -6,11 +6,9 @@ describe Bibliothecary::Parsers::Nuget do
   end
 
   it 'parses dependencies from Project.json' do
-    file = load_fixture('Project.json')
-
-    expect(Bibliothecary::Parsers::Nuget.analyse_file('Project.json', file, 'Project.json')).to eq({
+    expect(Bibliothecary::Parsers::Nuget.analyse_file('Project.json', fixture_path('Project.json'))).to eq({
       :platform=>"nuget",
-      :path=>"Project.json",
+      :path=>"spec/fixtures/Project.json",
       :dependencies=>[
         {:name=>"Microsoft.AspNet.Server.Kestrel",
          :requirement=>"1.0.0-beta7",
@@ -54,11 +52,9 @@ describe Bibliothecary::Parsers::Nuget do
   end
 
   it 'parses dependencies from Project.lock.json' do
-    file = load_fixture('Project.lock.json')
-
-    expect(Bibliothecary::Parsers::Nuget.analyse_file('Project.lock.json', file, 'Project.lock.json')).to eq({
+    expect(Bibliothecary::Parsers::Nuget.analyse_file('Project.lock.json', fixture_path('Project.lock.json'))).to eq({
       :platform=>"nuget",
-      :path=>"Project.lock.json",
+      :path=>"spec/fixtures/Project.lock.json",
       :dependencies=>[
         {:name=>"AutoMapper", :requirement=>"4.0.0-alpha1", :type=>"runtime"},
         {:name=>"EntityFramework.Core",
@@ -533,11 +529,9 @@ describe Bibliothecary::Parsers::Nuget do
   end
 
   it 'parses dependencies from packages.config' do
-    file = load_fixture('packages.config')
-
-    expect(Bibliothecary::Parsers::Nuget.analyse_file('packages.config', file, 'packages.config')).to eq({
+    expect(Bibliothecary::Parsers::Nuget.analyse_file('packages.config', fixture_path('packages.config'))).to eq({
       :platform=>"nuget",
-      :path=>"packages.config",
+      :path=>"spec/fixtures/packages.config",
       :dependencies=>[
         {:name=>"AutoMapper", :version=>"2.1.267", :type=>"runtime"},
         {:name=>"Microsoft.Web.Infrastructure",
@@ -552,11 +546,9 @@ describe Bibliothecary::Parsers::Nuget do
   end
 
   it 'parses dependencies from example.nuspec' do
-    file = load_fixture('example.nuspec')
-
-    expect(Bibliothecary::Parsers::Nuget.analyse_file('example.nuspec', file, 'example.nuspec')).to eq({
+    expect(Bibliothecary::Parsers::Nuget.analyse_file('example.nuspec', fixture_path('example.nuspec'))).to eq({
       :platform=>"nuget",
-      :path=>"example.nuspec",
+      :path=>"spec/fixtures/example.nuspec",
       :dependencies=>[
         {:name=>"FubuCore", :version=>"3.2.0.3001", :type=>"runtime"},
         {:name=>"HtmlTags", :version=>"[3.2.0.3001]", :type=>"runtime"},
@@ -566,13 +558,16 @@ describe Bibliothecary::Parsers::Nuget do
   end
 
   it 'parses dependencies from paket.lock' do
-    file = load_fixture('paket.lock')
-    expect(Bibliothecary::Parsers::Nuget.parse('paket.lock', file)).to eq([
-      {:name=>"Argu", :version=>"2.1", :type=>"runtime"},
-      {:name=>"Mono.Cecil", :version=>"0.9.6.1", :type=>"runtime"},
-      {:name=>"Chessie", :version=>"0.5.1", :type=>"runtime"},
-      {:name=>"FSharp.Core", :version=>"4.0.0.1", :type=>"runtime"},
-      {:name=>"Newtonsoft.Json", :version=>"9.0.1", :type=>"runtime"}
-    ])
+    expect(Bibliothecary::Parsers::Nuget.analyse_file('paket.lock', fixture_path('paket.lock'))).to eq({
+      :platform=>"nuget",
+      :path=>"spec/fixtures/paket.lock",
+      :dependencies=>[
+        {:name=>"Argu", :version=>"2.1", :type=>"runtime"},
+        {:name=>"Mono.Cecil", :version=>"0.9.6.1", :type=>"runtime"},
+        {:name=>"Chessie", :version=>"0.5.1", :type=>"runtime"},
+        {:name=>"FSharp.Core", :version=>"4.0.0.1", :type=>"runtime"},
+        {:name=>"Newtonsoft.Json", :version=>"9.0.1", :type=>"runtime"}
+      ]
+    })
   end
 end

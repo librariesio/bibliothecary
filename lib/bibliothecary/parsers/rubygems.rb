@@ -8,14 +8,17 @@ module Bibliothecary
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/^Gemfile$|^gems\.rb$/)
+          file_contents = File.open(path).read
           manifest = Gemnasium::Parser.send(:gemfile, file_contents)
           parse_manifest(manifest)
         elsif filename.match(/[A-Za-z0-9_-]+\.gemspec$/)
+          file_contents = File.open(path).read
           manifest = Gemnasium::Parser.send(:gemspec, file_contents)
           parse_manifest(manifest)
         elsif filename.match(/^Gemfile\.lock$|^gems\.locked$/)
+          file_contents = File.open(path).read
           parse_gemfile_lock(file_contents)
         else
           []

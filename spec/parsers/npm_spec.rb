@@ -6,11 +6,9 @@ describe Bibliothecary::Parsers::NPM do
   end
 
   it 'parses dependencies from package.json' do
-    file = load_fixture('package.json')
-
-    expect(Bibliothecary::Parsers::NPM.analyse_file('package.json', file, 'package.json')).to eq({
+    expect(Bibliothecary::Parsers::NPM.analyse_file('package.json', fixture_path('package.json'))).to eq({
       :platform=>"npm",
-      :path=>"package.json",
+      :path=>"spec/fixtures/package.json",
       :dependencies=>[
         {:name=>"babel", :requirement=>"^4.6.6", :type=>"runtime"},
         {:name=>"mocha", :requirement=>"^2.2.1", :type=>"development"}
@@ -19,11 +17,9 @@ describe Bibliothecary::Parsers::NPM do
   end
 
   it 'parses dependencies from npm-shrinkwrap.json' do
-    file = load_fixture('npm-shrinkwrap.json')
-
-    expect(Bibliothecary::Parsers::NPM.analyse_file('npm-shrinkwrap.json', file, 'npm-shrinkwrap.json')).to eq({
+    expect(Bibliothecary::Parsers::NPM.analyse_file('npm-shrinkwrap.json', fixture_path('npm-shrinkwrap.json'))).to eq({
       :platform=>"npm",
-      :path=>"npm-shrinkwrap.json",
+      :path=>"spec/fixtures/npm-shrinkwrap.json",
       :dependencies=>[
         {:name=>"babel", :requirement=>"4.7.16", :type=>"runtime"},
         {:name=>"body-parser", :requirement=>"1.13.3", :type=>"runtime"},

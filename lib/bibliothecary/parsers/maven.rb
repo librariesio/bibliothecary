@@ -5,14 +5,17 @@ module Bibliothecary
     class Maven
       include Bibliothecary::Analyser
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/ivy\.xml$/i)
+          file_contents = File.open(path).read
           xml = Ox.parse file_contents
           parse_ivy_manifest(xml)
         elsif filename.match(/pom\.xml$/i)
+          file_contents = File.open(path).read
           xml = Ox.parse file_contents
           parse_pom_manifest(xml)
         elsif filename.match(/build.gradle$/i)
+          file_contents = File.open(path).read
           parse_gradle(file_contents)
         else
           []

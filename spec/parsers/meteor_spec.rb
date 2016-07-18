@@ -6,11 +6,9 @@ describe Bibliothecary::Parsers::Meteor do
   end
 
   it 'parses dependencies from versions.json' do
-    file = load_fixture('versions.json')
-
-    expect(Bibliothecary::Parsers::Meteor.analyse_file('versions.json', file, 'versions.json')).to eq({
+    expect(Bibliothecary::Parsers::Meteor.analyse_file('versions.json', fixture_path('versions.json'))).to eq({
       :platform=>"meteor",
-      :path=>"versions.json",
+      :path=>"spec/fixtures/versions.json",
       :dependencies=>[
         {:name=>"accounts-base", :requirement=>"1.1.2", :type=>"runtime"},
         {:name=>"application-configuration", :requirement=>"1.0.3", :type=>"runtime"},

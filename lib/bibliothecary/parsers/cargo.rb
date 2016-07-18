@@ -5,11 +5,13 @@ module Bibliothecary
     class Cargo
       include Bibliothecary::Analyser
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/Cargo\.toml$/)
+          file_contents = File.open(path).read
           toml = TOML.parse(file_contents)
           parse_manifest(toml)
         elsif filename.match(/Cargo\.lock$/)
+          file_contents = File.open(path).read
           toml = TOML.parse(file_contents)
           parse_lockfile(toml)
         else

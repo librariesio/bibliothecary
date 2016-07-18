@@ -6,11 +6,9 @@ describe Bibliothecary::Parsers::Swift do
   end
 
   it 'parses dependencies from Package.swift' do
-    file = load_fixture('Package.swift')
-
-    expect(Bibliothecary::Parsers::Swift.analyse_file('Package.swift', file, 'Package.swift')).to eq({
+    expect(Bibliothecary::Parsers::Swift.analyse_file('Package.swift', fixture_path('Package.swift'))).to eq({
       :platform=>"swift",
-      :path=>"Package.swift",
+      :path=>"spec/fixtures/Package.swift",
       :dependencies=>[
         {:name=>"github.com/qutheory/vapor", :version=>"0.12.0 - 0.12.9223372036854775807", :type=>"runtime"},
         {:name=>"github.com/czechboy0/Tasks", :version=>"0.2.0 - 0.2.9223372036854775807", :type=>"runtime"},

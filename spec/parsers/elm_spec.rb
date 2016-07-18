@@ -6,11 +6,9 @@ describe Bibliothecary::Parsers::Elm do
   end
 
   it 'parses dependencies from elm-package.json' do
-    file = load_fixture('elm-package.json')
-
-    expect(Bibliothecary::Parsers::Elm.analyse_file('elm-package.json', file, 'elm-package.json')).to eq({
+    expect(Bibliothecary::Parsers::Elm.analyse_file('elm-package.json', fixture_path('elm-package.json'))).to eq({
       :platform=>"elm",
-      :path=>"elm-package.json",
+      :path=>"spec/fixtures/elm-package.json",
       :dependencies=>[
         {:name=>"evancz/elm-markdown",
          :requirement=>"1.1.0 <= v < 2.0.0",
@@ -29,11 +27,9 @@ describe Bibliothecary::Parsers::Elm do
   end
 
   it 'parses dependencies from elm_dependencies.json' do
-    file = load_fixture('elm_dependencies.json')
-
-    expect(Bibliothecary::Parsers::Elm.analyse_file('elm_dependencies.json', file, 'elm_dependencies.json')).to eq({
+    expect(Bibliothecary::Parsers::Elm.analyse_file('elm_dependencies.json', fixture_path('elm_dependencies.json'))).to eq({
       :platform=>"elm",
-      :path=>"elm_dependencies.json",
+      :path=>"spec/fixtures/elm_dependencies.json",
       :dependencies=>[
         {:name=>"johnpmayer/elm-webgl", :requirement=>"0.1.1", :type=>"runtime"},
         {:name=>"johnpmayer/elm-linear-algebra",
@@ -44,11 +40,9 @@ describe Bibliothecary::Parsers::Elm do
   end
 
   it 'parses dependencies from elm-stuff/exact-dependencies.json' do
-    file = load_fixture('exact-dependencies.json')
-
-    expect(Bibliothecary::Parsers::Elm.analyse_file('elm-stuff/exact-dependencies.json', file, 'elm-stuff/exact-dependencies.json')).to eq({
+    expect(Bibliothecary::Parsers::Elm.analyse_file('elm-stuff/exact-dependencies.json', fixture_path('exact-dependencies.json'))).to eq({
       :platform=>"elm",
-      :path=>"elm-stuff/exact-dependencies.json",
+      :path=>"spec/fixtures/exact-dependencies.json",
       :dependencies=>[
         {:name=>"jvoigtlaender/elm-drag-and-drop",
          :requirement=>"1.0.1",

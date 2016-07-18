@@ -10,15 +10,14 @@ module Bibliothecary
 
       def analyse(folder_path, file_list)
         file_list.map do |path|
-          file_contents = File.open(path).read
           filename = path.gsub(folder_path, '').gsub(/^\//, '')
-          analyse_file(filename, file_contents, path)
+          analyse_file(filename, path)
         end.compact
       end
 
-      def analyse_file(filename, file_contents, path)
+      def analyse_file(filename, path)
         begin
-          dependencies = parse(filename, file_contents)
+          dependencies = parse(filename, path)
           if dependencies.any?
             {
               platform: platform_name,

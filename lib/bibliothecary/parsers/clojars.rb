@@ -6,8 +6,9 @@ module Bibliothecary
     class Clojars
       include Bibliothecary::Analyser
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/^project\.clj$/)
+          file_contents = File.open(path).read
           parse_manifest(file_contents)
         else
           []

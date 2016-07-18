@@ -5,10 +5,12 @@ module Bibliothecary
     class Hex
       include Bibliothecary::Analyser
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/^mix\.exs$/)
+          file_contents = File.open(path).read
           parse_mix(file_contents)
         elsif filename.match(/^mix\.lock$/)
+          file_contents = File.open(path).read
           parse_mix_lock(file_contents)
         else
           []

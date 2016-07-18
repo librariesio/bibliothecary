@@ -6,11 +6,9 @@ describe Bibliothecary::Parsers::Packagist do
   end
 
   it 'parses dependencies from composer.json' do
-    file = load_fixture('composer.json')
-
-    expect(Bibliothecary::Parsers::Packagist.analyse_file('composer.json', file, 'composer.json')).to eq({
+    expect(Bibliothecary::Parsers::Packagist.analyse_file('composer.json', fixture_path('composer.json'))).to eq({
       :platform=>"packagist",
-      :path=>"composer.json",
+      :path=>"spec/fixtures/composer.json",
       :dependencies=>[
         {:name=>"laravel/framework", :requirement=>"5.0.*", :type=>"runtime"},
         {:name=>"phpunit/phpunit", :requirement=>"~4.0", :type=>"development"},
@@ -20,11 +18,9 @@ describe Bibliothecary::Parsers::Packagist do
   end
 
   it 'parses dependencies from composer.lock' do
-    file = load_fixture('composer.lock')
-
-    expect(Bibliothecary::Parsers::Packagist.analyse_file('composer.lock', file, 'composer.lock')).to eq({
+    expect(Bibliothecary::Parsers::Packagist.analyse_file('composer.lock', fixture_path('composer.lock'))).to eq({
       :platform=>"packagist",
-      :path=>"composer.lock",
+      :path=>"spec/fixtures/composer.lock",
       :dependencies=>[
         {:name=>"doctrine/annotations", :requirement=>"v1.2.1", :type=>"runtime"},
         {:name=>"doctrine/cache", :requirement=>"v1.3.1", :type=>"runtime"},

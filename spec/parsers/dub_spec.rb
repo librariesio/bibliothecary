@@ -6,11 +6,9 @@ describe Bibliothecary::Parsers::Dub do
   end
 
   it 'parses dependencies from dub.json' do
-    file = load_fixture('dub.json')
-
-    expect(Bibliothecary::Parsers::Dub.analyse_file('dub.json', file, 'dub.json')).to eq({
+    expect(Bibliothecary::Parsers::Dub.analyse_file('dub.json', fixture_path('dub.json'))).to eq({
       :platform=>"dub",
-      :path=>"dub.json",
+      :path=>"spec/fixtures/dub.json",
       :dependencies=>[
         {:name=>"vibe-d", :requirement=>"~>0.7.22", :type=>"runtime"},
         {:name=>"libdparse",
@@ -21,11 +19,9 @@ describe Bibliothecary::Parsers::Dub do
   end
 
   it 'parses dependencies from dub.sdl' do
-    file = load_fixture('dub.sdl')
-
-    expect(Bibliothecary::Parsers::Dub.analyse_file('dub.sdl', file, 'dub.sdl')).to eq({
+    expect(Bibliothecary::Parsers::Dub.analyse_file('dub.sdl', fixture_path('dub.sdl'))).to eq({
       :platform=>"dub",
-      :path=>"dub.sdl",
+      :path=>"spec/fixtures/dub.sdl",
       :dependencies=>[
         {:name=>"vibe-d", :version=>"~>0.7.23", :type=>:runtime}
       ]

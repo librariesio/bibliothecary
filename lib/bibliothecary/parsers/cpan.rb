@@ -6,11 +6,13 @@ module Bibliothecary
     class CPAN
       include Bibliothecary::Analyser
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/^META\.json$/i)
+          file_contents = File.open(path).read
           json = JSON.parse file_contents
           parse_json_manifest(json)
         elsif filename.match(/^META\.yml$/i)
+          file_contents = File.open(path).read
           yaml = YAML.load file_contents
           parse_yaml_manifest(yaml)
         else

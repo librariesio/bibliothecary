@@ -6,20 +6,25 @@ module Bibliothecary
     class Nuget
       include Bibliothecary::Analyser
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/Project\.json$/)
+          file_contents = File.open(path).read
           json = JSON.parse file_contents
           parse_project_json(json)
         elsif filename.match(/Project\.lock\.json$/)
+          file_contents = File.open(path).read
           json = JSON.parse file_contents
           parse_project_lock_json(json)
         elsif filename.match(/packages\.config$/)
+          file_contents = File.open(path).read
           xml = Ox.parse file_contents
           parse_packages_config(xml)
         elsif filename.match(/^[A-Za-z0-9_-]+\.nuspec$/)
+          file_contents = File.open(path).read
           xml = Ox.parse file_contents
           parse_nuspec(xml)
         elsif filename.match(/paket\.lock$/)
+          file_contents = File.open(path).read
           parse_paket_lock(file_contents.split("\n"))
         else
           []

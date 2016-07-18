@@ -3,8 +3,9 @@ module Bibliothecary
     class Julia
       include Bibliothecary::Analyser
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/^REQUIRE$/i)
+          file_contents = File.open(path).read
           parse_require(file_contents)
         else
           []

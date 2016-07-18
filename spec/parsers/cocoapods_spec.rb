@@ -6,11 +6,9 @@ describe Bibliothecary::Parsers::CocoaPods do
   end
 
   it 'parses dependencies from Podfile' do
-    file = load_fixture('Podfile')
-
-    expect(Bibliothecary::Parsers::CocoaPods.analyse_file('Podfile', file, 'Podfile')).to eq({
+    expect(Bibliothecary::Parsers::CocoaPods.analyse_file('Podfile', fixture_path('Podfile'))).to eq({
       :platform=>"cocoapods",
-      :path=>"Podfile",
+      :path=>"spec/fixtures/Podfile",
       :dependencies=>[
         {:name=>"Artsy-UIButtons", :requirement=>">= 0", :type=>:runtime},
         {:name=>"ORStackView", :requirement=>">= 0", :type=>:runtime},
@@ -38,11 +36,9 @@ describe Bibliothecary::Parsers::CocoaPods do
   end
 
   it 'parses dependencies from Podfile.lock' do
-    file = load_fixture('Podfile.lock')
-
-    expect(Bibliothecary::Parsers::CocoaPods.analyse_file('Podfile.lock', file, 'Podfile.lock')).to eq({
+    expect(Bibliothecary::Parsers::CocoaPods.analyse_file('Podfile.lock', fixture_path('Podfile.lock'))).to eq({
       :platform=>"cocoapods",
-      :path=>"Podfile.lock",
+      :path=>"spec/fixtures/Podfile.lock",
       :dependencies=>[
         {:name=>"Alamofire", :requirement=>"2.0.1", :type=>"runtime"},
         {:name=>"ARAnalytics", :requirement=>"3.8.0", :type=>"runtime"},
@@ -99,11 +95,9 @@ describe Bibliothecary::Parsers::CocoaPods do
   end
 
   it 'parses dependencies from example.podspec' do
-    file = load_fixture('example.podspec')
-
-    expect(Bibliothecary::Parsers::CocoaPods.analyse_file('example.podspec', file, 'example.podspec')).to eq({
+    expect(Bibliothecary::Parsers::CocoaPods.analyse_file('example.podspec', fixture_path('example.podspec'))).to eq({
       :platform=>"cocoapods",
-      :path=>"example.podspec",
+      :path=>"spec/fixtures/example.podspec",
       :dependencies=>[
         {:name=>"CocoaLumberjack", :requirement=>">= 0", :type=>:runtime}
       ]
@@ -111,11 +105,9 @@ describe Bibliothecary::Parsers::CocoaPods do
   end
 
   it 'parses dependencies from example.podspec.json' do
-    file = load_fixture('example.podspec.json')
-
-    expect(Bibliothecary::Parsers::CocoaPods.analyse_file('example.podspec.json', file, 'example.podspec.json')).to eq({
+    expect(Bibliothecary::Parsers::CocoaPods.analyse_file('example.podspec.json', fixture_path('example.podspec.json'))).to eq({
       :platform=>"cocoapods",
-      :path=>"example.podspec.json",
+      :path=>"spec/fixtures/example.podspec.json",
       :dependencies=>[
         {:name=>"OpenSSL", :requirement=>["~> 1.0"], :type=>"runtime"}
       ]

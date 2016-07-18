@@ -3,12 +3,15 @@ module Bibliothecary
     class Carthage
       include Bibliothecary::Analyser
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/^Cartfile$/)
+          file_contents = File.open(path).read
           parse_cartfile(file_contents)
         elsif filename.match(/^Cartfile\.private$/)
+          file_contents = File.open(path).read
           parse_cartfile_private(file_contents)
         elsif filename.match(/^Cartfile\.resolved$/)
+          file_contents = File.open(path).read
           parse_cartfile_resolved(file_contents)
         else
           []

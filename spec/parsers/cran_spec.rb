@@ -6,11 +6,9 @@ describe Bibliothecary::Parsers::CRAN do
   end
 
   it 'parses dependencies from DESCRIPTION' do
-    file = load_fixture('DESCRIPTION')
-
-    expect(Bibliothecary::Parsers::CRAN.analyse_file('DESCRIPTION', file, 'DESCRIPTION')).to eq({
+    expect(Bibliothecary::Parsers::CRAN.analyse_file('DESCRIPTION', fixture_path('DESCRIPTION'))).to eq({
       :platform=>"cran",
-      :path=>"DESCRIPTION",
+      :path=>"spec/fixtures/DESCRIPTION",
       :dependencies=>[
         {:name=>"R", :version=>">= 3.1", :type=>"depends"},
         {:name=>"digest", :version=>"*", :type=>"imports"},

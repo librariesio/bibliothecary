@@ -9,17 +9,21 @@ module Bibliothecary
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/^Podfile$/)
+          file_contents = File.open(path).read
           manifest = Gemnasium::Parser.send(:podfile, file_contents)
           parse_manifest(manifest)
         elsif filename.match(/^[A-Za-z0-9_-]+\.podspec$/)
+          file_contents = File.open(path).read
           manifest = Gemnasium::Parser.send(:podspec, file_contents)
           parse_manifest(manifest)
         elsif filename.match(/^Podfile\.lock$/)
+          file_contents = File.open(path).read
           manifest = YAML.load file_contents
           parse_podfile_lock(manifest)
         elsif filename.match(/^[A-Za-z0-9_-]+\.podspec.json$/)
+          file_contents = File.open(path).read
           json = JSON.parse(file_contents)
           parse_json_manifest(json)
         else

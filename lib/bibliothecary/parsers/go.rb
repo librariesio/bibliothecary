@@ -6,17 +6,21 @@ module Bibliothecary
     class Go
       include Bibliothecary::Analyser
 
-      def self.parse(filename, file_contents)
+      def self.parse(filename, path)
         if filename.match(/^glide\.yaml$/)
+          file_contents = File.open(path).read
           yaml = YAML.load file_contents
           parse_glide_yaml(yaml)
         elsif filename.match(/^glide\.lock$/)
+          file_contents = File.open(path).read
           yaml = YAML.load file_contents
           parse_glide_lockfile(yaml)
         elsif filename.match(/^Godeps\/Godeps\.json$/)
+          file_contents = File.open(path).read
           json = JSON.parse file_contents
           parse_godep_json(json)
         elsif filename.match(/^vendor\/manifest$/)
+          file_contents = File.open(path).read
           json = JSON.parse file_contents
           parse_gb_manifest(json)
         else
