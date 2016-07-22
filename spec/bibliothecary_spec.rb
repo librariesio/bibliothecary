@@ -28,7 +28,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Pypi,
           Bibliothecary::Parsers::Rubygems,
           Bibliothecary::Parsers::Shard,
-          Bibliothecary::Parsers::Swift
+          Bibliothecary::Parsers::SwiftPM
         ])
   end
 end

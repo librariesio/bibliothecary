@@ -1,6 +1,6 @@
 module Bibliothecary
   module Parsers
-    class Swift
+    class SwiftPM
       include Bibliothecary::Analyser
 
       def self.parse(filename, path)
