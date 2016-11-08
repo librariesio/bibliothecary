@@ -40,4 +40,32 @@ describe Bibliothecary::Parsers::CRAN do
       ]
     })
   end
+
+  it 'parses dependencies from minimal DESCRIPTION file' do
+    expect(Bibliothecary::Parsers::CRAN.analyse_file('DESCRIPTION', fixture_path('DESCRIPTION2'))).to eq({
+      :platform=>"cran",
+      :path=>"spec/fixtures/DESCRIPTION2",
+      :dependencies=>[
+        {:name=>"R", :version=>">= 2.14.1", :type=>"depends"},
+        {:name=>"methods", :version=>"*", :type=>"imports"},
+        {:name=>"chron", :version=>"*", :type=>"imports"},
+        {:name=>"ggplot2", :version=>">= 0.9.0", :type=>"suggests"},
+        {:name=>"plyr", :version=>"*", :type=>"suggests"},
+        {:name=>"reshape", :version=>"*", :type=>"suggests"},
+        {:name=>"reshape2", :version=>"*", :type=>"suggests"},
+        {:name=>"testthat", :version=>">=0.4", :type=>"suggests"},
+        {:name=>"hexbin", :version=>"*", :type=>"suggests"},
+        {:name=>"fastmatch", :version=>"*", :type=>"suggests"},
+        {:name=>"nlme", :version=>"*", :type=>"suggests"},
+        {:name=>"xts", :version=>"*", :type=>"suggests"},
+        {:name=>"bit64", :version=>"*", :type=>"suggests"},
+        {:name=>"gdata", :version=>"*", :type=>"suggests"},
+        {:name=>"GenomicRanges", :version=>"*", :type=>"suggests"},
+        {:name=>"caret", :version=>"*", :type=>"suggests"},
+        {:name=>"knitr", :version=>"*", :type=>"suggests"},
+        {:name=>"curl", :version=>"*", :type=>"suggests"},
+        {:name=>"zoo", :version=>"*", :type=>"suggests"},
+        {:name=>"plm", :version=>"*", :type=>"suggests"}]
+    })
+  end
 end
