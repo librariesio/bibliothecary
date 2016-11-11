@@ -6,6 +6,6 @@ authors = ["Jorge Aparicio <japaricious@gmail.com>",
            "Steve Klabnik <steve@steveklabnik.com>"]
 
 [dependencies]
-
+local_crate = {path = "../local_crate"}
 rustc-serialize = "*"
-regex = "*"
+regex = {version = "*"}
