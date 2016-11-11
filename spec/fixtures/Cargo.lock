@@ -2,10 +2,12 @@
 name = "pippin"
 version = "0.0.0"
 dependencies = [
+ "browserhtml 0.1.17 (git+https://github.com/browserhtml/browserhtml?branch=crate)",
  "byteorder 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "chrono 0.2.17 (registry+https://github.com/rust-lang/crates.io-index)",
  "docopt 0.6.78 (registry+https://github.com/rust-lang/crates.io-index)",
  "hashindexed 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "local_crate 0.0.1",
  "rand 0.3.12 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 0.1.44 (registry+https://github.com/rust-lang/crates.io-index)",
  "rust-crypto 0.2.34 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -30,6 +32,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "memchr 0.1.7 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "browserhtml"
+version = "0.1.17"
+source = "git+https://github.com/browserhtml/browserhtml?branch=crate#aafbb0996b02d1fadd4713c96e3d22b542f175a1"
 
 [[package]]
 name = "byteorder"
@@ -87,3 +94,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "libc"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "local_crate"
+version = "0.1"
