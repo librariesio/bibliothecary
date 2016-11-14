@@ -42,7 +42,7 @@ module Bibliothecary
       end
 
       def self.parse_project_lock_json(manifest)
-        manifest.fetch('libraries',[]).map do |name, requirement|
+        manifest.fetch('libraries',[]).map do |name, _requirement|
           dep = name.split('/')
           {
             name: dep[0],
