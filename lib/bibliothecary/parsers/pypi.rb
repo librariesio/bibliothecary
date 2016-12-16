@@ -40,7 +40,7 @@ module Bibliothecary
       def self.parse_requirements_txt(manifest)
         deps = []
         manifest.split("\n").each do |line|
-          match = line.match(REQUIREMENTS_REGEXP)
+          match = line.delete(' ').match(REQUIREMENTS_REGEXP)
           next unless match
           deps << {
             name: match[1],

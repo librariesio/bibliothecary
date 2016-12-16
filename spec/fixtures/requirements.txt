@@ -1,4 +1,4 @@
-Flask==0.8 # awful comment
+Flask == 0.8 # awful comment
 #Jinja2==2.6
 zope.component==4.2.2
 scikit-learn==0.16.1
