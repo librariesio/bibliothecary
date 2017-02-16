@@ -10,8 +10,7 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/^DESCRIPTION$/i)
           file_contents = File.open(path).read
-          control = DebControl::ControlFileBase.parse(file_contents)
-          parse_description(control)
+          parse_description(file_contents)
         else
           []
         end
@@ -21,7 +20,8 @@ module Bibliothecary
         filename.match(/^DESCRIPTION$/i)
       end
 
-      def self.parse_description(manifest)
+      def self.parse_description(file_contents)
+        manifest = DebControl::ControlFileBase.parse(file_contents)
         parse_section(manifest, 'Depends') +
         parse_section(manifest, 'Imports') +
         parse_section(manifest, 'Suggests') +

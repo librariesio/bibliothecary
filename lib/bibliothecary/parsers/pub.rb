@@ -8,12 +8,10 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/^pubspec\.yaml$/i)
           file_contents = File.open(path).read
-          yaml = YAML.load file_contents
-          parse_yaml_manifest(yaml)
+          parse_yaml_manifest(file_contents)
         elsif filename.match(/^pubspec\.lock$/i)
           file_contents = File.open(path).read
-          yaml = YAML.load file_contents
-          parse_yaml_lockfile(yaml)
+          parse_yaml_lockfile(file_contents)
         else
           []
         end
@@ -23,12 +21,14 @@ module Bibliothecary
         filename.match(/^pubspec\.yaml$/i) || filename.match(/^pubspec\.lock$/i)
       end
 
-      def self.parse_yaml_manifest(manifest)
+      def self.parse_yaml_manifest(file_contents)
+        manifest = YAML.load file_contents
         map_dependencies(manifest, 'dependencies', 'runtime') +
         map_dependencies(manifest, 'dev_dependencies', 'development')
       end
 
-      def self.parse_yaml_lockfile(manifest)
+      def self.parse_yaml_lockfile(file_contents)
+        manifest = YAML.load file_contents
         manifest.fetch('packages', []).map do |name, dep|
           {
             name: name,

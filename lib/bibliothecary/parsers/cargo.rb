@@ -8,12 +8,10 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/Cargo\.toml$/)
           file_contents = File.open(path).read
-          toml = TOML.parse(file_contents)
-          parse_manifest(toml)
+          parse_manifest(file_contents)
         elsif filename.match(/Cargo\.lock$/)
           file_contents = File.open(path).read
-          toml = TOML.parse(file_contents)
-          parse_lockfile(toml)
+          parse_lockfile(file_contents)
         else
           []
         end
@@ -23,7 +21,8 @@ module Bibliothecary
         filename.match(/Cargo\.toml$/) || filename.match(/Cargo\.lock$/)
       end
 
-      def self.parse_manifest(manifest)
+      def self.parse_manifest(file_contents)
+        manifest = TOML.parse(file_contents)
         manifest.fetch('dependencies', []).map do |name, requirement|
           if requirement.respond_to?(:fetch)
             requirement = requirement['version'] or next
@@ -37,7 +36,8 @@ module Bibliothecary
           .compact
       end
 
-      def self.parse_lockfile(manifest)
+      def self.parse_lockfile(file_contents)
+        manifest = TOML.parse(file_contents)
         manifest.fetch('package',[]).map do |dependency|
           next if not dependency['source'] or not dependency['source'].start_with?('registry+')
           {

@@ -8,8 +8,7 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/^bower\.json$/)
           file_contents = File.open(path).read
-          json = JSON.parse(file_contents)
-          parse_manifest(json)
+          parse_manifest(file_contents)
         else
           []
         end
@@ -20,8 +19,9 @@ module Bibliothecary
       end
 
       def self.parse_manifest(manifest)
-        map_dependencies(manifest, 'dependencies', 'runtime') +
-        map_dependencies(manifest, 'devDependencies', 'development')
+        json = JSON.parse(manifest)
+        map_dependencies(json, 'dependencies', 'runtime') +
+        map_dependencies(json, 'devDependencies', 'development')
       end
 
       def self.map_dependencies(hash, key, type)

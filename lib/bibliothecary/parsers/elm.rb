@@ -8,12 +8,10 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/^elm-package\.json$|^elm_dependencies\.json$/)
           file_contents = File.open(path).read
-          json = JSON.parse file_contents
-          parse_json_manifest(json)
+          parse_json_manifest(file_contents)
         elsif filename.match(/^elm-stuff\/exact-dependencies\.json$/)
           file_contents = File.open(path).read
-          json = JSON.parse file_contents
-          parse_json_lock(json)
+          parse_json_lock(file_contents)
         else
           []
         end
@@ -24,11 +22,13 @@ module Bibliothecary
           filename.match(/^elm-stuff\/exact-dependencies\.json$/)
       end
 
-      def self.parse_json_manifest(manifest)
+      def self.parse_json_manifest(file_contents)
+        manifest = JSON.parse file_contents
         map_dependencies(manifest, 'dependencies', 'runtime')
       end
 
-      def self.parse_json_lock(manifest)
+      def self.parse_json_lock(file_contents)
+        manifest = JSON.parse file_contents
         manifest.map do |name, requirement|
           {
             name: name,

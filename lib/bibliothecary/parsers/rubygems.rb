@@ -11,12 +11,10 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/^Gemfile$|^gems\.rb$/)
           file_contents = File.open(path).read
-          manifest = Gemnasium::Parser.send(:gemfile, file_contents)
-          parse_manifest(manifest)
+          parse_gemfile(file_contents)
         elsif filename.match(/[A-Za-z0-9_-]+\.gemspec$/)
           file_contents = File.open(path).read
-          manifest = Gemnasium::Parser.send(:gemspec, file_contents)
-          parse_manifest(manifest)
+          parse_gemspec(file_contents)
         elsif filename.match(/^Gemfile\.lock$|^gems\.locked$/)
           file_contents = File.open(path).read
           parse_gemfile_lock(file_contents)
@@ -43,6 +41,16 @@ module Bibliothecary
             type: 'runtime'
           }
         end.compact
+      end
+
+      def self.parse_gemfile(file_contents)
+        manifest = Gemnasium::Parser.send(:gemfile, file_contents)
+        parse_manifest(manifest)
+      end
+
+      def self.parse_gemspec(file_contents)
+        manifest = Gemnasium::Parser.send(:gemspec, file_contents)
+        parse_manifest(manifest)
       end
 
       def self.parse_manifest(manifest)

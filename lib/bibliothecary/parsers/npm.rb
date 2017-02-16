@@ -8,12 +8,10 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/^package\.json$/)
           file_contents = File.open(path).read
-          json = JSON.parse(file_contents)
-          parse_manifest(json)
+          parse_manifest(file_contents)
         elsif filename.match(/^npm-shrinkwrap\.json$/)
           file_contents = File.open(path).read
-          json = JSON.parse(file_contents)
-          parse_shrinkwrap(json)
+          parse_shrinkwrap(file_contents)
         else
           []
         end
@@ -23,7 +21,8 @@ module Bibliothecary
         filename.match(/^package\.json$/) || filename.match(/^npm-shrinkwrap\.json$/)
       end
 
-      def self.parse_shrinkwrap(manifest)
+      def self.parse_shrinkwrap(file_contents)
+        manifest = JSON.parse(file_contents)
         manifest.fetch('dependencies',[]).map do |name, requirement|
           {
             name: name,
@@ -33,7 +32,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_manifest(manifest)
+      def self.parse_manifest(file_contents)
+        manifest = JSON.parse(file_contents)
         map_dependencies(manifest, 'dependencies', 'runtime') +
         map_dependencies(manifest, 'devDependencies', 'development')
       end

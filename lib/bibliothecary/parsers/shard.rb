@@ -8,12 +8,10 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/^shard\.yml$/i)
           file_contents = File.open(path).read
-          yaml = YAML.load file_contents
-          parse_yaml_manifest(yaml)
+          parse_yaml_manifest(file_contents)
         elsif filename.match(/^shard\.lock$/i)
           file_contents = File.open(path).read
-          yaml = YAML.load file_contents
-          parse_yaml_lockfile(yaml)
+          parse_yaml_lockfile(file_contents)
         else
           []
         end
@@ -23,11 +21,13 @@ module Bibliothecary
         filename.match(/^shard\.yml$/i) || filename.match(/^shard\.lock$/i)
       end
 
-      def self.parse_yaml_lockfile(manifest)
+      def self.parse_yaml_lockfile(file_contents)
+        manifest = YAML.load file_contents
         map_dependencies(manifest, 'shards', 'runtime')
       end
 
-      def self.parse_yaml_manifest(manifest)
+      def self.parse_yaml_manifest(file_contents)
+        manifest = YAML.load file_contents
         map_dependencies(manifest, 'dependencies', 'runtime') +
         map_dependencies(manifest, 'development_dependencies', 'runtime')
       end

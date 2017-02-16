@@ -8,8 +8,7 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/^versions\.json$/)
           file_contents = File.open(path).read
-          json = JSON.parse(file_contents)
-          parse_manifest(json)
+          parse_manifest(file_contents)
         else
           []
         end
@@ -19,7 +18,8 @@ module Bibliothecary
         filename.match(/^versions\.json$/)
       end
 
-      def self.parse_manifest(manifest)
+      def self.parse_manifest(file_contents)
+        manifest = JSON.parse(file_contents)
         map_dependencies(manifest, 'dependencies', 'runtime')
       end
 

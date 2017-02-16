@@ -9,8 +9,7 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/^dub\.json$/)
           file_contents = File.open(path).read
-          json = JSON.parse(file_contents)
-          parse_manifest(json)
+          parse_manifest(file_contents)
         elsif filename.match(/^dub\.sdl$/)
           file_contents = File.open(path).read
           parse_sdl_manifest(file_contents)
@@ -23,7 +22,8 @@ module Bibliothecary
         filename.match(/^dub\.json$/) || filename.match(/^dub\.sdl$/)
       end
 
-      def self.parse_manifest(manifest)
+      def self.parse_manifest(file_contents)
+        manifest = JSON.parse(file_contents)
         map_dependencies(manifest, 'dependencies', 'runtime')
       end
 

@@ -8,12 +8,10 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/ivy\.xml$/i)
           file_contents = File.open(path).read
-          xml = Ox.parse file_contents
-          parse_ivy_manifest(xml)
+          parse_ivy_manifest(file_contents)
         elsif filename.match(/pom\.xml$/i)
           file_contents = File.open(path).read
-          xml = Ox.parse file_contents
-          parse_pom_manifest(xml)
+          parse_pom_manifest(file_contents)
         elsif filename.match(/build.gradle$/i)
           file_contents = File.open(path).read
           parse_gradle(file_contents)
@@ -28,7 +26,8 @@ module Bibliothecary
         filename.match(/build.gradle$/i)
       end
 
-      def self.parse_ivy_manifest(manifest)
+      def self.parse_ivy_manifest(file_contents)
+        manifest = Ox.parse file_contents
         manifest.dependencies.locate('dependency').map do |dependency|
           attrs = dependency.attributes
           {
@@ -39,7 +38,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_pom_manifest(manifest)
+      def self.parse_pom_manifest(file_contents)
+        manifest = Ox.parse file_contents
         if manifest.respond_to?('project')
           xml = manifest.project
         else

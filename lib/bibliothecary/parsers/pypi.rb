@@ -8,8 +8,7 @@ module Bibliothecary
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
 
       def self.parse(filename, path)
-        is_valid_requirements_file = is_requirements_file(filename)
-        if is_valid_requirements_file
+        if is_requirements_file(filename)
           file_contents = File.open(path).read
           parse_requirements_txt(file_contents)
         elsif filename.match(/setup\.py$/)

@@ -9,23 +9,19 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/Project\.json$/)
           file_contents = File.open(path).read
-          json = JSON.parse file_contents
-          parse_project_json(json)
+          parse_project_json(file_contents)
         elsif filename.match(/Project\.lock\.json$/)
           file_contents = File.open(path).read
-          json = JSON.parse file_contents
-          parse_project_lock_json(json)
+          parse_project_lock_json(file_contents)
         elsif filename.match(/packages\.config$/)
           file_contents = File.open(path).read
-          xml = Ox.parse file_contents
-          parse_packages_config(xml)
+          parse_packages_config(file_contents)
         elsif filename.match(/^[A-Za-z0-9_-]+\.nuspec$/)
           file_contents = File.open(path).read
-          xml = Ox.parse file_contents
-          parse_nuspec(xml)
+          parse_nuspec(file_contents)
         elsif filename.match(/paket\.lock$/)
           file_contents = File.open(path).read
-          parse_paket_lock(file_contents.split("\n"))
+          parse_paket_lock(file_contents)
         else
           []
         end
@@ -39,7 +35,8 @@ module Bibliothecary
         filename.match(/paket\.lock$/)
       end
 
-      def self.parse_project_json(manifest)
+      def self.parse_project_json(file_contents)
+        manifest = JSON.parse file_contents
         manifest.fetch('dependencies',[]).map do |name, requirement|
           {
             name: name,
@@ -49,7 +46,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_project_lock_json(manifest)
+      def self.parse_project_lock_json(file_contents)
+        manifest = JSON.parse file_contents
         manifest.fetch('libraries',[]).map do |name, _requirement|
           dep = name.split('/')
           {
@@ -60,7 +58,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_packages_config(manifest)
+      def self.parse_packages_config(file_contents)
+        manifest = Ox.parse file_contents
         manifest.packages.locate('package').map do |dependency|
           {
             name: dependency.id,
@@ -70,7 +69,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_nuspec(manifest)
+      def self.parse_nuspec(file_contents)
+        manifest = Ox.parse file_contents
         manifest.package.metadata.dependencies.locate('dependency').map do |dependency|
           {
             name: dependency.id,
@@ -80,7 +80,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_paket_lock(lines)
+      def self.parse_paket_lock(file_contents)
+        lines = file_contents.split("\n")
         package_version_re = /\s+(?<name>\S+)\s\((?<version>\d+\.\d+[\.\d+[\.\d+]*]*)\)/
         packages = lines.select { |line| package_version_re.match(line) }.map { |line| package_version_re.match(line) }.map do |match|
           {

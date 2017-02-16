@@ -9,20 +9,16 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/^glide\.yaml$/)
           file_contents = File.open(path).read
-          yaml = YAML.load file_contents
-          parse_glide_yaml(yaml)
+          parse_glide_yaml(file_contents)
         elsif filename.match(/^glide\.lock$/)
           file_contents = File.open(path).read
-          yaml = YAML.load file_contents
-          parse_glide_lockfile(yaml)
+          parse_glide_lockfile(file_contents)
         elsif filename.match(/^Godeps\/Godeps\.json$/)
           file_contents = File.open(path).read
-          json = JSON.parse file_contents
-          parse_godep_json(json)
+          parse_godep_json(file_contents)
         elsif filename.match(/^vendor\/manifest$/)
           file_contents = File.open(path).read
-          json = JSON.parse file_contents
-          parse_gb_manifest(json)
+          parse_gb_manifest(file_contents)
         else
           []
         end
@@ -35,7 +31,8 @@ module Bibliothecary
         filename.match(/^vendor\/manifest$/)
       end
 
-      def self.parse_godep_json(manifest)
+      def self.parse_godep_json(file_contents)
+        manifest = JSON.parse file_contents
         manifest.fetch('Deps',[]).map do |dependency|
           {
             name: dependency['ImportPath'],
@@ -45,7 +42,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_glide_yaml(manifest)
+      def self.parse_glide_yaml(file_contents)
+        manifest = YAML.load file_contents
         manifest.fetch('import',[]).map do |dependency|
           {
             name: dependency['package'],
@@ -61,7 +59,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_glide_lockfile(manifest)
+      def self.parse_glide_lockfile(file_contents)
+        manifest = YAML.load file_contents
         manifest.fetch('imports',[]).map do |dependency|
           {
             name: dependency['name'],
@@ -71,7 +70,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_gb_manifest(manifest)
+      def self.parse_gb_manifest(file_contents)
+        manifest = JSON.parse file_contents
         manifest.fetch('dependencies',[]).map do |dependency|
           {
             name: dependency['importpath'],

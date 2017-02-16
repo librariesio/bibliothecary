@@ -8,12 +8,10 @@ module Bibliothecary
       def self.parse(filename, path)
         if filename.match(/^composer\.json$/)
           file_contents = File.open(path).read
-          json = JSON.parse(file_contents)
-          parse_manifest(json)
+          parse_manifest(file_contents)
         elsif filename.match(/^composer\.lock$/)
           file_contents = File.open(path).read
-          json = JSON.parse(file_contents)
-          parse_lockfile(json)
+          parse_lockfile(file_contents)
         else
           []
         end
@@ -23,7 +21,8 @@ module Bibliothecary
         filename.match(/^composer\.json$/) || filename.match(/^composer\.lock$/)
       end
 
-      def self.parse_lockfile(manifest)
+      def self.parse_lockfile(file_contents)
+        manifest = JSON.parse file_contents
         manifest.fetch('packages',[]).map do |dependency|
           {
             name: dependency["name"],
@@ -33,7 +32,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_manifest(manifest)
+      def self.parse_manifest(file_contents)
+        manifest = JSON.parse file_contents
         map_dependencies(manifest, 'require', 'runtime') +
         map_dependencies(manifest, 'require-dev', 'development')
       end
