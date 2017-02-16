@@ -12,8 +12,6 @@ module Bibliothecary
           parse_requirements_txt(File.open(path).read)
         elsif filename.match(/setup\.py$/)
           parse_setup_py(File.open(path).read)
-        else
-          []
         end
       end
 

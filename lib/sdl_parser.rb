@@ -7,10 +7,6 @@ class SdlParser
     @type = type || 'runtime'
   end
 
-  def to_json
-    Oj.dump(dependencies, mode: :compat) unless contents.nil?
-  end
-
   def dependencies
     parse.children('dependency').inject([]) do |deps, dep|
       deps.push({
