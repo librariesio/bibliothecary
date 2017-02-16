@@ -33,23 +33,6 @@ module Bibliothecary
           .compact
       end
 
-      def self.analyse_cargo_lock(folder_path, file_list)
-        paths = file_list.select{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/Cargo\.lock$/) }
-        return unless paths.any?
-
-        paths.map do |path|
-          manifest = TOML.load_file(path)
-
-          {
-            platform: PLATFORM_NAME,
-            path: path,
-            dependencies: parse_lockfile(manifest)
-          }
-        end
-      rescue
-        []
-      end
-
       def self.parse_lockfile(manifest)
         manifest.fetch('package',[]).map do |dependency|
           next if not dependency['source'] or not dependency['source'].start_with?('registry+')
