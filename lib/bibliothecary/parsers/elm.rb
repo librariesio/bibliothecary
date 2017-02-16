@@ -19,41 +19,6 @@ module Bibliothecary
         end
       end
 
-      def self.analyse(folder_path, file_list)
-        [analyse_json(folder_path, file_list),
-        analyse_json_lock(folder_path, file_list)]
-      end
-
-      def self.analyse_json(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^elm-package\.json$|^elm_dependencies\.json$/) }
-        return unless path
-
-        manifest = JSON.parse File.open(path).read
-
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_json_manifest(manifest)
-        }
-      rescue
-        []
-      end
-
-      def self.analyse_json_lock(folder_path, file_list)
-        path = file_list.find{|path| path.gsub(folder_path, '').gsub(/^\//, '').match(/^elm-stuff\/exact-dependencies\.json$/) }
-        return unless path
-
-        manifest = JSON.parse File.open(path).read
-
-        {
-          platform: PLATFORM_NAME,
-          path: path,
-          dependencies: parse_json_lock(manifest)
-        }
-      rescue
-        []
-      end
-
       def self.parse_json_manifest(manifest)
         map_dependencies(manifest, 'dependencies', 'runtime')
       end
