@@ -5,20 +5,11 @@ module Bibliothecary
     class NPM
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/^package\.json$/)
-          file_contents = File.open(path).read
-          parse_manifest(file_contents)
-        elsif filename.match(/^npm-shrinkwrap\.json$/)
-          file_contents = File.open(path).read
-          parse_shrinkwrap(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^package\.json$/) || filename.match(/^npm-shrinkwrap\.json$/)
+      def self.mapping
+        {
+          /^package\.json$/ => :parse_manifest,
+          /^npm-shrinkwrap\.json$/ => :parse_shrinkwrap
+        }
       end
 
       def self.parse_shrinkwrap(file_contents)

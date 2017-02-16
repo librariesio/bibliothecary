@@ -6,29 +6,13 @@ module Bibliothecary
     class Go
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/^glide\.yaml$/)
-          file_contents = File.open(path).read
-          parse_glide_yaml(file_contents)
-        elsif filename.match(/^glide\.lock$/)
-          file_contents = File.open(path).read
-          parse_glide_lockfile(file_contents)
-        elsif filename.match(/^Godeps\/Godeps\.json$/)
-          file_contents = File.open(path).read
-          parse_godep_json(file_contents)
-        elsif filename.match(/^vendor\/manifest$/)
-          file_contents = File.open(path).read
-          parse_gb_manifest(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^glide\.yaml$/) ||
-        filename.match(/^glide\.lock$/) ||
-        filename.match(/^Godeps\/Godeps\.json$/) ||
-        filename.match(/^vendor\/manifest$/)
+      def self.mapping
+        {
+          /^glide\.yaml$/ => :parse_glide_yaml,
+          /^glide\.lock$/ => :parse_glide_lockfile,
+          /^Godeps\/Godeps\.json$/ => :parse_godep_json,
+          /^vendor\/manifest$/ => :parse_gb_manifest
+        }
       end
 
       def self.parse_godep_json(file_contents)

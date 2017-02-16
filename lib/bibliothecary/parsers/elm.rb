@@ -5,21 +5,11 @@ module Bibliothecary
     class Elm
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/^elm-package\.json$|^elm_dependencies\.json$/)
-          file_contents = File.open(path).read
-          parse_json_manifest(file_contents)
-        elsif filename.match(/^elm-stuff\/exact-dependencies\.json$/)
-          file_contents = File.open(path).read
-          parse_json_lock(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^elm-package\.json$|^elm_dependencies\.json$/) ||
-          filename.match(/^elm-stuff\/exact-dependencies\.json$/)
+      def self.mapping
+        {
+          /^elm-package\.json$|^elm_dependencies\.json$/ => :parse_json_manifest,
+          /^elm-stuff\/exact-dependencies\.json$/ => :parse_json_lock
+        }
       end
 
       def self.parse_json_manifest(file_contents)

@@ -6,20 +6,11 @@ module Bibliothecary
     class CPAN
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/^META\.json$/i)
-          file_contents = File.open(path).read
-          parse_json_manifest(file_contents)
-        elsif filename.match(/^META\.yml$/i)
-          file_contents = File.open(path).read
-          parse_yaml_manifest(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^META\.json$/i) || filename.match(/^META\.yml$/i)
+      def self.mapping
+        {
+          /^META\.json$/i => :parse_json_manifest,
+          /^META\.yml$/i => :parse_yaml_manifest
+        }
       end
 
       def self.parse_json_manifest(file_contents)

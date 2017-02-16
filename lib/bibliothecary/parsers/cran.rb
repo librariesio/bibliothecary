@@ -7,17 +7,10 @@ module Bibliothecary
 
       REQUIRE_REGEXP = /([a-zA-Z0-9\-_\.]+)\s?\(?([><=\s\d\.,]+)?\)?/
 
-      def self.parse(filename, path)
-        if filename.match(/^DESCRIPTION$/i)
-          file_contents = File.open(path).read
-          parse_description(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^DESCRIPTION$/i)
+      def self.mapping
+        {
+          /^DESCRIPTION$/i => :parse_description
+        }
       end
 
       def self.parse_description(file_contents)

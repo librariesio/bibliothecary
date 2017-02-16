@@ -6,20 +6,11 @@ module Bibliothecary
     class Dub
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/^dub\.json$/)
-          file_contents = File.open(path).read
-          parse_manifest(file_contents)
-        elsif filename.match(/^dub\.sdl$/)
-          file_contents = File.open(path).read
-          parse_sdl_manifest(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^dub\.json$/) || filename.match(/^dub\.sdl$/)
+      def self.mapping
+        {
+          /^dub\.json$/ => :parse_manifest,
+          /^dub\.sdl$/ => :parse_sdl_manifest
+        }
       end
 
       def self.parse_manifest(file_contents)

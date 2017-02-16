@@ -5,20 +5,11 @@ module Bibliothecary
     class Pub
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/^pubspec\.yaml$/i)
-          file_contents = File.open(path).read
-          parse_yaml_manifest(file_contents)
-        elsif filename.match(/^pubspec\.lock$/i)
-          file_contents = File.open(path).read
-          parse_yaml_lockfile(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^pubspec\.yaml$/i) || filename.match(/^pubspec\.lock$/i)
+      def self.mapping
+        {
+          /^pubspec\.yaml$/i => :parse_yaml_manifest,
+          /^pubspec\.lock$/i => :parse_yaml_lockfile
+        }
       end
 
       def self.parse_yaml_manifest(file_contents)

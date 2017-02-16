@@ -5,20 +5,11 @@ module Bibliothecary
     class Shard
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/^shard\.yml$/i)
-          file_contents = File.open(path).read
-          parse_yaml_manifest(file_contents)
-        elsif filename.match(/^shard\.lock$/i)
-          file_contents = File.open(path).read
-          parse_yaml_lockfile(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^shard\.yml$/i) || filename.match(/^shard\.lock$/i)
+      def self.mapping
+        {
+          /^shard\.yml$/i => :parse_yaml_manifest,
+          /^shard\.lock$/i => :parse_yaml_lockfile
+        }
       end
 
       def self.parse_yaml_lockfile(file_contents)

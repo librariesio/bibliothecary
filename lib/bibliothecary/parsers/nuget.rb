@@ -6,33 +6,14 @@ module Bibliothecary
     class Nuget
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/Project\.json$/)
-          file_contents = File.open(path).read
-          parse_project_json(file_contents)
-        elsif filename.match(/Project\.lock\.json$/)
-          file_contents = File.open(path).read
-          parse_project_lock_json(file_contents)
-        elsif filename.match(/packages\.config$/)
-          file_contents = File.open(path).read
-          parse_packages_config(file_contents)
-        elsif filename.match(/^[A-Za-z0-9_-]+\.nuspec$/)
-          file_contents = File.open(path).read
-          parse_nuspec(file_contents)
-        elsif filename.match(/paket\.lock$/)
-          file_contents = File.open(path).read
-          parse_paket_lock(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/Project\.json$/) ||
-        filename.match(/Project\.lock\.json$/) ||
-        filename.match(/packages\.config$/) ||
-        filename.match(/^[A-Za-z0-9_-]+\.nuspec$/) ||
-        filename.match(/paket\.lock$/)
+      def self.mapping
+        {
+          /Project\.json$/ => :parse_project_json,
+          /Project\.lock\.json$/ => :parse_project_lock_json,
+          /packages\.config$/ => :parse_packages_config,
+          /^[A-Za-z0-9_-]+\.nuspec$/ => :parse_nuspec,
+          /paket\.lock$/ => :parse_paket_lock
+        }
       end
 
       def self.parse_project_json(file_contents)

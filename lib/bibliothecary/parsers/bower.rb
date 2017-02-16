@@ -5,17 +5,10 @@ module Bibliothecary
     class Bower
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/^bower\.json$/)
-          file_contents = File.open(path).read
-          parse_manifest(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^bower\.json$/)
+      def self.mapping
+        {
+          /^bower\.json$/ => :parse_manifest
+        }
       end
 
       def self.parse_manifest(manifest)

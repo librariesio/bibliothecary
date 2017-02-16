@@ -3,23 +3,12 @@ module Bibliothecary
     class Carthage
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/^Cartfile$/)
-          file_contents = File.open(path).read
-          parse_cartfile(file_contents)
-        elsif filename.match(/^Cartfile\.private$/)
-          file_contents = File.open(path).read
-          parse_cartfile_private(file_contents)
-        elsif filename.match(/^Cartfile\.resolved$/)
-          file_contents = File.open(path).read
-          parse_cartfile_resolved(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^Cartfile$/) || filename.match(/^Cartfile\.private$/) || filename.match(/^Cartfile\.resolved$/)
+      def self.mapping
+        {
+          /^Cartfile$/ => :parse_cartfile,
+          /^Cartfile\.private$/ => :parse_cartfile_private,
+          /^Cartfile\.resolved$/ => :parse_cartfile_resolved
+        }
       end
 
       def self.parse_cartfile(manifest)

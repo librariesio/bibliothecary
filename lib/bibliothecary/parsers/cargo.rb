@@ -5,20 +5,11 @@ module Bibliothecary
     class Cargo
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/Cargo\.toml$/)
-          file_contents = File.open(path).read
-          parse_manifest(file_contents)
-        elsif filename.match(/Cargo\.lock$/)
-          file_contents = File.open(path).read
-          parse_lockfile(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/Cargo\.toml$/) || filename.match(/Cargo\.lock$/)
+      def self.mapping
+        {
+          /Cargo\.toml$/ => :parse_manifest,
+          /Cargo\.lock$/ => :parse_lockfile
+        }
       end
 
       def self.parse_manifest(file_contents)

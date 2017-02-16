@@ -5,17 +5,10 @@ module Bibliothecary
     class Meteor
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/^versions\.json$/)
-          file_contents = File.open(path).read
-          parse_manifest(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^versions\.json$/)
+      def self.mapping
+        {
+          /^versions\.json$/ => :parse_manifest
+        }
       end
 
       def self.parse_manifest(file_contents)

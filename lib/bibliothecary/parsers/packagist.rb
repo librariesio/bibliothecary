@@ -5,20 +5,11 @@ module Bibliothecary
     class Packagist
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/^composer\.json$/)
-          file_contents = File.open(path).read
-          parse_manifest(file_contents)
-        elsif filename.match(/^composer\.lock$/)
-          file_contents = File.open(path).read
-          parse_lockfile(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^composer\.json$/) || filename.match(/^composer\.lock$/)
+      def self.mapping
+        {
+          /^composer\.json$/ => :parse_manifest,
+          /^composer\.lock$/ => :parse_lockfile
+        }
       end
 
       def self.parse_lockfile(file_contents)

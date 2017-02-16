@@ -9,11 +9,9 @@ module Bibliothecary
 
       def self.parse(filename, path)
         if is_requirements_file(filename)
-          file_contents = File.open(path).read
-          parse_requirements_txt(file_contents)
+          parse_requirements_txt(File.open(path).read)
         elsif filename.match(/setup\.py$/)
-          file_contents = File.open(path).read
-          parse_setup_py(file_contents)
+          parse_setup_py(File.open(path).read)
         else
           []
         end

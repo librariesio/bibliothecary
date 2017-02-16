@@ -8,25 +8,12 @@ module Bibliothecary
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
 
-      def self.parse(filename, path)
-        if filename.match(/^Gemfile$|^gems\.rb$/)
-          file_contents = File.open(path).read
-          parse_gemfile(file_contents)
-        elsif filename.match(/[A-Za-z0-9_-]+\.gemspec$/)
-          file_contents = File.open(path).read
-          parse_gemspec(file_contents)
-        elsif filename.match(/^Gemfile\.lock$|^gems\.locked$/)
-          file_contents = File.open(path).read
-          parse_gemfile_lock(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^Gemfile$|^gems\.rb$/) ||
-        filename.match(/[A-Za-z0-9_-]+\.gemspec$/) ||
-        filename.match(/^Gemfile\.lock$|^gems\.locked$/)
+      def self.mapping
+        {
+          /^Gemfile$|^gems\.rb$/ => :parse_gemfile,
+          /[A-Za-z0-9_-]+\.gemspec$/ => :parse_gemspec,
+          /^Gemfile\.lock$|^gems\.locked$/ => :parse_gemfile_lock
+        }
       end
 
       def self.parse_gemfile_lock(manifest)

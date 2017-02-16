@@ -3,17 +3,10 @@ module Bibliothecary
     class Julia
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/^REQUIRE$/i)
-          file_contents = File.open(path).read
-          parse_require(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^REQUIRE$/i)
+      def self.mapping
+        {
+          /^REQUIRE$/i => :parse_require
+        }
       end
 
       def self.parse_require(manifest)

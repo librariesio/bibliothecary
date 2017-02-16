@@ -5,25 +5,12 @@ module Bibliothecary
     class Maven
       include Bibliothecary::Analyser
 
-      def self.parse(filename, path)
-        if filename.match(/ivy\.xml$/i)
-          file_contents = File.open(path).read
-          parse_ivy_manifest(file_contents)
-        elsif filename.match(/pom\.xml$/i)
-          file_contents = File.open(path).read
-          parse_pom_manifest(file_contents)
-        elsif filename.match(/build.gradle$/i)
-          file_contents = File.open(path).read
-          parse_gradle(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/ivy\.xml$/i) ||
-        filename.match(/pom\.xml$/i) ||
-        filename.match(/build.gradle$/i)
+      def self.mapping
+        {
+          /ivy\.xml$/i => :parse_ivy_manifest,
+          /pom\.xml$/i => :parse_pom_manifest,
+          /build.gradle$/i => :parse_gradle
+        }
       end
 
       def self.parse_ivy_manifest(file_contents)

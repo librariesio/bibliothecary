@@ -9,27 +9,13 @@ module Bibliothecary
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
 
-      def self.parse(filename, path)
-        if filename.match(/^Podfile$/)
-          file_contents = File.open(path).read
-          parse_podfile(file_contents)
-        elsif filename.match(/^[A-Za-z0-9_-]+\.podspec$/)
-          file_contents = File.open(path).read
-          parse_podspec(file_contents)
-        elsif filename.match(/^Podfile\.lock$/)
-          file_contents = File.open(path).read
-          parse_podfile_lock(file_contents)
-        elsif filename.match(/^[A-Za-z0-9_-]+\.podspec.json$/)
-          file_contents = File.open(path).read
-          parse_json_manifest(file_contents)
-        else
-          []
-        end
-      end
-
-      def self.match?(filename)
-        filename.match(/^Podfile$/) || filename.match(/^[A-Za-z0-9_-]+\.podspec$/) ||
-          filename.match(/^Podfile\.lock$/) || filename.match(/^[A-Za-z0-9_-]+\.podspec.json$/)
+      def self.mapping
+        {
+          /^Podfile$/ => :parse_podfile,
+          /^[A-Za-z0-9_-]+\.podspec$/ => :parse_podspec,
+          /^Podfile\.lock$/ => :parse_podfile_lock,
+          /^[A-Za-z0-9_-]+\.podspec.json$/ => :parse_json_manifest
+        }
       end
 
       def self.parse_podfile_lock(file_contents)
