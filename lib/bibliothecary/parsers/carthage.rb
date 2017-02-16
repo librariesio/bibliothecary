@@ -12,33 +12,19 @@ module Bibliothecary
       end
 
       def self.parse_cartfile(manifest)
-        response = Typhoeus.post("https://carthageparser.herokuapp.com/cartfile", params: {body: manifest})
-        json = JSON.parse(response.body)
-
-        json.map do |dependency|
-          {
-            name: dependency['name'],
-            version: dependency['version'],
-            type: dependency["type"]
-          }
-        end
+        map_dependencies(manifest, 'cartfile')
       end
 
       def self.parse_cartfile_private(manifest)
-        response = Typhoeus.post("https://carthageparser.herokuapp.com/cartfile.private", params: {body: manifest})
-        json = JSON.parse(response.body)
-
-        json.map do |dependency|
-          {
-            name: dependency['name'],
-            version: dependency['version'],
-            type: dependency["type"]
-          }
-        end
+        map_dependencies(manifest, 'cartfile.private')
       end
 
       def self.parse_cartfile_resolved(manifest)
-        response = Typhoeus.post("https://carthageparser.herokuapp.com/cartfile.resolved", params: {body: manifest})
+        map_dependencies(manifest, 'cartfile.resolved')
+      end
+
+      def self.map_dependencies(manifest, path)
+        response = Typhoeus.post("https://carthageparser.herokuapp.com/#{path}", params: {body: manifest})
         json = JSON.parse(response.body)
 
         json.map do |dependency|
