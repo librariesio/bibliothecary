@@ -32,23 +32,15 @@ module Bibliothecary
 
       def self.parse_gemfile(file_contents)
         manifest = Gemnasium::Parser.send(:gemfile, file_contents)
-        parse_manifest(manifest)
+        parse_ruby_manifest(manifest)
       end
 
       def self.parse_gemspec(file_contents)
         manifest = Gemnasium::Parser.send(:gemspec, file_contents)
-        parse_manifest(manifest)
+        parse_ruby_manifest(manifest)
       end
 
-      def self.parse_manifest(manifest)
-        manifest.dependencies.inject([]) do |deps, dep|
-          deps.push({
-            name: dep.name,
-            requirement: dep.requirement.to_s,
-            type: dep.type
-          })
-        end.uniq
-      end
+
     end
   end
 end

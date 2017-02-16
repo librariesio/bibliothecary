@@ -63,7 +63,8 @@ module Bibliothecary
         field = dependency.locate(name).first
         return nil if field.nil?
         value = field.nodes.first
-        if match = value.match(/^\$\{(.+)\}/)
+        match = value.match(/^\$\{(.+)\}/)
+        if match
           prop_field = xml.properties.locate(match[1]).first
           if prop_field
             return prop_field.nodes.first

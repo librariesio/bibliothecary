@@ -15,7 +15,7 @@ module Bibliothecary
 
       def self.parse_json_manifest(file_contents)
         manifest = JSON.parse file_contents
-        manifest['prereqs'].map do |group, deps|
+        manifest['prereqs'].map do |_group, deps|
           map_dependencies(deps, 'requires', 'runtime')
         end.flatten
       end

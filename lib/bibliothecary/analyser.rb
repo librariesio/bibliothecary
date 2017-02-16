@@ -43,6 +43,16 @@ module Bibliothecary
           nil
         end
       end
+
+      def parse_ruby_manifest(manifest)
+        manifest.dependencies.inject([]) do |deps, dep|
+          deps.push({
+            name: dep.name,
+            requirement: dep.requirement.to_s,
+            type: dep.type
+          })
+        end.uniq
+      end
     end
   end
 end

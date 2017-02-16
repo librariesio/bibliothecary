@@ -23,7 +23,7 @@ module Bibliothecary
 
       def self.parse_section(manifest, name)
         return [] unless manifest.first[name]
-        deps = manifest.first[name].gsub("\n", '').split(',').map(&:strip)
+        deps = manifest.first[name].delete("\n").split(',').map(&:strip)
         deps.map do |dependency|
           dep = dependency.match(REQUIRE_REGEXP)
           {

@@ -33,22 +33,12 @@ module Bibliothecary
 
       def self.parse_podspec(file_contents)
         manifest = Gemnasium::Parser.send(:podspec, file_contents)
-        parse_manifest(manifest)
+        parse_ruby_manifest(manifest)
       end
 
       def self.parse_podfile(file_contents)
         manifest = Gemnasium::Parser.send(:podfile, file_contents)
-        parse_manifest(manifest)
-      end
-
-      def self.parse_manifest(manifest)
-        manifest.dependencies.inject([]) do |deps, dep|
-          deps.push({
-            name: dep.name,
-            requirement: dep.requirement.to_s,
-            type: dep.type
-          })
-        end.uniq
+        parse_ruby_manifest(manifest)
       end
 
       def self.parse_json_manifest(file_contents)
