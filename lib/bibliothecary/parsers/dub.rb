@@ -19,6 +19,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^dub\.json$/) || filename.match(/^dub\.sdl$/)
+      end
+
       def self.parse_manifest(manifest)
         map_dependencies(manifest, 'dependencies', 'runtime')
       end

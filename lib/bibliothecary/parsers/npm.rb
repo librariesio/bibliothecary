@@ -19,6 +19,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^package\.json$/) || filename.match(/^npm-shrinkwrap\.json$/)
+      end
+
       def self.parse_shrinkwrap(manifest)
         manifest.fetch('dependencies',[]).map do |name, requirement|
           {

@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Pypi do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Pypi::platform_name).to eq('pypi')
+    expect(described_class.platform_name).to eq('pypi')
   end
 
   it 'parses dependencies from setup.py' do
-    expect(Bibliothecary::Parsers::Pypi.analyse_file('setup.py', fixture_path('setup.py'))).to eq({
+    expect(described_class.analyse_file('setup.py', fixture_path('setup.py'))).to eq({
       :platform=>"pypi",
       :path=>"spec/fixtures/setup.py",
       :dependencies=>[
@@ -39,7 +39,7 @@ describe Bibliothecary::Parsers::Pypi do
   end
 
   it 'parses dependencies from requirements.txt' do
-    expect(Bibliothecary::Parsers::Pypi.analyse_file('requirements.txt', fixture_path('requirements.txt'))).to eq({
+    expect(described_class.analyse_file('requirements.txt', fixture_path('requirements.txt'))).to eq({
       :platform=>"pypi",
       :path=>"spec/fixtures/requirements.txt",
       :dependencies=>[
@@ -57,13 +57,19 @@ describe Bibliothecary::Parsers::Pypi do
   end
 
   it 'correctly detected different requirements.txt file names' do
-      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('requirements.txt')).to be true
-      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('requirements.pip')).to be true
-      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('requirements-test.txt')).to be true
-      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('requirements-test.pip')).to be true
-      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('test-requirements.txt')).to be true
-      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('test-requirements.pip')).to be true
-      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('test-invalid.pip')).to be false
-      expect(Bibliothecary::Parsers::Pypi.is_requirements_file('some-random-file.txt')).to be false
+    expect(described_class.is_requirements_file('requirements.txt')).to be true
+    expect(described_class.is_requirements_file('requirements.pip')).to be true
+    expect(described_class.is_requirements_file('requirements-test.txt')).to be true
+    expect(described_class.is_requirements_file('requirements-test.pip')).to be true
+    expect(described_class.is_requirements_file('test-requirements.txt')).to be true
+    expect(described_class.is_requirements_file('test-requirements.pip')).to be true
+    expect(described_class.is_requirements_file('test-invalid.pip')).to be false
+    expect(described_class.is_requirements_file('some-random-file.txt')).to be false
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('requirements.txt')).to be_truthy
+    expect(described_class.match?('requirements.pip')).to be_truthy
+    expect(described_class.match?('setup.py')).to be_truthy
   end
 end

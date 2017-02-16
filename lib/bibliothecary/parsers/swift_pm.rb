@@ -12,6 +12,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^Package\.swift$/i)
+      end
+
       def self.parse_package_swift(manifest)
         response = Typhoeus.post("http://swift.libraries.io/to-json", body: manifest)
         json = JSON.parse(response.body)

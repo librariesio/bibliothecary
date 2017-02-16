@@ -28,6 +28,13 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^glide\.yaml$/) ||
+        filename.match(/^glide\.lock$/) ||
+        filename.match(/^Godeps\/Godeps\.json$/) ||
+        filename.match(/^vendor\/manifest$/)
+      end
+
       def self.parse_godep_json(manifest)
         manifest.fetch('Deps',[]).map do |dependency|
           {

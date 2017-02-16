@@ -19,6 +19,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^pubspec\.yaml$/i) || filename.match(/^pubspec\.lock$/i)
+      end
+
       def self.parse_yaml_manifest(manifest)
         map_dependencies(manifest, 'dependencies', 'runtime') +
         map_dependencies(manifest, 'dev_dependencies', 'development')

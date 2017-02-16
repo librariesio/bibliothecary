@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Maven do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Maven::platform_name).to eq('maven')
+    expect(described_class.platform_name).to eq('maven')
   end
 
   it 'parses dependencies from pom.xml' do
-    expect(Bibliothecary::Parsers::Maven.analyse_file('pom.xml', fixture_path('pom.xml'))).to eq({
+    expect(described_class.analyse_file('pom.xml', fixture_path('pom.xml'))).to eq({
       :platform=>"maven",
       :path=>"spec/fixtures/pom.xml",
       :dependencies=>[
@@ -85,7 +85,7 @@ describe Bibliothecary::Parsers::Maven do
   end
 
   it 'parses dependencies from pom2.xml' do
-    expect(Bibliothecary::Parsers::Maven.analyse_file('pom.xml', fixture_path('pom2.xml'))).to eq({
+    expect(described_class.analyse_file('pom.xml', fixture_path('pom2.xml'))).to eq({
       :platform=>"maven",
       :path=>"spec/fixtures/pom2.xml",
       :dependencies=>[
@@ -116,7 +116,7 @@ describe Bibliothecary::Parsers::Maven do
   end
 
   it 'parses dependencies from ivy.xml' do
-    expect(Bibliothecary::Parsers::Maven.analyse_file('ivy.xml', fixture_path('ivy.xml'))).to eq({
+    expect(described_class.analyse_file('ivy.xml', fixture_path('ivy.xml'))).to eq({
       :platform=>"maven",
       :path=>"spec/fixtures/ivy.xml",
       :dependencies=>[
@@ -147,7 +147,7 @@ describe Bibliothecary::Parsers::Maven do
   end
 
   it 'parses dependencies from build.gradle' do
-    expect(Bibliothecary::Parsers::Maven.analyse_file('build.gradle', fixture_path('build.gradle'))).to eq({
+    expect(described_class.analyse_file('build.gradle', fixture_path('build.gradle'))).to eq({
       :platform=>"maven",
       :path=>"spec/fixtures/build.gradle",
       :dependencies=>[
@@ -162,5 +162,11 @@ describe Bibliothecary::Parsers::Maven do
         {:name=>"com.android.support:customtabs", :version=>"23.1.1", :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('pom.xml')).to be_truthy
+    expect(described_class.match?('ivy.xml')).to be_truthy
+    expect(described_class.match?('build.gradle')).to be_truthy
   end
 end

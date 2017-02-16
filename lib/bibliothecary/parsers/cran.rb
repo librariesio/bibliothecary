@@ -17,6 +17,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^DESCRIPTION$/i)
+      end
+
       def self.parse_description(manifest)
         parse_section(manifest, 'Depends') +
         parse_section(manifest, 'Imports') +

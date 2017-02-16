@@ -15,6 +15,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^bower\.json$/)
+      end
+
       def self.parse_manifest(manifest)
         map_dependencies(manifest, 'dependencies', 'runtime') +
         map_dependencies(manifest, 'devDependencies', 'development')

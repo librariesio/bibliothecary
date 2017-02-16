@@ -19,6 +19,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^composer\.json$/) || filename.match(/^composer\.lock$/)
+      end
+
       def self.parse_lockfile(manifest)
         manifest.fetch('packages',[]).map do |dependency|
           {

@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::CocoaPods do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::CocoaPods::platform_name).to eq('cocoapods')
+    expect(described_class.platform_name).to eq('cocoapods')
   end
 
   it 'parses dependencies from Podfile' do
-    expect(Bibliothecary::Parsers::CocoaPods.analyse_file('Podfile', fixture_path('Podfile'))).to eq({
+    expect(described_class.analyse_file('Podfile', fixture_path('Podfile'))).to eq({
       :platform=>"cocoapods",
       :path=>"spec/fixtures/Podfile",
       :dependencies=>[
@@ -36,7 +36,7 @@ describe Bibliothecary::Parsers::CocoaPods do
   end
 
   it 'parses dependencies from Podfile.lock' do
-    expect(Bibliothecary::Parsers::CocoaPods.analyse_file('Podfile.lock', fixture_path('Podfile.lock'))).to eq({
+    expect(described_class.analyse_file('Podfile.lock', fixture_path('Podfile.lock'))).to eq({
       :platform=>"cocoapods",
       :path=>"spec/fixtures/Podfile.lock",
       :dependencies=>[
@@ -95,7 +95,7 @@ describe Bibliothecary::Parsers::CocoaPods do
   end
 
   it 'parses dependencies from example.podspec' do
-    expect(Bibliothecary::Parsers::CocoaPods.analyse_file('example.podspec', fixture_path('example.podspec'))).to eq({
+    expect(described_class.analyse_file('example.podspec', fixture_path('example.podspec'))).to eq({
       :platform=>"cocoapods",
       :path=>"spec/fixtures/example.podspec",
       :dependencies=>[
@@ -105,12 +105,20 @@ describe Bibliothecary::Parsers::CocoaPods do
   end
 
   it 'parses dependencies from example.podspec.json' do
-    expect(Bibliothecary::Parsers::CocoaPods.analyse_file('example.podspec.json', fixture_path('example.podspec.json'))).to eq({
+    expect(described_class.analyse_file('example.podspec.json', fixture_path('example.podspec.json'))).to eq({
       :platform=>"cocoapods",
       :path=>"spec/fixtures/example.podspec.json",
       :dependencies=>[
         {:name=>"OpenSSL", :requirement=>["~> 1.0"], :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('Podfile')).to be_truthy
+    expect(described_class.match?('Podfile.lock')).to be_truthy
+    expect(described_class.match?('devise.podspec')).to be_truthy
+    expect(described_class.match?('foo_meh-bar.podspec')).to be_truthy
+    expect(described_class.match?('devise.podspec.json')).to be_truthy
   end
 end

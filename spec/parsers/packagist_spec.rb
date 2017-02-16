@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Packagist do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Packagist::platform_name).to eq('packagist')
+    expect(described_class.platform_name).to eq('packagist')
   end
 
   it 'parses dependencies from composer.json' do
-    expect(Bibliothecary::Parsers::Packagist.analyse_file('composer.json', fixture_path('composer.json'))).to eq({
+    expect(described_class.analyse_file('composer.json', fixture_path('composer.json'))).to eq({
       :platform=>"packagist",
       :path=>"spec/fixtures/composer.json",
       :dependencies=>[
@@ -18,7 +18,7 @@ describe Bibliothecary::Parsers::Packagist do
   end
 
   it 'parses dependencies from composer.lock' do
-    expect(Bibliothecary::Parsers::Packagist.analyse_file('composer.lock', fixture_path('composer.lock'))).to eq({
+    expect(described_class.analyse_file('composer.lock', fixture_path('composer.lock'))).to eq({
       :platform=>"packagist",
       :path=>"spec/fixtures/composer.lock",
       :dependencies=>[
@@ -32,5 +32,10 @@ describe Bibliothecary::Parsers::Packagist do
         {:name=>"twig/twig", :requirement=>"v1.16.2", :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('composer.json')).to be_truthy
+    expect(described_class.match?('composer.lock')).to be_truthy
   end
 end

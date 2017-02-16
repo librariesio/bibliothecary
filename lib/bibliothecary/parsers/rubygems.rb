@@ -25,6 +25,12 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^Gemfile$|^gems\.rb$/) ||
+        filename.match(/[A-Za-z0-9_-]+\.gemspec$/) ||
+        filename.match(/^Gemfile\.lock$|^gems\.locked$/)
+      end
+
       def self.parse_gemfile_lock(manifest)
         manifest.split("\n").map do |line|
           match = line.match(NAME_VERSION_4)

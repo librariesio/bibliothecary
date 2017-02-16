@@ -19,6 +19,11 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^elm-package\.json$|^elm_dependencies\.json$/) ||
+          filename.match(/^elm-stuff\/exact-dependencies\.json$/)
+      end
+
       def self.parse_json_manifest(manifest)
         map_dependencies(manifest, 'dependencies', 'runtime')
       end

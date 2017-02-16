@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::CRAN do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::CRAN::platform_name).to eq('cran')
+    expect(described_class.platform_name).to eq('cran')
   end
 
   it 'parses dependencies from DESCRIPTION' do
-    expect(Bibliothecary::Parsers::CRAN.analyse_file('DESCRIPTION', fixture_path('DESCRIPTION'))).to eq({
+    expect(described_class.analyse_file('DESCRIPTION', fixture_path('DESCRIPTION'))).to eq({
       :platform=>"cran",
       :path=>"spec/fixtures/DESCRIPTION",
       :dependencies=>[
@@ -42,7 +42,7 @@ describe Bibliothecary::Parsers::CRAN do
   end
 
   it 'parses dependencies from minimal DESCRIPTION file' do
-    expect(Bibliothecary::Parsers::CRAN.analyse_file('DESCRIPTION', fixture_path('DESCRIPTION2'))).to eq({
+    expect(described_class.analyse_file('DESCRIPTION', fixture_path('DESCRIPTION2'))).to eq({
       :platform=>"cran",
       :path=>"spec/fixtures/DESCRIPTION2",
       :dependencies=>[
@@ -67,5 +67,9 @@ describe Bibliothecary::Parsers::CRAN do
         {:name=>"zoo", :version=>"*", :type=>"suggests"},
         {:name=>"plm", :version=>"*", :type=>"suggests"}]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('DESCRIPTION')).to be_truthy
   end
 end

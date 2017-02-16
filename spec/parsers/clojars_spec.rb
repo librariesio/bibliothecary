@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Clojars do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Clojars::platform_name).to eq('clojars')
+    expect(described_class.platform_name).to eq('clojars')
   end
 
   it 'parses dependencies from project.clj' do
-    expect(Bibliothecary::Parsers::Clojars.analyse_file('project.clj', fixture_path('project.clj'))).to eq({
+    expect(described_class.analyse_file('project.clj', fixture_path('project.clj'))).to eq({
       :platform=>"clojars",
       :path=>"spec/fixtures/project.clj",
       :dependencies=>[
@@ -16,5 +16,9 @@ describe Bibliothecary::Parsers::Clojars do
         {:name=>"ring/ring-defaults", :version=>"0.1.2", :type=>"runtime"},
         {:name=>"ring/ring-jetty-adapter", :version=>"1.2.1", :type=>"runtime"}      ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('project.clj')).to be_truthy
   end
 end

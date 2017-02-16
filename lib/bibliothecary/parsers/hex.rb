@@ -17,6 +17,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^mix\.exs$/) || filename.match(/^mix\.lock$/)
+      end
+
       def self.parse_mix(manifest)
         response = Typhoeus.post("https://mix-deps-json.herokuapp.com/", body: manifest)
         json = JSON.parse response.body

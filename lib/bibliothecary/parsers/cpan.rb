@@ -20,6 +20,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^META\.json$/i) || filename.match(/^META\.yml$/i)
+      end
+
       def self.parse_json_manifest(manifest)
         manifest['prereqs'].map do |group, deps|
           map_dependencies(deps, 'requires', 'runtime')

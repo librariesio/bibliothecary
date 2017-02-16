@@ -20,6 +20,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        is_requirements_file(filename) || filename.match(/setup\.py$/)
+      end
+
       def self.parse_setup_py(manifest)
         match = manifest.match(INSTALL_REGEXP)
         return [] unless match

@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Pub do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Pub::platform_name).to eq('pub')
+    expect(described_class.platform_name).to eq('pub')
   end
 
   it 'parses dependencies from pubspec.yaml' do
-    expect(Bibliothecary::Parsers::Pub.analyse_file('pubspec.yaml', fixture_path('pubspec.yaml'))).to eq({
+    expect(described_class.analyse_file('pubspec.yaml', fixture_path('pubspec.yaml'))).to eq({
       :platform=>"pub",
       :path=>"spec/fixtures/pubspec.yaml",
       :dependencies=>[
@@ -19,7 +19,7 @@ describe Bibliothecary::Parsers::Pub do
   end
 
   it 'parses dependencies from pubspec.lock' do
-    expect(Bibliothecary::Parsers::Pub.analyse_file('pubspec.lock', fixture_path('pubspec.lock'))).to eq({
+    expect(described_class.analyse_file('pubspec.lock', fixture_path('pubspec.lock'))).to eq({
       :platform=>"pub",
       :path=>"spec/fixtures/pubspec.lock",
       :dependencies=>[
@@ -29,5 +29,10 @@ describe Bibliothecary::Parsers::Pub do
         {:name=>"which", :requirement=>"0.1.3", :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('pubspec.yaml')).to be_truthy
+    expect(described_class.match?('pubspec.lock')).to be_truthy
   end
 end

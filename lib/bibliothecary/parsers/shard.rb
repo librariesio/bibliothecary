@@ -19,6 +19,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^shard\.yml$/i) || filename.match(/^shard\.lock$/i)
+      end
+
       def self.parse_yaml_lockfile(manifest)
         map_dependencies(manifest, 'shards', 'runtime')
       end

@@ -15,6 +15,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^versions\.json$/)
+      end
+
       def self.parse_manifest(manifest)
         map_dependencies(manifest, 'dependencies', 'runtime')
       end

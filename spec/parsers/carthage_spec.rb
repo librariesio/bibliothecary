@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Carthage do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Carthage::platform_name).to eq('carthage')
+    expect(described_class.platform_name).to eq('carthage')
   end
 
   it 'parses dependencies from Cartfile' do
-    expect(Bibliothecary::Parsers::Carthage.analyse_file('Cartfile', fixture_path('Cartfile'))).to eq({
+    expect(described_class.analyse_file('Cartfile', fixture_path('Cartfile'))).to eq({
       :platform=>"carthage",
       :path=>"spec/fixtures/Cartfile",
       :dependencies=>[
@@ -23,7 +23,7 @@ describe Bibliothecary::Parsers::Carthage do
   end
 
   it 'parses dependencies from Cartfile.private' do
-    expect(Bibliothecary::Parsers::Carthage.analyse_file('Cartfile.private', fixture_path('Cartfile.private'))).to eq({
+    expect(described_class.analyse_file('Cartfile.private', fixture_path('Cartfile.private'))).to eq({
       :platform=>"carthage",
       :path=>"spec/fixtures/Cartfile.private",
       :dependencies=>[
@@ -35,7 +35,7 @@ describe Bibliothecary::Parsers::Carthage do
   end
 
   it 'parses dependencies from Cartfile.resolved' do
-    expect(Bibliothecary::Parsers::Carthage.analyse_file('Cartfile.resolved', fixture_path('Cartfile.resolved'))).to eq({
+    expect(described_class.analyse_file('Cartfile.resolved', fixture_path('Cartfile.resolved'))).to eq({
       :platform=>"carthage",
       :path=>"spec/fixtures/Cartfile.resolved",
       :dependencies=>[
@@ -50,5 +50,11 @@ describe Bibliothecary::Parsers::Carthage do
         {:name=>"Carthage/ReactiveTask", :version=>"0.9.1 ", :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('Cartfile')).to be_truthy
+    expect(described_class.match?('Cartfile.private')).to be_truthy
+    expect(described_class.match?('Cartfile.resolved')).to be_truthy
   end
 end

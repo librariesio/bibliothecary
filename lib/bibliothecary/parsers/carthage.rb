@@ -18,6 +18,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^Cartfile$/) || filename.match(/^Cartfile\.private$/) || filename.match(/^Cartfile\.resolved$/)
+      end
+
       def self.parse_cartfile(manifest)
         response = Typhoeus.post("https://carthageparser.herokuapp.com/cartfile", params: {body: manifest})
         json = JSON.parse(response.body)

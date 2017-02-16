@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Go do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Go::platform_name).to eq('go')
+    expect(described_class.platform_name).to eq('go')
   end
 
   it 'parses dependencies from glide.yaml' do
-    expect(Bibliothecary::Parsers::Go.analyse_file('glide.yaml', fixture_path('glide.yaml'))).to eq({
+    expect(described_class.analyse_file('glide.yaml', fixture_path('glide.yaml'))).to eq({
       :platform=>"go",
       :path=>"spec/fixtures/glide.yaml",
       :dependencies=>[
@@ -23,7 +23,7 @@ describe Bibliothecary::Parsers::Go do
   end
 
   it 'parses dependencies from glide.lock' do
-    expect(Bibliothecary::Parsers::Go.analyse_file('glide.lock', fixture_path('glide.lock'))).to eq({
+    expect(described_class.analyse_file('glide.lock', fixture_path('glide.lock'))).to eq({
       :platform=>"go",
       :path=>"spec/fixtures/glide.lock",
       :dependencies=>[
@@ -44,7 +44,7 @@ describe Bibliothecary::Parsers::Go do
   end
 
   it 'parses dependencies from Godeps.json' do
-    expect(Bibliothecary::Parsers::Go.analyse_file('Godeps/Godeps.json', fixture_path('Godeps.json'))).to eq({
+    expect(described_class.analyse_file('Godeps/Godeps.json', fixture_path('Godeps.json'))).to eq({
       :platform=>"go",
       :path=>"spec/fixtures/Godeps.json",
       :dependencies=>[
@@ -95,7 +95,7 @@ describe Bibliothecary::Parsers::Go do
   end
 
   it 'parses dependencies from gb_manifest' do
-    expect(Bibliothecary::Parsers::Go.analyse_file('vendor/manifest', fixture_path('gb_manifest'))).to eq({
+    expect(described_class.analyse_file('vendor/manifest', fixture_path('gb_manifest'))).to eq({
       :platform=>"go",
       :path=>"spec/fixtures/gb_manifest",
       :dependencies=>[
@@ -104,5 +104,12 @@ describe Bibliothecary::Parsers::Go do
          :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('Godeps/Godeps.json')).to be_truthy
+    expect(described_class.match?('vendor/manifest')).to be_truthy
+    expect(described_class.match?('glide.yaml')).to be_truthy
+    expect(described_class.match?('glide.lock')).to be_truthy
   end
 end

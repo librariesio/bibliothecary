@@ -19,6 +19,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/Cargo\.toml$/) || filename.match(/Cargo\.lock$/)
+      end
+
       def self.parse_manifest(manifest)
         manifest.fetch('dependencies', []).map do |name, requirement|
           if requirement.respond_to?(:fetch)

@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Nuget do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Nuget::platform_name).to eq('nuget')
+    expect(described_class.platform_name).to eq('nuget')
   end
 
   it 'parses dependencies from Project.json' do
-    expect(Bibliothecary::Parsers::Nuget.analyse_file('Project.json', fixture_path('Project.json'))).to eq({
+    expect(described_class.analyse_file('Project.json', fixture_path('Project.json'))).to eq({
       :platform=>"nuget",
       :path=>"spec/fixtures/Project.json",
       :dependencies=>[
@@ -52,7 +52,7 @@ describe Bibliothecary::Parsers::Nuget do
   end
 
   it 'parses dependencies from Project.lock.json' do
-    expect(Bibliothecary::Parsers::Nuget.analyse_file('Project.lock.json', fixture_path('Project.lock.json'))).to eq({
+    expect(described_class.analyse_file('Project.lock.json', fixture_path('Project.lock.json'))).to eq({
       :platform=>"nuget",
       :path=>"spec/fixtures/Project.lock.json",
       :dependencies=>[
@@ -529,7 +529,7 @@ describe Bibliothecary::Parsers::Nuget do
   end
 
   it 'parses dependencies from packages.config' do
-    expect(Bibliothecary::Parsers::Nuget.analyse_file('packages.config', fixture_path('packages.config'))).to eq({
+    expect(described_class.analyse_file('packages.config', fixture_path('packages.config'))).to eq({
       :platform=>"nuget",
       :path=>"spec/fixtures/packages.config",
       :dependencies=>[
@@ -546,7 +546,7 @@ describe Bibliothecary::Parsers::Nuget do
   end
 
   it 'parses dependencies from example.nuspec' do
-    expect(Bibliothecary::Parsers::Nuget.analyse_file('example.nuspec', fixture_path('example.nuspec'))).to eq({
+    expect(described_class.analyse_file('example.nuspec', fixture_path('example.nuspec'))).to eq({
       :platform=>"nuget",
       :path=>"spec/fixtures/example.nuspec",
       :dependencies=>[
@@ -558,7 +558,7 @@ describe Bibliothecary::Parsers::Nuget do
   end
 
   it 'parses dependencies from paket.lock' do
-    expect(Bibliothecary::Parsers::Nuget.analyse_file('paket.lock', fixture_path('paket.lock'))).to eq({
+    expect(described_class.analyse_file('paket.lock', fixture_path('paket.lock'))).to eq({
       :platform=>"nuget",
       :path=>"spec/fixtures/paket.lock",
       :dependencies=>[
@@ -569,5 +569,13 @@ describe Bibliothecary::Parsers::Nuget do
         {:name=>"Newtonsoft.Json", :version=>"9.0.1", :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('Project.json')).to be_truthy
+    expect(described_class.match?('Project.lock.json')).to be_truthy
+    expect(described_class.match?('packages.config')).to be_truthy
+    expect(described_class.match?('paket.lock')).to be_truthy
+    expect(described_class.match?('example.nuspec')).to be_truthy
   end
 end

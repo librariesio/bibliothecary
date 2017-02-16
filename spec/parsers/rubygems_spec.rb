@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Rubygems do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Rubygems::platform_name).to eq('rubygems')
+    expect(described_class.platform_name).to eq('rubygems')
   end
 
   it 'parses dependencies from Gemfile' do
-    expect(Bibliothecary::Parsers::Rubygems.analyse_file('Gemfile', fixture_path('Gemfile'))).to eq({
+    expect(described_class.analyse_file('Gemfile', fixture_path('Gemfile'))).to eq({
       :platform=>"rubygems",
       :path=>"spec/fixtures/Gemfile",
       :dependencies=>[
@@ -23,7 +23,7 @@ describe Bibliothecary::Parsers::Rubygems do
   end
 
   it 'parses dependencies from gems.rb' do
-    expect(Bibliothecary::Parsers::Rubygems.analyse_file('gems.rb', fixture_path('gems.rb'))).to eq({
+    expect(described_class.analyse_file('gems.rb', fixture_path('gems.rb'))).to eq({
       :platform=>"rubygems",
       :path=>"spec/fixtures/gems.rb",
       :dependencies=>[
@@ -40,7 +40,7 @@ describe Bibliothecary::Parsers::Rubygems do
   end
 
   it 'parses dependencies from devise.gemspec' do
-    expect(Bibliothecary::Parsers::Rubygems.analyse_file('devise.gemspec', fixture_path('devise.gemspec'))).to eq({
+    expect(described_class.analyse_file('devise.gemspec', fixture_path('devise.gemspec'))).to eq({
       :platform=>"rubygems",
       :path=>"spec/fixtures/devise.gemspec",
       :dependencies=>[
@@ -55,7 +55,7 @@ describe Bibliothecary::Parsers::Rubygems do
   end
 
   it 'parses dependencies from Gemfile.lock' do
-    expect(Bibliothecary::Parsers::Rubygems.analyse_file('Gemfile.lock', fixture_path('Gemfile.lock'))).to eq({
+    expect(described_class.analyse_file('Gemfile.lock', fixture_path('Gemfile.lock'))).to eq({
       :platform=>"rubygems",
       :path=>"spec/fixtures/Gemfile.lock",
       :dependencies=>[
@@ -65,5 +65,13 @@ describe Bibliothecary::Parsers::Rubygems do
         {:name=>"hashie", :requirement=>"3.4.2", :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('devise.gemspec')).to be_truthy
+    expect(described_class.match?('Gemfile')).to be_truthy
+    expect(described_class.match?('Gemfile.lock')).to be_truthy
+    expect(described_class.match?('gems.rb')).to be_truthy
+    expect(described_class.match?('gems.locked')).to be_truthy
   end
 end

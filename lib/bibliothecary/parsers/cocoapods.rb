@@ -31,6 +31,11 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^Podfile$/) || filename.match(/^[A-Za-z0-9_-]+\.podspec$/) ||
+          filename.match(/^Podfile\.lock$/) || filename.match(/^[A-Za-z0-9_-]+\.podspec.json$/)
+      end
+
       def self.parse_podfile_lock(manifest)
         manifest['PODS'].map do |row|
           pod = row.is_a?(String) ? row : row.keys.first

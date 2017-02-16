@@ -31,6 +31,14 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/Project\.json$/) ||
+        filename.match(/Project\.lock\.json$/) ||
+        filename.match(/packages\.config$/) ||
+        filename.match(/^[A-Za-z0-9_-]+\.nuspec$/) ||
+        filename.match(/paket\.lock$/)
+      end
+
       def self.parse_project_json(manifest)
         manifest.fetch('dependencies',[]).map do |name, requirement|
           {

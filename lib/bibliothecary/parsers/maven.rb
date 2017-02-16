@@ -22,6 +22,12 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/ivy\.xml$/i) ||
+        filename.match(/pom\.xml$/i) ||
+        filename.match(/build.gradle$/i)
+      end
+
       def self.parse_ivy_manifest(manifest)
         manifest.dependencies.locate('dependency').map do |dependency|
           attrs = dependency.attributes

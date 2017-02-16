@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Shard do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Shard::platform_name).to eq('shard')
+    expect(described_class.platform_name).to eq('shard')
   end
 
   it 'parses dependencies from shard.yml' do
-    expect(Bibliothecary::Parsers::Shard.analyse_file('shard.yml', fixture_path('shard.yml'))).to eq({
+    expect(described_class.analyse_file('shard.yml', fixture_path('shard.yml'))).to eq({
       :platform=>"shard",
       :path=>"spec/fixtures/shard.yml",
       :dependencies=>[
@@ -20,7 +20,7 @@ describe Bibliothecary::Parsers::Shard do
   end
 
   it 'parses dependencies from shard.lock' do
-    expect(Bibliothecary::Parsers::Shard.analyse_file('shard.lock', fixture_path('shard.lock'))).to eq({
+    expect(described_class.analyse_file('shard.lock', fixture_path('shard.lock'))).to eq({
       :platform=>"shard",
       :path=>"spec/fixtures/shard.lock",
       :dependencies=>[
@@ -33,5 +33,10 @@ describe Bibliothecary::Parsers::Shard do
         {:name=>"shards", :requirement=>"0.6.0", :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('shard.yml')).to be_truthy
+    expect(described_class.match?('shard.lock')).to be_truthy
   end
 end

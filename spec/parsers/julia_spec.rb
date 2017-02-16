@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Julia do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Julia::platform_name).to eq('julia')
+    expect(described_class.platform_name).to eq('julia')
   end
 
   it 'parses dependencies from REQUIRE' do
-    expect(Bibliothecary::Parsers::Julia.analyse_file('REQUIRE', fixture_path('REQUIRE'))).to eq({
+    expect(described_class.analyse_file('REQUIRE', fixture_path('REQUIRE'))).to eq({
       :platform=>"julia",
       :path=>"spec/fixtures/REQUIRE",
       :dependencies=>[
@@ -29,5 +29,9 @@ describe Bibliothecary::Parsers::Julia do
         {:name=>"StatsBase", :requirement=>"*", :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('REQUIRE')).to be_truthy
   end
 end

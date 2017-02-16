@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Cargo do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Cargo::platform_name).to eq('cargo')
+    expect(described_class.platform_name).to eq('cargo')
   end
 
   it 'parses dependencies from Cargo.toml' do
-    expect(Bibliothecary::Parsers::Cargo.analyse_file('Cargo.toml', fixture_path('Cargo.toml'))).to eq({
+    expect(described_class.analyse_file('Cargo.toml', fixture_path('Cargo.toml'))).to eq({
       :platform=>"cargo",
       :path=>"spec/fixtures/Cargo.toml",
       :dependencies=>[
@@ -17,7 +17,7 @@ describe Bibliothecary::Parsers::Cargo do
   end
 
   it 'parses dependencies from Cargo.lock' do
-    expect(Bibliothecary::Parsers::Cargo.analyse_file('Cargo.lock', fixture_path('Cargo.lock'))).to eq({
+    expect(described_class.analyse_file('Cargo.lock', fixture_path('Cargo.lock'))).to eq({
       :platform=>"cargo",
       :path=>"spec/fixtures/Cargo.lock",
       :dependencies=>[
@@ -33,5 +33,10 @@ describe Bibliothecary::Parsers::Cargo do
         {:name=>"libc", :requirement=>"0.2.4", :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('Cargo.toml')).to be_truthy
+    expect(described_class.match?('Cargo.lock')).to be_truthy
   end
 end

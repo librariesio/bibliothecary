@@ -12,6 +12,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^REQUIRE$/i)
+      end
+
       def self.parse_require(manifest)
         manifest.split("\n").map do |line|
           match = line.split(/\s/)

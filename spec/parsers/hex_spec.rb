@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Hex do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Hex::platform_name).to eq('hex')
+    expect(described_class.platform_name).to eq('hex')
   end
 
   it 'parses dependencies from mix.exs' do
-    expect(Bibliothecary::Parsers::Hex.analyse_file('mix.exs', fixture_path('mix.exs'))).to eq({
+    expect(described_class.analyse_file('mix.exs', fixture_path('mix.exs'))).to eq({
       :platform=>"hex",
       :path=>"spec/fixtures/mix.exs",
       :dependencies=>[
@@ -18,7 +18,7 @@ describe Bibliothecary::Parsers::Hex do
   end
 
   it 'parses dependencies from mix.lock' do
-    expect(Bibliothecary::Parsers::Hex.analyse_file('mix.lock', fixture_path('mix.lock'))).to eq({
+    expect(described_class.analyse_file('mix.lock', fixture_path('mix.lock'))).to eq({
       :platform=>"hex",
       :path=>"spec/fixtures/mix.lock",
       :dependencies=>[
@@ -29,5 +29,10 @@ describe Bibliothecary::Parsers::Hex do
         {:name=>"cowboy", :version=>"1.0.4", :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('mix.exs')).to be_truthy
+    expect(described_class.match?('mix.lock')).to be_truthy
   end
 end

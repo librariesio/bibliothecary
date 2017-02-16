@@ -15,6 +15,10 @@ module Bibliothecary
         end
       end
 
+      def self.match?(filename)
+        filename.match(/^project\.clj$/)
+      end
+
       def self.parse_manifest(manifest)
         response = Typhoeus.post("https://clojars-json.herokuapp.com/project.clj", body: manifest)
         json = JSON.parse response.body

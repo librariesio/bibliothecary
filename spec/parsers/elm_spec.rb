@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::Elm do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::Elm::platform_name).to eq('elm')
+    expect(described_class.platform_name).to eq('elm')
   end
 
   it 'parses dependencies from elm-package.json' do
-    expect(Bibliothecary::Parsers::Elm.analyse_file('elm-package.json', fixture_path('elm-package.json'))).to eq({
+    expect(described_class.analyse_file('elm-package.json', fixture_path('elm-package.json'))).to eq({
       :platform=>"elm",
       :path=>"spec/fixtures/elm-package.json",
       :dependencies=>[
@@ -27,7 +27,7 @@ describe Bibliothecary::Parsers::Elm do
   end
 
   it 'parses dependencies from elm_dependencies.json' do
-    expect(Bibliothecary::Parsers::Elm.analyse_file('elm_dependencies.json', fixture_path('elm_dependencies.json'))).to eq({
+    expect(described_class.analyse_file('elm_dependencies.json', fixture_path('elm_dependencies.json'))).to eq({
       :platform=>"elm",
       :path=>"spec/fixtures/elm_dependencies.json",
       :dependencies=>[
@@ -40,7 +40,7 @@ describe Bibliothecary::Parsers::Elm do
   end
 
   it 'parses dependencies from elm-stuff/exact-dependencies.json' do
-    expect(Bibliothecary::Parsers::Elm.analyse_file('elm-stuff/exact-dependencies.json', fixture_path('exact-dependencies.json'))).to eq({
+    expect(described_class.analyse_file('elm-stuff/exact-dependencies.json', fixture_path('exact-dependencies.json'))).to eq({
       :platform=>"elm",
       :path=>"spec/fixtures/exact-dependencies.json",
       :dependencies=>[
@@ -53,5 +53,17 @@ describe Bibliothecary::Parsers::Elm do
         {:name=>"evancz/virtual-dom", :requirement=>"1.2.2", :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('elm-package.json')).to be_truthy
+    expect(described_class.match?('elm_dependencies.json')).to be_truthy
+    expect(described_class.match?('elm-stuff/exact-dependencies.json')).to be_truthy
+  end
+
+  it "doesn't match invalid manifest filepaths" do
+    expect(described_class.match?('node_modules/foo/elm-stuff/exact-dependencies.json')).to be_falsey
+    expect(described_class.match?('node_modules/foo/elm_dependencies.json')).to be_falsey
+    expect(described_class.match?('node_modules/foo/elm-package.json')).to be_falsey
   end
 end

@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary::Parsers::CPAN do
   it 'has a platform name' do
-    expect(Bibliothecary::Parsers::CPAN::platform_name).to eq('cpan')
+    expect(described_class.platform_name).to eq('cpan')
   end
 
   it 'parses dependencies from META.yml' do
-    expect(Bibliothecary::Parsers::CPAN.analyse_file('META.yml', fixture_path('META.yml'))).to eq({
+    expect(described_class.analyse_file('META.yml', fixture_path('META.yml'))).to eq({
       :platform=>"cpan",
       :path=>"spec/fixtures/META.yml",
       :dependencies=>[
@@ -20,7 +20,7 @@ describe Bibliothecary::Parsers::CPAN do
   end
 
   it 'parses dependencies from META.json' do
-    expect(Bibliothecary::Parsers::CPAN.analyse_file('META.json', fixture_path('META.json'))).to eq({
+    expect(described_class.analyse_file('META.json', fixture_path('META.json'))).to eq({
       :platform=>"cpan",
       :path=>"spec/fixtures/META.json",
       :dependencies=>[
@@ -31,5 +31,10 @@ describe Bibliothecary::Parsers::CPAN do
         {:name=>"List::Util", :requirement=>"1.07_00", :type=>"runtime"}
       ]
     })
+  end
+
+  it 'matches valid manifest filepaths' do
+    expect(described_class.match?('META.yml')).to be_truthy
+    expect(described_class.match?('META.json')).to be_truthy
   end
 end
