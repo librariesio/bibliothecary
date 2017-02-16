@@ -1,6 +1,12 @@
 # Bibliothecary
 
-Dependency manifest parsing service for https://libraries.io in Ruby
+Dependency manifest parsing library for https://libraries.io
+
+[![Build Status](https://travis-ci.org/librariesio/bibliothecary.svg?branch=master)](https://travis-ci.org/librariesio/bibliothecary)
+[![Code Climate](https://img.shields.io/codeclimate/github/librariesio/bibliothecary.svg?style=flat)](https://codeclimate.com/github/librariesio/bibliothecary)
+[![Test Coverage](https://img.shields.io/codeclimate/coverage/github/librariesio/bibliothecary.svg?style=flat)](https://codeclimate.com/github/librariesio/bibliothecary)
+[![Code Climate](https://img.shields.io/codeclimate/issues/github/librariesio/bibliothecary.svg)](https://codeclimate.com/github/librariesio/bibliothecary/issues)
+[![license](https://img.shields.io/github/license/librariesio/bibliothecary.svg)](https://github.com/librariesio/bibliothecary/blob/master/LICENSE.txt)
 
 ## Installation
 
