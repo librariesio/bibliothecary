@@ -17,50 +17,31 @@ module Bibliothecary
 
       def self.parse_godep_json(file_contents)
         manifest = JSON.parse file_contents
-        manifest.fetch('Deps',[]).map do |dependency|
-          {
-            name: dependency['ImportPath'],
-            requirement: dependency['Rev'],
-            type: 'runtime'
-          }
-        end
+        map_dependencies(manifest, 'Deps', 'ImportPath', 'Rev', 'runtime')
       end
 
       def self.parse_glide_yaml(file_contents)
         manifest = YAML.load file_contents
-        manifest.fetch('import',[]).map do |dependency|
-          {
-            name: dependency['package'],
-            requirement: dependency['version'] || '*',
-            type: 'runtime'
-          }
-        end + manifest.fetch('devImports',[]).map do |dependency|
-          {
-            name: dependency['package'],
-            requirement: dependency['version'] || '*',
-            type: 'development'
-          }
-        end
+        map_dependencies(manifest, 'import', 'package', 'version', 'runtime') +
+        map_dependencies(manifest, 'devImports', 'package', 'version', 'development')
       end
 
       def self.parse_glide_lockfile(file_contents)
         manifest = YAML.load file_contents
-        manifest.fetch('imports',[]).map do |dependency|
-          {
-            name: dependency['name'],
-            requirement: dependency['version'] || '*',
-            type: 'runtime'
-          }
-        end
+        map_dependencies(manifest, 'imports', 'name', 'version', 'runtime')
       end
 
       def self.parse_gb_manifest(file_contents)
         manifest = JSON.parse file_contents
-        manifest.fetch('dependencies',[]).map do |dependency|
+        map_dependencies(manifest, 'dependencies', 'importpath', 'revision', 'runtime')
+      end
+
+      def self.map_dependencies(manifest, attr_name, dep_attr_name, version_attr_name, type)
+        manifest.fetch(attr_name,[]).map do |dependency|
           {
-            name: dependency['importpath'],
-            requirement: dependency['revision'],
-            type: 'runtime'
+            name: dependency[dep_attr_name],
+            requirement: dependency[version_attr_name]  || '*',
+            type: type
           }
         end
       end
