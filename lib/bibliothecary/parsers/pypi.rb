@@ -52,7 +52,6 @@ module Bibliothecary
       end
 
       def self.is_requirements_file(filename)
-        is_requirements_file = filename.match(/require.*\.(txt|pip)$/)
         if filename.match(/require.*\.(txt|pip)$/) and !filename.match(/^node_modules/)
           return true
         else
