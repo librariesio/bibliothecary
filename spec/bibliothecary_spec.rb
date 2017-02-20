@@ -53,20 +53,8 @@ describe Bibliothecary do
   end
 
   it 'searches a folder for manifests and parses them' do
-    expect(described_class.analyse('./')).to eq([
-       {:platform=>"rubygems",
-        :path=>"bibliothecary.gemspec",
-        :dependencies=>
-         [{:name=>"toml-rb", :requirement=>"~> 0.3.9", :type=>:runtime},
-          {:name=>"librariesio-gem-parser", :requirement=>">= 0", :type=>:runtime},
-          {:name=>"ox", :requirement=>">= 0", :type=>:runtime},
-          {:name=>"typhoeus", :requirement=>">= 0", :type=>:runtime},
-          {:name=>"deb_control", :requirement=>">= 0", :type=>:runtime},
-          {:name=>"sdl4r", :requirement=>">= 0", :type=>:runtime},
-          {:name=>"bundler", :requirement=>"~> 1.11", :type=>:development},
-          {:name=>"rake", :requirement=>"~> 12.0", :type=>:development},
-          {:name=>"rspec", :requirement=>"~> 3.0", :type=>:development}]},
-       {:platform=>"rubygems",
+    expect(described_class.analyse('./')).to eq(
+      [{:platform=>"rubygems",
         :path=>"Gemfile",
         :dependencies=>
          [{:name=>"simplecov", :requirement=>">= 0", :type=>:development},
@@ -99,6 +87,18 @@ describe Bibliothecary do
           {:name=>"simplecov", :requirement=>"0.13.0", :type=>"runtime"},
           {:name=>"simplecov-html", :requirement=>"0.10.0", :type=>"runtime"},
           {:name=>"toml-rb", :requirement=>"0.3.15", :type=>"runtime"},
-          {:name=>"typhoeus", :requirement=>"1.1.2", :type=>"runtime"}]}])
+          {:name=>"typhoeus", :requirement=>"1.1.2", :type=>"runtime"}]},
+       {:platform=>"rubygems",
+        :path=>"bibliothecary.gemspec",
+        :dependencies=>
+         [{:name=>"toml-rb", :requirement=>"~> 0.3.9", :type=>:runtime},
+          {:name=>"librariesio-gem-parser", :requirement=>">= 0", :type=>:runtime},
+          {:name=>"ox", :requirement=>">= 0", :type=>:runtime},
+          {:name=>"typhoeus", :requirement=>">= 0", :type=>:runtime},
+          {:name=>"deb_control", :requirement=>">= 0", :type=>:runtime},
+          {:name=>"sdl4r", :requirement=>">= 0", :type=>:runtime},
+          {:name=>"bundler", :requirement=>"~> 1.11", :type=>:development},
+          {:name=>"rake", :requirement=>"~> 12.0", :type=>:development},
+          {:name=>"rspec", :requirement=>"~> 3.0", :type=>:development}]}])
   end
 end
