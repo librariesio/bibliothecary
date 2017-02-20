@@ -106,10 +106,25 @@ describe Bibliothecary::Parsers::Go do
     })
   end
 
+  it 'parses dependencies from gpm Godep file' do
+    expect(described_class.analyse_contents('Godeps', load_fixture('Godeps'))).to eq({
+      :platform=>"go",
+      :path=>"Godeps",
+      :dependencies=>[
+        {:name=>"github.com/nu7hatch/gotrail", :requirement=>"v0.0.2", :type=>"runtime"},
+        {:name=>"github.com/replicon/fast-archiver", :requirement=>"v1.02", :type=>"runtime"},
+        {:name=>"github.com/garyburd/redigo/redis", :requirement=>"a6a0a737c00caf4d4c2bb589941ace0d688168bb", :type=>"runtime"},
+        {:name=>"launchpad.net/gocheck", :requirement=>"r2013.03.03", :type=>"runtime"},
+        {:name=>"code.google.com/p/go.example/hello/...", :requirement=>"ae081cd1d6cc", :type=>"runtime"}
+      ]
+    })
+  end
+
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('Godeps/Godeps.json')).to be_truthy
     expect(described_class.match?('vendor/manifest')).to be_truthy
     expect(described_class.match?('glide.yaml')).to be_truthy
     expect(described_class.match?('glide.lock')).to be_truthy
+    expect(described_class.match?('Godeps')).to be_truthy
   end
 end

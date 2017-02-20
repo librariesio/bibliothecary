@@ -6,11 +6,14 @@ module Bibliothecary
     class Go
       include Bibliothecary::Analyser
 
+      GPM_REGEXP = /^(.+)\s+(.+)$/
+
       def self.mapping
         {
           /^glide\.yaml$/ => :parse_glide_yaml,
           /^glide\.lock$/ => :parse_glide_lockfile,
           /^Godeps\/Godeps\.json$/ => :parse_godep_json,
+          /^Godeps$/i => :parse_gpm,
           /^vendor\/manifest$/ => :parse_gb_manifest
         }
       end
@@ -18,6 +21,20 @@ module Bibliothecary
       def self.parse_godep_json(file_contents)
         manifest = JSON.parse file_contents
         map_dependencies(manifest, 'Deps', 'ImportPath', 'Rev', 'runtime')
+      end
+
+      def self.parse_gpm(file_contents)
+        deps = []
+        file_contents.split("\n").each do |line|
+          match = line.gsub(/(\#(.*))/, '').match(GPM_REGEXP)
+          next unless match
+          deps << {
+            name: match[1].strip,
+            requirement: match[2].strip || '*',
+            type: 'runtime'
+          }
+        end
+        deps
       end
 
       def self.parse_glide_yaml(file_contents)
