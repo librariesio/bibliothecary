@@ -2,11 +2,11 @@ require 'spec_helper'
 
 describe Bibliothecary do
   it 'has a version number' do
-    expect(Bibliothecary::VERSION).not_to be nil
+    expect(described_class::VERSION).not_to be nil
   end
 
   it 'lists supported package managers' do
-    expect(Bibliothecary.package_managers).to eq([
+    expect(described_class.package_managers).to eq([
           Bibliothecary::Parsers::Bower,
           Bibliothecary::Parsers::Cargo,
           Bibliothecary::Parsers::Carthage,
@@ -30,5 +30,17 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Shard,
           Bibliothecary::Parsers::SwiftPM
         ])
+  end
+
+  it 'identifys manifests from a list of file paths' do
+    expect(described_class.identify_manifests(['package.json', 'README.md', 'index.js'])).to eq([
+      'package.json'
+      ])
+  end
+
+  it 'analyses contents of a file' do
+    expect(described_class.analyse_file('bower.json', load_fixture('bower.json'))).to eq([
+      {:name=>"jquery", :requirement=>">= 1.9.1", :type=>"runtime"}
+    ])
   end
 end

@@ -15,6 +15,14 @@ module Bibliothecary
         end
       end
 
+      def self.parse_file(filename, contents)
+        if is_requirements_file(filename)
+          parse_requirements_txt(contents)
+        elsif filename.match(/setup\.py$/)
+          parse_setup_py(contents)
+        end
+      end
+
       def self.match?(filename)
         is_requirements_file(filename) || filename.match(/setup\.py$/)
       end

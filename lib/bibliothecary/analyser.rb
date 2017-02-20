@@ -5,11 +5,16 @@ module Bibliothecary
     end
     module ClassMethods
       def parse(filename, path)
+        parse_file(filename, File.open(path).read)
+      end
+
+      def parse_file(filename, contents)
         mapping.each do |regex, method_name|
           if filename.match(regex)
-            return send(method_name, File.open(path).read)
+            return send(method_name, contents)
           end
         end
+        return []
       end
 
       def match?(filename)

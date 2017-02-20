@@ -7,3 +7,7 @@ require 'bibliothecary'
 def fixture_path(name)
   "spec/fixtures/#{name}"
 end
+
+def load_fixture(name)
+  File.open(fixture_path(name)).read
+end

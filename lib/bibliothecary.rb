@@ -12,6 +12,20 @@ module Bibliothecary
     package_managers.map{|pm| pm.analyse(path, file_list) }.flatten.compact
   end
 
+  def self.analyse_file(file_path, contents)
+    package_managers.map do |pm|
+      pm.parse_file(file_path, contents)
+    end.flatten.uniq.compact
+  end
+
+  def self.identify_manifests(file_list)
+    package_managers.map do |pm|
+      file_list.select do |file_path|
+        pm.match?(file_path)
+      end
+    end.flatten.uniq.compact
+  end
+
   def self.package_managers
     Bibliothecary::Parsers.constants.map{|c| Bibliothecary::Parsers.const_get(c) }.sort_by{|c| c.to_s.downcase }
   end
