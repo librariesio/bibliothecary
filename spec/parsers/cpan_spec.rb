@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::CPAN do
   end
 
   it 'parses dependencies from META.yml' do
-    expect(described_class.analyse_file('META.yml', fixture_path('META.yml'))).to eq({
+    expect(described_class.analyse_contents('META.yml', load_fixture('META.yml'))).to eq({
       :platform=>"cpan",
-      :path=>"spec/fixtures/META.yml",
+      :path=>"META.yml",
       :dependencies=>[
         {:name=>"Digest::MD5", :requirement=>0, :type=>"runtime"},
         {:name=>"File::Temp", :requirement=>0, :type=>"runtime"},
@@ -20,9 +20,9 @@ describe Bibliothecary::Parsers::CPAN do
   end
 
   it 'parses dependencies from META.json' do
-    expect(described_class.analyse_file('META.json', fixture_path('META.json'))).to eq({
+    expect(described_class.analyse_contents('META.json', load_fixture('META.json'))).to eq({
       :platform=>"cpan",
-      :path=>"spec/fixtures/META.json",
+      :path=>"META.json",
       :dependencies=>[
         {:name=>"English", :requirement=>"1.00", :type=>"runtime"},
         {:name=>"Test::More", :requirement=>"0.45", :type=>"runtime"},

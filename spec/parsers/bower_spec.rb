@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::Bower do
   end
 
   it 'parses dependencies from bower.json' do
-    expect(described_class.analyse_file('bower.json', fixture_path('bower.json'))).to eq({
+    expect(described_class.analyse_contents('bower.json', load_fixture('bower.json'))).to eq({
       :platform=>"bower",
-      :path=>"spec/fixtures/bower.json",
+      :path=>"bower.json",
       :dependencies=>[
         {:name=>"jquery", :requirement=>">= 1.9.1", :type=>"runtime"}
       ]

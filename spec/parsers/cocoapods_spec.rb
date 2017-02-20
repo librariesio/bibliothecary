@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::CocoaPods do
   end
 
   it 'parses dependencies from Podfile' do
-    expect(described_class.analyse_file('Podfile', fixture_path('Podfile'))).to eq({
+    expect(described_class.analyse_contents('Podfile', load_fixture('Podfile'))).to eq({
       :platform=>"cocoapods",
-      :path=>"spec/fixtures/Podfile",
+      :path=>"Podfile",
       :dependencies=>[
         {:name=>"Artsy-UIButtons", :requirement=>">= 0", :type=>:runtime},
         {:name=>"ORStackView", :requirement=>">= 0", :type=>:runtime},
@@ -36,9 +36,9 @@ describe Bibliothecary::Parsers::CocoaPods do
   end
 
   it 'parses dependencies from Podfile.lock' do
-    expect(described_class.analyse_file('Podfile.lock', fixture_path('Podfile.lock'))).to eq({
+    expect(described_class.analyse_contents('Podfile.lock', load_fixture('Podfile.lock'))).to eq({
       :platform=>"cocoapods",
-      :path=>"spec/fixtures/Podfile.lock",
+      :path=>"Podfile.lock",
       :dependencies=>[
         {:name=>"Alamofire", :requirement=>"2.0.1", :type=>"runtime"},
         {:name=>"ARAnalytics", :requirement=>"3.8.0", :type=>"runtime"},
@@ -95,9 +95,9 @@ describe Bibliothecary::Parsers::CocoaPods do
   end
 
   it 'parses dependencies from example.podspec' do
-    expect(described_class.analyse_file('example.podspec', fixture_path('example.podspec'))).to eq({
+    expect(described_class.analyse_contents('example.podspec', load_fixture('example.podspec'))).to eq({
       :platform=>"cocoapods",
-      :path=>"spec/fixtures/example.podspec",
+      :path=>"example.podspec",
       :dependencies=>[
         {:name=>"CocoaLumberjack", :requirement=>">= 0", :type=>:runtime}
       ]
@@ -105,9 +105,9 @@ describe Bibliothecary::Parsers::CocoaPods do
   end
 
   it 'parses dependencies from example.podspec.json' do
-    expect(described_class.analyse_file('example.podspec.json', fixture_path('example.podspec.json'))).to eq({
+    expect(described_class.analyse_contents('example.podspec.json', load_fixture('example.podspec.json'))).to eq({
       :platform=>"cocoapods",
-      :path=>"spec/fixtures/example.podspec.json",
+      :path=>"example.podspec.json",
       :dependencies=>[
         {:name=>"OpenSSL", :requirement=>["~> 1.0"], :type=>"runtime"}
       ]

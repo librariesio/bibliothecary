@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::Go do
   end
 
   it 'parses dependencies from glide.yaml' do
-    expect(described_class.analyse_file('glide.yaml', fixture_path('glide.yaml'))).to eq({
+    expect(described_class.analyse_contents('glide.yaml', load_fixture('glide.yaml'))).to eq({
       :platform=>"go",
-      :path=>"spec/fixtures/glide.yaml",
+      :path=>"glide.yaml",
       :dependencies=>[
         {:name=>"gopkg.in/yaml.v2", :requirement=>"*", :type=>"runtime"},
         {:name=>"github.com/Masterminds/vcs",
@@ -23,9 +23,9 @@ describe Bibliothecary::Parsers::Go do
   end
 
   it 'parses dependencies from glide.lock' do
-    expect(described_class.analyse_file('glide.lock', fixture_path('glide.lock'))).to eq({
+    expect(described_class.analyse_contents('glide.lock', load_fixture('glide.lock'))).to eq({
       :platform=>"go",
-      :path=>"spec/fixtures/glide.lock",
+      :path=>"glide.lock",
       :dependencies=>[
         {:name=>"github.com/codegangsta/cli",
          :requirement=>"c31a7975863e7810c92e2e288a9ab074f9a88f29",
@@ -44,9 +44,9 @@ describe Bibliothecary::Parsers::Go do
   end
 
   it 'parses dependencies from Godeps.json' do
-    expect(described_class.analyse_file('Godeps/Godeps.json', fixture_path('Godeps.json'))).to eq({
+    expect(described_class.analyse_contents('Godeps/Godeps.json', load_fixture('Godeps.json'))).to eq({
       :platform=>"go",
-      :path=>"spec/fixtures/Godeps.json",
+      :path=>"Godeps/Godeps.json",
       :dependencies=>[
         {:name=>"github.com/BurntSushi/toml",
          :requirement=>"3883ac1ce943878302255f538fce319d23226223",
@@ -95,9 +95,9 @@ describe Bibliothecary::Parsers::Go do
   end
 
   it 'parses dependencies from gb_manifest' do
-    expect(described_class.analyse_file('vendor/manifest', fixture_path('gb_manifest'))).to eq({
+    expect(described_class.analyse_contents('vendor/manifest', load_fixture('gb_manifest'))).to eq({
       :platform=>"go",
-      :path=>"spec/fixtures/gb_manifest",
+      :path=>"vendor/manifest",
       :dependencies=>[
         {:name=>"github.com/gorilla/mux",
          :requirement=>"9fa818a44c2bf1396a17f9d5a3c0f6dd39d2ff8e",

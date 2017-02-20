@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::CRAN do
   end
 
   it 'parses dependencies from DESCRIPTION' do
-    expect(described_class.analyse_file('DESCRIPTION', fixture_path('DESCRIPTION'))).to eq({
+    expect(described_class.analyse_contents('DESCRIPTION', load_fixture('DESCRIPTION'))).to eq({
       :platform=>"cran",
-      :path=>"spec/fixtures/DESCRIPTION",
+      :path=>"DESCRIPTION",
       :dependencies=>[
         {:name=>"R", :version=>">= 3.1", :type=>"depends"},
         {:name=>"digest", :version=>"*", :type=>"imports"},
@@ -42,9 +42,9 @@ describe Bibliothecary::Parsers::CRAN do
   end
 
   it 'parses dependencies from minimal DESCRIPTION file' do
-    expect(described_class.analyse_file('DESCRIPTION', fixture_path('DESCRIPTION2'))).to eq({
+    expect(described_class.analyse_contents('DESCRIPTION', load_fixture('DESCRIPTION2'))).to eq({
       :platform=>"cran",
-      :path=>"spec/fixtures/DESCRIPTION2",
+      :path=>"DESCRIPTION",
       :dependencies=>[
         {:name=>"R", :version=>">= 2.14.1", :type=>"depends"},
         {:name=>"methods", :version=>"*", :type=>"imports"},

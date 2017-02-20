@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::Clojars do
   end
 
   it 'parses dependencies from project.clj' do
-    expect(described_class.analyse_file('project.clj', fixture_path('project.clj'))).to eq({
+    expect(described_class.analyse_contents('project.clj', load_fixture('project.clj'))).to eq({
       :platform=>"clojars",
-      :path=>"spec/fixtures/project.clj",
+      :path=>"project.clj",
       :dependencies=>[
         {:name=>"org.clojure/clojure", :version=>"1.6.0", :type=>"runtime"},
         {:name=>"cheshire", :version=>"5.4.0", :type=>"runtime"},

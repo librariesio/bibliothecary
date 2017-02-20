@@ -14,7 +14,7 @@ module Bibliothecary
 
   def self.analyse_file(file_path, contents)
     package_managers.map do |pm|
-      pm.parse_file(file_path, contents)
+      pm.analyse_contents(file_path, contents)
     end.flatten.uniq.compact
   end
 

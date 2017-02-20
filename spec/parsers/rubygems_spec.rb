@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::Rubygems do
   end
 
   it 'parses dependencies from Gemfile' do
-    expect(described_class.analyse_file('Gemfile', fixture_path('Gemfile'))).to eq({
+    expect(described_class.analyse_contents('Gemfile', load_fixture('Gemfile'))).to eq({
       :platform=>"rubygems",
-      :path=>"spec/fixtures/Gemfile",
+      :path=>"Gemfile",
       :dependencies=>[
         {:name=>"oj", :requirement=>">= 0", :type=>:runtime},
         {:name=>"rails", :requirement=>"= 4.2.0", :type=>:runtime},
@@ -23,9 +23,9 @@ describe Bibliothecary::Parsers::Rubygems do
   end
 
   it 'parses dependencies from gems.rb' do
-    expect(described_class.analyse_file('gems.rb', fixture_path('gems.rb'))).to eq({
+    expect(described_class.analyse_contents('gems.rb', load_fixture('gems.rb'))).to eq({
       :platform=>"rubygems",
-      :path=>"spec/fixtures/gems.rb",
+      :path=>"gems.rb",
       :dependencies=>[
         {:name=>"oj", :requirement=>">= 0", :type=>:runtime},
         {:name=>"rails", :requirement=>"= 4.2.0", :type=>:runtime},
@@ -40,9 +40,9 @@ describe Bibliothecary::Parsers::Rubygems do
   end
 
   it 'parses dependencies from devise.gemspec' do
-    expect(described_class.analyse_file('devise.gemspec', fixture_path('devise.gemspec'))).to eq({
+    expect(described_class.analyse_contents('devise.gemspec', load_fixture('devise.gemspec'))).to eq({
       :platform=>"rubygems",
-      :path=>"spec/fixtures/devise.gemspec",
+      :path=>"devise.gemspec",
       :dependencies=>[
         {:name=>"warden", :requirement=>"~> 1.2.3", :type=>:runtime},
         {:name=>"orm_adapter", :requirement=>"~> 0.1", :type=>:development},
@@ -55,9 +55,9 @@ describe Bibliothecary::Parsers::Rubygems do
   end
 
   it 'parses dependencies from Gemfile.lock' do
-    expect(described_class.analyse_file('Gemfile.lock', fixture_path('Gemfile.lock'))).to eq({
+    expect(described_class.analyse_contents('Gemfile.lock', load_fixture('Gemfile.lock'))).to eq({
       :platform=>"rubygems",
-      :path=>"spec/fixtures/Gemfile.lock",
+      :path=>"Gemfile.lock",
       :dependencies=>[
         {:name=>"CFPropertyList", :requirement=>"2.3.1", :type=>"runtime"},
         {:name=>"actionmailer", :requirement=>"4.2.3", :type=>"runtime"},

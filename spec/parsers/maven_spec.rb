@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::Maven do
   end
 
   it 'parses dependencies from pom.xml' do
-    expect(described_class.analyse_file('pom.xml', fixture_path('pom.xml'))).to eq({
+    expect(described_class.analyse_contents('pom.xml', load_fixture('pom.xml'))).to eq({
       :platform=>"maven",
-      :path=>"spec/fixtures/pom.xml",
+      :path=>"pom.xml",
       :dependencies=>[
         {:name=>"org.glassfish.jersey.core:jersey-server",
         :requirement=>"2.16",
@@ -85,9 +85,9 @@ describe Bibliothecary::Parsers::Maven do
   end
 
   it 'parses dependencies from pom2.xml' do
-    expect(described_class.analyse_file('pom.xml', fixture_path('pom2.xml'))).to eq({
+    expect(described_class.analyse_contents('pom.xml', load_fixture('pom2.xml'))).to eq({
       :platform=>"maven",
-      :path=>"spec/fixtures/pom2.xml",
+      :path=>"pom.xml",
       :dependencies=>[
         {:name=>"org.apache.maven:maven-plugin-api",
           :requirement=>"3.3.9",
@@ -116,9 +116,9 @@ describe Bibliothecary::Parsers::Maven do
   end
 
   it 'parses dependencies from ivy.xml' do
-    expect(described_class.analyse_file('ivy.xml', fixture_path('ivy.xml'))).to eq({
+    expect(described_class.analyse_contents('ivy.xml', load_fixture('ivy.xml'))).to eq({
       :platform=>"maven",
-      :path=>"spec/fixtures/ivy.xml",
+      :path=>"ivy.xml",
       :dependencies=>[
         {:name=>"org.htmlparser:htmlparser", :requirement=>"2.1", :type=>"runtime"},
         {:name=>"org.apache.velocity:velocity",
@@ -147,9 +147,9 @@ describe Bibliothecary::Parsers::Maven do
   end
 
   it 'parses dependencies from build.gradle' do
-    expect(described_class.analyse_file('build.gradle', fixture_path('build.gradle'))).to eq({
+    expect(described_class.analyse_contents('build.gradle', load_fixture('build.gradle'))).to eq({
       :platform=>"maven",
-      :path=>"spec/fixtures/build.gradle",
+      :path=>"build.gradle",
       :dependencies=>[
         {:name=>"com.squareup.okhttp:okhttp", :version=>"2.1.0", :type=>"runtime"},
         {:name=>"com.squareup.okhttp:okhttp-urlconnection", :version=>"2.1.0", :type=>"runtime"},

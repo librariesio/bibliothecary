@@ -39,8 +39,16 @@ describe Bibliothecary do
   end
 
   it 'analyses contents of a file' do
-    expect(described_class.analyse_file('bower.json', load_fixture('bower.json'))).to eq([
-      {:name=>"jquery", :requirement=>">= 1.9.1", :type=>"runtime"}
-    ])
+    expect(described_class.analyse_file('bower.json', load_fixture('bower.json'))).to eq([{
+      :platform=>"bower",
+      :path=>"bower.json",
+      :dependencies=>[
+        {:name=>"jquery", :requirement=>">= 1.9.1", :type=>"runtime"}
+      ]
+    }])
+  end
+
+  it 'ignores certain files' do
+    expect(described_class.ignored_files).to eq(".git|node_modules|bower_components")
   end
 end

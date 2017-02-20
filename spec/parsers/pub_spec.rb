@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::Pub do
   end
 
   it 'parses dependencies from pubspec.yaml' do
-    expect(described_class.analyse_file('pubspec.yaml', fixture_path('pubspec.yaml'))).to eq({
+    expect(described_class.analyse_contents('pubspec.yaml', load_fixture('pubspec.yaml'))).to eq({
       :platform=>"pub",
-      :path=>"spec/fixtures/pubspec.yaml",
+      :path=>"pubspec.yaml",
       :dependencies=>[
         {:name=>"analyzer", :requirement=>">=0.22.0 <0.25.0", :type=>"runtime"},
         {:name=>"args", :requirement=>">=0.12.0 <0.13.0", :type=>"runtime"},
@@ -19,9 +19,9 @@ describe Bibliothecary::Parsers::Pub do
   end
 
   it 'parses dependencies from pubspec.lock' do
-    expect(described_class.analyse_file('pubspec.lock', fixture_path('pubspec.lock'))).to eq({
+    expect(described_class.analyse_contents('pubspec.lock', load_fixture('pubspec.lock'))).to eq({
       :platform=>"pub",
-      :path=>"spec/fixtures/pubspec.lock",
+      :path=>"pubspec.lock",
       :dependencies=>[
         {:name=>"analyzer", :requirement=>"0.24.6", :type=>"runtime"},
         {:name=>"args", :requirement=>"0.12.2+6", :type=>"runtime"},

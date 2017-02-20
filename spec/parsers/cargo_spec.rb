@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::Cargo do
   end
 
   it 'parses dependencies from Cargo.toml' do
-    expect(described_class.analyse_file('Cargo.toml', fixture_path('Cargo.toml'))).to eq({
+    expect(described_class.analyse_contents('Cargo.toml', load_fixture('Cargo.toml'))).to eq({
       :platform=>"cargo",
-      :path=>"spec/fixtures/Cargo.toml",
+      :path=>"Cargo.toml",
       :dependencies=>[
         {:name=>"rustc-serialize", :requirement=>"*", :type=>"runtime"},
         {:name=>"regex", :requirement=>"*", :type=>"runtime"}
@@ -17,9 +17,9 @@ describe Bibliothecary::Parsers::Cargo do
   end
 
   it 'parses dependencies from Cargo.lock' do
-    expect(described_class.analyse_file('Cargo.lock', fixture_path('Cargo.lock'))).to eq({
+    expect(described_class.analyse_contents('Cargo.lock', load_fixture('Cargo.lock'))).to eq({
       :platform=>"cargo",
-      :path=>"spec/fixtures/Cargo.lock",
+      :path=>"Cargo.lock",
       :dependencies=>[
         {:name=>"advapi32-sys", :requirement=>"0.1.2", :type=>"runtime"},
         {:name=>"aho-corasick", :requirement=>"0.4.0", :type=>"runtime"},

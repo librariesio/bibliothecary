@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::Carthage do
   end
 
   it 'parses dependencies from Cartfile' do
-    expect(described_class.analyse_file('Cartfile', fixture_path('Cartfile'))).to eq({
+    expect(described_class.analyse_contents('Cartfile', load_fixture('Cartfile'))).to eq({
       :platform=>"carthage",
-      :path=>"spec/fixtures/Cartfile",
+      :path=>"Cartfile",
       :dependencies=>[
          {:name=>"ReactiveCocoa/ReactiveCocoa", :version=>">= 2.3.1", :type=>"runtime"},
          {:name=>"Mantle/Mantle", :version=>"~> 1.0", :type=>"runtime"},
@@ -23,9 +23,9 @@ describe Bibliothecary::Parsers::Carthage do
   end
 
   it 'parses dependencies from Cartfile.private' do
-    expect(described_class.analyse_file('Cartfile.private', fixture_path('Cartfile.private'))).to eq({
+    expect(described_class.analyse_contents('Cartfile.private', load_fixture('Cartfile.private'))).to eq({
       :platform=>"carthage",
-      :path=>"spec/fixtures/Cartfile.private",
+      :path=>"Cartfile.private",
       :dependencies=>[
         {:name=>"Quick/Quick", :version=>"~> 0.9", :type=>"development"},
         {:name=>"Quick/Nimble", :version=>"~> 3.1", :type=>"development"},
@@ -35,9 +35,9 @@ describe Bibliothecary::Parsers::Carthage do
   end
 
   it 'parses dependencies from Cartfile.resolved' do
-    expect(described_class.analyse_file('Cartfile.resolved', fixture_path('Cartfile.resolved'))).to eq({
+    expect(described_class.analyse_contents('Cartfile.resolved', load_fixture('Cartfile.resolved'))).to eq({
       :platform=>"carthage",
-      :path=>"spec/fixtures/Cartfile.resolved",
+      :path=>"Cartfile.resolved",
       :dependencies=>[
         {:name=>"thoughtbot/Argo", :version=>"v2.2.0 ", :type=>"runtime"},
         {:name=>"Quick/Nimble", :version=>"v3.1.0 ", :type=>"runtime"},

@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::Hex do
   end
 
   it 'parses dependencies from mix.exs' do
-    expect(described_class.analyse_file('mix.exs', fixture_path('mix.exs'))).to eq({
+    expect(described_class.analyse_contents('mix.exs', load_fixture('mix.exs'))).to eq({
       :platform=>"hex",
-      :path=>"spec/fixtures/mix.exs",
+      :path=>"mix.exs",
       :dependencies=>[
         {:name=>"poison", :version=>"~> 1.3.1", :type=>"runtime"},
         {:name=>"plug", :version=>"~> 0.11.0", :type=>"runtime"},
@@ -18,9 +18,9 @@ describe Bibliothecary::Parsers::Hex do
   end
 
   it 'parses dependencies from mix.lock' do
-    expect(described_class.analyse_file('mix.lock', fixture_path('mix.lock'))).to eq({
+    expect(described_class.analyse_contents('mix.lock', load_fixture('mix.lock'))).to eq({
       :platform=>"hex",
-      :path=>"spec/fixtures/mix.lock",
+      :path=>"mix.lock",
       :dependencies=>[
         {:name=>"ranch", :version=>"1.2.1", :type=>"runtime"},
         {:name=>"poison", :version=>"2.1.0", :type=>"runtime"},

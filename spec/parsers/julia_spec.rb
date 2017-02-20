@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::Julia do
   end
 
   it 'parses dependencies from REQUIRE' do
-    expect(described_class.analyse_file('REQUIRE', fixture_path('REQUIRE'))).to eq({
+    expect(described_class.analyse_contents('REQUIRE', load_fixture('REQUIRE'))).to eq({
       :platform=>"julia",
-      :path=>"spec/fixtures/REQUIRE",
+      :path=>"REQUIRE",
       :dependencies=>[
         {:name=>"julia", :requirement=>"0.3", :type=>"runtime"},
         {:name=>"Codecs", :requirement=>"*", :type=>"runtime"},

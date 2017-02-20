@@ -4,10 +4,6 @@ module Bibliothecary
       base.extend(ClassMethods)
     end
     module ClassMethods
-      def parse(filename, path)
-        parse_file(filename, File.open(path).read)
-      end
-
       def parse_file(filename, contents)
         mapping.each do |regex, method_name|
           if filename.match(regex)
@@ -28,17 +24,18 @@ module Bibliothecary
       def analyse(folder_path, file_list)
         file_list.map do |path|
           filename = path.gsub(folder_path, '').gsub(/^\//, '')
-          analyse_file(filename, path)
+          contents = File.open(path).read
+          analyse_contents(filename, contents)
         end.compact
       end
 
-      def analyse_file(filename, path)
+      def analyse_contents(filename, contents)
         begin
-          dependencies = parse(filename, path)
+          dependencies = parse_file(filename, contents)
           if dependencies.any?
             {
               platform: platform_name,
-              path: path,
+              path: filename,
               dependencies: dependencies
             }
           else

@@ -6,9 +6,9 @@ describe Bibliothecary::Parsers::Shard do
   end
 
   it 'parses dependencies from shard.yml' do
-    expect(described_class.analyse_file('shard.yml', fixture_path('shard.yml'))).to eq({
+    expect(described_class.analyse_contents('shard.yml', load_fixture('shard.yml'))).to eq({
       :platform=>"shard",
-      :path=>"spec/fixtures/shard.yml",
+      :path=>"shard.yml",
       :dependencies=>[
         {:name=>"frost", :requirement=>"*", :type=>"runtime"},
         {:name=>"shards", :requirement=>"*", :type=>"runtime"},
@@ -20,9 +20,9 @@ describe Bibliothecary::Parsers::Shard do
   end
 
   it 'parses dependencies from shard.lock' do
-    expect(described_class.analyse_file('shard.lock', fixture_path('shard.lock'))).to eq({
+    expect(described_class.analyse_contents('shard.lock', load_fixture('shard.lock'))).to eq({
       :platform=>"shard",
-      :path=>"spec/fixtures/shard.lock",
+      :path=>"shard.lock",
       :dependencies=>[
         {:name=>"common_mark", :requirement=>"0.1.0", :type=>"runtime"},
         {:name=>"frost", :requirement=>"*", :type=>"runtime"},
