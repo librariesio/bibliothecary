@@ -8,7 +8,8 @@ module Bibliothecary
       def self.mapping
         {
           /^package\.json$/ => :parse_manifest,
-          /^npm-shrinkwrap\.json$/ => :parse_shrinkwrap
+          /^npm-shrinkwrap\.json$/ => :parse_shrinkwrap,
+          /^yarn\.lock$/ => :parse_yarn_lock
         }
       end
 
@@ -27,6 +28,11 @@ module Bibliothecary
         manifest = JSON.parse(file_contents)
         map_dependencies(manifest, 'dependencies', 'runtime') +
         map_dependencies(manifest, 'devDependencies', 'development')
+      end
+
+      def self.parse_yarn_lock(file_contents)
+        response = Typhoeus.post("https://yarn-parser.herokuapp.com/parse", body: file_contents)
+        JSON.parse(response.body)
       end
 
       def self.map_dependencies(hash, key, type)
