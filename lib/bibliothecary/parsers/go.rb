@@ -14,7 +14,8 @@ module Bibliothecary
           /^glide\.lock$/ => :parse_glide_lockfile,
           /^Godeps\/Godeps\.json$/ => :parse_godep_json,
           /^Godeps$/i => :parse_gpm,
-          /^vendor\/manifest$/ => :parse_gb_manifest
+          /^vendor\/manifest$/ => :parse_gb_manifest,
+          /^vendor\/vendor.json$/ => :parse_govendor
         }
       end
 
@@ -35,6 +36,11 @@ module Bibliothecary
           }
         end
         deps
+      end
+
+      def self.parse_govendor(file_contents)
+        manifest = JSON.load file_contents
+        map_dependencies(manifest, 'package', 'path', 'revision', 'runtime')
       end
 
       def self.parse_glide_yaml(file_contents)

@@ -120,11 +120,26 @@ describe Bibliothecary::Parsers::Go do
     })
   end
 
+  it 'parses dependencies from govendor vendor.json file' do
+    expect(described_class.analyse_contents('vendor/vendor.json', load_fixture('vendor.json'))).to eq({
+      :platform=>"go",
+      :path=>"vendor/vendor.json",
+      :dependencies=>[
+        {:name=>"github.com/Bowery/prompt", :requirement=>"d43c2707a6c5a152a344c64bb4fed657e2908a81", :type=>"runtime"},
+        {:name=>"github.com/dchest/safefile", :requirement=>"855e8d98f1852d48dde521e0522408d1fe7e836a", :type=>"runtime"},
+        {:name=>"github.com/google/shlex", :requirement=>"6f45313302b9c56850fc17f99e40caebce98c716", :type=>"runtime"},
+        {:name=>"github.com/pkg/errors", :requirement=>"a2d6902c6d2a2f194eb3fb474981ab7867c81505", :type=>"runtime"},
+        {:name=>"golang.org/x/tools/go/vcs", :requirement=>"1727758746e7a08feaaceb9366d1468498ac2ac2", :type=>"runtime"}
+      ]
+    })
+  end
+
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('Godeps/Godeps.json')).to be_truthy
     expect(described_class.match?('vendor/manifest')).to be_truthy
     expect(described_class.match?('glide.yaml')).to be_truthy
     expect(described_class.match?('glide.lock')).to be_truthy
     expect(described_class.match?('Godeps')).to be_truthy
+    expect(described_class.match?('vendor/vendor.json')).to be_truthy
   end
 end
