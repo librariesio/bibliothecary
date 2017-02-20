@@ -26,7 +26,104 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Identify package manager manifests from a list of files:
+
+```ruby
+Bibliothecary.identify_manifests(['package.json', 'README.md', 'index.js']) #=> 'package.json'
+```
+
+Parse a manifest file for it's dependencies:
+
+```ruby
+Bibliothecary.analyse_file 'bower.json', File.open('bower.json').read
+```
+
+Search a directory for manifest files and parse the contents:
+
+```ruby
+Bibliothecary.analyse('./')
+```
+
+## Supported package manager file formats
+
+- npm
+  - package.json
+  - npm-shrinkwrap.json
+  - yarn.lock
+- Maven
+  - pom.xml
+  - ivy.xml
+  - build.gradle
+- RubyGems
+  - Gemfile
+  - Gemfile.lock
+  - gems.rb
+  - gems.locked
+  - *.gemspec
+- Packagist
+  - composer.json
+  - composer.lock
+- PyPi
+  - setup.py
+  - req*.txt
+  - req*.pip
+  - requirements/*.txt
+  - requirements/*.pip
+- Nuget
+  - packages.config
+  - Project.json
+  - Project.lock.json
+  - *.nuspec
+  - paket.lock
+- Bower
+  - bower.json
+- CPAN
+  - META.json
+  - META.yml
+- CocoaPods
+  - Podfile
+  - Podfile.lock
+  - *.podspec
+- Clojars
+  - project.clj
+- Meteor
+  - versions.json
+- CRAN
+  - DESCRIPTION
+- Cargo
+  - Cargo.toml
+  - Cargo.lock
+- Hex
+  - mix.exs
+  - mix.lock
+- Swift
+  - Package.swift
+- Pub
+  - pubspec.yaml
+  - pubspec.lock
+- Carthage
+  - Cartfile
+  - Cartfile.private
+  - Cartfile.resolved
+- Dub
+  - dub.json
+  - dub.sdl
+- Julia
+  - REQUIRE
+- Shards
+  - shard.yml
+  - shard.lock
+- Go
+  - glide.yaml
+  - glide.lock
+  - Godeps
+  - Godeps/Godeps.json
+  - vendor/manifest
+  - vendor/vendor.json
+- Elm
+  - elm-package.json
+  - elm_dependencies.json
+  - elm-stuff/exact-dependencies.json
 
 ## Development
 
