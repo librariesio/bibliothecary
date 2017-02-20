@@ -31,6 +31,6 @@ module Bibliothecary
   end
 
   def self.ignored_files
-    ['.git', 'node_modules', 'bower_components', 'spec/fixtures'].join('|')
+    ['.git', 'node_modules', 'bower_components', 'spec/fixtures', 'vendor/bundle'].join('|')
   end
 end
