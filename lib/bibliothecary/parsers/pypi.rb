@@ -45,14 +45,14 @@ module Bibliothecary
       def self.map_requirements(info)
         if info.is_a?(Hash)
           if info['version']
-            requirement = info['version']
+            info['version']
           elsif info['git']
-            requirement = info['git'] + '#' + info['ref']
+            info['git'] + '#' + info['ref']
           else
-            requirement = '*'
+            '*'
           end
         else
-          requirement = info || '*'
+          info || '*'
         end
       end
 
