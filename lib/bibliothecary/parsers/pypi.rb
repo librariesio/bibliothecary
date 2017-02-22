@@ -12,11 +12,70 @@ module Bibliothecary
           parse_requirements_txt(contents)
         elsif filename.match(/setup\.py$/)
           parse_setup_py(contents)
+        elsif filename.match(/^Pipfile$/)
+          parse_pipfile(contents)
+        elsif filename.match(/^Pipfile\.lock$/)
+          parse_pipfile_lock(contents)
         end
       end
 
       def self.match?(filename)
-        is_requirements_file(filename) || filename.match(/setup\.py$/)
+        is_requirements_file(filename) ||
+        filename.match(/setup\.py$/) ||
+        filename.match(/Pipfile$/) ||
+        filename.match(/Pipfile\.lock$/)
+      end
+
+      def self.parse_pipfile(file_contents)
+        manifest = TOML.parse(file_contents)
+        map_dependencies(manifest['packages'], 'runtime') + map_dependencies(manifest['dev-packages'], 'develop')
+      end
+
+      def self.map_dependencies(packages, type)
+        return [] unless packages
+        packages.map do |name, info|
+          if info.is_a?(Hash)
+            if info['version']
+              requirement = info['version']
+            elsif info['git']
+              requirement = info['git'] + '#' + info['ref']
+            else
+              requirement = '*'
+            end
+          else
+            requirement = info || '*'
+          end
+          {
+            name: name,
+            requirement: requirement,
+            type: type
+          }
+        end
+      end
+
+      def self.parse_pipfile_lock(file_contents)
+        manifest = JSON.parse(file_contents)
+        deps = []
+        manifest.each do |group, dependencies|
+          next if group == "_meta"
+          group = 'runtime' if group == 'default'
+          dependencies.each do |name, info|
+            if info['version']
+              requirement = info['version']
+            elsif info['git']
+              requirement = info['git'] + '#' + info['ref']
+            else
+              requirement = '*'
+            end
+
+            deps << {
+              name: name,
+              requirement: requirement,
+              type: group
+            }
+          end
+        end
+        deps
       end
 
       def self.parse_setup_py(manifest)
