@@ -32,7 +32,7 @@ module Bibliothecary
       def analyse_contents(filename, contents)
         begin
           dependencies = parse_file(filename, contents)
-          if dependencies.any?
+          if dependencies && dependencies.any?
             {
               platform: platform_name,
               path: filename,

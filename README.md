@@ -69,6 +69,8 @@ Bibliothecary.analyse('./')
   - req*.pip
   - requirements/*.txt
   - requirements/*.pip
+  - Pipfile
+  - Pipfile.lock
 - Nuget
   - packages.config
   - Project.json

@@ -56,6 +56,33 @@ describe Bibliothecary::Parsers::Pypi do
     })
   end
 
+  it 'parses dependencies from Pipfile' do
+    expect(described_class.analyse_contents('Pipfile', load_fixture('Pipfile'))).to eq({
+      :platform=>"pypi",
+      :path=>"Pipfile",
+      :dependencies=>[
+        {:name=>"requests", :requirement=>"*", :type=>"runtime"},
+        {:name=>"Django", :requirement=>">1.10", :type=>"runtime"},
+        {:name=>"pinax", :requirement=>"git://github.com/pinax/pinax.git#1.4", :type=>"runtime"},
+        {:name=>"nose", :requirement=>"*", :type=>"develop"}
+      ]
+    })
+  end
+
+  it 'parses dependencies from Pipfile.lock' do
+    expect(described_class.analyse_contents('Pipfile.lock', load_fixture('Pipfile.lock'))).to eq({
+      :platform=>"pypi",
+      :path=>"Pipfile.lock",
+      :dependencies=>[
+        {:name=>"PySocks", :requirement=>"==1.6.5", :type=>"runtime"},
+        {:name=>"requests", :requirement=>"==2.13.0", :type=>"runtime"},
+        {:name=>"Django", :requirement=>"==1.10.5", :type=>"runtime"},
+        {:name=>"pinax", :requirement=>"git://github.com/pinax/pinax.git#1.4", :type=>"runtime"},
+        {:name=>"nose", :requirement=>"==1.3.7", :type=>"develop"}
+      ]
+    })
+  end
+
   it 'correctly detected different requirements.txt file names' do
     expect(described_class.is_requirements_file('requirements.txt')).to be true
     expect(described_class.is_requirements_file('requirements.pip')).to be true
@@ -71,5 +98,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.match?('requirements.txt')).to be_truthy
     expect(described_class.match?('requirements.pip')).to be_truthy
     expect(described_class.match?('setup.py')).to be_truthy
+    expect(described_class.match?('Pipfile')).to be_truthy
+    expect(described_class.match?('Pipfile.lock')).to be_truthy
   end
 end
