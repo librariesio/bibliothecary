@@ -34,22 +34,25 @@ module Bibliothecary
       def self.map_dependencies(packages, type)
         return [] unless packages
         packages.map do |name, info|
-          if info.is_a?(Hash)
-            if info['version']
-              requirement = info['version']
-            elsif info['git']
-              requirement = info['git'] + '#' + info['ref']
-            else
-              requirement = '*'
-            end
-          else
-            requirement = info || '*'
-          end
           {
             name: name,
-            requirement: requirement,
+            requirement: map_requirements(info),
             type: type
           }
+        end
+      end
+
+      def self.map_requirements(info)
+        if info.is_a?(Hash)
+          if info['version']
+            requirement = info['version']
+          elsif info['git']
+            requirement = info['git'] + '#' + info['ref']
+          else
+            requirement = '*'
+          end
+        else
+          requirement = info || '*'
         end
       end
 
@@ -60,17 +63,9 @@ module Bibliothecary
           next if group == "_meta"
           group = 'runtime' if group == 'default'
           dependencies.each do |name, info|
-            if info['version']
-              requirement = info['version']
-            elsif info['git']
-              requirement = info['git'] + '#' + info['ref']
-            else
-              requirement = '*'
-            end
-
             deps << {
               name: name,
-              requirement: requirement,
+              requirement: map_requirements(info),
               type: group
             }
           end
