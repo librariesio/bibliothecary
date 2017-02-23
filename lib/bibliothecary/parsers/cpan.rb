@@ -8,8 +8,14 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^META\.json$/i => :parse_json_manifest,
-          /^META\.yml$/i => :parse_yaml_manifest
+          /^META\.json$/i => {
+            kind: 'manifest',
+            parser: :parse_json_manifest
+          },
+          /^META\.yml$/i => {
+            kind: 'manifest',
+            parser: :parse_yaml_manifest
+          }
         }
       end
 

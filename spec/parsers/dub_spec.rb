@@ -14,7 +14,8 @@ describe Bibliothecary::Parsers::Dub do
         {:name=>"libdparse",
          :requirement=>{"optional"=>true, "version"=>"~>0.2.0"},
          :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -24,7 +25,8 @@ describe Bibliothecary::Parsers::Dub do
       :path=>"dub.sdl",
       :dependencies=>[
         {:name=>"vibe-d", :version=>"~>0.7.23", :type=>:runtime}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 

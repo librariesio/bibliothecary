@@ -5,7 +5,10 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^REQUIRE$/i => :parse_require
+          /^REQUIRE$/i => {
+            kind: 'manifest',
+            parser: :parse_require
+          }
         }
       end
 

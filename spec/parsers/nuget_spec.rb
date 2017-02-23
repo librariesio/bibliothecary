@@ -47,7 +47,8 @@ describe Bibliothecary::Parsers::Nuget do
          :requirement=>"1.0.0-beta7",
          :type=>"runtime"},
         {:name=>"AutoMapper", :requirement=>"4.0.0-alpha1", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -524,7 +525,8 @@ describe Bibliothecary::Parsers::Nuget do
         {:name=>"System.Xml.XDocument",
          :requirement=>"4.0.11-beta-23225",
          :type=>"runtime"}
-      ]
+      ],
+      kind: 'lockfile'
     })
   end
 
@@ -541,7 +543,8 @@ describe Bibliothecary::Parsers::Nuget do
         {:name=>"Ninject", :version=>"3.0.1.10", :type=>"runtime"},
         {:name=>"Ninject.Web.Common", :version=>"3.0.0.7", :type=>"runtime"},
         {:name=>"WebActivator", :version=>"1.5", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -553,7 +556,8 @@ describe Bibliothecary::Parsers::Nuget do
         {:name=>"FubuCore", :version=>"3.2.0.3001", :type=>"runtime"},
         {:name=>"HtmlTags", :version=>"[3.2.0.3001]", :type=>"runtime"},
         {:name=>"DotNetZip", :version=>"*", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -567,7 +571,8 @@ describe Bibliothecary::Parsers::Nuget do
         {:name=>"Chessie", :version=>"0.5.1", :type=>"runtime"},
         {:name=>"FSharp.Core", :version=>"4.0.0.1", :type=>"runtime"},
         {:name=>"Newtonsoft.Json", :version=>"9.0.1", :type=>"runtime"}
-      ]
+      ],
+      kind: 'lockfile'
     })
   end
 

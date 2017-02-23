@@ -12,7 +12,8 @@ describe Bibliothecary::Parsers::Cargo do
       :dependencies=>[
         {:name=>"rustc-serialize", :requirement=>"*", :type=>"runtime"},
         {:name=>"regex", :requirement=>"*", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -31,7 +32,8 @@ describe Bibliothecary::Parsers::Cargo do
         {:name=>"kernel32-sys", :requirement=>"0.2.1", :type=>"runtime"},
         {:name=>"libc", :requirement=>"0.1.12", :type=>"runtime"},
         {:name=>"libc", :requirement=>"0.2.4", :type=>"runtime"}
-      ]
+      ],
+      kind: 'lockfile'
     })
   end
 

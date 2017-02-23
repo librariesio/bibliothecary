@@ -15,7 +15,8 @@ describe Bibliothecary::Parsers::CPAN do
         {:name=>"LWP", :requirement=>0, :type=>"runtime"},
         {:name=>"XML::Simple", :requirement=>0, :type=>"runtime"},
         {:name=>"perl", :requirement=>"5.6.0", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -29,7 +30,8 @@ describe Bibliothecary::Parsers::CPAN do
         {:name=>"Module::Build", :requirement=>"0.28", :type=>"runtime"},
         {:name=>"Getopt::Long", :requirement=>"2.32", :type=>"runtime"},
         {:name=>"List::Util", :requirement=>"1.07_00", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 

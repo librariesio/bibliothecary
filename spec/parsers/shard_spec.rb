@@ -15,7 +15,8 @@ describe Bibliothecary::Parsers::Shard do
         {:name=>"common_mark", :requirement=>"*", :type=>"runtime"},
         {:name=>"minitest", :requirement=>">= 0.2.0", :type=>"runtime"},
         {:name=>"selenium-webdriver", :requirement=>"*", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -31,7 +32,8 @@ describe Bibliothecary::Parsers::Shard do
         {:name=>"pool", :requirement=>"0.2.1", :type=>"runtime"},
         {:name=>"selenium-webdriver", :requirement=>"0.1.0", :type=>"runtime"},
         {:name=>"shards", :requirement=>"0.6.0", :type=>"runtime"}
-      ]
+      ],
+      kind: 'lockfile'
     })
   end
 

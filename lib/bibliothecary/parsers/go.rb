@@ -10,12 +10,30 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^glide\.yaml$/ => :parse_glide_yaml,
-          /^glide\.lock$/ => :parse_glide_lockfile,
-          /^Godeps\/Godeps\.json$/ => :parse_godep_json,
-          /^Godeps$/i => :parse_gpm,
-          /^vendor\/manifest$/ => :parse_gb_manifest,
-          /^vendor\/vendor.json$/ => :parse_govendor
+          /^glide\.yaml$/ => {
+            kind: 'manifest',
+            parser: :parse_glide_yaml
+          },
+          /^glide\.lock$/ => {
+            kind: 'lockfile',
+            parser: :parse_glide_lockfile
+          },
+          /^Godeps\/Godeps\.json$/ => {
+            kind: 'manifest',
+            parser: :parse_godep_json
+          },
+          /^Godeps$/i => {
+            kind: 'manifest',
+            parser: :parse_gpm
+          },
+          /^vendor\/manifest$/ => {
+            kind: 'manifest',
+            parser: :parse_gb_manifest
+          },
+          /^vendor\/vendor.json$/ => {
+            kind: 'manifest',
+            parser: :parse_govendor
+          }
         }
       end
 

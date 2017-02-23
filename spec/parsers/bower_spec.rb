@@ -11,7 +11,8 @@ describe Bibliothecary::Parsers::Bower do
       :path=>"bower.json",
       :dependencies=>[
         {:name=>"jquery", :requirement=>">= 1.9.1", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 

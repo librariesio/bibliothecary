@@ -7,8 +7,14 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^elm-package\.json$|^elm_dependencies\.json$/ => :parse_json_manifest,
-          /^elm-stuff\/exact-dependencies\.json$/ => :parse_json_lock
+          /^elm-package\.json$|^elm_dependencies\.json$/ => {
+            kind: 'manifest',
+            parser: :parse_json_manifest
+          },
+          /^elm-stuff\/exact-dependencies\.json$/ => {
+            kind: 'lockfile',
+            parser: :parse_json_lock
+          }
         }
       end
 

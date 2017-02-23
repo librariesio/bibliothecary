@@ -14,7 +14,9 @@ describe Bibliothecary::Parsers::Clojars do
         {:name=>"cheshire", :version=>"5.4.0", :type=>"runtime"},
         {:name=>"compojure", :version=>"1.3.2", :type=>"runtime"},
         {:name=>"ring/ring-defaults", :version=>"0.1.2", :type=>"runtime"},
-        {:name=>"ring/ring-jetty-adapter", :version=>"1.2.1", :type=>"runtime"}      ]
+        {:name=>"ring/ring-jetty-adapter", :version=>"1.2.1", :type=>"runtime"}
+      ],
+      kind: 'manifest'
     })
   end
 

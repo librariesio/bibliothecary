@@ -13,7 +13,8 @@ describe Bibliothecary::Parsers::Hex do
         {:name=>"poison", :version=>"~> 1.3.1", :type=>"runtime"},
         {:name=>"plug", :version=>"~> 0.11.0", :type=>"runtime"},
         {:name=>"cowboy", :version=>"~> 1.0.0", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -27,7 +28,8 @@ describe Bibliothecary::Parsers::Hex do
         {:name=>"plug", :version=>"1.1.6", :type=>"runtime"},
         {:name=>"cowlib", :version=>"1.0.2", :type=>"runtime"},
         {:name=>"cowboy", :version=>"1.0.4", :type=>"runtime"}
-      ]
+      ],
+      kind: 'lockfile'
     })
   end
 

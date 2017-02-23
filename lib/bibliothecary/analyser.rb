@@ -5,9 +5,9 @@ module Bibliothecary
     end
     module ClassMethods
       def parse_file(filename, contents)
-        mapping.each do |regex, method_name|
+        mapping.each do |regex, details|
           if filename.match(regex)
-            return send(method_name, contents)
+            return send(details[:parser], contents)
           end
         end
         return []
@@ -36,7 +36,8 @@ module Bibliothecary
             {
               platform: platform_name,
               path: filename,
-              dependencies: dependencies
+              dependencies: dependencies,
+              kind: determine_kind(filename)
             }
           else
             nil
@@ -44,6 +45,15 @@ module Bibliothecary
         rescue
           nil
         end
+      end
+
+      def determine_kind(filename)
+        mapping.each do |regex, details|
+          if filename.match(regex)
+            return details[:kind]
+          end
+        end
+        return []
       end
 
       def parse_ruby_manifest(manifest)

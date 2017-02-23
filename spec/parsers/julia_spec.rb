@@ -27,7 +27,8 @@ describe Bibliothecary::Parsers::Julia do
         {:name=>"Loess", :requirement=>"*", :type=>"runtime"},
         {:name=>"Showoff", :requirement=>"0.0.3", :type=>"runtime"},
         {:name=>"StatsBase", :requirement=>"*", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 

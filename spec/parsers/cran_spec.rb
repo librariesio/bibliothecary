@@ -37,7 +37,8 @@ describe Bibliothecary::Parsers::CRAN do
         {:name=>"rmarkdown", :version=>"*", :type=>"suggests"},
         {:name=>"svglite", :version=>"*", :type=>"suggests"},
         {:name=>"sp", :version=>"*", :type=>"enhances"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -65,7 +66,9 @@ describe Bibliothecary::Parsers::CRAN do
         {:name=>"knitr", :version=>"*", :type=>"suggests"},
         {:name=>"curl", :version=>"*", :type=>"suggests"},
         {:name=>"zoo", :version=>"*", :type=>"suggests"},
-        {:name=>"plm", :version=>"*", :type=>"suggests"}]
+        {:name=>"plm", :version=>"*", :type=>"suggests"}
+      ],
+      kind: 'manifest'
     })
   end
 

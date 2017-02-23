@@ -16,7 +16,8 @@ describe Bibliothecary::Parsers::Meteor do
         {:name=>"binary-heap", :requirement=>"1.0.1", :type=>"runtime"},
         {:name=>"tracker", :requirement=>"1.0.3", :type=>"runtime"},
         {:name=>"underscore", :requirement=>"1.0.1", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 

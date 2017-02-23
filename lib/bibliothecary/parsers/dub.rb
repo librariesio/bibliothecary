@@ -8,8 +8,14 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^dub\.json$/ => :parse_manifest,
-          /^dub\.sdl$/ => :parse_sdl_manifest
+          /^dub\.json$/ => {
+            kind: 'manifest',
+            parser: :parse_manifest
+          },
+          /^dub\.sdl$/ => {
+            kind: 'manifest',
+            parser: :parse_sdl_manifest
+          }
         }
       end
 

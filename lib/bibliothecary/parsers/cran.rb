@@ -9,7 +9,10 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^DESCRIPTION$/i => :parse_description
+          /^DESCRIPTION$/i => {
+            kind: 'manifest',
+            parser: :parse_description
+          }
         }
       end
 

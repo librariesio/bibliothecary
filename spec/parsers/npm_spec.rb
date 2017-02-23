@@ -12,7 +12,8 @@ describe Bibliothecary::Parsers::NPM do
       :dependencies=>[
         {:name=>"babel", :requirement=>"^4.6.6", :type=>"runtime"},
         {:name=>"mocha", :requirement=>"^2.2.1", :type=>"development"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -39,7 +40,8 @@ describe Bibliothecary::Parsers::NPM do
         {:name=>"semver", :requirement=>"4.3.6", :type=>"runtime"},
         {:name=>"serve-static", :requirement=>"1.10.0", :type=>"runtime"},
         {:name=>"toml", :requirement=>"2.3.0", :type=>"runtime"}
-      ]
+      ],
+      kind: 'lockfile'
     })
   end
 
@@ -68,7 +70,8 @@ describe Bibliothecary::Parsers::NPM do
         {"name"=>"statuses", "version"=>"1.3.1", "type"=>"runtime"},
         {"name"=>"type-is", "version"=>"1.6.14", "type"=>"runtime"},
         {"name"=>"unpipe", "version"=>"1.0.0", "type"=>"runtime"}
-      ]
+      ],
+      kind: 'lockfile'
     })
   end
 

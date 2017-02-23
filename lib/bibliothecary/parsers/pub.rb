@@ -7,8 +7,14 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^pubspec\.yaml$/i => :parse_yaml_manifest,
-          /^pubspec\.lock$/i => :parse_yaml_lockfile
+          /^pubspec\.yaml$/i => {
+            kind: 'manifest',
+            parser: :parse_yaml_manifest
+          },
+          /^pubspec\.lock$/i => {
+            kind: 'lockfile',
+            parser: :parse_yaml_lockfile
+          }
         }
       end
 

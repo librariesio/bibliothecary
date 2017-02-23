@@ -7,7 +7,10 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^versions\.json$/ => :parse_manifest
+          /^versions\.json$/ => {
+            kind: 'manifest',
+            parser: :parse_manifest
+          }
         }
       end
 

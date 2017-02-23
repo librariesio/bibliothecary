@@ -18,7 +18,8 @@ describe Bibliothecary::Parsers::Go do
         {:name=>"github.com/Masterminds/semver",
          :requirement=>"^1.0.0",
          :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -39,7 +40,8 @@ describe Bibliothecary::Parsers::Go do
         {:name=>"gopkg.in/yaml.v2",
          :requirement=>"f7716cbe52baa25d2e9b0d0da546fcf909fc16b4",
          :type=>"runtime"}
-      ]
+      ],
+      kind: 'lockfile'
     })
   end
 
@@ -90,7 +92,8 @@ describe Bibliothecary::Parsers::Go do
         {:name=>"gopkg.in/yaml.v1",
          :requirement=>"9f9df34309c04878acc86042b16630b0f696e1de",
          :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -102,7 +105,8 @@ describe Bibliothecary::Parsers::Go do
         {:name=>"github.com/gorilla/mux",
          :requirement=>"9fa818a44c2bf1396a17f9d5a3c0f6dd39d2ff8e",
          :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -116,7 +120,8 @@ describe Bibliothecary::Parsers::Go do
         {:name=>"github.com/garyburd/redigo/redis", :requirement=>"a6a0a737c00caf4d4c2bb589941ace0d688168bb", :type=>"runtime"},
         {:name=>"launchpad.net/gocheck", :requirement=>"r2013.03.03", :type=>"runtime"},
         {:name=>"code.google.com/p/go.example/hello/...", :requirement=>"ae081cd1d6cc", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -130,7 +135,8 @@ describe Bibliothecary::Parsers::Go do
         {:name=>"github.com/google/shlex", :requirement=>"6f45313302b9c56850fc17f99e40caebce98c716", :type=>"runtime"},
         {:name=>"github.com/pkg/errors", :requirement=>"a2d6902c6d2a2f194eb3fb474981ab7867c81505", :type=>"runtime"},
         {:name=>"golang.org/x/tools/go/vcs", :requirement=>"1727758746e7a08feaaceb9366d1468498ac2ac2", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 

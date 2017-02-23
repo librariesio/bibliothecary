@@ -31,7 +31,8 @@ describe Bibliothecary::Parsers::CocoaPods do
         {:name=>"Nimble-Snapshots", :requirement=>">= 0", :type=>:runtime},
         {:name=>"Quick", :requirement=>">= 0", :type=>:runtime},
         {:name=>"Forgeries", :requirement=>">= 0", :type=>:runtime}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -90,7 +91,8 @@ describe Bibliothecary::Parsers::CocoaPods do
         {:name=>"UIImageViewAligned", :requirement=>"0.0.1", :type=>"runtime"},
         {:name=>"UIView+BooleanAnimations", :requirement=>"1.0.2", :type=>"runtime"},
         {:name=>"XNGMarkdownParser", :requirement=>"0.3.0", :type=>"runtime"}
-      ]
+      ],
+      kind: 'lockfile'
     })
   end
 
@@ -100,7 +102,8 @@ describe Bibliothecary::Parsers::CocoaPods do
       :path=>"example.podspec",
       :dependencies=>[
         {:name=>"CocoaLumberjack", :requirement=>">= 0", :type=>:runtime}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -110,7 +113,8 @@ describe Bibliothecary::Parsers::CocoaPods do
       :path=>"example.podspec.json",
       :dependencies=>[
         {:name=>"OpenSSL", :requirement=>["~> 1.0"], :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 

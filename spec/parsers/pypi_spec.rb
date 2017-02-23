@@ -34,7 +34,8 @@ describe Bibliothecary::Parsers::Pypi do
         {:name=>"python-dateutil", :requirement=>">=2.4,<2.5", :type=>"runtime"},
         {:name=>"pytz", :requirement=>"==2015.7", :type=>"runtime"},
         {:name=>"django-suit", :requirement=>"*", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -52,7 +53,8 @@ describe Bibliothecary::Parsers::Pypi do
         {:name=>"distribute", :requirement=>"==0.6.24", :type=>"runtime"},
         {:name=>"gunicorn", :requirement=>"==0.14.2", :type=>"runtime"},
         {:name=>"requests", :requirement=>"==0.11.1", :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -65,7 +67,8 @@ describe Bibliothecary::Parsers::Pypi do
         {:name=>"Django", :requirement=>">1.10", :type=>"runtime"},
         {:name=>"pinax", :requirement=>"git://github.com/pinax/pinax.git#1.4", :type=>"runtime"},
         {:name=>"nose", :requirement=>"*", :type=>"develop"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -79,7 +82,8 @@ describe Bibliothecary::Parsers::Pypi do
         {:name=>"Django", :requirement=>"==1.10.5", :type=>"runtime"},
         {:name=>"pinax", :requirement=>"git://github.com/pinax/pinax.git#1.4", :type=>"runtime"},
         {:name=>"nose", :requirement=>"==1.3.7", :type=>"develop"}
-      ]
+      ],
+      kind: 'lockfile'
     })
   end
 

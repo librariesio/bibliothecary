@@ -7,8 +7,14 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^composer\.json$/ => :parse_manifest,
-          /^composer\.lock$/ => :parse_lockfile
+          /^composer\.json$/ => {
+            kind: 'manifest',
+            parser: :parse_manifest
+          },
+          /^composer\.lock$/ => {
+            kind: 'lockfile',
+            parser: :parse_lockfile
+          }
         }
       end
 

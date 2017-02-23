@@ -10,9 +10,18 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^Gemfile$|^gems\.rb$/ => :parse_gemfile,
-          /[A-Za-z0-9_-]+\.gemspec$/ => :parse_gemspec,
-          /^Gemfile\.lock$|^gems\.locked$/ => :parse_gemfile_lock
+          /^Gemfile$|^gems\.rb$/ => {
+            kind: 'manifest',
+            parser: :parse_gemfile
+          },
+          /[A-Za-z0-9_-]+\.gemspec$/ => {
+            kind: 'manifest',
+            parser: :parse_gemspec
+          },
+          /^Gemfile\.lock$|^gems\.locked$/ => {
+            kind: 'lockfile',
+            parser: :parse_gemfile_lock
+          }
         }
       end
 

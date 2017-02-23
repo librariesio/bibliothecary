@@ -19,6 +19,14 @@ module Bibliothecary
         end
       end
 
+      def self.determine_kind(filename)
+        if is_requirements_file(filename) || filename.match(/setup\.py$/) || filename.match(/^Pipfile$/)
+          'manifest'
+        elsif filename.match(/^Pipfile\.lock$/)
+          'lockfile'
+        end
+      end
+
       def self.match?(filename)
         is_requirements_file(filename) ||
         filename.match(/setup\.py$/) ||

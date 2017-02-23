@@ -8,7 +8,10 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^project\.clj$/ => :parse_manifest
+          /^project\.clj$/ => {
+            kind: 'manifest',
+            parser: :parse_manifest
+          }
         }
       end
 

@@ -22,7 +22,8 @@ describe Bibliothecary::Parsers::Elm do
         {:name=>"elm-lang/core",
          :requirement=>"1.0.0 <= v < 2.0.0",
          :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -35,7 +36,8 @@ describe Bibliothecary::Parsers::Elm do
         {:name=>"johnpmayer/elm-linear-algebra",
          :requirement=>"1.0.1",
          :type=>"runtime"}
-      ]
+      ],
+      kind: 'manifest'
     })
   end
 
@@ -51,7 +53,8 @@ describe Bibliothecary::Parsers::Elm do
         {:name=>"elm-lang/core", :requirement=>"1.1.1", :type=>"runtime"},
         {:name=>"evancz/automaton", :requirement=>"1.0.0", :type=>"runtime"},
         {:name=>"evancz/virtual-dom", :requirement=>"1.2.2", :type=>"runtime"}
-      ]
+      ],
+      kind: 'lockfile'
     })
   end
 
