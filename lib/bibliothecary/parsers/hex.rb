@@ -19,7 +19,7 @@ module Bibliothecary
       end
 
       def self.parse_mix(manifest)
-        response = Typhoeus.post("https://mix-deps-json.herokuapp.com/", body: manifest)
+        response = Typhoeus.post("https://mix.libraries.io/", body: manifest)
         json = JSON.parse response.body
 
         json.map do |name, version|
@@ -32,7 +32,7 @@ module Bibliothecary
       end
 
       def self.parse_mix_lock(manifest)
-        response = Typhoeus.post("https://mix-deps-json.herokuapp.com/lock", body: manifest)
+        response = Typhoeus.post("https://mix.libraries.io/lock", body: manifest)
         json = JSON.parse response.body
 
         json.map do |name, info|
