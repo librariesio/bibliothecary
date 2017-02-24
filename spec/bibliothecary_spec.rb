@@ -69,7 +69,7 @@ describe Bibliothecary do
          [{:name=>"bibliothecary", :requirement=>"5.1.0", :type=>"runtime"},
           {:name=>"citrus", :requirement=>"3.0.2", :type=>"runtime"},
           {:name=>"codeclimate-test-reporter",
-           :requirement=>"1.0.5",
+           :requirement=>"1.0.6",
            :type=>"runtime"},
           {:name=>"deb_control", :requirement=>"0.0.1", :type=>"runtime"},
           {:name=>"diff-lcs", :requirement=>"1.3", :type=>"runtime"},
