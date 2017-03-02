@@ -104,5 +104,6 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.match?('setup.py')).to be_truthy
     expect(described_class.match?('Pipfile')).to be_truthy
     expect(described_class.match?('Pipfile.lock')).to be_truthy
+    expect(described_class.match?('python/pip-requirements.txt')).to be_truthy
   end
 end
