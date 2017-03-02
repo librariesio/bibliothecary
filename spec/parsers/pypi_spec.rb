@@ -87,17 +87,6 @@ describe Bibliothecary::Parsers::Pypi do
     })
   end
 
-  it 'correctly detected different requirements.txt file names' do
-    expect(described_class.is_requirements_file('requirements.txt')).to be true
-    expect(described_class.is_requirements_file('requirements.pip')).to be true
-    expect(described_class.is_requirements_file('requirements-test.txt')).to be true
-    expect(described_class.is_requirements_file('requirements-test.pip')).to be true
-    expect(described_class.is_requirements_file('test-requirements.txt')).to be true
-    expect(described_class.is_requirements_file('test-requirements.pip')).to be true
-    expect(described_class.is_requirements_file('test-invalid.pip')).to be false
-    expect(described_class.is_requirements_file('some-random-file.txt')).to be false
-  end
-
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('requirements.txt')).to be_truthy
     expect(described_class.match?('requirements.pip')).to be_truthy
@@ -105,5 +94,10 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.match?('Pipfile')).to be_truthy
     expect(described_class.match?('Pipfile.lock')).to be_truthy
     expect(described_class.match?('python/pip-requirements.txt')).to be_truthy
+  end
+
+  it 'fails to match invalid manifest filepaths' do
+    expect(described_class.match?('some-random-file.txt')).to be_falsey
+    expect(described_class.match?('node_modules/requirements.txt')).to be_falsey
   end
 end

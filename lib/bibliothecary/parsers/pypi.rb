@@ -7,31 +7,25 @@ module Bibliothecary
       REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)([><=\d\.,]+)?/
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
 
-      def self.parse_file(filename, contents)
-        if is_requirements_file(filename)
-          parse_requirements_txt(contents)
-        elsif filename.match(/setup\.py$/)
-          parse_setup_py(contents)
-        elsif filename.match(/^Pipfile$/)
-          parse_pipfile(contents)
-        elsif filename.match(/^Pipfile\.lock$/)
-          parse_pipfile_lock(contents)
-        end
-      end
-
-      def self.determine_kind(filename)
-        if is_requirements_file(filename) || filename.match(/setup\.py$/) || filename.match(/^Pipfile$/)
-          'manifest'
-        elsif filename.match(/^Pipfile\.lock$/)
-          'lockfile'
-        end
-      end
-
-      def self.match?(filename)
-        is_requirements_file(filename) ||
-        filename.match(/setup\.py$/) ||
-        filename.match(/Pipfile$/) ||
-        filename.match(/Pipfile\.lock$/)
+      def self.mapping
+        {
+          /^(?!node_modules).*require.*\.(txt|pip)$/ => {
+            kind: 'manifest',
+            parser: :parse_requirements_txt
+          },
+          /setup\.py$/ => {
+            kind: 'manifest',
+            parser: :parse_setup_py
+          },
+          /^Pipfile$/ => {
+            kind: 'manifest',
+            parser: :parse_pipfile
+          },
+          /^Pipfile\.lock$/ => {
+            kind: 'lockfile',
+            parser: :parse_pipfile_lock
+          }
+        }
       end
 
       def self.parse_pipfile(file_contents)
@@ -110,14 +104,6 @@ module Bibliothecary
           }
         end
         deps
-      end
-
-      def self.is_requirements_file(filename)
-        if filename.match(/require.*\.(txt|pip)$/) and !filename.match(/^node_modules/)
-          return true
-        else
-          return false
-        end
       end
     end
   end
