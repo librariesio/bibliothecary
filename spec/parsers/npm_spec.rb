@@ -79,6 +79,9 @@ describe Bibliothecary::Parsers::NPM do
     expect(described_class.match?('package.json')).to be_truthy
     expect(described_class.match?('npm-shrinkwrap.json')).to be_truthy
     expect(described_class.match?('yarn.lock')).to be_truthy
+    expect(described_class.match?('website/package.json')).to be_truthy
+    expect(described_class.match?('website/yarn.lock')).to be_truthy
+    expect(described_class.match?('website/npm-shrinkwrap.json')).to be_truthy
   end
 
   it "doesn't match invalid manifest filepaths" do
