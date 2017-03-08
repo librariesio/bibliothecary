@@ -75,7 +75,7 @@ describe Bibliothecary do
           {:name=>"diff-lcs", :requirement=>"1.3", :type=>"runtime"},
           {:name=>"docile", :requirement=>"1.1.5", :type=>"runtime"},
           {:name=>"ethon", :requirement=>"0.10.1", :type=>"runtime"},
-          {:name=>"ffi", :requirement=>"1.9.17", :type=>"runtime"},
+          {:name=>"ffi", :requirement=>"1.9.18", :type=>"runtime"},
           {:name=>"json", :requirement=>"2.0.3", :type=>"runtime"},
           {:name=>"librariesio-gem-parser", :requirement=>"1.0.0", :type=>"runtime"},
           {:name=>"ox", :requirement=>"2.4.9", :type=>"runtime"},
