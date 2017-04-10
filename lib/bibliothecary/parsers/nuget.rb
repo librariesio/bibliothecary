@@ -63,6 +63,8 @@ module Bibliothecary
             type: 'runtime'
           }
         end
+      rescue
+        []
       end
 
       def self.parse_nuspec(file_contents)
@@ -74,6 +76,8 @@ module Bibliothecary
             type: 'runtime'
           }
         end
+      rescue
+        []
       end
 
       def self.parse_paket_lock(file_contents)
