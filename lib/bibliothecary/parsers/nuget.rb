@@ -24,6 +24,10 @@ module Bibliothecary
             kind: 'manifest',
             parser: :parse_nuspec
           },
+          /^[A-Za-z0-9_-]+\.csproj$/ => {
+            kind: 'manifest',
+            parser: :parse_csproj
+          },
           /paket\.lock$/ => {
             kind: 'lockfile',
             parser: :parse_paket_lock
@@ -63,6 +67,20 @@ module Bibliothecary
             type: 'runtime'
           }
         end
+      rescue
+        []
+      end
+
+      def self.parse_csproj(file_contents)
+        manifest = Ox.parse file_contents
+        packages = manifest.locate('ItemGroup/PackageReference').map do |dependency|
+          {
+            name: dependency.Include,
+            version: dependency.Version,
+            type: 'runtime'
+          }
+        end
+        packages.uniq {|package| package[:name] }
       rescue
         []
       end

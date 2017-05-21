@@ -548,6 +548,22 @@ describe Bibliothecary::Parsers::Nuget do
     })
   end
 
+  it 'parses dependencies from example.csproj' do
+    expect(described_class.analyse_contents('example.csproj', load_fixture('example.csproj'))).to eq({
+      :platform=>"nuget",
+      :path=>"example.csproj",
+      :dependencies=>[
+        {:name=>"Microsoft.AspNetCore", :version=>"1.1.1", :type=>"runtime"},
+        {:name=>"Microsoft.AspNetCore.Mvc", :version=>"1.1.2", :type=>"runtime"},
+        {:name=>"Microsoft.AspNetCore.StaticFiles", :version=>"1.1.1", :type=>"runtime"},
+        {:name=>"Microsoft.Extensions.Logging.Debug", :version=>"1.1.1", :type=>"runtime"},
+        {:name=>"Microsoft.Extensions.DependencyInjection", :version=>"1.1.1", :type=>"runtime"},
+        {:name=>"Microsoft.VisualStudio.Web.BrowserLink", :version=>"1.1.0", :type=>"runtime"}
+      ],
+      kind: 'manifest'
+    })
+  end
+
   it 'parses dependencies from example.nuspec' do
     expect(described_class.analyse_contents('example.nuspec', load_fixture('example.nuspec'))).to eq({
       :platform=>"nuget",
@@ -582,5 +598,6 @@ describe Bibliothecary::Parsers::Nuget do
     expect(described_class.match?('packages.config')).to be_truthy
     expect(described_class.match?('paket.lock')).to be_truthy
     expect(described_class.match?('example.nuspec')).to be_truthy
+    expect(described_class.match?('example.csproj')).to be_truthy
   end
 end
