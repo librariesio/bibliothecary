@@ -77,6 +77,7 @@ Bibliothecary.analyse('./')
   - Project.lock.json
   - *.nuspec
   - paket.lock
+  - *.csproj
 - Bower
   - bower.json
 - CPAN
