@@ -18,11 +18,26 @@ module Bibliothecary
           /^(?!node_modules).*yarn\.lock$/ => {
             kind: 'lockfile',
             parser: :parse_yarn_lock
+          },
+          /^(?!node_modules).*package-lock\.json$/ => {
+            kind: 'lockfile',
+            parser: :parse_package_lock
           }
         }
       end
 
       def self.parse_shrinkwrap(file_contents)
+        manifest = JSON.parse(file_contents)
+        manifest.fetch('dependencies',[]).map do |name, requirement|
+          {
+            name: name,
+            requirement: requirement["version"],
+            type: 'runtime'
+          }
+        end
+      end
+
+      def self.parse_package_lock(file_contents)
         manifest = JSON.parse(file_contents)
         manifest.fetch('dependencies',[]).map do |name, requirement|
           {

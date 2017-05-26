@@ -48,6 +48,7 @@ Bibliothecary.analyse('./')
 
 - npm
   - package.json
+  - package-lock.json
   - npm-shrinkwrap.json
   - yarn.lock
 - Maven
