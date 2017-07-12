@@ -34,16 +34,6 @@ module Bibliothecary
           }
         end
       end
-
-      def self.map_dependencies(hash, key, type)
-        hash.fetch(key,[]).map do |name, requirement|
-          {
-            name: name,
-            requirement: requirement,
-            type: type
-          }
-        end
-      end
     end
   end
 end

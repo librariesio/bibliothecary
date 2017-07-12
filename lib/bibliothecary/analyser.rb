@@ -31,6 +31,16 @@ module Bibliothecary
         end
       end
 
+      def map_dependencies(hash, key, type)
+        hash.fetch(key,[]).map do |name, requirement|
+          {
+            name: name,
+            requirement: requirement,
+            type: type
+          }
+        end
+      end
+
       def analyse(folder_path, file_list)
         file_list.map do |path|
           filename = path.gsub(folder_path, '').gsub(/^\//, '')
