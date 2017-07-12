@@ -10,7 +10,7 @@ module Bibliothecary
         {
           /^dub\.json$/ => {
             kind: 'manifest',
-            parser: :parse_manifest
+            parser: :parse_json_runtime_manifest
           },
           /^dub\.sdl$/ => {
             kind: 'manifest',
@@ -19,23 +19,8 @@ module Bibliothecary
         }
       end
 
-      def self.parse_manifest(file_contents)
-        manifest = JSON.parse(file_contents)
-        map_dependencies(manifest, 'dependencies', 'runtime')
-      end
-
       def self.parse_sdl_manifest(manifest)
         SdlParser.new(:runtime, manifest).dependencies
-      end
-
-      def self.map_dependencies(hash, key, type)
-        hash.fetch(key,[]).map do |name, requirement|
-          {
-            name: name,
-            requirement: requirement,
-            type: type
-          }
-        end
       end
     end
   end

@@ -10,7 +10,7 @@ module Bibliothecary
         {
           /Project\.json$/ => {
             kind: 'manifest',
-            parser: :parse_project_json
+            parser: :parse_json_runtime_manifest
           },
           /Project\.lock\.json$/ => {
             kind: 'lockfile',
@@ -33,17 +33,6 @@ module Bibliothecary
             parser: :parse_paket_lock
           }
         }
-      end
-
-      def self.parse_project_json(file_contents)
-        manifest = JSON.parse file_contents
-        manifest.fetch('dependencies',[]).map do |name, requirement|
-          {
-            name: name,
-            requirement: requirement,
-            type: 'runtime'
-          }
-        end
       end
 
       def self.parse_project_lock_json(file_contents)

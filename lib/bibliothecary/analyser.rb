@@ -21,6 +21,16 @@ module Bibliothecary
         self.name.to_s.split('::').last.downcase
       end
 
+      def parse_json_runtime_manifest(file_contents)
+        JSON.parse(file_contents).fetch('dependencies',[]).map do |name, requirement|
+          {
+            name: name,
+            requirement: requirement,
+            type: 'runtime'
+          }
+        end
+      end
+
       def analyse(folder_path, file_list)
         file_list.map do |path|
           filename = path.gsub(folder_path, '').gsub(/^\//, '')
