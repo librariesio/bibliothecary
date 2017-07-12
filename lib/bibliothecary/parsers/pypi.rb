@@ -29,7 +29,7 @@ module Bibliothecary
       end
 
       def self.parse_pipfile(file_contents)
-        manifest = TOML.parse(file_contents)
+        manifest = TomlRB.parse(file_contents)
         map_dependencies(manifest['packages'], 'runtime') + map_dependencies(manifest['dev-packages'], 'develop')
       end
 
