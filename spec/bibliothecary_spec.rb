@@ -17,6 +17,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Dub,
           Bibliothecary::Parsers::Elm,
           Bibliothecary::Parsers::Go,
+          Bibliothecary::Parsers::Haxelib,
           Bibliothecary::Parsers::Hex,
           Bibliothecary::Parsers::Julia,
           Bibliothecary::Parsers::Maven,
