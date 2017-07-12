@@ -30,16 +30,6 @@ module Bibliothecary
         manifest = YAML.load file_contents
         map_dependencies(manifest, 'requires', 'runtime')
       end
-
-      def self.map_dependencies(hash, key, type)
-        hash.fetch(key,[]).map do |name, requirement|
-          {
-            name: name,
-            requirement: requirement,
-            type: type
-          }
-        end
-      end
     end
   end
 end

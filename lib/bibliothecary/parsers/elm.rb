@@ -9,18 +9,13 @@ module Bibliothecary
         {
           /^elm-package\.json$|^elm_dependencies\.json$/ => {
             kind: 'manifest',
-            parser: :parse_json_manifest
+            parser: :parse_json_runtime_manifest
           },
           /^elm-stuff\/exact-dependencies\.json$/ => {
             kind: 'lockfile',
             parser: :parse_json_lock
           }
         }
-      end
-
-      def self.parse_json_manifest(file_contents)
-        manifest = JSON.parse file_contents
-        map_dependencies(manifest, 'dependencies', 'runtime')
       end
 
       def self.parse_json_lock(file_contents)
@@ -30,16 +25,6 @@ module Bibliothecary
             name: name,
             requirement: requirement,
             type: 'runtime'
-          }
-        end
-      end
-
-      def self.map_dependencies(hash, key, type)
-        hash.fetch(key,[]).map do |name, requirement|
-          {
-            name: name,
-            requirement: requirement,
-            type: type
           }
         end
       end
