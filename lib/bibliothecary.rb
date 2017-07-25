@@ -7,7 +7,7 @@ end
 
 module Bibliothecary
   def self.analyse(path)
-    cmd = `find #{path} -type f | grep -vE "#{ignored_files}"`
+    cmd = `find #{path} -type f | grep -vE "#{ignored_files_regex}"`
     file_list = cmd.split("\n").sort
     package_managers.map{|pm| pm.analyse(path, file_list) }.flatten.compact
   end
@@ -19,8 +19,9 @@ module Bibliothecary
   end
 
   def self.identify_manifests(file_list)
+    allowed_file_list = file_list.reject{|f| f.start_with?(*ignored_files) }
     package_managers.map do |pm|
-      file_list.select do |file_path|
+      allowed_file_list.select do |file_path|
         pm.match?(file_path)
       end
     end.flatten.uniq.compact
@@ -31,6 +32,10 @@ module Bibliothecary
   end
 
   def self.ignored_files
-    ['.git', 'node_modules', 'bower_components', 'spec/fixtures', 'vendor/bundle'].join('|')
+    ['.git', 'node_modules', 'bower_components', 'spec/fixtures', 'vendor/bundle', 'dist']
+  end
+
+  def self.ignored_files_regex
+    ignored_files.join('|')
   end
 end

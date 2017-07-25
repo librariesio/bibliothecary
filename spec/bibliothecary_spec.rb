@@ -39,6 +39,12 @@ describe Bibliothecary do
       ])
   end
 
+  it 'identifys manifests from a list of file paths except ignored ones' do
+    expect(described_class.identify_manifests(['package.json', 'bower_components/package.json', 'README.md', 'index.js'])).to eq([
+      'package.json'
+      ])
+  end
+
   it 'analyses contents of a file' do
     expect(described_class.analyse_file('bower.json', load_fixture('bower.json'))).to eq([{
       :platform=>"bower",
@@ -51,7 +57,7 @@ describe Bibliothecary do
   end
 
   it 'ignores certain files' do
-    expect(described_class.ignored_files).to eq(".git|node_modules|bower_components|spec/fixtures|vendor/bundle")
+    expect(described_class.ignored_files_regex).to eq(".git|node_modules|bower_components|spec/fixtures|vendor/bundle|dist")
   end
 
   it 'searches a folder for manifests and parses them' do
