@@ -57,7 +57,7 @@ describe Bibliothecary do
   end
 
   it 'ignores certain files' do
-    expect(described_class.ignored_files_regex).to eq(".git|node_modules|bower_components|spec/fixtures|vendor/bundle|dist")
+    expect(described_class.ignored_files_regex).to eq(".git|node_modules|bower_components|spec/fixtures|vendor|dist")
   end
 
   it 'searches a folder for manifests and parses them' do
