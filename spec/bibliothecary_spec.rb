@@ -73,7 +73,7 @@ describe Bibliothecary do
        {:platform=>"rubygems",
         :path=>"Gemfile.lock",
         :dependencies=>
-         [{:name=>"bibliothecary", :requirement=>"5.4.0", :type=>"runtime"},
+         [{:name=>"bibliothecary", :requirement=>Bibliothecary::VERSION, :type=>"runtime"},
           {:name=>"citrus", :requirement=>"3.0.2", :type=>"runtime"},
           {:name=>"codeclimate-test-reporter",
            :requirement=>"1.0.8",
