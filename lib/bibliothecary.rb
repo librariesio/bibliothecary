@@ -32,7 +32,7 @@ module Bibliothecary
   end
 
   def self.ignored_files
-    ['.git', 'node_modules', 'bower_components', 'spec/fixtures', 'vendor/bundle', 'dist']
+    ['.git', 'node_modules', 'bower_components', 'spec/fixtures', 'vendor', 'dist']
   end
 
   def self.ignored_files_regex
