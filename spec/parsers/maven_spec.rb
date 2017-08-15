@@ -154,15 +154,15 @@ describe Bibliothecary::Parsers::Maven do
       :platform=>"maven",
       :path=>"build.gradle",
       :dependencies=>[
-        {:name=>"com.squareup.okhttp:okhttp", :version=>"2.1.0", :type=>"runtime"},
-        {:name=>"com.squareup.okhttp:okhttp-urlconnection", :version=>"2.1.0", :type=>"runtime"},
-        {:name=>"com.squareup.picasso:picasso", :version=>"2.4.0", :type=>"runtime"},
-        {:name=>"com.google.android.gms:play-services-wearable", :version=>"8.3.0", :type=>"runtime"},
-        {:name=>"de.greenrobot:eventbus", :version=>"2.4.0", :type=>"runtime"},
-        {:name=>"com.android.support:appcompat-v7", :version=>"23.1.1", :type=>"runtime"},
-        {:name=>"com.android.support:recyclerview-v7", :version=>"23.1.1", :type=>"runtime"},
-        {:name=>"com.android.support:design", :version=>"23.1.1", :type=>"runtime"},
-        {:name=>"com.android.support:customtabs", :version=>"23.1.1", :type=>"runtime"}
+        {:name=>"com.squareup.okhttp:okhttp", :version=>"2.1.0", :type=>"compile"},
+        {:name=>"com.squareup.okhttp:okhttp-urlconnection", :version=>"2.1.0", :type=>"compile"},
+        {:name=>"com.squareup.picasso:picasso", :version=>"2.4.0", :type=>"compile"},
+        {:name=>"com.google.android.gms:play-services-wearable", :version=>"8.3.0", :type=>"compile"},
+        {:name=>"de.greenrobot:eventbus", :version=>"2.4.0", :type=>"compile"},
+        {:name=>"com.android.support:appcompat-v7", :version=>"23.1.1", :type=>"compile"},
+        {:name=>"com.android.support:recyclerview-v7", :version=>"23.1.1", :type=>"compile"},
+        {:name=>"com.android.support:design", :version=>"23.1.1", :type=>"compile"},
+        {:name=>"com.android.support:customtabs", :version=>"23.1.1", :type=>"compile"},
       ],
       kind: 'manifest'
     })

@@ -58,16 +58,14 @@ module Bibliothecary
       def self.parse_gradle(manifest)
         response = Typhoeus.post("https://gradle-parser.libraries.io/parse", body: manifest)
         json = JSON.parse(response.body)
-
-        return [] unless json['dependencies'] && json['dependencies']['compile'] && json['dependencies']['compile'].is_a?(Array)
-        json['dependencies']['compile'].map do |dependency|
-          next unless dependency =~ (/[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+(\.[A-Za-z0-9_-])?\:[A-Za-z0-9_-]+\:/)
-          version = dependency.split(':').last
-          name = dependency.split(':')[0..-2].join(':')
+        return [] unless json['dependencies']
+        json['dependencies'].map do |dependency|
+          name = [dependency["group"], dependency["name"]].join(':')
+          next unless name =~ (/[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+(\.[A-Za-z0-9_-])?\:[A-Za-z0-9_-]/)
           {
             name: name,
-            version: version,
-            type: 'runtime'
+            version: dependency["version"],
+            type: dependency["type"]
           }
         end.compact
       end
