@@ -99,5 +99,6 @@ describe Bibliothecary::Parsers::Pypi do
   it 'fails to match invalid manifest filepaths' do
     expect(described_class.match?('some-random-file.txt')).to be_falsey
     expect(described_class.match?('node_modules/requirements.txt')).to be_falsey
+    expect(described_class.match?('require/some/other/folder/myhomework.txt')).to be_falsey
   end
 end

@@ -9,7 +9,7 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^(?!node_modules).*require.*\.(txt|pip)$/ => {
+          /^(?!node_modules).*require[^\/]*(\/)?[^\/]*\.(txt|pip)$/ => {
             kind: 'manifest',
             parser: :parse_requirements_txt
           },
