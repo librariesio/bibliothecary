@@ -26,6 +26,12 @@ module Bibliothecary
             requirement: dependency["version"],
             type: 'runtime'
           }
+        end + manifest.fetch('packages-dev',[]).map do |dependency|
+          {
+            name: dependency["name"],
+            requirement: dependency["version"],
+            type: 'development'
+          }
         end
       end
 

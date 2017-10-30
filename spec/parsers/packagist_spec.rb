@@ -30,7 +30,8 @@ describe Bibliothecary::Parsers::Packagist do
         {:name=>"symfony/swiftmailer-bundle", :requirement=>"v2.3.8", :type=>"runtime"},
         {:name=>"symfony/symfony", :requirement=>"v2.6.1", :type=>"runtime"},
         {:name=>"twig/extensions", :requirement=>"v1.2.0", :type=>"runtime"},
-        {:name=>"twig/twig", :requirement=>"v1.16.2", :type=>"runtime"}
+        {:name=>"twig/twig", :requirement=>"v1.16.2", :type=>"runtime"},
+        {:name=>"sensio/generator-bundle", :requirement=>"v2.5.0", :type=>"development"}
       ],
       kind: 'lockfile'
     })
