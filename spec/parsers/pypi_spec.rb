@@ -33,7 +33,8 @@ describe Bibliothecary::Parsers::Pypi do
         {:name=>"ijson", :requirement=>">=2.2,<2.3", :type=>"runtime"},
         {:name=>"python-dateutil", :requirement=>">=2.4,<2.5", :type=>"runtime"},
         {:name=>"pytz", :requirement=>"==2015.7", :type=>"runtime"},
-        {:name=>"django-suit", :requirement=>"*", :type=>"runtime"}
+        {:name=>"django-suit", :requirement=>"*", :type=>"runtime"},
+        {:name=>"dummy", :requirement=>"==2.0beta1", :type=>"runtime"}
       ],
       kind: 'manifest'
     })
@@ -52,7 +53,8 @@ describe Bibliothecary::Parsers::Pypi do
         {:name=>"chardet", :requirement=>"==1.0.1", :type=>"runtime"},
         {:name=>"distribute", :requirement=>"==0.6.24", :type=>"runtime"},
         {:name=>"gunicorn", :requirement=>"==0.14.2", :type=>"runtime"},
-        {:name=>"requests", :requirement=>"==0.11.1", :type=>"runtime"}
+        {:name=>"requests", :requirement=>"==0.11.1", :type=>"runtime"},
+        {:name=>"Django", :requirement=>"==2.0beta1", :type=>"runtime"}
       ],
       kind: 'manifest'
     })

@@ -4,7 +4,7 @@ module Bibliothecary
       include Bibliothecary::Analyser
 
       INSTALL_REGEXP = /install_requires\s*=\s*\[([\s\S]*?)\]/
-      REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)([><=\d\.,]+)?/
+      REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)([><=\w\.,]+)?/
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
 
       def self.mapping
