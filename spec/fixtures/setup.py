@@ -27,6 +27,7 @@ setup(name='political-memory',
         'python-dateutil>=2.4,<2.5',
         'pytz==2015.7',
         'django-suit',
+        'dummy==2.0beta1',
     ],
     extras_require={
         'testing': [
