@@ -15,7 +15,7 @@ module Bibliothecary
         c.syntax = 'bibliothecary list'
         c.description = 'List dependencies'
         c.option("--path FILENAME", String, "Path to file/folder to analyse")
-        c.action do |args, options|
+        c.action do |_args, options|
           output = Bibliothecary.analyse(options.path)
           output.each do |manifest|
             puts "#{manifest[:path]} (#{manifest[:platform]})"
