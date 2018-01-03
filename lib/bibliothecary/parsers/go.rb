@@ -33,7 +33,15 @@ module Bibliothecary
           /^vendor\/vendor.json$/ => {
             kind: 'manifest',
             parser: :parse_govendor
-          }
+          },
+          /^Gopkg\.toml$/ => {
+            kind: 'manifest',
+            parser: :parse_dep_toml
+          },
+          /^Gopkg\.lock$/ => {
+            kind: 'lockfile',
+            parser: :parse_dep_lockfile
+          },
         }
       end
 
@@ -75,6 +83,16 @@ module Bibliothecary
       def self.parse_gb_manifest(file_contents)
         manifest = JSON.parse file_contents
         map_dependencies(manifest, 'dependencies', 'importpath', 'revision', 'runtime')
+      end
+
+      def self.parse_dep_toml(file_contents)
+        manifest = TomlRB.parse file_contents
+        map_dependencies(manifest, 'constraint', 'name', 'version', 'runtime')
+      end
+
+      def self.parse_dep_lockfile(file_contents)
+        manifest = TomlRB.parse file_contents
+        map_dependencies(manifest, 'projects', 'name', 'revision', 'runtime')
       end
 
       def self.map_dependencies(manifest, attr_name, dep_attr_name, version_attr_name, type)

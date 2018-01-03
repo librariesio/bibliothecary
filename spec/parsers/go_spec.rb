@@ -140,6 +140,48 @@ describe Bibliothecary::Parsers::Go do
     })
   end
 
+  it 'parses dependencies from dep Gopkg.toml file' do
+    expect(described_class.analyse_contents('Gopkg.toml', load_fixture('Gopkg.toml'))).to eq({
+      :platform=>"go",
+      :path=>"Gopkg.toml",
+      :dependencies=>[
+        {:name=>"github.com/Masterminds/semver", :requirement=>"*", :type=>"runtime"},
+        {:name=>"github.com/Masterminds/vcs", :requirement=>"1.11.0", :type=>"runtime"},
+        {:name=>"github.com/go-yaml/yaml", :requirement=>"*", :type=>"runtime"},
+        {:name=>"github.com/pelletier/go-toml", :requirement=>"*", :type=>"runtime"},
+        {:name=>"github.com/pkg/errors", :requirement=>"0.8.0", :type=>"runtime"},
+        {:name=>"github.com/boltdb/bolt", :requirement=>"1.0.0", :type=>"runtime"},
+        {:name=>"github.com/jmank88/nuts", :requirement=>"0.2.0", :type=>"runtime"},
+        {:name=>"github.com/golang/protobuf", :requirement=>"*", :type=>"runtime"}
+      ],
+      kind: 'manifest'
+    })
+  end
+
+  it 'parses dependencies from dep Gopkg.lock file' do
+    expect(described_class.analyse_contents('Gopkg.lock', load_fixture('Gopkg.lock'))).to eq({
+      :platform=>"go",
+      :path=>"Gopkg.lock",
+      :dependencies=>[
+        {:name=>"github.com/Masterminds/semver", :requirement=>"a93e51b5a57ef416dac8bb02d11407b6f55d8929", :type=>"runtime"},
+        {:name=>"github.com/Masterminds/vcs", :requirement=>"3084677c2c188840777bff30054f2b553729d329", :type=>"runtime"},
+        {:name=>"github.com/armon/go-radix", :requirement=>"4239b77079c7b5d1243b7b4736304ce8ddb6f0f2", :type=>"runtime"},
+        {:name=>"github.com/boltdb/bolt", :requirement=>"2f1ce7a837dcb8da3ec595b1dac9d0632f0f99e8", :type=>"runtime"},
+        {:name=>"github.com/go-yaml/yaml", :requirement=>"cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b", :type=>"runtime"},
+        {:name=>"github.com/golang/protobuf", :requirement=>"5afd06f9d81a86d6e3bb7dc702d6bd148ea3ff23", :type=>"runtime"},
+        {:name=>"github.com/jmank88/nuts", :requirement=>"a1e02c788669d022c325a8ee674f15360d7104f4", :type=>"runtime"},
+        {:name=>"github.com/nightlyone/lockfile", :requirement=>"e83dc5e7bba095e8d32fb2124714bf41f2a30cb5", :type=>"runtime"},
+        {:name=>"github.com/pelletier/go-toml", :requirement=>"b8b5e7696574464b2f9bf303a7b37781bb52889f", :type=>"runtime"},
+        {:name=>"github.com/pkg/errors", :requirement=>"645ef00459ed84a119197bfb8d8205042c6df63d", :type=>"runtime"},
+        {:name=>"github.com/sdboyer/constext", :requirement=>"836a144573533ea4da4e6929c235fd348aed1c80", :type=>"runtime"},
+        {:name=>"golang.org/x/net", :requirement=>"66aacef3dd8a676686c7ae3716979581e8b03c47", :type=>"runtime"},
+        {:name=>"golang.org/x/sync", :requirement=>"f52d1811a62927559de87708c8913c1650ce4f26", :type=>"runtime"},
+        {:name=>"golang.org/x/sys", :requirement=>"bb24a47a89eac6c1227fbcb2ae37a8b9ed323366", :type=>"runtime"}
+      ],
+      kind: 'lockfile'
+    })
+  end
+
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('Godeps/Godeps.json')).to be_truthy
     expect(described_class.match?('vendor/manifest')).to be_truthy
@@ -147,5 +189,7 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.match?('glide.lock')).to be_truthy
     expect(described_class.match?('Godeps')).to be_truthy
     expect(described_class.match?('vendor/vendor.json')).to be_truthy
+    expect(described_class.match?('Gopkg.toml')).to be_truthy
+    expect(described_class.match?('Gopkg.lock')).to be_truthy
   end
 end
