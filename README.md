@@ -46,6 +46,8 @@ Bibliothecary.analyse('./')
 
 ## Supported package manager file formats
 
+- Haskell
+  - \*.cabal
 - npm
   - package.json
   - package-lock.json
