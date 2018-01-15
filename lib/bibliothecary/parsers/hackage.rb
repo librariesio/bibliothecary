@@ -2,13 +2,13 @@ require "json"
 
 module Bibliothecary
   module Parsers
-    class Haskell
+    class Hackage
       include Bibliothecary::Analyser
 
       def self.mapping
         {
           /.*\.cabal$/ => {
-            kind: 'lockfile',
+            kind: 'manifest',
             parser: :parse_cabal
           },
         }
@@ -20,7 +20,7 @@ module Bibliothecary
         }
 
         response = Typhoeus.post("https://cabal-parser.libraries.io/parse", headers: headers, body: file_contents)
-        
+
         if response.response_code == 200 then
           JSON.parse(response.body, symbolize_names: true)
         else
