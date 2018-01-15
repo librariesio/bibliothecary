@@ -31,7 +31,7 @@ module Bibliothecary
           dep = dependency.match(REQUIRE_REGEXP)
           {
             name: dep[1],
-            version: dep[2] || '*',
+            requirement: dep[2] || '*',
             type: name.downcase
           }
         end

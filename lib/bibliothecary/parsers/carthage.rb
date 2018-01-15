@@ -39,7 +39,7 @@ module Bibliothecary
         json.map do |dependency|
           {
             name: dependency['name'],
-            version: dependency['version'],
+            requirement: dependency['version'],
             type: dependency["type"]
           }
         end

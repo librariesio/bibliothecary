@@ -52,7 +52,7 @@ module Bibliothecary
         manifest.packages.locate('package').map do |dependency|
           {
             name: dependency.id,
-            version: dependency.version,
+            requirement: dependency.version,
             type: 'runtime'
           }
         end
@@ -65,7 +65,7 @@ module Bibliothecary
         packages = manifest.locate('ItemGroup/PackageReference').map do |dependency|
           {
             name: dependency.Include,
-            version: dependency.Version,
+            requirement: dependency.Version,
             type: 'runtime'
           }
         end
@@ -79,7 +79,7 @@ module Bibliothecary
         manifest.package.metadata.dependencies.locate('dependency').map do |dependency|
           {
             name: dependency.id,
-            version: dependency.attributes[:version] || '*',
+            requirement: dependency.attributes[:version] || '*',
             type: 'runtime'
           }
         end
@@ -93,7 +93,7 @@ module Bibliothecary
         packages = lines.select { |line| package_version_re.match(line) }.map { |line| package_version_re.match(line) }.map do |match|
           {
             name: match[:name].strip,
-            version: match[:version],
+            requirement: match[:version],
             type: 'runtime'
           }
         end

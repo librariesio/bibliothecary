@@ -25,7 +25,7 @@ module Bibliothecary
         json.map do |name, version|
           {
             name: name,
-            version: version,
+            requirement: version,
             type: "runtime"
           }
         end
@@ -38,7 +38,7 @@ module Bibliothecary
         json.map do |name, info|
           {
             name: name,
-            version: info['version'],
+            requirement: info['version'],
             type: "runtime"
           }
         end
