@@ -20,7 +20,7 @@ module Bibliothecary
           version = "#{dependency['version']['lowerBound']} - #{dependency['version']['upperBound']}"
           {
             name: name,
-            version: version,
+            requirement: version,
             type: 'runtime'
           }
         end

@@ -25,7 +25,7 @@ module Bibliothecary
         dependencies.map do |dependency|
           {
             name: dependency[0],
-            version: dependency[1],
+            requirement: dependency[1],
             type: "runtime"
           }
         end

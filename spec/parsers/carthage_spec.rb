@@ -10,14 +10,14 @@ describe Bibliothecary::Parsers::Carthage do
       :platform=>"carthage",
       :path=>"Cartfile",
       :dependencies=>[
-         {:name=>"ReactiveCocoa/ReactiveCocoa", :version=>">= 2.3.1", :type=>"runtime"},
-         {:name=>"Mantle/Mantle", :version=>"~> 1.0", :type=>"runtime"},
-         {:name=>"jspahrsummers/libextobjc", :version=>"== 0.4.1", :type=>"runtime"},
-         {:name=>"jspahrsummers/xcconfigs", :version=>" ", :type=>"runtime"},
-         {:name=>"jspahrsummers/xcconfigs", :version=>"branch ", :type=>"runtime"},
-         {:name=>"https://enterprise.local/ghe/desktop/git-error-translations",:version=>" ",:type=>"runtime"},
-         {:name=>"https://enterprise.local/desktop/git-error-translations2.git",:version=>"development ",:type=>"runtime"},
-         {:name=>"file:///directory/to/project", :version=>"branch ", :type=>"runtime"}
+         {:name=>"ReactiveCocoa/ReactiveCocoa", :requirement=>">= 2.3.1", :type=>"runtime"},
+         {:name=>"Mantle/Mantle", :requirement=>"~> 1.0", :type=>"runtime"},
+         {:name=>"jspahrsummers/libextobjc", :requirement=>"== 0.4.1", :type=>"runtime"},
+         {:name=>"jspahrsummers/xcconfigs", :requirement=>" ", :type=>"runtime"},
+         {:name=>"jspahrsummers/xcconfigs", :requirement=>"branch ", :type=>"runtime"},
+         {:name=>"https://enterprise.local/ghe/desktop/git-error-translations",:requirement=>" ",:type=>"runtime"},
+         {:name=>"https://enterprise.local/desktop/git-error-translations2.git",:requirement=>"development ",:type=>"runtime"},
+         {:name=>"file:///directory/to/project", :requirement=>"branch ", :type=>"runtime"}
       ],
       kind: 'manifest'
     })
@@ -28,9 +28,9 @@ describe Bibliothecary::Parsers::Carthage do
       :platform=>"carthage",
       :path=>"Cartfile.private",
       :dependencies=>[
-        {:name=>"Quick/Quick", :version=>"~> 0.9", :type=>"development"},
-        {:name=>"Quick/Nimble", :version=>"~> 3.1", :type=>"development"},
-        {:name=>"jspahrsummers/xcconfigs",:version=>"ec5753493605deed7358dec5f9260f503d3ed650 ",:type=>"development"}
+        {:name=>"Quick/Quick", :requirement=>"~> 0.9", :type=>"development"},
+        {:name=>"Quick/Nimble", :requirement=>"~> 3.1", :type=>"development"},
+        {:name=>"jspahrsummers/xcconfigs",:requirement=>"ec5753493605deed7358dec5f9260f503d3ed650 ",:type=>"development"}
       ],
       kind: 'manifest'
     })
@@ -41,15 +41,15 @@ describe Bibliothecary::Parsers::Carthage do
       :platform=>"carthage",
       :path=>"Cartfile.resolved",
       :dependencies=>[
-        {:name=>"thoughtbot/Argo", :version=>"v2.2.0 ", :type=>"runtime"},
-        {:name=>"Quick/Nimble", :version=>"v3.1.0 ", :type=>"runtime"},
-        {:name=>"jdhealy/PrettyColors", :version=>"v3.0.0 ", :type=>"runtime"},
-        {:name=>"Quick/Quick", :version=>"v0.9.1 ", :type=>"runtime"},
-        {:name=>"antitypical/Result", :version=>"1.0.2 ", :type=>"runtime"},
-        {:name=>"jspahrsummers/xcconfigs",:version=>"ec5753493605deed7358dec5f9260f503d3ed650 ",:type=>"runtime"},
-        {:name=>"Carthage/Commandant", :version=>"0.8.3 ", :type=>"runtime"},
-        {:name=>"ReactiveCocoa/ReactiveCocoa", :version=>"v4.0.1 ", :type=>"runtime"},
-        {:name=>"Carthage/ReactiveTask", :version=>"0.9.1 ", :type=>"runtime"}
+        {:name=>"thoughtbot/Argo", :requirement=>"v2.2.0 ", :type=>"runtime"},
+        {:name=>"Quick/Nimble", :requirement=>"v3.1.0 ", :type=>"runtime"},
+        {:name=>"jdhealy/PrettyColors", :requirement=>"v3.0.0 ", :type=>"runtime"},
+        {:name=>"Quick/Quick", :requirement=>"v0.9.1 ", :type=>"runtime"},
+        {:name=>"antitypical/Result", :requirement=>"1.0.2 ", :type=>"runtime"},
+        {:name=>"jspahrsummers/xcconfigs",:requirement=>"ec5753493605deed7358dec5f9260f503d3ed650 ",:type=>"runtime"},
+        {:name=>"Carthage/Commandant", :requirement=>"0.8.3 ", :type=>"runtime"},
+        {:name=>"ReactiveCocoa/ReactiveCocoa", :requirement=>"v4.0.1 ", :type=>"runtime"},
+        {:name=>"Carthage/ReactiveTask", :requirement=>"0.9.1 ", :type=>"runtime"}
       ],
       kind: 'lockfile'
     })

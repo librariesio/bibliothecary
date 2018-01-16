@@ -11,7 +11,7 @@ class SdlParser
     parse.children('dependency').inject([]) do |deps, dep|
       deps.push({
         name: dep.value,
-        version: dep.attribute('version') || ">= 0",
+        requirement: dep.attribute('version') || ">= 0",
         type: type,
       })
     end.uniq

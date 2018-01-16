@@ -535,14 +535,14 @@ describe Bibliothecary::Parsers::Nuget do
       :platform=>"nuget",
       :path=>"packages.config",
       :dependencies=>[
-        {:name=>"AutoMapper", :version=>"2.1.267", :type=>"runtime"},
+        {:name=>"AutoMapper", :requirement=>"2.1.267", :type=>"runtime"},
         {:name=>"Microsoft.Web.Infrastructure",
-         :version=>"1.0.0.0",
+         :requirement=>"1.0.0.0",
          :type=>"runtime"},
-        {:name=>"Mvc3Futures", :version=>"3.0.20105.0", :type=>"runtime"},
-        {:name=>"Ninject", :version=>"3.0.1.10", :type=>"runtime"},
-        {:name=>"Ninject.Web.Common", :version=>"3.0.0.7", :type=>"runtime"},
-        {:name=>"WebActivator", :version=>"1.5", :type=>"runtime"}
+        {:name=>"Mvc3Futures", :requirement=>"3.0.20105.0", :type=>"runtime"},
+        {:name=>"Ninject", :requirement=>"3.0.1.10", :type=>"runtime"},
+        {:name=>"Ninject.Web.Common", :requirement=>"3.0.0.7", :type=>"runtime"},
+        {:name=>"WebActivator", :requirement=>"1.5", :type=>"runtime"}
       ],
       kind: 'manifest'
     })
@@ -553,12 +553,12 @@ describe Bibliothecary::Parsers::Nuget do
       :platform=>"nuget",
       :path=>"example.csproj",
       :dependencies=>[
-        {:name=>"Microsoft.AspNetCore", :version=>"1.1.1", :type=>"runtime"},
-        {:name=>"Microsoft.AspNetCore.Mvc", :version=>"1.1.2", :type=>"runtime"},
-        {:name=>"Microsoft.AspNetCore.StaticFiles", :version=>"1.1.1", :type=>"runtime"},
-        {:name=>"Microsoft.Extensions.Logging.Debug", :version=>"1.1.1", :type=>"runtime"},
-        {:name=>"Microsoft.Extensions.DependencyInjection", :version=>"1.1.1", :type=>"runtime"},
-        {:name=>"Microsoft.VisualStudio.Web.BrowserLink", :version=>"1.1.0", :type=>"runtime"}
+        {:name=>"Microsoft.AspNetCore", :requirement=>"1.1.1", :type=>"runtime"},
+        {:name=>"Microsoft.AspNetCore.Mvc", :requirement=>"1.1.2", :type=>"runtime"},
+        {:name=>"Microsoft.AspNetCore.StaticFiles", :requirement=>"1.1.1", :type=>"runtime"},
+        {:name=>"Microsoft.Extensions.Logging.Debug", :requirement=>"1.1.1", :type=>"runtime"},
+        {:name=>"Microsoft.Extensions.DependencyInjection", :requirement=>"1.1.1", :type=>"runtime"},
+        {:name=>"Microsoft.VisualStudio.Web.BrowserLink", :requirement=>"1.1.0", :type=>"runtime"}
       ],
       kind: 'manifest'
     })
@@ -569,9 +569,9 @@ describe Bibliothecary::Parsers::Nuget do
       :platform=>"nuget",
       :path=>"example.nuspec",
       :dependencies=>[
-        {:name=>"FubuCore", :version=>"3.2.0.3001", :type=>"runtime"},
-        {:name=>"HtmlTags", :version=>"[3.2.0.3001]", :type=>"runtime"},
-        {:name=>"DotNetZip", :version=>"*", :type=>"runtime"}
+        {:name=>"FubuCore", :requirement=>"3.2.0.3001", :type=>"runtime"},
+        {:name=>"HtmlTags", :requirement=>"[3.2.0.3001]", :type=>"runtime"},
+        {:name=>"DotNetZip", :requirement=>"*", :type=>"runtime"}
       ],
       kind: 'manifest'
     })
@@ -582,11 +582,11 @@ describe Bibliothecary::Parsers::Nuget do
       :platform=>"nuget",
       :path=>"paket.lock",
       :dependencies=>[
-        {:name=>"Argu", :version=>"2.1", :type=>"runtime"},
-        {:name=>"Mono.Cecil", :version=>"0.9.6.1", :type=>"runtime"},
-        {:name=>"Chessie", :version=>"0.5.1", :type=>"runtime"},
-        {:name=>"FSharp.Core", :version=>"4.0.0.1", :type=>"runtime"},
-        {:name=>"Newtonsoft.Json", :version=>"9.0.1", :type=>"runtime"}
+        {:name=>"Argu", :requirement=>"2.1", :type=>"runtime"},
+        {:name=>"Mono.Cecil", :requirement=>"0.9.6.1", :type=>"runtime"},
+        {:name=>"Chessie", :requirement=>"0.5.1", :type=>"runtime"},
+        {:name=>"FSharp.Core", :requirement=>"4.0.0.1", :type=>"runtime"},
+        {:name=>"Newtonsoft.Json", :requirement=>"9.0.1", :type=>"runtime"}
       ],
       kind: 'lockfile'
     })

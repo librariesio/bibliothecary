@@ -64,7 +64,7 @@ module Bibliothecary
           next unless name =~ (/[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+(\.[A-Za-z0-9_-])?\:[A-Za-z0-9_-]/)
           {
             name: name,
-            version: dependency["version"],
+            requirement: dependency["version"],
             type: dependency["type"]
           }
         end.compact

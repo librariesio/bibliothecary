@@ -24,7 +24,7 @@ describe Bibliothecary::Parsers::Dub do
       :platform=>"dub",
       :path=>"dub.sdl",
       :dependencies=>[
-        {:name=>"vibe-d", :version=>"~>0.7.23", :type=>:runtime}
+        {:name=>"vibe-d", :requirement=>"~>0.7.23", :type=>:runtime}
       ],
       kind: 'manifest'
     })
