@@ -13,7 +13,7 @@ module Bibliothecary
       end
 
       def self.parse_package_swift(manifest)
-        response = Typhoeus.post("http://swift.libraries.io/to-json", body: manifest)
+        response = Typhoeus.post("#{Bibliothecary.configuration.swift_parser_host}/to-json", body: manifest)
         json = JSON.parse(response.body)
         json["dependencies"].map do |dependency|
           name = dependency['url'].gsub(/^https?:\/\//, '').gsub(/\.git$/,'')

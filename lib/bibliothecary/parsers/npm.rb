@@ -55,7 +55,7 @@ module Bibliothecary
       end
 
       def self.parse_yarn_lock(file_contents)
-        response = Typhoeus.post("https://yarn-parser.libraries.io/parse", body: file_contents)
+        response = Typhoeus.post("#{Bibliothecary.configuration.yarn_parser_host}/parse", body: file_contents)
         return [] unless response.response_code == 200
         json = JSON.parse(response.body, symbolize_names: true)
         json.uniq.map do |dep|

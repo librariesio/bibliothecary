@@ -16,7 +16,7 @@ module Bibliothecary
       end
 
       def self.parse_manifest(manifest)
-        response = Typhoeus.post("https://clojars.libraries.io/project.clj", body: manifest)
+        response = Typhoeus.post("#{Bibliothecary.configuration.clojars_parser_host}/project.clj", body: manifest)
         json = JSON.parse response.body
         index = json.index("dependencies")
 
