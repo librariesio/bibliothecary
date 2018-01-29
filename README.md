@@ -124,10 +124,14 @@ Bibliothecary.analyse('./')
   - Godeps/Godeps.json
   - vendor/manifest
   - vendor/vendor.json
+  - Gopkg.toml
+  - Gopkg.lock
 - Elm
   - elm-package.json
   - elm_dependencies.json
   - elm-stuff/exact-dependencies.json
+- Haxelib
+  - haxelib.json
 
 ## Development
 
