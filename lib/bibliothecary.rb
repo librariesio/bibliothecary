@@ -1,5 +1,6 @@
 require "bibliothecary/version"
 require "bibliothecary/analyser"
+require "bibliothecary/configuration"
 
 Dir[File.expand_path('../bibliothecary/parsers/*.rb', __FILE__)].each do |file|
   require file
@@ -32,10 +33,26 @@ module Bibliothecary
   end
 
   def self.ignored_files
-    ['.git', 'node_modules', 'bower_components', 'spec/fixtures', 'vendor', 'dist']
+    configuration.ignored_files
   end
 
   def self.ignored_files_regex
     ignored_files.join('|')
+  end
+
+  class << self
+    attr_writer :configuration
+  end
+
+  def self.configuration
+    @configuration ||= Configuration.new
+  end
+
+  def self.reset
+    @configuration = Configuration.new
+  end
+
+  def self.configure
+    yield(configuration)
   end
 end

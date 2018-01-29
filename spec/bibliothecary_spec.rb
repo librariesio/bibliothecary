@@ -81,4 +81,32 @@ describe Bibliothecary do
         :dependencies=>[],
         :kind => 'manifest'}])
   end
+
+  it 'allows customization of config options' do
+    Bibliothecary.configure do |config|
+      config.ignored_files = ['foobar']
+    end
+
+    expect(Bibliothecary.ignored_files).to eq(['foobar'])
+
+    Bibliothecary.reset
+  end
+
+  it 'allows customization of config options' do
+    Bibliothecary.configure do |config|
+      config.ignored_files = ['foobar']
+    end
+
+    expect(Bibliothecary.ignored_files).to eq(['foobar'])
+  end
+
+  it 'allows resetting of config options' do
+    Bibliothecary.configure do |config|
+      config.carthage_parser_host = 'http://foobar.com'
+    end
+
+    Bibliothecary.reset
+
+    expect(Bibliothecary.configuration.carthage_parser_host).to eq('https://carthage.libraries.io')
+  end
 end

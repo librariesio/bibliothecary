@@ -33,7 +33,7 @@ module Bibliothecary
       end
 
       def self.map_dependencies(manifest, path)
-        response = Typhoeus.post("https://carthage.libraries.io/#{path}", params: {body: manifest})
+        response = Typhoeus.post("#{Bibliothecary.configuration.carthage_parser_host}/#{path}", params: {body: manifest})
         json = JSON.parse(response.body)
 
         json.map do |dependency|

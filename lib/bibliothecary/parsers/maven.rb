@@ -56,7 +56,7 @@ module Bibliothecary
       end
 
       def self.parse_gradle(manifest)
-        response = Typhoeus.post("https://gradle-parser.libraries.io/parse", body: manifest)
+        response = Typhoeus.post("#{Bibliothecary.configuration.gradle_parser_host}/parse", body: manifest)
         json = JSON.parse(response.body)
         return [] unless json['dependencies']
         json['dependencies'].map do |dependency|

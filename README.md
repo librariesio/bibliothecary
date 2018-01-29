@@ -44,6 +44,16 @@ Search a directory for manifest files and parse the contents:
 Bibliothecary.analyse('./')
 ```
 
+There are a number of parsers that rely on web services to parse the file formats, those urls can be configured like so:
+
+```ruby
+Bibliothecary.configure do |config|
+  config.carthage_parser_host = 'http://my-carthage-parsing-service.com'
+end
+```
+
+All available config options are in: https://github.com/librariesio/bibliothecary/blob/master/lib/bibliothecary/configuration.rb
+
 ## Supported package manager file formats
 
 - npm
