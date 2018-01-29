@@ -7,3 +7,9 @@ require 'bibliothecary'
 def load_fixture(name)
   File.open("spec/fixtures/#{name}").read
 end
+
+RSpec.configure do |config|
+  config.after(:each) do
+    Bibliothecary.reset
+  end
+end
