@@ -144,6 +144,9 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - elm-stuff/exact-dependencies.json
 - Haxelib
   - haxelib.json
+- Hackage
+  - *.cabal
+  - cabal.config
 
 ## Development
 
