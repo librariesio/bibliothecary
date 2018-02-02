@@ -7,6 +7,7 @@ module Bibliothecary
     attr_accessor :gradle_parser_host
     attr_accessor :yarn_parser_host
     attr_accessor :swift_parser_host
+    attr_accessor :cabal_parser_host
 
     def initialize
       @ignored_files = ['.git', 'node_modules', 'bower_components', 'spec/fixtures', 'vendor', 'dist']
@@ -16,6 +17,7 @@ module Bibliothecary
       @gradle_parser_host   = 'https://gradle-parser.libraries.io'
       @yarn_parser_host     = 'https://yarn-parser.libraries.io'
       @swift_parser_host    = 'http://swift.libraries.io'
+      @cabal_parser_host    = 'http://cabal.libraries.io'
     end
   end
 end
