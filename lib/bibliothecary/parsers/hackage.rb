@@ -24,7 +24,7 @@ module Bibliothecary
           'Content-Type' => "text/plain;charset=utf-8"
         }
 
-        response = Typhoeus.post("#{@cabal_parser_host}/parse", headers: headers, body: file_contents)
+        response = Typhoeus.post("#{Bibliothecary.configuration.cabal_parser_host}/parse", headers: headers, body: file_contents)
 
         if response.response_code == 200 then
           JSON.parse(response.body, symbolize_names: true)
