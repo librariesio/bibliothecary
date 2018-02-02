@@ -1,0 +1,103 @@
+name:                cabal-parser
+version:             0.1.0.0
+synopsis:            Tiny Web Service for Parsing Cabal Files
+
+description:
+  Helper service for bibliothecary to parse cabal files from various sources.
+  Provides a fiat JSON represenation for a given cabal file posted to this HTTP API.
+
+homepage:            https://github.com/alunduil/librariesio-cabal-parser
+bug-reports:         https://github.com/alunduil/librariesio-cabal-parser/issues
+license:             GPL-3
+license-file:        LICENSE
+author:              Alex Brandt
+maintainer:          alunduil@alunduil.com
+copyright:           (c) 2018 Alex Brandt
+category:            Development
+build-type:          Simple
+cabal-version:       >= 1.10
+tested-with:         GHC == 8.*
+
+extra-source-files:
+    ChangeLog.md
+  , LICENSE
+  , README.md
+  , Setup.hs
+  , test/examples/*.cabal
+
+source-repository head
+  type:     git
+  location: https://github.com/alunduil/librariesio-cabal-parser
+  branch:   develop
+
+executable cabal-parser
+  default-language:    Haskell2010
+  main-is:             Main.hs
+
+  ghc-options:         -Wall -fwarn-tabs -fwarn-monomorphism-restriction
+                       -fwarn-unused-do-bind
+
+  hs-source-dirs:
+      src
+
+  other-modules:
+      API
+    , Dependencies
+    , Dependency
+    , Distribution.Types.GenericPackageDescription.MimeUnrender
+    , Distribution.Types.PackageName.JSON
+    , Distribution.Version.JSON
+    , Environment
+
+  build-depends:
+      aeson          == 1.1.*
+    , base           >= 4.9 && < 4.11
+    , Cabal          == 2.0.*
+    , envy           == 1.3.*
+    , pretty         == 1.1.*
+    , servant-server == 0.11.*
+    , text           == 1.2.*
+    , utf8-string    == 1.0.*
+    , warp           == 3.2.*
+
+  other-extensions:
+      DataKinds
+    , FlexibleInstances
+    , MultiParamTypeClasses
+    , OverloadedStrings
+    , RecordWildCards
+    , TypeOperators
+
+test-suite cabal-parser-tests
+  default-language:    Haskell2010
+  type:                exitcode-stdio-1.0
+  main-is:             Spec.hs
+
+  ghc-options:         -Wall -fwarn-tabs -fwarn-monomorphism-restriction
+                       -fwarn-unused-do-bind
+
+  hs-source-dirs:
+      src
+    , test
+
+  other-modules:
+      Dependencies
+    , DependenciesSpec
+    , Dependency
+    , Distribution.Types.PackageName.JSON
+    , Distribution.Version.JSON
+    , Distribution.Version.JSONSpec
+
+  build-tool-depends:
+      hspec-discover:hspec-discover == 2.4.*
+
+  build-depends:
+      aeson      == 1.1.*
+    , base       >= 4.9 && < 4.11
+    , bytestring == 0.10.*
+    , Cabal      == 2.0.*
+    , hspec      == 2.4.*
+    , pretty     == 1.1.*
+    , text       == 1.2.*
+
+  other-extensions:

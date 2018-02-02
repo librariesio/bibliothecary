@@ -56,6 +56,8 @@ All available config options are in: https://github.com/librariesio/bibliothecar
 
 ## Supported package manager file formats
 
+- Hackage
+  - \*.cabal
 - npm
   - package.json
   - package-lock.json
