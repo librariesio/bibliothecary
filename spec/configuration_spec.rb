@@ -30,4 +30,8 @@ describe Bibliothecary::Configuration do
   it 'should have a default host for swift parser' do
     expect(config.swift_parser_host).to eq('http://swift.libraries.io')
   end
+
+  it 'should have a default host for swift parser' do
+    expect(config.cabal_parser_host).to eq('http://cabal.libraries.io')
+  end
 end
