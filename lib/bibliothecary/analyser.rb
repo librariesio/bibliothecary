@@ -44,6 +44,7 @@ module Bibliothecary
       def analyse(folder_path, file_list)
         file_list.map do |path|
           filename = path.gsub(folder_path, '').gsub(/^\//, '')
+          next unless match?(filename)
           contents = File.open(path).read
           analyse_contents(filename, contents)
         end.compact
