@@ -7,11 +7,11 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^shard\.yml$/i => {
+          /^shard\.yml$|.*\/shard\.yml$/i => {
             kind: 'manifest',
             parser: :parse_yaml_manifest
           },
-          /^shard\.lock$/i => {
+          /^shard\.lock$|.*\/shard\.lock$/i => {
             kind: 'lockfile',
             parser: :parse_yaml_lockfile
           }

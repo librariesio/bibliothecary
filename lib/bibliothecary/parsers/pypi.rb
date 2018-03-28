@@ -9,19 +9,19 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^(?!node_modules).*require[^\/]*(\/)?[^\/]*\.(txt|pip)$/ => {
+          /.*require[^\/]*(\/)?[^\/]*\.(txt|pip)$/ => {
             kind: 'manifest',
             parser: :parse_requirements_txt
           },
-          /setup\.py$/ => {
+          /^setup\.py$|.*\/setup.py$/ => {
             kind: 'manifest',
             parser: :parse_setup_py
           },
-          /^Pipfile$/ => {
+          /^Pipfile$|.*\/Pipfile$/ => {
             kind: 'manifest',
             parser: :parse_pipfile
           },
-          /^Pipfile\.lock$/ => {
+          /^Pipfile\.lock$|.*\/Pipfile\.lock$/ => {
             kind: 'lockfile',
             parser: :parse_pipfile_lock
           }

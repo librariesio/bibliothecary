@@ -51,21 +51,17 @@ module Bibliothecary
       end
 
       def analyse_contents(filename, contents)
-        begin
-          dependencies = parse_file(filename, contents)
-          if dependencies && dependencies.any?
-            {
-              platform: platform_name,
-              path: filename,
-              dependencies: dependencies,
-              kind: determine_kind(filename)
-            }
-          else
-            nil
-          end
-        rescue
-          nil
+        dependencies = parse_file(filename, contents)
+        if dependencies && dependencies.any?
+          {
+            platform: platform_name,
+            path: filename,
+            dependencies: dependencies,
+            kind: determine_kind(filename)
+          }
         end
+      rescue
+        nil
       end
 
       def determine_kind(filename)

@@ -10,15 +10,15 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^Gemfile$|^gems\.rb$/ => {
+          /^Gemfile$|^gems\.rb$|.*\/Gemfile$|.*\/gems\.rb$/ => {
             kind: 'manifest',
             parser: :parse_gemfile
           },
-          /[A-Za-z0-9_-]+\.gemspec$/ => {
+          /^[A-Za-z0-9_-]+\.gemspec$|.*\/[A-Za-z0-9_-]+\.gemspec$/ => {
             kind: 'manifest',
             parser: :parse_gemspec
           },
-          /^Gemfile\.lock$|^gems\.locked$/ => {
+          /^Gemfile\.lock$|^gems\.locked$|.*\/gems\.locked$|.*\/Gemfile\.lock$/ => {
             kind: 'lockfile',
             parser: :parse_gemfile_lock
           }

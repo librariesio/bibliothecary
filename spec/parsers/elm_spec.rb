@@ -65,8 +65,7 @@ describe Bibliothecary::Parsers::Elm do
   end
 
   it "doesn't match invalid manifest filepaths" do
-    expect(described_class.match?('node_modules/foo/elm-stuff/exact-dependencies.json')).to be_falsey
-    expect(described_class.match?('node_modules/foo/elm_dependencies.json')).to be_falsey
-    expect(described_class.match?('node_modules/foo/elm-package.json')).to be_falsey
+    expect(described_class.match?('node_modules/foo/elm-stuff/sexact-dependencies.json')).to be_falsey
+    expect(described_class.match?('stuff/selm-package.json')).to be_falsey
   end
 end

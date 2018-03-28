@@ -7,11 +7,11 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^mix\.exs$/ => {
+          /^mix\.exs$|.*\/mix\.exs$/ => {
             kind: 'manifest',
             parser: :parse_mix
           },
-          /^mix\.lock$/ => {
+          /^mix\.lock$|.*\/mix\.lock$/ => {
             kind: 'lockfile',
             parser: :parse_mix_lock
           }

@@ -7,15 +7,15 @@ module Bibliothecary
 
       def self.mapping
         {
-          /ivy\.xml$/i => {
+          /^ivy\.xml$|.*\/ivy\.xml$/i => {
             kind: 'manifest',
             parser: :parse_ivy_manifest
           },
-          /pom\.xml$/i => {
+          /^pom\.xml$|.*\/pom\.xml$/i => {
             kind: 'manifest',
             parser: :parse_pom_manifest
           },
-          /build.gradle$/i => {
+          /^build.gradle$|.*\/build.gradle$/i => {
             kind: 'manifest',
             parser: :parse_gradle
           }

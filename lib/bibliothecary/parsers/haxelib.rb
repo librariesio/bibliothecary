@@ -7,7 +7,7 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^haxelib\.json$/ => {
+          /^haxelib\.json$|.*\/haxelib\.json$/ => {
             kind: 'manifest',
             parser: :parse_json_runtime_manifest
           }

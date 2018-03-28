@@ -7,11 +7,11 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^composer\.json$/ => {
+          /^composer\.json$|.*\/composer\.json$/ => {
             kind: 'manifest',
             parser: :parse_manifest
           },
-          /^composer\.lock$/ => {
+          /^composer\.lock$|.*\/composer\.lock$/ => {
             kind: 'lockfile',
             parser: :parse_lockfile
           }

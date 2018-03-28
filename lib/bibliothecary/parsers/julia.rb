@@ -5,7 +5,7 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^REQUIRE$/i => {
+          /^REQUIRE$|.*\/REQUIRE$/i => {
             kind: 'manifest',
             parser: :parse_require
           }
