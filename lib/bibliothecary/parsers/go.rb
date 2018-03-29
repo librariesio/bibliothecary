@@ -10,35 +10,35 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^glide\.yaml$/ => {
+          /(^glide\.yaml$|.*\/glide\.yaml$)/ => {
             kind: 'manifest',
             parser: :parse_glide_yaml
           },
-          /^glide\.lock$/ => {
+          /(^glide\.lock$|.*\/glide\.lock$)/ => {
             kind: 'lockfile',
             parser: :parse_glide_lockfile
           },
-          /^Godeps\/Godeps\.json$/ => {
+          /(^Godeps\/Godeps\.json$|.*\/Godeps\/Godeps\.json$)/ => {
             kind: 'manifest',
             parser: :parse_godep_json
           },
-          /^Godeps$/i => {
+          /(^Godeps$|.*\/Godeps$)/i => {
             kind: 'manifest',
             parser: :parse_gpm
           },
-          /^vendor\/manifest$/ => {
+          /(^vendor\/manifest$|.*\/vendor\/manifest$)/ => {
             kind: 'manifest',
             parser: :parse_gb_manifest
           },
-          /^vendor\/vendor.json$/ => {
+          /(^vendor\/vendor.json$|.*\/vendor\/vendor.json$)/ => {
             kind: 'manifest',
             parser: :parse_govendor
           },
-          /^Gopkg\.toml$/ => {
+          /(^Gopkg\.toml$|.*\/Gopkg\.toml$)/ => {
             kind: 'manifest',
             parser: :parse_dep_toml
           },
-          /^Gopkg\.lock$/ => {
+          /(^Gopkg\.lock$|.*\/Gopkg\.lock$)/ => {
             kind: 'lockfile',
             parser: :parse_dep_lockfile
           },

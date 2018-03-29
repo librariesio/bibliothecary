@@ -8,27 +8,27 @@ module Bibliothecary
 
       def self.mapping
         {
-          /Project\.json$/ => {
+          /(^Project\.json$|.*\/Project\.json$)/ => {
             kind: 'manifest',
             parser: :parse_json_runtime_manifest
           },
-          /Project\.lock\.json$/ => {
+          /(^Project\.lock\.json$|.*\/Project\.lock\.json$)/ => {
             kind: 'lockfile',
             parser: :parse_project_lock_json
           },
-          /packages\.config$/ => {
+          /(^packages\.config$|.*\/packages\.config$)/ => {
             kind: 'manifest',
             parser: :parse_packages_config
           },
-          /^[A-Za-z0-9_-]+\.nuspec$/ => {
+          /(^[A-Za-z0-9_-]+\.nuspec$|.*\/[A-Za-z0-9_-]+\.nuspec$)/ => {
             kind: 'manifest',
             parser: :parse_nuspec
           },
-          /^[A-Za-z0-9_-]+\.csproj$/ => {
+          /(^[A-Za-z0-9_-]+\.csproj$|.*\/[A-Za-z0-9_-]+\.csproj$)/ => {
             kind: 'manifest',
             parser: :parse_csproj
           },
-          /paket\.lock$/ => {
+          /(^paket\.lock$|.*\/paket\.lock$)/ => {
             kind: 'lockfile',
             parser: :parse_paket_lock
           }

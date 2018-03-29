@@ -7,11 +7,11 @@ module Bibliothecary
 
       def self.mapping
         {
-          /Cargo\.toml$/ => {
+          /(^Cargo.toml$|.*\/Cargo.toml$)/ => {
             kind: 'manifest',
             parser: :parse_manifest
           },
-          /Cargo\.lock$/ => {
+          /(^Cargo\.lock$|.*\/Cargo\.lock$)/ => {
             kind: 'lockfile',
             parser: :parse_lockfile
           }

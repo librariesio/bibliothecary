@@ -12,7 +12,7 @@ module Bibliothecary
             kind: 'manifest',
             parser: :parse_cabal
           },
-          /cabal\.config$/ => {
+          /^cabal\.config$|.*\/cabal\.config$/ => {
             kind: 'lockfile',
             parser: :parse_cabal_config
           },
