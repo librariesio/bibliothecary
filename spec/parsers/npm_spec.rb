@@ -45,7 +45,8 @@ describe Bibliothecary::Parsers::NPM do
     })
   end
 
-  it 'parses dependencies from yarn.lock' do
+  it 'parses dependencies from yarn.lock', :vcr do
+
     expect(described_class.analyse_contents('yarn.lock', load_fixture('yarn.lock'))).to eq({
       :platform=>"npm",
       :path=>"yarn.lock",

@@ -1,0 +1,50 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://carthage.libraries.io/cartfile?body=%23%20Require%20version%202.3.1%20or%20later%0Agithub%20%22ReactiveCocoa/ReactiveCocoa%22%20%3E=%202.3.1%0A%0A%23%20Require%20version%201.x%0Agithub%20%22Mantle/Mantle%22%20~%3E%201.0%20%20%20%20%23%20(1.0%20or%20later,%20but%20less%20than%202.0)%0A%0A%23%20Require%20exactly%20version%200.4.1%0Agithub%20%22jspahrsummers/libextobjc%22%20==%200.4.1%0A%0A%23%20Use%20the%20latest%20version%0Agithub%20%22jspahrsummers/xcconfigs%22%0A%0A%23%20Use%20the%20branch%0Agithub%20%22jspahrsummers/xcconfigs%22%20%22branch%22%0A%0A%23%20Use%20a%20project%20from%20GitHub%20Enterprise%0Agithub%20%22https://enterprise.local/ghe/desktop/git-error-translations%22%0A%0A%23%20Use%20a%20project%20from%20any%20arbitrary%20server,%20on%20the%20%22development%22%20branch%0Agit%20%22https://enterprise.local/desktop/git-error-translations2.git%22%20%22development%22%0A%0A%23%20Use%20a%20local%20project%0Agit%20%22file:///directory/to/project%22%20%22branch%22%0A
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Typhoeus - https://github.com/typhoeus/typhoeus
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 May 2018 13:56:41 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - __cfduid=d056b94cb92b8df77260831e85fba555a1526651801; expires=Sat, 18-May-19
+        13:56:41 GMT; path=/; domain=.libraries.io; HttpOnly
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      Expect-Ct:
+      - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 41ced4204a1335d2-LHR
+    body:
+      encoding: UTF-8
+      string: '[{"name":"ReactiveCocoa/ReactiveCocoa","version":">= 2.3.1","type":"runtime"},{"name":"Mantle/Mantle","version":"~>
+        1.0","type":"runtime"},{"name":"jspahrsummers/libextobjc","version":"== 0.4.1","type":"runtime"},{"name":"jspahrsummers/xcconfigs","version":"
+        ","type":"runtime"},{"name":"jspahrsummers/xcconfigs","version":"branch ","type":"runtime"},{"name":"https://enterprise.local/ghe/desktop/git-error-translations","version":"
+        ","type":"runtime"},{"name":"https://enterprise.local/desktop/git-error-translations2.git","version":"development
+        ","type":"runtime"},{"name":"file:///directory/to/project","version":"branch
+        ","type":"runtime"}]'
+    http_version: 
+  recorded_at: Fri, 18 May 2018 13:56:41 GMT
+recorded_with: VCR 4.0.0

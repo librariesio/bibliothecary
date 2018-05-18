@@ -27,7 +27,7 @@ describe Bibliothecary::Parsers::Hackage do
     expect(described_class.match?("test")).to be_falsey
   end
 
-  it 'parses dependencies from *.cabal files' do
+  it 'parses dependencies from *.cabal files', :vcr do
     expect(described_class.analyse_contents('example.cabal', load_fixture('example.cabal'))).to eq({
       :platform=>"hackage",
       :path=>"example.cabal",

@@ -5,7 +5,7 @@ describe Bibliothecary::Parsers::Hex do
     expect(described_class.platform_name).to eq('hex')
   end
 
-  it 'parses dependencies from mix.exs' do
+  it 'parses dependencies from mix.exs', :vcr do
     expect(described_class.analyse_contents('mix.exs', load_fixture('mix.exs'))).to eq({
       :platform=>"hex",
       :path=>"mix.exs",
@@ -18,7 +18,7 @@ describe Bibliothecary::Parsers::Hex do
     })
   end
 
-  it 'parses dependencies from mix.lock' do
+  it 'parses dependencies from mix.lock', :vcr do
     expect(described_class.analyse_contents('mix.lock', load_fixture('mix.lock'))).to eq({
       :platform=>"hex",
       :path=>"mix.lock",

@@ -5,7 +5,7 @@ describe Bibliothecary::Parsers::Clojars do
     expect(described_class.platform_name).to eq('clojars')
   end
 
-  it 'parses dependencies from project.clj' do
+  it 'parses dependencies from project.clj', :vcr do
     expect(described_class.analyse_contents('project.clj', load_fixture('project.clj'))).to eq({
       :platform=>"clojars",
       :path=>"project.clj",

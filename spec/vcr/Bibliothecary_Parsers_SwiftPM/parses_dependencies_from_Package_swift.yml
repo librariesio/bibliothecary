@@ -1,0 +1,28 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: http://swift.libraries.io/to-json
+    body:
+      encoding: UTF-8
+      string: "import PackageDescription\n\nlet package = Package(\n    name: \"swift-package-converter\",\n
+        \   dependencies: [\n    \t.Package(url: \"https://github.com/qutheory/vapor.git\",
+        majorVersion: 0, minor: 12),\n    \t.Package(url: \"https://github.com/czechboy0/Tasks.git\",
+        majorVersion: 0, minor: 2),\n    \t.Package(url: \"https://github.com/czechboy0/Environment.git\",
+        majorVersion: 0, minor: 4),\n    ]\n)\n"
+    headers:
+      User-Agent:
+      - Typhoeus - https://github.com/typhoeus/typhoeus
+      Expect:
+      - ''
+  response:
+    status:
+      code: 0
+      message: 
+    headers: {}
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Fri, 18 May 2018 13:54:32 GMT
+recorded_with: VCR 4.0.0

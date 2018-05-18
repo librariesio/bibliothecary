@@ -60,8 +60,8 @@ module Bibliothecary
             kind: determine_kind(filename)
           }
         end
-      rescue
-        nil
+      # rescue
+      #   nil
       end
 
       def determine_kind(filename)

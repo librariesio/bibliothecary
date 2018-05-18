@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://clojars.libraries.io/project.clj
+    body:
+      encoding: UTF-8
+      string: |
+        (defproject clojars-json "0.1.0"
+          :description "FIXME: write description"
+          :url "http://example.com/FIXME"
+          :license {:name "Eclipse Public License"
+                    :url "http://www.eclipse.org/legal/epl-v10.html"}
+          :dependencies [[org.clojure/clojure "1.6.0"]
+                         [cheshire "5.4.0"]
+                         [compojure "1.3.2"]
+                         [ring/ring-defaults "0.1.2"]
+                         [ring/ring-jetty-adapter "1.2.1"]]
+          :plugins [[lein-ring "0.8.13"]]
+          :min-lein-version "2.0.0"
+          :ring {:handler clojars-json.core/app}
+          :uberjar-name "clojars-json.jar"
+          :profiles {:uberjar {:aot :all}}
+          :main clojars-json.core
+          )
+    headers:
+      User-Agent:
+      - Typhoeus - https://github.com/typhoeus/typhoeus
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 May 2018 13:56:41 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '567'
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - __cfduid=d5ac4d8d2aff7472cbb6f4470d7cd6a6c1526651801; expires=Sat, 18-May-19
+        13:56:41 GMT; path=/; domain=.libraries.io; HttpOnly
+      Expect-Ct:
+      - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 41ced42238bcbba8-LHR
+    body:
+      encoding: UTF-8
+      string: '["defproject","clojars-json","0.1.0","description","FIXME: write description","url","http://example.com/FIXME","license",{"name":"Eclipse
+        Public License","url":"http://www.eclipse.org/legal/epl-v10.html"},"dependencies",[["org.clojure/clojure","1.6.0"],["cheshire","5.4.0"],["compojure","1.3.2"],["ring/ring-defaults","0.1.2"],["ring/ring-jetty-adapter","1.2.1"]],"plugins",[["lein-ring","0.8.13"]],"min-lein-version","2.0.0","ring",{"handler":"clojars-json.core/app"},"uberjar-name","clojars-json.jar","profiles",{"uberjar":{"aot":"all"}},"main","clojars-json.core"]'
+    http_version: 
+  recorded_at: Fri, 18 May 2018 13:56:42 GMT
+recorded_with: VCR 4.0.0
