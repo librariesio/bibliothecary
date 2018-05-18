@@ -5,7 +5,7 @@ describe Bibliothecary::Parsers::Carthage do
     expect(described_class.platform_name).to eq('carthage')
   end
 
-  it 'parses dependencies from Cartfile' do
+  it 'parses dependencies from Cartfile', :vcr do
     expect(described_class.analyse_contents('Cartfile', load_fixture('Cartfile'))).to eq({
       :platform=>"carthage",
       :path=>"Cartfile",
@@ -23,7 +23,7 @@ describe Bibliothecary::Parsers::Carthage do
     })
   end
 
-  it 'parses dependencies from Cartfile.private' do
+  it 'parses dependencies from Cartfile.private', :vcr do
     expect(described_class.analyse_contents('Cartfile.private', load_fixture('Cartfile.private'))).to eq({
       :platform=>"carthage",
       :path=>"Cartfile.private",
@@ -36,7 +36,7 @@ describe Bibliothecary::Parsers::Carthage do
     })
   end
 
-  it 'parses dependencies from Cartfile.resolved' do
+  it 'parses dependencies from Cartfile.resolved', :vcr do
     expect(described_class.analyse_contents('Cartfile.resolved', load_fixture('Cartfile.resolved'))).to eq({
       :platform=>"carthage",
       :path=>"Cartfile.resolved",

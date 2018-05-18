@@ -5,7 +5,7 @@ describe Bibliothecary::Parsers::SwiftPM do
     expect(described_class.platform_name).to eq('swiftpm')
   end
 
-  it 'parses dependencies from Package.swift' do
+  it 'parses dependencies from Package.swift', :vcr do
     expect(described_class.analyse_contents('Package.swift', load_fixture('Package.swift'))).to eq({
       :platform=>"swiftpm",
       :path=>"Package.swift",

@@ -149,7 +149,7 @@ describe Bibliothecary::Parsers::Maven do
     })
   end
 
-  it 'parses dependencies from build.gradle' do
+  it 'parses dependencies from build.gradle', :vcr do
     expect(described_class.analyse_contents('build.gradle', load_fixture('build.gradle'))).to eq({
       :platform=>"maven",
       :path=>"build.gradle",

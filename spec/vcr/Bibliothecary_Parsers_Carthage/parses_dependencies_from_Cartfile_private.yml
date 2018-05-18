@@ -1,0 +1,47 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://carthage.libraries.io/cartfile.private?body=github%20%22Quick/Quick%22%20~%3E%200.9%0Agithub%20%22Quick/Nimble%22%20~%3E%203.1%0Agithub%20%22jspahrsummers/xcconfigs%22%20%22ec5753493605deed7358dec5f9260f503d3ed650%22%0A
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Typhoeus - https://github.com/typhoeus/typhoeus
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 18 May 2018 13:56:41 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - __cfduid=d056b94cb92b8df77260831e85fba555a1526651801; expires=Sat, 18-May-19
+        13:56:41 GMT; path=/; domain=.libraries.io; HttpOnly
+      Vary:
+      - Accept-Encoding
+      X-Content-Type-Options:
+      - nosniff
+      Expect-Ct:
+      - max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+      Server:
+      - cloudflare
+      Cf-Ray:
+      - 41ced420ba4035d2-LHR
+    body:
+      encoding: UTF-8
+      string: '[{"name":"Quick/Quick","version":"~> 0.9","type":"development"},{"name":"Quick/Nimble","version":"~>
+        3.1","type":"development"},{"name":"jspahrsummers/xcconfigs","version":"ec5753493605deed7358dec5f9260f503d3ed650
+        ","type":"development"}]'
+    http_version: 
+  recorded_at: Fri, 18 May 2018 13:56:41 GMT
+recorded_with: VCR 4.0.0
