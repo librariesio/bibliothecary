@@ -118,125 +118,29 @@ http_interactions:
       - ''
   response:
     status:
-      code: 521
-      message: Origin Down
+      code: 200
+      message: OK
     headers:
       Date:
-      - Fri, 18 May 2018 13:55:32 GMT
+      - Fri, 18 May 2018 14:14:18 GMT
       Content-Type:
-      - text/html; charset=UTF-8
+      - application/json;charset=utf-8
       Transfer-Encoding:
       - chunked
       Connection:
       - keep-alive
       Set-Cookie:
-      - __cfduid=d98f5422e46b95b2affb570c31c82d65a1526651732; expires=Sat, 18-May-19
-        13:55:32 GMT; path=/; domain=.libraries.io; HttpOnly
-      - cf_use_ob=0; expires=Fri, 18-May-18 13:56:02 GMT; path=/
-      Expires:
-      - Thu, 01 Jan 1970 00:00:01 GMT
-      Cache-Control:
-      - no-store, no-cache, must-revalidate, post-check=0, pre-check=0
-      Pragma:
-      - no-cache
-      X-Frame-Options:
-      - SAMEORIGIN
+      - __cfduid=d1235dc5aac0b8d9cca4a2ff63b913fe31526652858; expires=Sat, 18-May-19
+        14:14:18 GMT; path=/; domain=.libraries.io; HttpOnly
       Server:
       - cloudflare
       Cf-Ray:
-      - 41ced27176f034c4-LHR
+      - 41ceedef102e35b4-LHR
     body:
       encoding: UTF-8
-      string: |
-        <!DOCTYPE html>
-        <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
-        <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
-        <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en-US"> <![endif]-->
-        <!--[if gt IE 8]><!--> <html class="no-js" lang="en-US"> <!--<![endif]-->
-        <head>
-        <meta http-equiv="refresh" content="0">
-        <title>cabal.libraries.io | 521: Web server is down</title>
-        <meta charset="UTF-8" />
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
-        <meta name="robots" content="noindex, nofollow" />
-        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
-        <link rel="stylesheet" id="cf_styles-css" href="/cdn-cgi/styles/cf.errors.css" type="text/css" media="screen,projection" />
-        <!--[if lt IE 9]><link rel="stylesheet" id='cf_styles-ie-css' href="/cdn-cgi/styles/cf.errors.ie.css" type="text/css" media="screen,projection" /><![endif]-->
-        <style type="text/css">body{margin:0;padding:0}</style>
-        </head>
-        <body>
-        <div id="cf-wrapper">
-        <div id="cf-error-details" class="cf-error-details-wrapper">
-        <div class="cf-wrapper cf-error-overview">
-        <h1>
-        <span class="cf-error-type">Error</span>
-        <span class="cf-error-code">521</span>
-        <small class="heading-ray-id">Ray ID: 41ced27176f034c4 &bull; 2018-05-18 13:55:32 UTC</small>
-        </h1>
-        <h2 class="cf-subheadline">Web server is down</h2>
-        </div>
-        <div class="cf-section cf-highlight cf-status-display">
-        <div class="cf-wrapper">
-        <div class="cf-columns cols-3">
-        <div id="cf-browser-status" class="cf-column cf-status-item cf-browser-status ">
-        <div class="cf-icon-error-container">
-        <i class="cf-icon cf-icon-browser"></i>
-        <i class="cf-icon-status cf-icon-ok"></i>
-        </div>
-        <span class="cf-status-desc">You</span>
-        <h3 class="cf-status-name">Browser</h3>
-        <span class="cf-status-label">Working</span>
-        </div>
-        <div id="cf-cloudflare-status" class="cf-column cf-status-item cf-cloudflare-status ">
-        <div class="cf-icon-error-container">
-        <i class="cf-icon cf-icon-cloud"></i>
-        <i class="cf-icon-status cf-icon-ok"></i>
-        </div>
-        <span class="cf-status-desc">London</span>
-        <h3 class="cf-status-name">Cloudflare</h3>
-        <span class="cf-status-label">Working</span>
-        </div>
-        <div id="cf-host-status" class="cf-column cf-status-item cf-host-status cf-error-source">
-        <div class="cf-icon-error-container">
-        <i class="cf-icon cf-icon-server"></i>
-        <i class="cf-icon-status cf-icon-error"></i>
-        </div>
-        <span class="cf-status-desc">cabal.libraries.io</span>
-        <h3 class="cf-status-name">Host</h3>
-        <span class="cf-status-label">Error</span>
-        </div>
-        </div>
-        </div>
-        </div>
-        <div class="cf-section cf-wrapper">
-        <div class="cf-columns two">
-        <div class="cf-column">
-        <h2>What happened?</h2>
-        <p>The web server is not returning a connection. As a result, the web page is not displaying.</p>
-        </div>
-        <div class="cf-column">
-        <h2>What can I do?</h2>
-        <h5>If you are a visitor of this website:</h5>
-        <p>Please try again in a few minutes.</p>
-        <h5>If you are the owner of this website:</h5>
-        <p><span>Contact your hosting provider letting them know your web server is not responding.</span> <a href="https://support.cloudflare.com/hc/en-us/articles/200171916-Error-521">Additional troubleshooting information</a>.</p>
-        </div>
-        </div>
-        </div>
-        <div class="cf-error-footer cf-wrapper">
-        <p>
-        <span class="cf-footer-item">Cloudflare Ray ID: <strong>41ced27176f034c4</strong></span>
-        <span class="cf-footer-separator">&bull;</span>
-        <span class="cf-footer-item"><span>Your IP</span>: 81.187.162.80</span>
-        <span class="cf-footer-separator">&bull;</span>
-        <span class="cf-footer-item"><span>Performance &amp; security by</span> <a href="https://www.cloudflare.com/5xx-error-landing?utm_source=error_footer" id="brand_link" target="_blank">Cloudflare</a></span>
-        </p>
-        </div>
-        </div>
-        </div>
-        </body>
-        </html>
+      string: '[{"requirement":"==1.1.*","name":"aeson","type":"runtime"},{"requirement":">=4.9
+        && <4.11","name":"base","type":"runtime"},{"requirement":"==2.0.*","name":"Cabal","type":"runtime"},{"requirement":"==1.3.*","name":"envy","type":"runtime"},{"requirement":"==1.1.*","name":"pretty","type":"runtime"},{"requirement":"==0.11.*","name":"servant-server","type":"runtime"},{"requirement":"==1.2.*","name":"text","type":"runtime"},{"requirement":"==1.0.*","name":"utf8-string","type":"runtime"},{"requirement":"==3.2.*","name":"warp","type":"runtime"},{"requirement":"==2.4.*","name":"hspec-discover","type":"build"},{"requirement":"==1.1.*","name":"aeson","type":"test"},{"requirement":">=4.9
+        && <4.11","name":"base","type":"test"},{"requirement":"==0.10.*","name":"bytestring","type":"test"},{"requirement":"==2.0.*","name":"Cabal","type":"test"},{"requirement":"==2.4.*","name":"hspec","type":"test"},{"requirement":"==1.1.*","name":"pretty","type":"test"},{"requirement":"==1.2.*","name":"text","type":"test"}]'
     http_version: 
-  recorded_at: Fri, 18 May 2018 13:55:32 GMT
+  recorded_at: Fri, 18 May 2018 14:14:18 GMT
 recorded_with: VCR 4.0.0
