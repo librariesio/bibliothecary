@@ -17,12 +17,27 @@ http_interactions:
       - ''
   response:
     status:
-      code: 0
-      message: 
-    headers: {}
+      code: 200
+      message: OK
+    headers:
+      Content-Length:
+      - '474'
+      Vapor-Duration:
+      - 539.948 ms
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 18 May 2018 14:24:02 GMT
+      Server:
+      - Vapor 1.0.2
     body:
       encoding: UTF-8
-      string: ''
+      string: '{"dependencies": [{"url": "https://github.com/qutheory/vapor.git",
+        "version": {"lowerBound": "0.12.0", "upperBound": "0.12.9223372036854775807"}},
+        {"url": "https://github.com/czechboy0/Tasks.git", "version": {"lowerBound":
+        "0.2.0", "upperBound": "0.2.9223372036854775807"}}, {"url": "https://github.com/czechboy0/Environment.git",
+        "version": {"lowerBound": "0.4.0", "upperBound": "0.4.9223372036854775807"}}],
+        "exclude": [], "name": "swift-package-converter", "targets": []}'
     http_version: 
-  recorded_at: Fri, 18 May 2018 13:54:32 GMT
+  recorded_at: Fri, 18 May 2018 14:24:02 GMT
 recorded_with: VCR 4.0.0
