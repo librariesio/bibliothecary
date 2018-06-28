@@ -72,15 +72,79 @@ describe Bibliothecary do
       [{:platform=>"rubygems",
         :path=>"Gemfile",
         :dependencies=>[],
-         :kind => 'manifest'},
+        :kind => 'manifest',
+        :related_paths=>["Gemfile.lock"]},
        {:platform=>"rubygems",
         :path=>"Gemfile.lock",
         :dependencies=>[],
-        :kind => 'lockfile'},
+        :kind => 'lockfile',
+        :related_paths=>["Gemfile"]},
        {:platform=>"rubygems",
         :path=>"bibliothecary.gemspec",
         :dependencies=>[],
-        :kind => 'manifest'}])
+        :kind => 'manifest',
+        :related_paths=>[]}])
+  end
+
+  it 'handles a complicated folder with many manifests', :vcr do
+    Bibliothecary.configure do |config|
+      config.ignored_files.delete("spec/fixtures")
+    end
+
+    analysis = described_class.analyse('./spec/fixtures/multimanifest_dir')
+    # empty out any dependencies to make the test more reliable.
+    # we test specific manifest parsers in the parsers specs
+    analysis.each do |a|
+      a[:dependencies] = []
+    end
+    expect(analysis).to eq(
+      [{:platform=>"maven",
+        :path=>"pom.xml",
+        :dependencies=>[],
+        :kind=>"manifest",
+        :related_paths=>[]},
+       {:platform=>"npm",
+        :path=>"package-lock.json",
+        :dependencies=>[],
+        :kind=>"lockfile",
+        :related_paths=>["package.json"]},
+       {:platform=>"npm",
+        :path=>"package.json",
+        :dependencies=>[],
+        :kind=>"manifest",
+        :related_paths=>["package-lock.json", "yarn.lock"]},
+       {:platform=>"npm",
+        :path=>"yarn.lock",
+        :dependencies=>[],
+        :kind=>"lockfile",
+        :related_paths=>["package.json"]},
+       {:platform=>"pypi",
+        :path=>"setup.py",
+        :dependencies=>[],
+        :kind=>"manifest",
+        :related_paths=>[]},
+       {:platform=>"rubygems",
+        :path=>"Gemfile",
+        :dependencies=>[],
+        :kind=>"manifest",
+        :related_paths=>["Gemfile.lock"]},
+       {:platform=>"rubygems",
+        :path=>"Gemfile.lock",
+        :dependencies=>[],
+        :kind=>"lockfile",
+        :related_paths=>["Gemfile"]},
+       {:platform=>"rubygems",
+        :path=>"subdir/Gemfile",
+        :dependencies=>[],
+        :kind=>"manifest",
+        :related_paths=>["subdir/Gemfile.lock"]},
+       {:platform=>"rubygems",
+        :path=>"subdir/Gemfile.lock",
+        :dependencies=>[],
+        :kind=>"lockfile",
+        :related_paths=>["subdir/Gemfile"]}])
+
+    Bibliothecary.reset
   end
 
   it 'allows customization of config options' do

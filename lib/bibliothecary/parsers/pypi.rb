@@ -11,11 +11,13 @@ module Bibliothecary
         {
           /.*require[^\/]*(\/)?[^\/]*\.(txt|pip)$/ => {
             kind: 'manifest',
-            parser: :parse_requirements_txt
+            parser: :parse_requirements_txt,
+            can_have_lockfile: false
           },
           /^setup\.py$|.*\/setup.py$/ => {
             kind: 'manifest',
-            parser: :parse_setup_py
+            parser: :parse_setup_py,
+            can_have_lockfile: false
           },
           /^Pipfile$|.*\/Pipfile$/ => {
             kind: 'manifest',

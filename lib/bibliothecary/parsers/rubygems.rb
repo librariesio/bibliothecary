@@ -16,7 +16,8 @@ module Bibliothecary
           },
           /^[A-Za-z0-9_-]+\.gemspec$|.*\/[A-Za-z0-9_-]+\.gemspec$/ => {
             kind: 'manifest',
-            parser: :parse_gemspec
+            parser: :parse_gemspec,
+            can_have_lockfile: false
           },
           /^Gemfile\.lock$|^gems\.locked$|.*\/gems\.locked$|.*\/Gemfile\.lock$/ => {
             kind: 'lockfile',

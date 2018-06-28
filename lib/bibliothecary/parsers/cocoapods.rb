@@ -17,7 +17,8 @@ module Bibliothecary
           },
           /(^[A-Za-z0-9_-]+\.podspec$|.*\/[A-Za-z0-9_-]+\.podspec$)/ => {
             kind: 'manifest',
-            parser: :parse_podspec
+            parser: :parse_podspec,
+            can_have_lockfile: false
           },
           /(^Podfile\.lock$|.*\/Podfile\.lock$)/ => {
             kind: 'lockfile',
@@ -25,7 +26,8 @@ module Bibliothecary
           },
           /(^[A-Za-z0-9_-]+\.podspec.json$|.*\/[A-Za-z0-9_-]+\.podspec.json$)/ => {
             kind: 'manifest',
-            parser: :parse_json_manifest
+            parser: :parse_json_manifest,
+            can_have_lockfile: false
           }
         }
       end
