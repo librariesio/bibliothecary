@@ -66,9 +66,9 @@ module Bibliothecary
         end
 
         # set related_paths so manifests point to lockfiles and vice versa
-        by_dirname.each do |dirname, analyses|
-          manifest = analyses.find { |analysis| analysis[:kind] == "manifest" }
-          lockfiles = analyses.select { |analysis| analysis[:kind] == "lockfile" }
+        by_dirname.each do |_, all_for_dirname|
+          manifest = all_for_dirname.find { |analysis| analysis[:kind] == "manifest" }
+          lockfiles = all_for_dirname.select { |analysis| analysis[:kind] == "lockfile" }
           manifest[:related_paths] = lockfiles.map { |analysis| analysis[:path] }
           lockfiles.each do |analysis|
             analysis[:related_paths].push(manifest[:path])
