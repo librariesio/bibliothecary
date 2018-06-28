@@ -42,12 +42,40 @@ module Bibliothecary
       end
 
       def analyse(folder_path, file_list)
-        file_list.map do |path|
+        analyses = file_list.map do |path|
           filename = path.gsub(folder_path, '').gsub(/^\//, '')
           next unless match?(filename)
           contents = File.open(path).read
           analyse_contents(filename, contents)
         end.compact
+
+        analyses.each do |analysis|
+          analysis[:related_paths] = []
+        end
+
+        # associate manifests and lockfiles in the same directory;
+        # note that right now we're in the context of a single
+        # package manager, so manifest and lockfile in the
+        # same directory is considered proof that they are
+        # matched.
+        by_dirname = {}
+        analyses.each do |analysis|
+          dirname = File.dirname(analysis[:path])
+          by_dirname[dirname] ||= []
+          by_dirname[dirname].push(analysis)
+        end
+
+        # set related_paths so manifests point to lockfiles and vice versa
+        by_dirname.each do |dirname, analyses|
+          manifest = analyses.find { |analysis| analysis[:kind] == "manifest" }
+          lockfiles = analyses.select { |analysis| analysis[:kind] == "lockfile" }
+          manifest[:related_paths] = lockfiles.map { |analysis| analysis[:path] }
+          lockfiles.each do |analysis|
+            analysis[:related_paths].push(manifest[:path])
+          end
+        end
+
+        analyses
       end
 
       def analyse_contents(filename, contents)

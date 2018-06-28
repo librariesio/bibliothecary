@@ -1,0 +1,89 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    CFPropertyList (2.3.1)
+    actionmailer (4.2.3)
+      actionpack (= 4.2.3)
+      actionview (= 4.2.3)
+      activejob (= 4.2.3)
+      mail (~> 2.5, >= 2.5.4)
+      rails-dom-testing (~> 1.0, >= 1.0.5)
+    googleauth (0.4.1)
+      faraday (~> 0.9)
+      jwt (~> 1.4)
+      logging (~> 2.0)
+      memoist (~> 0.12)
+      multi_json (= 1.11)
+      signet (~> 0.6)
+    hashie (3.4.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bigquery
+  bootstrap-sass
+  bugsnag
+  bundler
+  coffee-rails
+  counter_culture
+  dalli
+  dotenv-rails
+  elasticsearch-model
+  elasticsearch-rails
+  faraday-http-cache
+  fast_blank
+  fast_xor
+  fast_xs
+  fog
+  font-awesome-rails
+  gemoji
+  gems
+  hiredis
+  hirefire-resource
+  jbuilder
+  jquery-rails
+  js-cookie-rails
+  languages
+  mime-types (~> 2.6.1)
+  newrelic_rpm
+  nokogiri
+  octokit
+  oj
+  oj_mimic_json
+  omniauth
+  omniauth-github
+  pg
+  platform-api
+  postgres_ext
+  premailer-rails
+  puma
+  pushover
+  rack-canonical-host
+  rails (= 4.2.3)
+  rails_12factor
+  rails_safe_tasks
+  rb-readline
+  redis
+  sanitize-url
+  sass-rails
+  sassc-rails
+  semantic
+  sidekiq
+  simple-rss
+  simple_form
+  sinatra
+  sitemap_generator
+  spdx
+  spring
+  sprockets (~> 2.12)
+  thin
+  tipsy-rails
+  turbolinks
+  typhoeus
+  uglifier
+  will_paginate
+  will_paginate-bootstrap
+
+BUNDLED WITH
+   1.10.5

@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.accidia</groupId>
+    <artifactId>echo</artifactId>
+    <packaging>jar</packaging>
+    <name>echo</name>
+    <version>0.1.23</version>
+    <url>https://github.com/accidia/echo</url>
+
+    <description>Echo provides a simple interface to store and retrieve generic protocol buffer objects</description>
+
+    <properties>
+        <source.version>1.8</source.version>
+        <target.version>1.8</target.version>
+        <failIfNoTests>true</failIfNoTests>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <additionalparam>-Xdoclint:none</additionalparam>
+
+        <!--VERSIONS-->
+        <jersey.version>2.16</jersey.version>
+        <protobuf.version>2.5.0</protobuf.version>
+        <protobuf.java.version>1.2</protobuf.java.version>
+        <commons.beanutils.version>1.9.2</commons.beanutils.version>
+        <slf4j.version>1.7.7</slf4j.version>
+        <logback.version>1.1.2</logback.version>
+        <guava.version>18.0</guava.version>
+        <testng.version>6.1.1</testng.version>
+        <mvn.plugins.compiler.version>2.5.1</mvn.plugins.compiler.version>
+        <mvn.plugins.javadoc.version>2.10.1</mvn.plugins.javadoc.version>
+        <mvn.plugins.resources.version>2.7</mvn.plugins.resources.version>
+        <mvn.plugins.antrun.version>1.7</mvn.plugins.antrun.version>
+        <mvn.plugins.gpg.version>1.5</mvn.plugins.gpg.version>
+        <mvn.plugins.source.version>2.4</mvn.plugins.source.version>
+    </properties>
+
+    <licenses>
+        <license>
+            <name>Accidia License</name>
+            <url>https://github.com/accidia/echo/raw/master/LICENSE</url>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>scm:git:git@github.com:accidia/echo.git</url>
+        <developerConnection>scm:git:https://github.com/accidia/echo</developerConnection>
+        <connection>scm:git:https://github.com/accidia/echo.git</connection>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+    </distributionManagement>
+
+    <developers>
+        <developer>
+            <name>Paymon Teyer</name>
+            <id>pteyer</id>
+            <email>id at accidia.org</email>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <!--JERSEY SERVLET-->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-common</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <!--JETTY-->
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-jetty-http</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-jetty-servlet</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <!--JERSEY CLIENT-->
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <!--JSON SUPPORT-->
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-moxy</artifactId>
+            <version>${jersey.version}</version>
+        </dependency>
+        <!--GUAVA-->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <!--PROTOBUF-JSON-->
+        <dependency>
+            <groupId>com.googlecode.protobuf-java-format</groupId>
+            <artifactId>protobuf-java-format</artifactId>
+            <version>${protobuf.java.version}</version>
+        </dependency>
+        <!--MYSQL-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.9</version>
+        </dependency>
+        <!--SPRING-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>4.1.0.RELEASE</version>
+        </dependency>
+        <!--COMMONS CONNECTION POOL-->
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.2.1</version>
+        </dependency>
+        <!--FREEMARKER-->
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.21</version>
+        </dependency>
+        <!--JASYPT-->
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt</artifactId>
+            <version>1.9.2</version>
+        </dependency>
+        <!--PROTOBUF-->
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+        <!--JEDIS-->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.6.0</version>
+        </dependency>
+        <!--LOGBACK-->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.2</version>
+        </dependency>
+        <!--METRICS CORE-->
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <!--MEMCACHE CLIENT-->
+        <dependency>
+            <groupId>net.spy</groupId>
+            <artifactId>spymemcached</artifactId>
+            <version>2.11.7</version>
+        </dependency>
+        <!--METRICS JERSEY-->
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-jersey2</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <!--METRICS ANNOTATIONS-->
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-annotation</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <!--METRICS GUICE-->
+        <dependency>
+            <groupId>com.palominolabs.metrics</groupId>
+            <artifactId>metrics-guice</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <!--GUICE-->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <!--COMMONS IO-->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+        <!--COMMONS EXEC-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-exec</artifactId>
+            <version>1.3</version>
+        </dependency>
+         <!--TYPESAFE CONFIGURATIONS-->
+        <dependency>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+         <!--TESTNG -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>6.8.7</version>
+            <scope>test</scope>
+        </dependency>
+        <!--MOCKITO-->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.8.4</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!--COMPILER-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${mvn.plugins.compiler.version}</version>
+                <configuration>
+                    <source>${source.version}</source>
+                    <target>${target.version}</target>
+                    <includes>
+                        <include>**/*.java</include>
+                        <include>**/*.proto</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <!--INCLUDE SOURCE-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>${mvn.plugins.source.version}</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>**/*.java</include>
+                        <include>**/*.proto</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <!--JAVADOC-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${mvn.plugins.javadoc.version}</version>
+                <configuration>
+                    <outputDirectory>apidocs/</outputDirectory>
+                    <author>false</author>
+                    <show>public</show>
+                    <source>${source.version}</source>
+                    <version>true</version>
+                    <windowtitle>echo</windowtitle>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>${mvn.plugins.resources.version}</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/generated-sources/protobuf</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/protos</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.accidia.echo.EchoApplication</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>echo</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--PROTOC-->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-sources</id>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <tasks>
+                                <mkdir dir="target/generated-sources" />
+                                <exec failonerror="true" executable="protoc">
+                                    <arg value="--java_out=target/generated-sources" />
+                                    <arg value="src/main/resources/protos/echo.proto" />
+                                    <arg value="src/test/resources/protos/echo-test.proto" />
+                                </exec>
+                            </tasks>
+                            <sourceRoot>target/generated-sources</sourceRoot>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--GPG-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>${mvn.plugins.gpg.version}</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
