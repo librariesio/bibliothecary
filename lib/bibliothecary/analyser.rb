@@ -66,16 +66,14 @@ module Bibliothecary
           "manifest" => Hash.new { |h, k| h[k] = [] },
           "lockfile" => Hash.new { |h, k| h[k] = [] }
         }
-        by_dirname_manifests = by_dirname["manifest"]
-        by_dirname_lockfiles = by_dirname["lockfile"]
 
         analyses.each do |analysis|
           dirname = File.dirname(analysis[:path])
           by_dirname[analysis[:kind]][dirname].push(analysis)
         end
 
-        set_related_paths_field(by_dirname_lockfiles, by_dirname_manifests)
-        set_related_paths_field(by_dirname_manifests, by_dirname_lockfiles)
+        set_related_paths_field(by_dirname["manifest"], by_dirname["lockfile"])
+        set_related_paths_field(by_dirname["lockfile"], by_dirname["manifest"])
       end
 
       def analyse(folder_path, file_list)
