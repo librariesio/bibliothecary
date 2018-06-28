@@ -54,24 +54,37 @@ module Bibliothecary
         end
 
         # associate manifests and lockfiles in the same directory;
+
         # note that right now we're in the context of a single
         # package manager, so manifest and lockfile in the
         # same directory is considered proof that they are
         # matched.
-        by_dirname = {}
+
+        by_dirname = {
+          "manifest" => Hash.new { |h, k| h[k] = [] },
+          "lockfile" => Hash.new { |h, k| h[k] = [] }
+        }
+        by_dirname_manifests = by_dirname["manifest"]
+        by_dirname_lockfiles = by_dirname["lockfile"]
+
         analyses.each do |analysis|
           dirname = File.dirname(analysis[:path])
-          by_dirname[dirname] ||= []
-          by_dirname[dirname].push(analysis)
+          by_dirname[analysis[:kind]][dirname].push(analysis)
         end
 
         # set related_paths so manifests point to lockfiles and vice versa
-        by_dirname.each do |_, all_for_dirname|
-          manifest = all_for_dirname.find { |analysis| analysis[:kind] == "manifest" }
-          lockfiles = all_for_dirname.select { |analysis| analysis[:kind] == "lockfile" }
-          manifest[:related_paths] = lockfiles.map { |analysis| analysis[:path] }
-          lockfiles.each do |analysis|
-            analysis[:related_paths].push(manifest[:path])
+        by_dirname_manifests.each do |dirname, manifests|
+          manifests.each do |manifest|
+            lockfiles = by_dirname_lockfiles[dirname].map { |analysis| analysis[:path] }
+            lockfiles.sort!
+            manifest[:related_paths] = lockfiles
+          end
+        end
+        by_dirname_lockfiles.each do |dirname, lockfiles|
+          lockfiles.each do |lockfile|
+            manifests = by_dirname_manifests[dirname].map { |analysis| analysis[:path] }
+            manifests.sort!
+            lockfile[:related_paths] = manifests
           end
         end
 

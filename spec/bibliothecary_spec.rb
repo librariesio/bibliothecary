@@ -78,12 +78,12 @@ describe Bibliothecary do
         :path=>"Gemfile.lock",
         :dependencies=>[],
         :kind => 'lockfile',
-        :related_paths=>["Gemfile"]},
+        :related_paths=>["Gemfile", "bibliothecary.gemspec"]},
        {:platform=>"rubygems",
         :path=>"bibliothecary.gemspec",
         :dependencies=>[],
         :kind => 'manifest',
-        :related_paths=>[]}])
+        :related_paths=>["Gemfile.lock"]}])
   end
 
   it 'handles a complicated folder with many manifests', :vcr do
