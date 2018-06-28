@@ -72,6 +72,10 @@ module Bibliothecary
           by_dirname[analysis[:kind]][dirname].push(analysis)
         end
 
+        by_dirname["manifest"].each do |_, manifests|
+          manifests.delete_if { |manifest| !determine_can_have_lockfile(manifest[:path]) }
+        end
+
         set_related_paths_field(by_dirname["manifest"], by_dirname["lockfile"])
         set_related_paths_field(by_dirname["lockfile"], by_dirname["manifest"])
       end
@@ -110,6 +114,15 @@ module Bibliothecary
           end
         end
         return []
+      end
+
+      def determine_can_have_lockfile(filename)
+        mapping.each do |regex, details|
+          if filename.match(regex)
+            return details.fetch(:can_have_lockfile, true)
+          end
+        end
+        return true
       end
 
       def parse_ruby_manifest(manifest)
