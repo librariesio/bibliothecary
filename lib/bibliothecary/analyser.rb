@@ -41,14 +41,16 @@ module Bibliothecary
         end
       end
 
-      def analyse(folder_path, file_list)
-        analyses = file_list.map do |path|
-          filename = path.gsub(folder_path, '').gsub(/^\//, '')
-          next unless match?(filename)
-          contents = File.open(path).read
-          analyse_contents(filename, contents)
-        end.compact
+      def set_related_paths_field(by_dirname_dest, by_dirname_source)
+        by_dirname_dest.each do |dirname, analyses|
+          analyses.each do |analysis|
+            source_analyses = by_dirname_source[dirname].map { |source_analysis| source_analysis[:path] }
+            analysis[:related_paths] = source_analyses.sort
+          end
+        end
+      end
 
+      def add_related_paths(analyses)
         analyses.each do |analysis|
           analysis[:related_paths] = []
         end
@@ -72,21 +74,19 @@ module Bibliothecary
           by_dirname[analysis[:kind]][dirname].push(analysis)
         end
 
-        # set related_paths so manifests point to lockfiles and vice versa
-        by_dirname_manifests.each do |dirname, manifests|
-          manifests.each do |manifest|
-            lockfiles = by_dirname_lockfiles[dirname].map { |analysis| analysis[:path] }
-            lockfiles.sort!
-            manifest[:related_paths] = lockfiles
-          end
-        end
-        by_dirname_lockfiles.each do |dirname, lockfiles|
-          lockfiles.each do |lockfile|
-            manifests = by_dirname_manifests[dirname].map { |analysis| analysis[:path] }
-            manifests.sort!
-            lockfile[:related_paths] = manifests
-          end
-        end
+        set_related_paths_field(by_dirname_lockfiles, by_dirname_manifests)
+        set_related_paths_field(by_dirname_manifests, by_dirname_lockfiles)
+      end
+
+      def analyse(folder_path, file_list)
+        analyses = file_list.map do |path|
+          filename = path.gsub(folder_path, '').gsub(/^\//, '')
+          next unless match?(filename)
+          contents = File.open(path).read
+          analyse_contents(filename, contents)
+        end.compact
+
+        add_related_paths(analyses)
 
         analyses
       end
