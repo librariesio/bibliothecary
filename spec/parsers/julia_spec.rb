@@ -20,13 +20,17 @@ describe Bibliothecary::Parsers::Julia do
         {:name=>"DataStructures", :requirement=>"*", :type=>"runtime"},
         {:name=>"Dates", :requirement=>"*", :type=>"runtime"},
         {:name=>"Distributions", :requirement=>"*", :type=>"runtime"},
+        {:name=>"Gadfly", :requirement=>"0.7-", :type=>"runtime"},
         {:name=>"Hexagons", :requirement=>"*", :type=>"runtime"},
+        {:name=>"Homebrew", :requirement=>"*", :type=>"runtime"},
         {:name=>"Iterators", :requirement=>"0.1.5", :type=>"runtime"},
         {:name=>"JSON", :requirement=>"*", :type=>"runtime"},
         {:name=>"KernelDensity", :requirement=>"*", :type=>"runtime"},
         {:name=>"Loess", :requirement=>"*", :type=>"runtime"},
+        {:name=>"Plots", :requirement=>"0.12 0.15", :type=>"runtime"},
         {:name=>"Showoff", :requirement=>"0.0.3", :type=>"runtime"},
-        {:name=>"StatsBase", :requirement=>"*", :type=>"runtime"}
+        {:name=>"StatsBase", :requirement=>"*", :type=>"runtime"},
+        {:name=>"WinReg", :requirement=>"*", :type=>"runtime"}
       ],
       kind: 'manifest'
     })
