@@ -6,7 +6,7 @@ module Bibliothecary
       def self.mapping
         {
           /^REQUIRE$|.*\/REQUIRE$/i => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_require
           }
         }
@@ -14,23 +14,23 @@ module Bibliothecary
 
       def self.parse_require(manifest)
         deps = []
-        manifest.split('\n').each do |line|
+        manifest.split("\n").each do |line|
           next if line.match(/^#/) || line.empty?
           split = line.split(/\s/)
           if line.match(/^@/)
             name = split[1]
-            reqs = split[2, split.length].join(' ')
+            reqs = split[2, split.length].join(" ")
           else
             name = split[0]
-            reqs = split[1, split.length].join(' ')
+            reqs = split[1, split.length].join(" ")
           end
-          reqs = '*' if reqs.empty?
+          reqs = "*" if reqs.empty?
           next if name.empty?
 
           deps << {
             name: name,
             requirement: reqs,
-            type: 'runtime'
+            type: "runtime"
           }
         end
         deps
