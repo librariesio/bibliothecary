@@ -8,10 +8,21 @@ DataFrames 0.4.2
 DataStructures
 Dates
 Distributions
+Gadfly 0.7-
 Hexagons
+@osx Homebrew
 Iterators 0.1.5
 JSON
 KernelDensity
 Loess
+Plots 0.12 0.15
 Showoff 0.0.3
 StatsBase
+@windows WinReg
+
+# The following should get ignored.
+  - MySQL RDBMS
+  - Oracle RDBMS
+  - PostgreSQL
+  - MongoDB
+  - SQLite
