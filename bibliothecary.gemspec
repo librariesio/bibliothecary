@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "toml-rb", "~> 1.0"
   spec.add_dependency "librariesio-gem-parser"
-  spec.add_dependency "ox", ">= 2.8.1"
+  spec.add_dependency "ox", ">= 2.8.2"
   spec.add_dependency "typhoeus"
   spec.add_dependency "deb_control"
   spec.add_dependency "sdl4r"
