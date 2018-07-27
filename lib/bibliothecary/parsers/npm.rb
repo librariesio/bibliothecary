@@ -56,7 +56,9 @@ module Bibliothecary
 
       def self.parse_yarn_lock(file_contents)
         response = Typhoeus.post("#{Bibliothecary.configuration.yarn_parser_host}/parse", body: file_contents)
-        return [] unless response.response_code == 200
+
+        raise Bibliothecary::ParseHostError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.yarn_parser_host}/parse", response.response_code) unless response.response_code == 200
+
         json = JSON.parse(response.body, symbolize_names: true)
         json.uniq.map do |dep|
           {

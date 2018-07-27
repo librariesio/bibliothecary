@@ -14,6 +14,7 @@ module Bibliothecary
 
       def self.parse_package_swift(manifest)
         response = Typhoeus.post("#{Bibliothecary.configuration.swift_parser_host}/to-json", body: manifest)
+        raise Bibliothecary::ParseHostError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.swift_parser_host}/to-json", response.response_code) unless response.response_code == 200
         json = JSON.parse(response.body)
         json["dependencies"].map do |dependency|
           name = dependency['url'].gsub(/^https?:\/\//, '').gsub(/\.git$/,'')

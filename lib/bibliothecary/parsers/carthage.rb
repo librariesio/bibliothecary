@@ -34,6 +34,7 @@ module Bibliothecary
 
       def self.map_dependencies(manifest, path)
         response = Typhoeus.post("#{Bibliothecary.configuration.carthage_parser_host}/#{path}", params: {body: manifest})
+        raise Bibliothecary::ParseHostError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.carthage_parser_host}/#{path}", response.response_code) unless response.response_code == 200
         json = JSON.parse(response.body)
 
         json.map do |dependency|

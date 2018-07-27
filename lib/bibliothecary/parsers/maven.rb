@@ -57,6 +57,7 @@ module Bibliothecary
 
       def self.parse_gradle(manifest)
         response = Typhoeus.post("#{Bibliothecary.configuration.gradle_parser_host}/parse", body: manifest)
+        raise Bibliothecary::ParseHostError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.gradle_parser_host}/parse", response.response_code) unless response.response_code == 200
         json = JSON.parse(response.body)
         return [] unless json['dependencies']
         json['dependencies'].map do |dependency|
