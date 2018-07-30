@@ -20,7 +20,7 @@ module Bibliothecary
 
       def self.parse_mix(manifest)
         response = Typhoeus.post("#{Bibliothecary.configuration.mix_parser_host}/", body: manifest)
-        raise Bibliothecary::ParseHostError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.mix_parser_host}/", response.response_code) unless response.response_code == 200
+        raise Bibliothecary::ParseHostError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.mix_parser_host}/", response.response_code) unless response.success?
         json = JSON.parse response.body
 
         json.map do |name, version|
@@ -34,7 +34,7 @@ module Bibliothecary
 
       def self.parse_mix_lock(manifest)
         response = Typhoeus.post("#{Bibliothecary.configuration.mix_parser_host}/lock", body: manifest)
-        raise Bibliothecary::ParseHostError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.mix_parser_host}/", response.response_code) unless response.response_code == 200
+        raise Bibliothecary::ParseHostError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.mix_parser_host}/", response.response_code) unless response.success?
         json = JSON.parse response.body
 
         json.map do |name, info|
