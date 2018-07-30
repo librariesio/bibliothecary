@@ -17,7 +17,7 @@ module Bibliothecary
 
       def self.parse_manifest(manifest)
         response = Typhoeus.post("#{Bibliothecary.configuration.clojars_parser_host}/project.clj", body: manifest)
-        raise Bibliothecary::ParseHostError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.clojars_parser_host}/project.clj", response.response_code) unless response.success?
+        raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.clojars_parser_host}/project.clj", response.response_code) unless response.success?
         json = JSON.parse response.body
         index = json.index("dependencies")
 
