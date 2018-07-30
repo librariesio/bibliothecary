@@ -1,7 +1,7 @@
 require "bibliothecary/version"
 require "bibliothecary/analyser"
 require "bibliothecary/configuration"
-
+require "bibliothecary/exceptions"
 Dir[File.expand_path('../bibliothecary/parsers/*.rb', __FILE__)].each do |file|
   require file
 end
@@ -31,7 +31,6 @@ module Bibliothecary
   def self.package_managers
     Bibliothecary::Parsers.constants.map{|c| Bibliothecary::Parsers.const_get(c) }.sort_by{|c| c.to_s.downcase }
   end
-
   def self.ignored_files
     configuration.ignored_files
   end

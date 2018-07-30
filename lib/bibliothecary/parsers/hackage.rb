@@ -26,11 +26,8 @@ module Bibliothecary
 
         response = Typhoeus.post("#{Bibliothecary.configuration.cabal_parser_host}/parse", headers: headers, body: file_contents)
 
-        if response.response_code == 200 then
-          JSON.parse(response.body, symbolize_names: true)
-        else
-          []
-        end
+        raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.cabal_parser_host}/parse", response.response_code) unless response.success?
+        JSON.parse(response.body, symbolize_names: true)
       end
 
       def self.parse_cabal_config(file_contents)
