@@ -1,5 +1,5 @@
 module Bibliothecary
-  class ParseHostError < StandardError
+  class RemoteParsingError < StandardError
     attr_accessor :code
     def initialize(msg, code)
       @code = code
