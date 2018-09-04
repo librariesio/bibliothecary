@@ -4,7 +4,7 @@ describe Bibliothecary::Configuration do
   let(:config) { described_class.new }
 
   it 'should have a default list of ignored dirs' do
-    expect(config.ignored_dirs).to eq(['.git', 'node_modules', 'bower_components', 'fixtures', 'vendor', 'dist'])
+    expect(config.ignored_dirs).to eq(['.git', 'node_modules', 'bower_components', 'vendor', 'dist'])
   end
 
   it 'should have a default host for carthage parser' do

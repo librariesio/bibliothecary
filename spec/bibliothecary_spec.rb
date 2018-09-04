@@ -58,6 +58,9 @@ describe Bibliothecary do
   end
 
   it 'searches a folder for manifests and parses them' do
+    Bibliothecary.configure do |config|
+      config.ignored_dirs.append("fixtures")
+    end
     analysis = described_class.analyse('./')
     # empty out any dependencies to make the test more reliable.
     # we test specific manifest parsers in the parsers specs
@@ -83,10 +86,6 @@ describe Bibliothecary do
   end
 
   it 'handles a complicated folder with many manifests', :vcr do
-    Bibliothecary.configure do |config|
-      config.ignored_dirs.delete("spec/fixtures")
-    end
-
     analysis = described_class.analyse('./spec/fixtures/multimanifest_dir')
     # empty out any dependencies to make the test more reliable.
     # we test specific manifest parsers in the parsers specs

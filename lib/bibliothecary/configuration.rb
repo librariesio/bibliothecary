@@ -10,7 +10,7 @@ module Bibliothecary
     attr_accessor :cabal_parser_host
 
     def initialize
-      @ignored_dirs = ['.git', 'node_modules', 'bower_components', 'fixtures', 'vendor', 'dist']
+      @ignored_dirs = ['.git', 'node_modules', 'bower_components', 'vendor', 'dist']
       @carthage_parser_host = 'https://carthage.libraries.io'
       @clojars_parser_host  = 'https://clojars.libraries.io'
       @mix_parser_host      = 'https://mix.libraries.io'
