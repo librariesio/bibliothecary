@@ -57,10 +57,6 @@ describe Bibliothecary do
     }])
   end
 
-  it 'ignores certain files' do
-    expect(described_class.ignored_files_regex).to eq(".git|node_modules|bower_components|spec/fixtures|vendor|dist")
-  end
-
   it 'searches a folder for manifests and parses them' do
     analysis = described_class.analyse('./')
     # empty out any dependencies to make the test more reliable.
@@ -88,7 +84,7 @@ describe Bibliothecary do
 
   it 'handles a complicated folder with many manifests', :vcr do
     Bibliothecary.configure do |config|
-      config.ignored_files.delete("spec/fixtures")
+      config.ignored_dirs.delete("spec/fixtures")
     end
 
     analysis = described_class.analyse('./spec/fixtures/multimanifest_dir')
@@ -149,20 +145,20 @@ describe Bibliothecary do
 
   it 'allows customization of config options' do
     Bibliothecary.configure do |config|
-      config.ignored_files = ['foobar']
+      config.ignored_dirs = ['foobar']
     end
 
-    expect(Bibliothecary.ignored_files).to eq(['foobar'])
+    expect(Bibliothecary.ignored_dirs).to eq(['foobar'])
 
     Bibliothecary.reset
   end
 
   it 'allows customization of config options' do
     Bibliothecary.configure do |config|
-      config.ignored_files = ['foobar']
+      config.ignored_dirs = ['foobar']
     end
 
-    expect(Bibliothecary.ignored_files).to eq(['foobar'])
+    expect(Bibliothecary.ignored_dirs).to eq(['foobar'])
   end
 
   it 'allows resetting of config options' do
