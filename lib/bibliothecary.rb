@@ -13,7 +13,7 @@ module Bibliothecary
     file_list = []
     Find.find(path) do |subpath|
       Find.prune if FileTest.directory?(subpath) && ignored_dirs.include?(File.basename(subpath))
-      file_list.append(subpath)
+      file_list.push(subpath)
     end
     package_managers.map{|pm| pm.analyse(path, file_list) }.flatten.compact
   end

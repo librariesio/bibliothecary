@@ -59,7 +59,7 @@ describe Bibliothecary do
 
   it 'searches a folder for manifests and parses them' do
     Bibliothecary.configure do |config|
-      config.ignored_dirs.append("fixtures")
+      config.ignored_dirs.push("fixtures")
     end
     analysis = described_class.analyse('./')
     # empty out any dependencies to make the test more reliable.
