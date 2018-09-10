@@ -32,7 +32,8 @@ describe Bibliothecary::Parsers::Julia do
         {:name=>"StatsBase", :requirement=>"*", :type=>"runtime"},
         {:name=>"WinReg", :requirement=>"*", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 

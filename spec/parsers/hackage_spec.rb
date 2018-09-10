@@ -50,7 +50,8 @@ describe Bibliothecary::Parsers::Hackage do
         {:requirement=>"==1.1.*", :name=>"pretty", :type=>"test"},
         {:requirement=>"==1.2.*", :name=>"text", :type=>"test"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -168,7 +169,8 @@ describe Bibliothecary::Parsers::Hackage do
         {:name=>"word8", :requirement=>"0.1.3", :type=>"runtime"},
         {:name=>"zlib", :requirement=>"0.6.1.2", :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 end

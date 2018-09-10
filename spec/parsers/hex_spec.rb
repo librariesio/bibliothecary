@@ -14,7 +14,8 @@ describe Bibliothecary::Parsers::Hex do
         {:name=>"plug", :requirement=>"~> 0.11.0", :type=>"runtime"},
         {:name=>"cowboy", :requirement=>"~> 1.0.0", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -29,7 +30,8 @@ describe Bibliothecary::Parsers::Hex do
         {:name=>"cowlib", :requirement=>"1.0.2", :type=>"runtime"},
         {:name=>"cowboy", :requirement=>"1.0.4", :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 

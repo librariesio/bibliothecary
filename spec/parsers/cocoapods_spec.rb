@@ -32,7 +32,8 @@ describe Bibliothecary::Parsers::CocoaPods do
         {:name=>"Quick", :requirement=>">= 0", :type=>:runtime},
         {:name=>"Forgeries", :requirement=>">= 0", :type=>:runtime}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -92,7 +93,8 @@ describe Bibliothecary::Parsers::CocoaPods do
         {:name=>"UIView+BooleanAnimations", :requirement=>"1.0.2", :type=>"runtime"},
         {:name=>"XNGMarkdownParser", :requirement=>"0.3.0", :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 
@@ -103,7 +105,8 @@ describe Bibliothecary::Parsers::CocoaPods do
       :dependencies=>[
         {:name=>"CocoaLumberjack", :requirement=>">= 0", :type=>:runtime}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -114,7 +117,8 @@ describe Bibliothecary::Parsers::CocoaPods do
       :dependencies=>[
         {:name=>"OpenSSL", :requirement=>["~> 1.0"], :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
