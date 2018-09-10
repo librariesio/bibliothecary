@@ -15,7 +15,8 @@ describe Bibliothecary::Parsers::Pub do
         {:name=>"benchmark_harness", :requirement=>">=1.0.0 <2.0.0", :type=>"development"},
         {:name=>"guinness", :requirement=>">=0.1.9 <0.2.0", :type=>"development"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -29,7 +30,8 @@ describe Bibliothecary::Parsers::Pub do
         {:name=>"barback", :requirement=>"0.15.2+7", :type=>"runtime"},
         {:name=>"which", :requirement=>"0.1.3", :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 

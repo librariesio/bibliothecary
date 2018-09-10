@@ -16,7 +16,8 @@ describe Bibliothecary::Parsers::Clojars do
         {:name=>"ring/ring-defaults", :requirement=>"0.1.2", :type=>"runtime"},
         {:name=>"ring/ring-jetty-adapter", :requirement=>"1.2.1", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 

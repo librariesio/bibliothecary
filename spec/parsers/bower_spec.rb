@@ -12,7 +12,8 @@ describe Bibliothecary::Parsers::Bower do
       :dependencies=>[
         {:name=>"jquery", :requirement=>">= 1.9.1", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 

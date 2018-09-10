@@ -19,7 +19,8 @@ describe Bibliothecary::Parsers::Carthage do
          {:name=>"https://enterprise.local/desktop/git-error-translations2.git",:requirement=>"development ",:type=>"runtime"},
          {:name=>"file:///directory/to/project", :requirement=>"branch ", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -32,7 +33,8 @@ describe Bibliothecary::Parsers::Carthage do
         {:name=>"Quick/Nimble", :requirement=>"~> 3.1", :type=>"development"},
         {:name=>"jspahrsummers/xcconfigs",:requirement=>"ec5753493605deed7358dec5f9260f503d3ed650 ",:type=>"development"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -51,7 +53,8 @@ describe Bibliothecary::Parsers::Carthage do
         {:name=>"ReactiveCocoa/ReactiveCocoa", :requirement=>"v4.0.1 ", :type=>"runtime"},
         {:name=>"Carthage/ReactiveTask", :requirement=>"0.9.1 ", :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 

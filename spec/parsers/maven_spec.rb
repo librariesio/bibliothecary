@@ -81,7 +81,8 @@ describe Bibliothecary::Parsers::Maven do
         {:name=>"org.testng:testng", :requirement=>"6.8.7", :type=>"test"},
         {:name=>"org.mockito:mockito-all", :requirement=>"1.8.4", :type=>"test"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -113,7 +114,8 @@ describe Bibliothecary::Parsers::Maven do
           :type=>"runtime"},
          {:name=>"org.testng:testng", :requirement=>"6.9.12", :type=>"test"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -145,7 +147,8 @@ describe Bibliothecary::Parsers::Maven do
         :type=>"runtime"},
         {:name=>"org.mozilla:rhino", :requirement=>"1.7.7", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -164,7 +167,8 @@ describe Bibliothecary::Parsers::Maven do
         {:name=>"com.android.support:design", :requirement=>"23.1.1", :type=>"compile"},
         {:name=>"com.android.support:customtabs", :requirement=>"23.1.1", :type=>"compile"},
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 

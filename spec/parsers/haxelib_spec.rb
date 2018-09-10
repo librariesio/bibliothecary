@@ -13,7 +13,8 @@ describe Bibliothecary::Parsers::Haxelib do
         {:name=>"lime", :requirement=>"2.9.1", :type=>"runtime"},
         {:name=>"openfl", :requirement=>"3.6.1", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 

@@ -48,7 +48,8 @@ describe Bibliothecary::Parsers::Nuget do
          :type=>"runtime"},
         {:name=>"AutoMapper", :requirement=>"4.0.0-alpha1", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -526,7 +527,8 @@ describe Bibliothecary::Parsers::Nuget do
          :requirement=>"4.0.11-beta-23225",
          :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 
@@ -544,7 +546,8 @@ describe Bibliothecary::Parsers::Nuget do
         {:name=>"Ninject.Web.Common", :requirement=>"3.0.0.7", :type=>"runtime"},
         {:name=>"WebActivator", :requirement=>"1.5", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -560,7 +563,8 @@ describe Bibliothecary::Parsers::Nuget do
         {:name=>"Microsoft.Extensions.DependencyInjection", :requirement=>"1.1.1", :type=>"runtime"},
         {:name=>"Microsoft.VisualStudio.Web.BrowserLink", :requirement=>"1.1.0", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -573,7 +577,8 @@ describe Bibliothecary::Parsers::Nuget do
         {:name=>"HtmlTags", :requirement=>"[3.2.0.3001]", :type=>"runtime"},
         {:name=>"DotNetZip", :requirement=>"*", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -588,7 +593,8 @@ describe Bibliothecary::Parsers::Nuget do
         {:name=>"FSharp.Core", :requirement=>"4.0.0.1", :type=>"runtime"},
         {:name=>"Newtonsoft.Json", :requirement=>"9.0.1", :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 

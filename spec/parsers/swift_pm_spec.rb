@@ -14,7 +14,8 @@ describe Bibliothecary::Parsers::SwiftPM do
         {:name=>"github.com/czechboy0/Tasks", :requirement=>"0.2.0 - 0.2.9223372036854775807", :type=>"runtime"},
         {:name=>"github.com/czechboy0/Environment", :requirement=>"0.4.0 - 0.4.9223372036854775807", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
