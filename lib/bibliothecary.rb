@@ -10,17 +10,12 @@ end
 
 module Bibliothecary
   def self.analyse(path)
-    file_list = load_file_list(path)
-    package_managers.map{|pm| pm.analyse(path, file_list) }.flatten.compact
-  end
-
-  def self.load_file_list(path)
     file_list = []
     Find.find(path) do |subpath|
       Find.prune if FileTest.directory?(subpath) && ignored_dirs.include?(File.basename(subpath))
-      file_list.push(subpath) if FileTest.file?(subpath)
+      file_list.push(subpath)
     end
-    file_list
+    package_managers.map{|pm| pm.analyse(path, file_list) }.flatten.compact
   end
 
   def self.analyse_file(file_path, contents)
