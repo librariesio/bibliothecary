@@ -18,7 +18,7 @@ module Bibliothecary
     file_list = []
     Find.find(path) do |subpath|
       Find.prune if FileTest.directory?(subpath) && ignored_dirs.include?(File.basename(subpath))
-      file_list.append(subpath) if FileTest.file?(subpath)
+      file_list.push(subpath) if FileTest.file?(subpath)
     end
     file_list
   end
