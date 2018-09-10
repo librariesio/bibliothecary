@@ -16,7 +16,8 @@ describe Bibliothecary::Parsers::CPAN do
         {:name=>"XML::Simple", :requirement=>0, :type=>"runtime"},
         {:name=>"perl", :requirement=>"5.6.0", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -31,7 +32,8 @@ describe Bibliothecary::Parsers::CPAN do
         {:name=>"Getopt::Long", :requirement=>"2.32", :type=>"runtime"},
         {:name=>"List::Util", :requirement=>"1.07_00", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 

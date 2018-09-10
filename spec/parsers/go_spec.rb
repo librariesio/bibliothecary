@@ -19,7 +19,8 @@ describe Bibliothecary::Parsers::Go do
          :requirement=>"^1.0.0",
          :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -41,7 +42,8 @@ describe Bibliothecary::Parsers::Go do
          :requirement=>"f7716cbe52baa25d2e9b0d0da546fcf909fc16b4",
          :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 
@@ -93,7 +95,8 @@ describe Bibliothecary::Parsers::Go do
          :requirement=>"9f9df34309c04878acc86042b16630b0f696e1de",
          :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -106,7 +109,8 @@ describe Bibliothecary::Parsers::Go do
          :requirement=>"9fa818a44c2bf1396a17f9d5a3c0f6dd39d2ff8e",
          :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -121,7 +125,8 @@ describe Bibliothecary::Parsers::Go do
         {:name=>"launchpad.net/gocheck", :requirement=>"r2013.03.03", :type=>"runtime"},
         {:name=>"code.google.com/p/go.example/hello/...", :requirement=>"ae081cd1d6cc", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -136,7 +141,8 @@ describe Bibliothecary::Parsers::Go do
         {:name=>"github.com/pkg/errors", :requirement=>"a2d6902c6d2a2f194eb3fb474981ab7867c81505", :type=>"runtime"},
         {:name=>"golang.org/x/tools/go/vcs", :requirement=>"1727758746e7a08feaaceb9366d1468498ac2ac2", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -154,7 +160,8 @@ describe Bibliothecary::Parsers::Go do
         {:name=>"github.com/jmank88/nuts", :requirement=>"0.2.0", :type=>"runtime"},
         {:name=>"github.com/golang/protobuf", :requirement=>"*", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -178,7 +185,8 @@ describe Bibliothecary::Parsers::Go do
         {:name=>"golang.org/x/sync", :requirement=>"f52d1811a62927559de87708c8913c1650ce4f26", :type=>"runtime"},
         {:name=>"golang.org/x/sys", :requirement=>"bb24a47a89eac6c1227fbcb2ae37a8b9ed323366", :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 

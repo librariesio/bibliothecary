@@ -38,7 +38,8 @@ describe Bibliothecary::Parsers::CRAN do
         {:name=>"svglite", :requirement=>"*", :type=>"suggests"},
         {:name=>"sp", :requirement=>"*", :type=>"enhances"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -68,7 +69,8 @@ describe Bibliothecary::Parsers::CRAN do
         {:name=>"zoo", :requirement=>"*", :type=>"suggests"},
         {:name=>"plm", :requirement=>"*", :type=>"suggests"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 

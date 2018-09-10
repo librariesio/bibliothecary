@@ -15,7 +15,8 @@ describe Bibliothecary::Parsers::Dub do
          :requirement=>{"optional"=>true, "version"=>"~>0.2.0"},
          :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -26,7 +27,8 @@ describe Bibliothecary::Parsers::Dub do
       :dependencies=>[
         {:name=>"vibe-d", :requirement=>"~>0.7.23", :type=>:runtime}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 

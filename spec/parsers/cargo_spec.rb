@@ -13,7 +13,8 @@ describe Bibliothecary::Parsers::Cargo do
         {:name=>"rustc-serialize", :requirement=>"*", :type=>"runtime"},
         {:name=>"regex", :requirement=>"*", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -33,7 +34,8 @@ describe Bibliothecary::Parsers::Cargo do
         {:name=>"libc", :requirement=>"0.1.12", :type=>"runtime"},
         {:name=>"libc", :requirement=>"0.2.4", :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 

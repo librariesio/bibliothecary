@@ -14,7 +14,8 @@ describe Bibliothecary::Parsers::Packagist do
         {:name=>"phpunit/phpunit", :requirement=>"~4.0", :type=>"development"},
         {:name=>"phpspec/phpspec", :requirement=>"~2.1", :type=>"development"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -33,7 +34,8 @@ describe Bibliothecary::Parsers::Packagist do
         {:name=>"twig/twig", :requirement=>"v1.16.2", :type=>"runtime"},
         {:name=>"sensio/generator-bundle", :requirement=>"v2.5.0", :type=>"development"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 

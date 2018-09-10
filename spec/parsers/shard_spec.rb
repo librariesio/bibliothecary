@@ -16,7 +16,8 @@ describe Bibliothecary::Parsers::Shard do
         {:name=>"minitest", :requirement=>">= 0.2.0", :type=>"runtime"},
         {:name=>"selenium-webdriver", :requirement=>"*", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -33,7 +34,8 @@ describe Bibliothecary::Parsers::Shard do
         {:name=>"selenium-webdriver", :requirement=>"0.1.0", :type=>"runtime"},
         {:name=>"shards", :requirement=>"0.6.0", :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 

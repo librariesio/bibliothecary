@@ -36,7 +36,8 @@ describe Bibliothecary::Parsers::Pypi do
         {:name=>"django-suit", :requirement=>"*", :type=>"runtime"},
         {:name=>"dummy", :requirement=>"==2.0beta1", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -56,7 +57,8 @@ describe Bibliothecary::Parsers::Pypi do
         {:name=>"requests", :requirement=>"==0.11.1", :type=>"runtime"},
         {:name=>"Django", :requirement=>"==2.0beta1", :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -70,7 +72,8 @@ describe Bibliothecary::Parsers::Pypi do
         {:name=>"pinax", :requirement=>"git://github.com/pinax/pinax.git#1.4", :type=>"runtime"},
         {:name=>"nose", :requirement=>"*", :type=>"develop"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -85,7 +88,8 @@ describe Bibliothecary::Parsers::Pypi do
         {:name=>"pinax", :requirement=>"git://github.com/pinax/pinax.git#1.4", :type=>"runtime"},
         {:name=>"nose", :requirement=>"==1.3.7", :type=>"develop"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 

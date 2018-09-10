@@ -23,7 +23,8 @@ describe Bibliothecary::Parsers::Elm do
          :requirement=>"1.0.0 <= v < 2.0.0",
          :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -37,7 +38,8 @@ describe Bibliothecary::Parsers::Elm do
          :requirement=>"1.0.1",
          :type=>"runtime"}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -54,7 +56,8 @@ describe Bibliothecary::Parsers::Elm do
         {:name=>"evancz/automaton", :requirement=>"1.0.0", :type=>"runtime"},
         {:name=>"evancz/virtual-dom", :requirement=>"1.2.2", :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 

@@ -19,7 +19,8 @@ describe Bibliothecary::Parsers::Rubygems do
         {:name=>"rails_12factor", :requirement=>">= 0", :type=>:runtime},
         {:name=>"bugsnag", :requirement=>">= 0", :type=>:runtime}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -37,7 +38,8 @@ describe Bibliothecary::Parsers::Rubygems do
         {:name=>"rails_12factor", :requirement=>">= 0", :type=>:runtime},
         {:name=>"bugsnag", :requirement=>">= 0", :type=>:runtime}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -53,7 +55,8 @@ describe Bibliothecary::Parsers::Rubygems do
         {:name=>"railties", :requirement=>"< 5, >= 3.2.6", :type=>:runtime},
         {:name=>"responders", :requirement=>">= 0", :type=>:runtime}
       ],
-      kind: 'manifest'
+      kind: 'manifest',
+      success: true
     })
   end
 
@@ -67,7 +70,8 @@ describe Bibliothecary::Parsers::Rubygems do
         {:name=>"googleauth", :requirement=>"0.4.1", :type=>"runtime"},
         {:name=>"hashie", :requirement=>"3.4.2", :type=>"runtime"}
       ],
-      kind: 'lockfile'
+      kind: 'lockfile',
+      success: true
     })
   end
 
