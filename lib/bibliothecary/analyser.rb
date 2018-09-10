@@ -120,7 +120,7 @@ module Bibliothecary
             return details[:kind]
           end
         end
-        return []
+        return nil
       end
 
       def determine_can_have_lockfile(filename)
