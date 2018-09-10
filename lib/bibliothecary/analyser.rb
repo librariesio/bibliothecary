@@ -100,11 +100,18 @@ module Bibliothecary
             platform: platform_name,
             path: filename,
             dependencies: dependencies,
-            kind: determine_kind(filename)
+            kind: determine_kind(filename),
+            success: true
           }
         end
-      # rescue
-      #   nil
+      rescue
+        {
+          platform: platform_name,
+          path: filename,
+          dependencies: nil,
+          kind: determine_kind(filename),
+          success: false
+        }
       end
 
       def determine_kind(filename)
@@ -113,7 +120,7 @@ module Bibliothecary
             return details[:kind]
           end
         end
-        return []
+        return nil
       end
 
       def determine_can_have_lockfile(filename)
