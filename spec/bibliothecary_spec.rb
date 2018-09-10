@@ -182,4 +182,18 @@ describe Bibliothecary do
 
     expect(Bibliothecary.configuration.carthage_parser_host).to eq('https://carthage.libraries.io')
   end
+
+  it 'properly ignores directories based on ignored_dirs' do
+    Bibliothecary.configure do |config|
+      config.ignored_dirs.push("spec")
+    end
+
+    files = Bibliothecary.load_file_list(".")
+    expect(files.select {|item| /^\.\/spec/.match(item) }).to eq []
+  end
+
+  it 'does not include directories in file list' do
+    files = Bibliothecary.load_file_list(".")
+    expect(files.select {|item| FileTest.directory?(item) }).to eq []
+  end
 end
