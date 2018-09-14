@@ -104,7 +104,7 @@ module Bibliothecary
             success: true
           }
         end
-      rescue
+      rescue Exception # default is StandardError but C bindings throw Exceptions
         {
           platform: platform_name,
           path: filename,
