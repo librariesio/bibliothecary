@@ -51,8 +51,6 @@ module Bibliothecary
             type: extract_pom_dep_info(xml, dependency, 'scope') || 'runtime'
           }
         end
-      rescue
-        []
       end
 
       def self.parse_gradle(manifest)
