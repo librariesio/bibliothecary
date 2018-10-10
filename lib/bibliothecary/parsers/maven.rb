@@ -37,8 +37,6 @@ module Bibliothecary
             type: 'runtime'
           }
         end
-      rescue
-        []
       end
 
       def self.ivy_report?(file_contents)
