@@ -26,7 +26,12 @@ module Bibliothecary
       def parse_file(filename, contents)
         mapping.each do |regex, details|
           if mapping_entry_match?(regex, details, filename, contents)
-            return send(details[:parser], contents)
+            begin
+              return send(details[:parser], contents)
+            rescue Exception => e # default is StandardError but C bindings throw Exceptions
+              # the C xml parser also puts a newline at the end of the message
+              raise Bibliothecary::FileParsingError.new(e.message.strip, filename)
+            end
           end
         end
         return []
@@ -125,13 +130,14 @@ module Bibliothecary
             success: true
           }
         end
-      rescue Exception # default is StandardError but C bindings throw Exceptions
+      rescue Bibliothecary::FileParsingError => e
         {
           platform: platform_name,
           path: filename,
           dependencies: nil,
           kind: determine_kind(filename, contents),
-          success: false
+          success: false,
+          error_message: e.message
         }
       end
 
