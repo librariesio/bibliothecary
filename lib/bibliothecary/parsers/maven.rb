@@ -68,7 +68,7 @@ module Bibliothecary
             requirement: version,
             type: type
           }
-        end
+        end.compact
       end
 
       def self.parse_pom_manifest(file_contents)
