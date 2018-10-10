@@ -219,6 +219,14 @@ describe Bibliothecary::Parsers::Maven do
     }.to raise_error(StandardError, "ivy-report document lacks <info> element")
   end
 
+  it 'returns [] on an xml file with no ivy_report' do
+    expect(described_class.parse_file('non_ivy_report.xml', load_fixture('ivy_reports/non_ivy_report.xml'))).to eq([])
+  end
+
+  it 'returns [] on an .xml file with bad syntax' do
+    expect(described_class.parse_file('invalid_syntax.xml', load_fixture('ivy_reports/invalid_syntax.xml'))).to eq([])
+  end
+
   it 'can determine kind on an ivy report with no contents specified' do
     expect(described_class.determine_kind(fixture_path('ivy_reports/com.example-hello_2.12-compile.xml'))).to eq("lockfile")
   end
@@ -236,5 +244,9 @@ describe Bibliothecary::Parsers::Maven do
     expect(described_class.match?('whatever.xml')).to be_falsey
     # but if it's a real file we should be able to identify it has <ivy-report> in it
     expect(described_class.match?(fixture_path('ivy_reports/com.example-hello_2.12-compile.xml'))).to be_truthy
+    # not an ivy-report but ends in xml
+    expect(described_class.match?(fixture_path('ivy_reports/non_ivy_report.xml'))).to be_falsey
+    # not an ivy-report because bad xml
+    expect(described_class.match?(fixture_path('ivy_reports/invalid_syntax.xml'))).to be_falsey
   end
 end
