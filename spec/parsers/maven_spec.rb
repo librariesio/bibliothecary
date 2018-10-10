@@ -226,12 +226,16 @@ describe Bibliothecary::Parsers::Maven do
     }.to raise_error(Bibliothecary::FileParsingError, "missing_info.xml: ivy-report document lacks <info> element")
   end
 
-  it 'returns [] on an xml file with no ivy_report' do
-    expect(described_class.parse_file('non_ivy_report.xml', load_fixture('ivy_reports/non_ivy_report.xml'))).to eq([])
+  it 'raises FileParsingError on an xml file with no ivy_report' do
+    expect {
+      described_class.parse_file('non_ivy_report.xml', load_fixture('ivy_reports/non_ivy_report.xml'))
+    }.to raise_error(Bibliothecary::FileParsingError, "non_ivy_report.xml: No parser for this file type")
   end
 
   it 'returns [] on an .xml file with bad syntax' do
-    expect(described_class.parse_file('invalid_syntax.xml', load_fixture('ivy_reports/invalid_syntax.xml'))).to eq([])
+    expect {
+      described_class.parse_file('invalid_syntax.xml', load_fixture('ivy_reports/invalid_syntax.xml'))
+    }.to raise_error(Bibliothecary::FileParsingError, "invalid_syntax.xml: No parser for this file type")
   end
 
   it 'can determine kind on an ivy report with no contents specified' do
