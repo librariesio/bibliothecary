@@ -24,7 +24,7 @@ module Bibliothecary
   end
 
   def self.analyse_file(file_path, contents)
-    package_managers.map do |pm|
+    package_managers.select { |pm| pm.match?(file_path, contents) }.map do |pm|
       pm.analyse_contents(file_path, contents)
     end.flatten.uniq.compact
   end

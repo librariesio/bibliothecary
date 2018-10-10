@@ -34,7 +34,7 @@ module Bibliothecary
             end
           end
         end
-        return []
+        raise Bibliothecary::FileParsingError.new("No parser for this file type", filename)
       end
 
       def match?(filename, contents=nil)
