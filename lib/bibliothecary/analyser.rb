@@ -4,17 +4,38 @@ module Bibliothecary
       base.extend(ClassMethods)
     end
     module ClassMethods
+      def mapping_entry_match?(regex, details, filename, contents)
+        if filename.match(regex)
+          # we only want to load contents if we don't have them already
+          # and there's a content_matcher method to use
+          return true if details[:content_matcher].nil?
+          if contents.nil?
+            contents = begin
+                         File.open(filename).read
+                       rescue
+                         nil
+                       end
+          end
+          return false if contents.nil?
+          return true if send(details[:content_matcher], contents)
+        else
+          return false
+        end
+      end
+
       def parse_file(filename, contents)
         mapping.each do |regex, details|
-          if filename.match(regex)
+          if mapping_entry_match?(regex, details, filename, contents)
             return send(details[:parser], contents)
           end
         end
         return []
       end
 
-      def match?(filename)
-        mapping.keys.any?{|regex| filename.match(regex) }
+      def match?(filename, contents=nil)
+        mapping.any? do |regex, details|
+          mapping_entry_match?(regex, details, filename, contents)
+        end
       end
 
       def platform_name
@@ -100,7 +121,7 @@ module Bibliothecary
             platform: platform_name,
             path: filename,
             dependencies: dependencies,
-            kind: determine_kind(filename),
+            kind: determine_kind(filename, contents),
             success: true
           }
         end
@@ -109,23 +130,23 @@ module Bibliothecary
           platform: platform_name,
           path: filename,
           dependencies: nil,
-          kind: determine_kind(filename),
+          kind: determine_kind(filename, contents),
           success: false
         }
       end
 
-      def determine_kind(filename)
+      def determine_kind(filename, contents = nil)
         mapping.each do |regex, details|
-          if filename.match(regex)
+          if mapping_entry_match?(regex, details, filename, contents)
             return details[:kind]
           end
         end
         return nil
       end
 
-      def determine_can_have_lockfile(filename)
+      def determine_can_have_lockfile(filename, contents = nil)
         mapping.each do |regex, details|
-          if filename.match(regex)
+          if mapping_entry_match?(regex, details, filename, contents)
             return details.fetch(:can_have_lockfile, true)
           end
         end

@@ -172,9 +172,69 @@ describe Bibliothecary::Parsers::Maven do
     })
   end
 
+  it 'parses dependencies from an ivy report for a root project / type compile' do
+    expect(described_class.analyse_contents('com.example-hello_2.12-compile.xml', load_fixture('ivy_reports/com.example-hello_2.12-compile.xml'))).to eq({
+      platform: "maven",
+      path: "com.example-hello_2.12-compile.xml",
+      dependencies: [
+        {:name=>"org.scala-lang:scala-library", :requirement=>"2.12.5", :type=>"compile"}
+      ],
+      kind: 'lockfile',
+      success: true
+    })
+  end
+
+  it 'parses dependencies from an ivy report for a subproject / type test' do
+    expect(described_class.analyse_contents('com.example-subproject_2.12-test.xml', load_fixture('ivy_reports/com.example-subproject_2.12-test.xml'))).to eq({
+      platform: "maven",
+      path: "com.example-subproject_2.12-test.xml",
+      dependencies: [
+        {:name=>"com.typesafe.akka:akka-stream_2.12", :requirement=>"2.5.6", :type=>"test"},
+        {:name=>"com.typesafe:ssl-config-core_2.12", :requirement=>"0.2.2", :type=>"test"},
+        {:name=>"org.scala-lang.modules:scala-parser-combinators_2.12", :requirement=>"1.0.4", :type=>"test"},
+        {:name=>"org.reactivestreams:reactive-streams", :requirement=>"1.0.1", :type=>"test"},
+        {:name=>"com.typesafe.akka:akka-actor_2.12", :requirement=>"2.5.6", :type=>"test"},
+        {:name=>"org.scala-lang.modules:scala-java8-compat_2.12", :requirement=>"0.8.0", :type=>"test"},
+        {:name=>"com.typesafe:config", :requirement=>"1.3.1", :type=>"test"},
+        {:name=>"org.scala-lang:scala-library", :requirement=>"2.12.5", :type=>"test"}
+      ],
+      kind: 'lockfile',
+      success: true
+    })
+  end
+
+  it 'reports success: false on a broken ivy report' do
+    expect(described_class.analyse_contents('missing_info.xml', load_fixture('ivy_reports/missing_info.xml'))).to eq({
+      platform: "maven",
+      path: "missing_info.xml",
+      dependencies: nil,
+      kind: 'lockfile',
+      success: false
+    })
+  end
+
+  it 'raises error on a broken ivy report' do
+    expect {
+      described_class.parse_file('missing_info.xml', load_fixture('ivy_reports/missing_info.xml'))
+    }.to raise_error(StandardError, "ivy-report document lacks <info> element")
+  end
+
+  it 'can determine kind on an ivy report with no contents specified' do
+    expect(described_class.determine_kind(fixture_path('ivy_reports/com.example-hello_2.12-compile.xml'))).to eq("lockfile")
+  end
+
+  it 'cannot determine kind on an ivy report with no contents available' do
+    # this file doesn't really exist so we can't know it's an ivy report
+    expect(described_class.determine_kind(fixture_path('whatever.xml'))).to be(nil)
+  end
+
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('pom.xml')).to be_truthy
     expect(described_class.match?('ivy.xml')).to be_truthy
     expect(described_class.match?('build.gradle')).to be_truthy
+    # since the file doesn't really exist, we can't say it's a manifest file
+    expect(described_class.match?('whatever.xml')).to be_falsey
+    # but if it's a real file we should be able to identify it has <ivy-report> in it
+    expect(described_class.match?(fixture_path('ivy_reports/com.example-hello_2.12-compile.xml'))).to be_truthy
   end
 end
