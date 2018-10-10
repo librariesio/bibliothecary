@@ -6,4 +6,13 @@ module Bibliothecary
       super(msg)
     end
   end
+
+  class FileParsingError < StandardError
+    attr_accessor :filename
+    def initialize(msg, filename)
+      @filename = filename
+      msg = "#{filename}: #{msg}" unless msg.include?(filename)
+      super("#{msg}")
+    end
+  end
 end

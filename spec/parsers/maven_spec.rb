@@ -86,6 +86,12 @@ describe Bibliothecary::Parsers::Maven do
     })
   end
 
+  it 'raises FileParsingError on a broken pom.xml' do
+    expect {
+      described_class.parse_file('pom.xml', load_fixture('broken/pom.xml'))
+    }.to raise_error(Bibliothecary::FileParsingError, "pom.xml: invalid format, expected < at line 1, column 1 [parse.c:147]")
+  end
+
   it 'parses dependencies from pom2.xml' do
     expect(described_class.analyse_contents('pom.xml', load_fixture('pom2.xml'))).to eq({
       :platform=>"maven",
@@ -209,14 +215,15 @@ describe Bibliothecary::Parsers::Maven do
       path: "missing_info.xml",
       dependencies: nil,
       kind: 'lockfile',
-      success: false
+      success: false,
+      error_message: "missing_info.xml: ivy-report document lacks <info> element"
     })
   end
 
-  it 'raises error on a broken ivy report' do
+  it 'raises FileParsingError on a broken ivy report' do
     expect {
       described_class.parse_file('missing_info.xml', load_fixture('ivy_reports/missing_info.xml'))
-    }.to raise_error(StandardError, "ivy-report document lacks <info> element")
+    }.to raise_error(Bibliothecary::FileParsingError, "missing_info.xml: ivy-report document lacks <info> element")
   end
 
   it 'returns [] on an xml file with no ivy_report' do
