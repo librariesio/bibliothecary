@@ -18,7 +18,12 @@ module Bibliothecary
           /^build.gradle$|.*\/build.gradle$/i => {
             kind: 'manifest',
             parser: :parse_gradle
-          }
+          },
+          /^.+.xml$/i => {
+            content_matcher: :ivy_report?,
+            kind: 'lockfile',
+            parser: :parse_ivy_report
+          },
         }
       end
 
@@ -34,6 +39,36 @@ module Bibliothecary
         end
       rescue
         []
+      end
+
+      def self.ivy_report?(file_contents)
+        doc = Ox.parse file_contents
+        doc&.root&.value == 'ivy-report'
+      end
+
+      def self.parse_ivy_report(file_contents)
+        doc = Ox.parse file_contents
+        root = doc.root
+        raise "ivy-report document does not have ivy-report at the root" if root.value != "ivy-report"
+        info = doc.locate("ivy-report/info").first
+        raise "ivy-report document lacks <info> element" if info.nil?
+        type = info.attributes[:conf]
+        type = "unknown" if type.nil?
+        modules = doc.locate("ivy-report/dependencies/module")
+        modules.map do |mod|
+          attrs = mod.attributes
+          org = attrs[:organisation]
+          name = attrs[:name]
+          version = mod.locate('revision').first&.attributes[:name]
+
+          next nil if org.nil? or name.nil? or version.nil?
+
+          {
+            name: "#{org}:#{name}",
+            requirement: version,
+            type: type
+          }
+        end.compact
       end
 
       def self.parse_pom_manifest(file_contents)
