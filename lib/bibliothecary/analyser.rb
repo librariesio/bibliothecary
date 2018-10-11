@@ -17,7 +17,7 @@ module Bibliothecary
                        end
           end
           return false if contents.nil?
-          return true if send(details[:content_matcher], contents)
+          return send(details[:content_matcher], contents)
         else
           return false
         end
