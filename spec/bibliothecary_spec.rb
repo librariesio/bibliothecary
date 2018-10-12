@@ -62,7 +62,12 @@ describe Bibliothecary do
     Bibliothecary.configure do |config|
       config.ignored_dirs.push("fixtures")
     end
-    analysis = described_class.analyse('./')
+    # If we run the analysis in pwd, confusion about absolute vs.
+    # relative paths is concealed because both work
+    orig_pwd = Dir.pwd
+    analysis = Dir.chdir("/") do
+      described_class.analyse(orig_pwd)
+    end
     # empty out any dependencies to make the test more reliable.
     # we test specific manifest parsers in the parsers specs
     analysis.each do |a|
@@ -90,7 +95,12 @@ describe Bibliothecary do
   end
 
   it 'handles a complicated folder with many manifests', :vcr do
-    analysis = described_class.analyse('./spec/fixtures/multimanifest_dir')
+    # If we run the analysis in pwd, confusion about absolute vs.
+    # relative paths is concealed because both work
+    orig_pwd = Dir.pwd
+    analysis = Dir.chdir("/") do
+      described_class.analyse(File.join(orig_pwd, 'spec/fixtures/multimanifest_dir'))
+    end
     # empty out any dependencies to make the test more reliable.
     # we test specific manifest parsers in the parsers specs
     analysis.each do |a|
@@ -98,11 +108,17 @@ describe Bibliothecary do
     end
     expect(analysis).to eq(
       [{:platform=>"maven",
+        :path=>"com.example-hello_2.12-compile.xml",
+        :dependencies=>[],
+        :kind=>"lockfile",
+        :success=>true,
+        :related_paths=>["pom.xml"]},
+       {:platform=>"maven",
         :path=>"pom.xml",
         :dependencies=>[],
         :kind=>"manifest",
         success: true,
-        :related_paths=>[]},
+        :related_paths=>["com.example-hello_2.12-compile.xml"]},
        {:platform=>"npm",
         :path=>"package-lock.json",
         :dependencies=>[],

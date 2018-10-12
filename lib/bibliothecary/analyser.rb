@@ -9,13 +9,9 @@ module Bibliothecary
           # we only want to load contents if we don't have them already
           # and there's a content_matcher method to use
           return true if details[:content_matcher].nil?
-          if contents.nil?
-            contents = begin
-                         File.open(filename).read
-                       rescue
-                         nil
-                       end
-          end
+          # this is the libraries.io case where we won't load all .xml
+          # files (for example) just to look at their contents, we'll
+          # assume they are not manifests.
           return false if contents.nil?
           return send(details[:content_matcher], contents)
         else
@@ -34,10 +30,18 @@ module Bibliothecary
             end
           end
         end
+        # this can be raised if we don't check match_info?, or we check match? but
+        # did not have the file contents so it turns out for example that a
+        # .xml file isn't a manifest after all.
         raise Bibliothecary::FileParsingError.new("No parser for this file type", filename)
       end
 
-      def match?(filename, contents=nil)
+      # this is broken with contents=nil because it can't look at file
+      # contents, so skips manifests that are ambiguously a
+      # manifest considering only the filename. However, those are
+      # the semantics that libraries.io uses since it doesn't have
+      # the files locally.
+      def match?(filename, contents = nil)
         mapping.any? do |regex, details|
           mapping_entry_match?(regex, details, filename, contents)
         end
@@ -107,11 +111,13 @@ module Bibliothecary
       end
 
       def analyse(folder_path, file_list)
-        analyses = file_list.map do |path|
-          filename = path.sub(folder_path, '').gsub(/^\//, '')
-          next unless match?(filename)
-          contents = File.open(path).read
-          analyse_contents(filename, contents)
+        analyse_file_info(file_list.map { |absolute_path| FileInfo.new(folder_path, absolute_path) })
+      end
+
+      def analyse_file_info(file_info_list)
+        analyses = file_info_list.map do |info|
+          next unless match?(info.relative_path, info.contents)
+          analyse_contents(info.relative_path, info.contents)
         end.compact
 
         add_related_paths(analyses)
@@ -141,6 +147,7 @@ module Bibliothecary
         }
       end
 
+      # calling this with contents=nil is broken, but kept for back compat
       def determine_kind(filename, contents = nil)
         mapping.each do |regex, details|
           if mapping_entry_match?(regex, details, filename, contents)
@@ -150,6 +157,7 @@ module Bibliothecary
         return nil
       end
 
+      # calling this with contents=nil is broken, but kept for back compat
       def determine_can_have_lockfile(filename, contents = nil)
         mapping.each do |regex, details|
           if mapping_entry_match?(regex, details, filename, contents)
