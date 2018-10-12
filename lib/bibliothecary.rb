@@ -17,7 +17,7 @@ module Bibliothecary
 
   # deprecated; use load_file_info_list.
   def self.load_file_list(path)
-    load_file_info_list(path).map { |info| info.absolute_path }
+    load_file_info_list(path).map { |info| info.full_path }
   end
 
   def self.load_file_info_list(path)

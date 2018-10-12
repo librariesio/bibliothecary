@@ -4,16 +4,16 @@ module Bibliothecary
       base.extend(ClassMethods)
     end
     module ClassMethods
-      def mapping_entry_match?(regex, details, filename, contents)
-        if filename.match(regex)
+      def mapping_entry_match?(regex, details, info)
+        if info.relative_path.match(regex)
           # we only want to load contents if we don't have them already
           # and there's a content_matcher method to use
           return true if details[:content_matcher].nil?
           # this is the libraries.io case where we won't load all .xml
           # files (for example) just to look at their contents, we'll
           # assume they are not manifests.
-          return false if contents.nil?
-          return send(details[:content_matcher], contents)
+          return false if info.contents.nil?
+          return send(details[:content_matcher], info.contents)
         else
           return false
         end
@@ -21,7 +21,7 @@ module Bibliothecary
 
       def parse_file(filename, contents)
         mapping.each do |regex, details|
-          if mapping_entry_match?(regex, details, filename, contents)
+          if mapping_entry_match?(regex, details, FileInfo.new(nil, filename, contents))
             begin
               return send(details[:parser], contents)
             rescue Exception => e # default is StandardError but C bindings throw Exceptions
@@ -30,9 +30,10 @@ module Bibliothecary
             end
           end
         end
-        # this can be raised if we don't check match_info?, or we check match? but
-        # did not have the file contents so it turns out for example that a
-        # .xml file isn't a manifest after all.
+        # this can be raised if we don't check match?/match_info?,
+        # OR don't have the file contents when we check them, so
+        # it turns out for example that a .xml file isn't a
+        # manifest after all.
         raise Bibliothecary::FileParsingError.new("No parser for this file type", filename)
       end
 
@@ -42,8 +43,12 @@ module Bibliothecary
       # the semantics that libraries.io uses since it doesn't have
       # the files locally.
       def match?(filename, contents = nil)
+        match_info?(FileInfo.new(nil, filename, contents))
+      end
+
+      def match_info?(info)
         mapping.any? do |regex, details|
-          mapping_entry_match?(regex, details, filename, contents)
+          mapping_entry_match?(regex, details, info)
         end
       end
 
@@ -103,6 +108,9 @@ module Bibliothecary
         end
 
         by_dirname["manifest"].each do |_, manifests|
+          # This determine_can_have_lockfile in theory needs the file contents but
+          # in practice doesn't right now since the only mapping that needs
+          # file contents is a lockfile and not a manifest so won't reach here.
           manifests.delete_if { |manifest| !determine_can_have_lockfile(manifest[:path]) }
         end
 
@@ -111,12 +119,12 @@ module Bibliothecary
       end
 
       def analyse(folder_path, file_list)
-        analyse_file_info(file_list.map { |absolute_path| FileInfo.new(folder_path, absolute_path) })
+        analyse_file_info(file_list.map { |full_path| FileInfo.new(folder_path, full_path) })
       end
 
       def analyse_file_info(file_info_list)
         analyses = file_info_list.map do |info|
-          next unless match?(info.relative_path, info.contents)
+          next unless match_info?(info)
           analyse_contents(info.relative_path, info.contents)
         end.compact
 
@@ -150,7 +158,7 @@ module Bibliothecary
       # calling this with contents=nil is broken, but kept for back compat
       def determine_kind(filename, contents = nil)
         mapping.each do |regex, details|
-          if mapping_entry_match?(regex, details, filename, contents)
+          if mapping_entry_match?(regex, details, FileInfo.new(nil, filename, contents))
             return details[:kind]
           end
         end
@@ -160,7 +168,7 @@ module Bibliothecary
       # calling this with contents=nil is broken, but kept for back compat
       def determine_can_have_lockfile(filename, contents = nil)
         mapping.each do |regex, details|
-          if mapping_entry_match?(regex, details, filename, contents)
+          if mapping_entry_match?(regex, details, FileInfo.new(nil, filename, contents))
             return details.fetch(:can_have_lockfile, true)
           end
         end
