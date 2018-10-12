@@ -78,15 +78,15 @@ module Bibliothecary
 
       def set_related_paths_field(by_dirname_dest, by_dirname_source)
         by_dirname_dest.each do |dirname, analyses|
-          analyses.each do |analysis|
-            source_analyses = by_dirname_source[dirname].map { |source_analysis| source_analysis[:path] }
+          analyses.each do |(info, analysis)|
+            source_analyses = by_dirname_source[dirname].map { |(info, source_analysis)| info.relative_path }
             analysis[:related_paths] = source_analyses.sort
           end
         end
       end
 
       def add_related_paths(analyses)
-        analyses.each do |analysis|
+        analyses.each do |(info, analysis)|
           analysis[:related_paths] = []
         end
 
@@ -102,16 +102,16 @@ module Bibliothecary
           "lockfile" => Hash.new { |h, k| h[k] = [] }
         }
 
-        analyses.each do |analysis|
-          dirname = File.dirname(analysis[:path])
-          by_dirname[analysis[:kind]][dirname].push(analysis)
+        analyses.each do |(info, analysis)|
+          dirname = File.dirname(info.relative_path)
+          by_dirname[analysis[:kind]][dirname].push([info, analysis])
         end
 
         by_dirname["manifest"].each do |_, manifests|
           # This determine_can_have_lockfile in theory needs the file contents but
           # in practice doesn't right now since the only mapping that needs
           # file contents is a lockfile and not a manifest so won't reach here.
-          manifests.delete_if { |manifest| !determine_can_have_lockfile(manifest[:path]) }
+          manifests.delete_if { |(info, manifest)| !determine_can_have_lockfile_from_info(info) }
         end
 
         set_related_paths_field(by_dirname["manifest"], by_dirname["lockfile"])
@@ -125,50 +125,67 @@ module Bibliothecary
       def analyse_file_info(file_info_list)
         analyses = file_info_list.map do |info|
           next unless match_info?(info)
-          analyse_contents(info.relative_path, info.contents)
-        end.compact
+          [info, analyse_contents_from_info(info)]
+        end
+
+        # strip the ones we failed to analyse
+        analyses = analyses.reject { |(info, analysis)| analysis.nil? }
 
         add_related_paths(analyses)
 
-        analyses
+        analyses.map { |(info, analysis)| analysis }
       end
 
       def analyse_contents(filename, contents)
-        dependencies = parse_file(filename, contents)
+        analyse_contents_from_info(FileInfo.new(nil, filename, contents))
+      end
+
+      def analyse_contents_from_info(info)
+        dependencies = parse_file(info.relative_path, info.contents)
         if dependencies && dependencies.any?
           {
             platform: platform_name,
-            path: filename,
+            path: info.relative_path,
             dependencies: dependencies,
-            kind: determine_kind(filename, contents),
+            kind: determine_kind_from_info(info),
             success: true
           }
         end
       rescue Bibliothecary::FileParsingError => e
         {
           platform: platform_name,
-          path: filename,
+          path: info.relative_path,
           dependencies: nil,
-          kind: determine_kind(filename, contents),
+          kind: determine_kind_from_info(info),
           success: false,
           error_message: e.message
         }
       end
 
-      # calling this with contents=nil is broken, but kept for back compat
+      # calling this with contents=nil can produce less-informed
+      # results, but kept for back compat
       def determine_kind(filename, contents = nil)
+        determine_kind_from_info(FileInfo.new(nil, filename, contents))
+      end
+
+      def determine_kind_from_info(info)
         mapping.each do |regex, details|
-          if mapping_entry_match?(regex, details, FileInfo.new(nil, filename, contents))
+          if mapping_entry_match?(regex, details, info)
             return details[:kind]
           end
         end
         return nil
       end
 
-      # calling this with contents=nil is broken, but kept for back compat
+      # calling this with contents=nil can produce less-informed
+      # results, but kept for back compat
       def determine_can_have_lockfile(filename, contents = nil)
+        determine_can_have_lockfile_from_info(FileInfo.new(nil, filename, contents))
+      end
+
+      def determine_can_have_lockfile_from_info(info)
         mapping.each do |regex, details|
-          if mapping_entry_match?(regex, details, FileInfo.new(nil, filename, contents))
+          if mapping_entry_match?(regex, details, info)
             return details.fetch(:can_have_lockfile, true)
           end
         end
