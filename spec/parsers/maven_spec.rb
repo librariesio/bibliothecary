@@ -238,8 +238,8 @@ describe Bibliothecary::Parsers::Maven do
     }.to raise_error(Bibliothecary::FileParsingError, "invalid_syntax.xml: No parser for this file type")
   end
 
-  it 'can determine kind on an ivy report with no contents specified' do
-    expect(described_class.determine_kind(fixture_path('ivy_reports/com.example-hello_2.12-compile.xml'))).to eq("lockfile")
+  it 'cannot determine kind on an ivy report with no contents specified' do
+    expect(described_class.determine_kind(fixture_path('ivy_reports/com.example-hello_2.12-compile.xml'))).to be(nil)
   end
 
   it 'cannot determine kind on an ivy report with no contents available' do
@@ -253,8 +253,11 @@ describe Bibliothecary::Parsers::Maven do
     expect(described_class.match?('build.gradle')).to be_truthy
     # since the file doesn't really exist, we can't say it's a manifest file
     expect(described_class.match?('whatever.xml')).to be_falsey
-    # but if it's a real file we should be able to identify it has <ivy-report> in it
-    expect(described_class.match?(fixture_path('ivy_reports/com.example-hello_2.12-compile.xml'))).to be_truthy
+    # but if it's a real file with contents we should be able to identify it has <ivy-report> in it
+    expect(described_class.match?(fixture_path('ivy_reports/com.example-hello_2.12-compile.xml'),
+                                  load_fixture('ivy_reports/com.example-hello_2.12-compile.xml'))).to be_truthy
+    # but if it's a real file without contents we should not be able to identify it has <ivy-report> in it
+    expect(described_class.match?(fixture_path('ivy_reports/com.example-hello_2.12-compile.xml'))).to be_falsey
     # not an ivy-report but ends in xml
     expect(described_class.match?(fixture_path('ivy_reports/non_ivy_report.xml'))).to be_falsey
     # not an ivy-report because bad xml
