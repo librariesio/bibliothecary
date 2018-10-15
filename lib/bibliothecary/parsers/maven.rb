@@ -41,13 +41,19 @@ module Bibliothecary
 
       def self.ivy_report?(file_contents)
         doc = Ox.parse file_contents
-        doc&.root&.value == 'ivy-report'
+        root = doc&.locate("ivy-report")&.first
+        return !root.nil?
+      rescue Exception => e
+        # We rescue exception here since native libs can throw a non-StandardError
+        # We don't want to throw errors during the matching phase, only during
+        # parsing after we match.
+        false
       end
 
       def self.parse_ivy_report(file_contents)
         doc = Ox.parse file_contents
-        root = doc.root
-        raise "ivy-report document does not have ivy-report at the root" if root.value != "ivy-report"
+        root = doc.locate("ivy-report").first
+        raise "ivy-report document does not have ivy-report at the root" if root.nil?
         info = doc.locate("ivy-report/info").first
         raise "ivy-report document lacks <info> element" if info.nil?
         type = info.attributes[:conf]
