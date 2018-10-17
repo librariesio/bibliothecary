@@ -1,0 +1,2 @@
+ci:
+  extra_ignore_directories: [ fixtures ]
