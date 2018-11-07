@@ -10,9 +10,32 @@ Dir[File.expand_path('../bibliothecary/parsers/*.rb', __FILE__)].each do |file|
 end
 
 module Bibliothecary
-  def self.analyse(path)
+  def self.analyse(path, error_if_no_parser=false)
     info_list = load_file_info_list(path)
-    package_managers.map{|pm| pm.analyse_file_info(info_list) }.flatten.compact
+    # Each package manager needs to see the entire list so it can
+    # associate related manifests and lockfiles for example.
+    analyses = package_managers.map{|pm| pm.analyse_file_info(info_list) }.flatten.compact
+
+    if error_if_no_parser
+      analyses_by_path = {}
+      analyses.each { |a| analyses_by_path[a[:path]] = a }
+
+      info_list.each do |info|
+        next if analyses_by_path.key?(info.relative_path)
+        analysis = {
+          platform: 'unknown',
+          path: info.relative_path,
+          dependencies: nil,
+          kind: 'unknown',
+          success: false,
+          error_message: 'No parser for this file type'
+        }
+        analyses_by_path[info.relative_path] = analysis
+        analyses.push(analysis)
+      end
+    end
+
+    analyses
   end
 
   # deprecated; use load_file_info_list.
