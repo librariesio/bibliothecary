@@ -12,22 +12,27 @@ end
 module Bibliothecary
   def self.analyse(path, error_if_no_parser=false)
     info_list = load_file_info_list(path)
-    # Each package manager needs to see the entire list so it can
+
+    # set the package manager on each info
+    info_list.each do |info|
+      matches = package_managers.select { |pm| pm.match_info?(info) }
+
+      raise "Multiple package managers fighting over #{info.relative_path}: #{matches.map(&:to_s)}" if matches.length > 1
+      info.package_manager = matches[0] if matches.length == 1
+    end
+
+    # Each package manager needs to see its entire list so it can
     # associate related manifests and lockfiles for example.
-    analyses = package_managers.map{|pm| pm.analyse_file_info(info_list) }.flatten.compact
+    analyses = package_managers.map do |pm|
+      matching_infos = info_list.select { |info| info.package_manager == pm }
+      pm.analyse_file_info(matching_infos)
+    end
+    analyses = analyses.flatten.compact
 
     if error_if_no_parser
-      analyses_by_path = {}
-      analyses.each { |a| analyses_by_path[a[:path]] = a }
-
-      info_list.each do |info|
-        next if analyses_by_path.key?(info.relative_path)
-
-        analysis = Bibliothecary::Analyser::create_error_analysis('unknown', info.relative_path, 'unknown',
-                                                                  'No parser for this file type')
-
-        analyses_by_path[info.relative_path] = analysis
-        analyses.push(analysis)
+      info_list.select { |info| info.package_manager.nil? }.each do |info|
+        analyses.push(Bibliothecary::Analyser::create_error_analysis('unknown', info.relative_path, 'unknown',
+                                                                     'No parser for this file type'))
       end
     end
 

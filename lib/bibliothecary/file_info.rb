@@ -5,6 +5,7 @@ module Bibliothecary
     attr_reader :folder_path
     attr_reader :relative_path
     attr_reader :full_path
+    attr_accessor :package_manager
 
     def contents
       @contents ||=
@@ -43,6 +44,8 @@ module Bibliothecary
       end
 
       @contents = contents
+
+      @package_manager = nil
     end
   end
 end
