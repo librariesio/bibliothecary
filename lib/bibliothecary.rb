@@ -10,7 +10,7 @@ Dir[File.expand_path('../bibliothecary/parsers/*.rb', __FILE__)].each do |file|
 end
 
 module Bibliothecary
-  def self.analyse(path, ignore_unparseable_files=true)
+  def self.analyse(path, ignore_unparseable_files: true)
     info_list = load_file_info_list(path)
 
     info_list = info_list.reject { |info| info.package_manager.nil? } if ignore_unparseable_files
