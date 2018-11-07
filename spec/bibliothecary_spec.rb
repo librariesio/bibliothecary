@@ -176,7 +176,7 @@ describe Bibliothecary do
     # relative paths is concealed because both work
     orig_pwd = Dir.pwd
     analysis = Dir.chdir("/") do
-      described_class.analyse(File.join(orig_pwd, 'spec/fixtures/multimanifest_dir'), error_if_no_parser = true)
+      described_class.analyse(File.join(orig_pwd, 'spec/fixtures/multimanifest_dir'), ignore_unparseable_files=false)
     end
     # empty out any dependencies to make the test more reliable.
     # we test specific manifest parsers in the parsers specs
@@ -259,7 +259,7 @@ describe Bibliothecary do
     # relative paths is concealed because both work
     orig_pwd = Dir.pwd
     analysis = Dir.chdir("/") do
-      described_class.analyse(File.join(orig_pwd, 'spec/fixtures/empty_manifests'), error_if_no_parser=true)
+      described_class.analyse(File.join(orig_pwd, 'spec/fixtures/empty_manifests'), ignore_unparseable_files=false)
     end
     expect(analysis).to eq(
                           [{:platform=>"npm",
