@@ -44,6 +44,11 @@ module Bibliothecary
         mapping.each do |regex, details|
           if mapping_entry_match?(regex, details, FileInfo.new(nil, filename, contents))
             begin
+              # The `parser` method should raise an exception if the file is malformed,
+              # should return empty [] if the file is fine but simply doesn't contain
+              # any dependencies, and should never return nil. At the time of writing
+              # this comment, some of the parsers return [] or nil to mean an error
+              # which is confusing to users.
               return send(details[:parser], contents)
             rescue Exception => e # default is StandardError but C bindings throw Exceptions
               # the C xml parser also puts a newline at the end of the message
