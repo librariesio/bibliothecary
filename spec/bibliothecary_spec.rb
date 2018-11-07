@@ -171,6 +171,89 @@ describe Bibliothecary do
     Bibliothecary.reset
   end
 
+  it 'handles a complicated folder with many manifests complaining about no-parser files', :vcr do
+    # If we run the analysis in pwd, confusion about absolute vs.
+    # relative paths is concealed because both work
+    orig_pwd = Dir.pwd
+    analysis = Dir.chdir("/") do
+      described_class.analyse(File.join(orig_pwd, 'spec/fixtures/multimanifest_dir'), error_if_no_parser = true)
+    end
+    # empty out any dependencies to make the test more reliable.
+    # we test specific manifest parsers in the parsers specs
+    analysis.each do |a|
+      a[:dependencies] = []
+    end
+    expect(analysis).to eq(
+      [{:platform=>"maven",
+        :path=>"com.example-hello_2.12-compile.xml",
+        :dependencies=>[],
+        :kind=>"lockfile",
+        :success=>true,
+        :related_paths=>["pom.xml"]},
+       {:platform=>"maven",
+        :path=>"pom.xml",
+        :dependencies=>[],
+        :kind=>"manifest",
+        success: true,
+        :related_paths=>["com.example-hello_2.12-compile.xml"]},
+       {:platform=>"npm",
+        :path=>"package-lock.json",
+        :dependencies=>[],
+        :kind=>"lockfile",
+        success: true,
+        :related_paths=>["package.json"]},
+       {:platform=>"npm",
+        :path=>"package.json",
+        :dependencies=>[],
+        :kind=>"manifest",
+        success: true,
+        :related_paths=>["package-lock.json", "yarn.lock"]},
+       {:platform=>"npm",
+        :path=>"yarn.lock",
+        :dependencies=>[],
+        :kind=>"lockfile",
+        success: true,
+        :related_paths=>["package.json"]},
+       {:platform=>"pypi",
+        :path=>"setup.py",
+        :dependencies=>[],
+        :kind=>"manifest",
+        success: true,
+        :related_paths=>[]},
+       {:platform=>"rubygems",
+        :path=>"Gemfile",
+        :dependencies=>[],
+        :kind=>"manifest",
+        success: true,
+        :related_paths=>["Gemfile.lock"]},
+       {:platform=>"rubygems",
+        :path=>"Gemfile.lock",
+        :dependencies=>[],
+        :kind=>"lockfile",
+        success: true,
+        :related_paths=>["Gemfile"]},
+       {:platform=>"rubygems",
+        :path=>"subdir/Gemfile",
+        :dependencies=>[],
+        :kind=>"manifest",
+        success: true,
+        :related_paths=>["subdir/Gemfile.lock"]},
+       {:platform=>"rubygems",
+        :path=>"subdir/Gemfile.lock",
+        :dependencies=>[],
+        :kind=>"lockfile",
+        success: true,
+        :related_paths=>["subdir/Gemfile"]},
+       {:platform=>"unknown",
+        :path=>"unknown_non_manifest.txt",
+        :dependencies=>[],
+        :kind=>"unknown",
+        :success=>false,
+        :error_message=>"No parser for this file type"}])
+
+    Bibliothecary.reset
+  end
+
   it 'allows customization of config options' do
     Bibliothecary.configure do |config|
       config.ignored_dirs = ['foobar']
