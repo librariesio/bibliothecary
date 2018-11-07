@@ -142,15 +142,15 @@ module Bibliothecary
 
       def analyse_contents_from_info(info)
         dependencies = parse_file(info.relative_path, info.contents)
-        if dependencies && dependencies.any?
-          {
-            platform: platform_name,
-            path: info.relative_path,
-            dependencies: dependencies,
-            kind: determine_kind_from_info(info),
-            success: true
-          }
-        end
+        dependencies = [] if dependencies.nil?
+
+        {
+          platform: platform_name,
+          path: info.relative_path,
+          dependencies: dependencies,
+          kind: determine_kind_from_info(info),
+          success: true
+        }
       rescue Bibliothecary::FileParsingError => e
         {
           platform: platform_name,

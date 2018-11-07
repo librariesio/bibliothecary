@@ -254,6 +254,29 @@ describe Bibliothecary do
     Bibliothecary.reset
   end
 
+  it 'handles empty manifests' do
+    # If we run the analysis in pwd, confusion about absolute vs.
+    # relative paths is concealed because both work
+    orig_pwd = Dir.pwd
+    analysis = Dir.chdir("/") do
+      described_class.analyse(File.join(orig_pwd, 'spec/fixtures/empty_manifests'), error_if_no_parser=true)
+    end
+    expect(analysis).to eq(
+                          [{:platform=>"npm",
+                            :path=>"package.json",
+                            :dependencies=>[],
+                            :kind=>"manifest",
+                            :success=>true,
+                            :related_paths=>[]},
+                           {:platform=>"rubygems",
+                            :path=>"Gemfile",
+                            :dependencies=>[],
+                            :kind=>"manifest",
+                            :success=>true,
+                            :related_paths=>[]}])
+    Bibliothecary.reset
+  end
+
   it 'allows customization of config options' do
     Bibliothecary.configure do |config|
       config.ignored_dirs = ['foobar']
