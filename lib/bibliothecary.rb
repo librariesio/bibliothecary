@@ -10,16 +10,10 @@ Dir[File.expand_path('../bibliothecary/parsers/*.rb', __FILE__)].each do |file|
 end
 
 module Bibliothecary
-  def self.analyse(path, error_if_no_parser=false)
+  def self.analyse(path, ignore_unparseable_files=true)
     info_list = load_file_info_list(path)
 
-    # set the package manager on each info
-    info_list.each do |info|
-      matches = package_managers.select { |pm| pm.match_info?(info) }
-
-      raise "Multiple package managers fighting over #{info.relative_path}: #{matches.map(&:to_s)}" if matches.length > 1
-      info.package_manager = matches[0] if matches.length == 1
-    end
+    info_list = info_list.reject { |info| info.package_manager.nil? } if ignore_unparseable_files
 
     # Each package manager needs to see its entire list so it can
     # associate related manifests and lockfiles for example.
@@ -29,11 +23,9 @@ module Bibliothecary
     end
     analyses = analyses.flatten.compact
 
-    if error_if_no_parser
-      info_list.select { |info| info.package_manager.nil? }.each do |info|
-        analyses.push(Bibliothecary::Analyser::create_error_analysis('unknown', info.relative_path, 'unknown',
-                                                                     'No parser for this file type'))
-      end
+    info_list.select { |info| info.package_manager.nil? }.each do |info|
+      analyses.push(Bibliothecary::Analyser::create_error_analysis('unknown', info.relative_path, 'unknown',
+                                                                   'No parser for this file type'))
     end
 
     analyses
@@ -44,11 +36,26 @@ module Bibliothecary
     load_file_info_list(path).map { |info| info.full_path }
   end
 
+  def self.init_package_manager(info)
+    # set the package manager on each info
+    matches = package_managers.select { |pm| pm.match_info?(info) }
+
+    info.package_manager = matches[0] if matches.length == 1
+
+    # this is a bug at the moment if it's raised (we don't handle it sensibly)
+    raise "Multiple package managers fighting over #{info.relative_path}: #{matches.map(&:to_s)}" if matches.length > 1
+  end
+
   def self.load_file_info_list(path)
     file_list = []
     Find.find(path) do |subpath|
       Find.prune if FileTest.directory?(subpath) && ignored_dirs.include?(File.basename(subpath))
-      file_list.push(FileInfo.new(path, subpath)) if FileTest.file?(subpath)
+      next unless FileTest.file?(subpath)
+
+      info = FileInfo.new(path, subpath)
+      init_package_manager(info)
+
+      file_list.push(info)
     end
     file_list
   end
