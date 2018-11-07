@@ -1,5 +1,26 @@
 module Bibliothecary
   module Analyser
+    def self.create_error_analysis(platform_name, relative_path, kind, message)
+      {
+        platform: platform_name,
+        path: relative_path,
+        dependencies: nil,
+        kind: kind,
+        success: false,
+        error_message: message
+      }
+    end
+
+    def self.create_analysis(platform_name, relative_path, kind, dependencies)
+      {
+        platform: platform_name,
+        path: relative_path,
+        dependencies: dependencies,
+        kind: kind,
+        success: true
+      }
+    end
+
     def self.included(base)
       base.extend(ClassMethods)
     end
@@ -141,25 +162,12 @@ module Bibliothecary
       end
 
       def analyse_contents_from_info(info)
+        kind = determine_kind_from_info(info)
         dependencies = parse_file(info.relative_path, info.contents)
-        dependencies = [] if dependencies.nil?
 
-        {
-          platform: platform_name,
-          path: info.relative_path,
-          dependencies: dependencies,
-          kind: determine_kind_from_info(info),
-          success: true
-        }
+        Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies || [])
       rescue Bibliothecary::FileParsingError => e
-        {
-          platform: platform_name,
-          path: info.relative_path,
-          dependencies: nil,
-          kind: determine_kind_from_info(info),
-          success: false,
-          error_message: e.message
-        }
+        Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, kind, e.message)
       end
 
       # calling this with contents=nil can produce less-informed

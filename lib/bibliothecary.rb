@@ -22,14 +22,10 @@ module Bibliothecary
 
       info_list.each do |info|
         next if analyses_by_path.key?(info.relative_path)
-        analysis = {
-          platform: 'unknown',
-          path: info.relative_path,
-          dependencies: nil,
-          kind: 'unknown',
-          success: false,
-          error_message: 'No parser for this file type'
-        }
+
+        analysis = Bibliothecary::Analyser::create_error_analysis('unknown', info.relative_path, 'unknown',
+                                                                  'No parser for this file type')
+
         analyses_by_path[info.relative_path] = analysis
         analyses.push(analysis)
       end
