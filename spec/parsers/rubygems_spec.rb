@@ -52,7 +52,7 @@ describe Bibliothecary::Parsers::Rubygems do
         {:name=>"orm_adapter", :requirement=>"~> 0.1", :type=>:development},
         {:name=>"bcrypt", :requirement=>"~> 3.0", :type=>:runtime},
         {:name=>"thread_safe", :requirement=>"~> 0.1", :type=>:runtime},
-        {:name=>"railties", :requirement=>"< 5, >= 3.2.6", :type=>:runtime},
+        {:name=>"railties", :requirement=>">= 3.2.6, < 5", :type=>:runtime},
         {:name=>"responders", :requirement=>">= 0", :type=>:runtime}
       ],
       kind: 'manifest',
