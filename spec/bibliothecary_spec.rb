@@ -60,7 +60,7 @@ describe Bibliothecary do
 
   it 'searches a folder for manifests and parses them' do
     Bibliothecary.configure do |config|
-      config.ignored_dirs.push("fixtures")
+      config.ignored_dirs.push("spec/fixtures")
     end
     # If we run the analysis in pwd, confusion about absolute vs.
     # relative paths is concealed because both work
@@ -280,9 +280,11 @@ describe Bibliothecary do
   it 'allows customization of config options' do
     Bibliothecary.configure do |config|
       config.ignored_dirs = ['foobar']
+      config.ignored_files = ['hello']
     end
 
     expect(Bibliothecary.ignored_dirs).to eq(['foobar'])
+    expect(Bibliothecary.ignored_files).to eq(['hello'])
 
     Bibliothecary.reset
   end
@@ -306,12 +308,69 @@ describe Bibliothecary do
   end
 
   it 'properly ignores directories based on ignored_dirs' do
+    files = Bibliothecary.load_file_list(".")
+    expect(files.select {|item| item.start_with?("spec/") }.length).to be > 1
+
     Bibliothecary.configure do |config|
       config.ignored_dirs.push("spec")
     end
 
     files = Bibliothecary.load_file_list(".")
-    expect(files.select {|item| /^\.\/spec/.match(item) }).to eq []
+    expect(files.select {|item| item.start_with?("spec/") }).to eq []
+
+    Bibliothecary.reset
+  end
+
+  it 'properly ignores files based on ignored_files' do
+    files = Bibliothecary.load_file_list(".")
+    expect(files.select {|item| item.end_with?("spec/fixtures/package.json") }.length).to eq(1)
+
+    Bibliothecary.configure do |config|
+      config.ignored_files.push("spec/fixtures/package.json")
+    end
+
+    files = Bibliothecary.load_file_list(".")
+    expect(files.select {|item| item.end_with?("spec/fixtures/package.json") }).to eq []
+
+    Bibliothecary.reset
+  end
+
+  it 'only ignores directories that match by full relative path' do
+    files = Bibliothecary.load_file_list(".")
+    expect(files.select {|item| item.start_with?("spec/fixtures/") }.length).to be > 1
+
+    Bibliothecary.configure do |config|
+      config.ignored_dirs.push("fixtures")
+    end
+
+    files = Bibliothecary.load_file_list(".")
+    expect(files.select {|item| item.start_with?("spec/fixtures/") }.length).to be > 1
+
+    Bibliothecary.reset
+  end
+
+  it 'ignores directories and files correctly when doing identify_manifests' do
+    all_files = ["Gemfile", "something/package.json", "something/Gemfile", "Gemfile.lock", "hello/package.json"].sort
+    files = Bibliothecary.identify_manifests(all_files).sort
+    expect(files).to eq(all_files)
+
+    Bibliothecary.configure do |config|
+      # should be ignored along with its child file;
+      # should NOT cause Gemfile.lock to be ignored just because it
+      # starts with "Gemfile"
+      config.ignored_dirs.push("Gemfile")
+      # should not be ignored because inside "something"
+      config.ignored_dirs.push("package.json")
+      # should be ignored
+      config.ignored_files.push("hello/package.json")
+      # should not be ignored when inside "something"
+      config.ignored_files.push("package.json")
+    end
+
+    files = Bibliothecary.identify_manifests(all_files).sort
+    expect(files).to eq(["Gemfile.lock", "something/Gemfile", "something/package.json"])
+
+    Bibliothecary.reset
   end
 
   it 'does not include directories in file list' do

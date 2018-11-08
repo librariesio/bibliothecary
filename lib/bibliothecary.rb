@@ -49,10 +49,11 @@ module Bibliothecary
   def self.load_file_info_list(path)
     file_list = []
     Find.find(path) do |subpath|
-      Find.prune if FileTest.directory?(subpath) && ignored_dirs.include?(File.basename(subpath))
-      next unless FileTest.file?(subpath)
-
       info = FileInfo.new(path, subpath)
+      Find.prune if FileTest.directory?(subpath) && ignored_dirs.include?(info.relative_path)
+      next unless FileTest.file?(subpath)
+      next if ignored_files.include?(info.relative_path)
+
       init_package_manager(info)
 
       file_list.push(info)
@@ -72,7 +73,17 @@ module Bibliothecary
   # because this API is used by libraries.io and we don't want to
   # download all .xml files from GitHub.
   def self.identify_manifests(file_list)
-    allowed_file_list = file_list.reject{|f| f.start_with?(*ignored_dirs) }
+    ignored_dirs_with_slash = ignored_dirs.map do |d|
+      if d.end_with?("/")
+        d
+      else
+        d + "/"
+      end
+    end
+    allowed_file_list = file_list.reject do |f|
+      ignored_dirs.include?(f) || f.start_with?(*ignored_dirs_with_slash)
+    end
+    allowed_file_list = allowed_file_list.reject{|f| ignored_files.include?(f)}
     package_managers.map do |pm|
       allowed_file_list.select do |file_path|
         # this is a call to match? without file contents, which will skip
@@ -85,8 +96,13 @@ module Bibliothecary
   def self.package_managers
     Bibliothecary::Parsers.constants.map{|c| Bibliothecary::Parsers.const_get(c) }.sort_by{|c| c.to_s.downcase }
   end
+
   def self.ignored_dirs
     configuration.ignored_dirs
+  end
+
+  def self.ignored_files
+    configuration.ignored_files
   end
 
   class << self
