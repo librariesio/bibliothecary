@@ -73,13 +73,7 @@ module Bibliothecary
   # because this API is used by libraries.io and we don't want to
   # download all .xml files from GitHub.
   def self.identify_manifests(file_list)
-    ignored_dirs_with_slash = ignored_dirs.map do |d|
-      if d.end_with?("/")
-        d
-      else
-        d + "/"
-      end
-    end
+    ignored_dirs_with_slash = ignored_dirs.map { |d| if d.end_with?("/") then d else d + "/" end }
     allowed_file_list = file_list.reject do |f|
       ignored_dirs.include?(f) || f.start_with?(*ignored_dirs_with_slash)
     end
