@@ -30,7 +30,7 @@ module Bibliothecary
             kind: 'lockfile',
             parser: :parse_ivy_report
           },
-          /^tidelift-gradle-resolved\.txt|.*\/tidelift-gradle-resolved\.txt$/i => {
+          /^gradle-dependencies-q\.txt|.*\/gradle-dependencies-q\.txt$/i => {
             kind: 'manifest',
             parser: :parse_gradle_resolved
           }
@@ -88,17 +88,22 @@ module Bibliothecary
       def self.parse_gradle_resolved(file_contents)
         type = nil
         file_contents.split("\n").map do |line|
-          type = GRADLE_TYPE_REGEX.match(line).captures[0] if GRADLE_TYPE_REGEX.match(line)
+          type_match = GRADLE_TYPE_REGEX.match(line)
+          type = type_match.captures[0] if type_match
 
-          if GRADLE_DEP_REGEX.match(line)
-            split = GRADLE_DEP_REGEX.match(line).captures[0]
-            dep = line.split(split)[1].sub(/\(n\)$/, "").sub(/\(\*\)$/,"").strip.split(":")
-            {
-              name: dep[0, dep.length - 1].join(":"),
-              requirement: dep[-1],
-              type: type
-            }
-          end
+          gradle_dep_match = GRADLE_DEP_REGEX.match(line)
+          next unless gradle_dep_match
+
+          split = gradle_dep_match.captures[0]
+
+          # org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
+          # Lines can end with (n) or (*) to indicate that something was not resolved (n) or resolved previously (*).
+          dep = line.split(split)[1].sub(/\(n\)$/, "").sub(/\(\*\)$/,"").strip.split(":")
+          {
+            name: dep[0, dep.length - 1].join(":"),
+            requirement: dep[-1],
+            type: type
+          }
         end.compact
       end
 
