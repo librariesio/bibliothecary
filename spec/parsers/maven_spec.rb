@@ -263,4 +263,12 @@ describe Bibliothecary::Parsers::Maven do
     # not an ivy-report because bad xml
     expect(described_class.match?(fixture_path('ivy_reports/invalid_syntax.xml'))).to be_falsey
   end
+
+  it 'parses dependencies from tidelift-gradle-resolved.txt' do
+    deps = described_class.analyse_contents('tidelift-gradle-resolved.txt', load_fixture('tidelift-gradle-resolved.txt'))
+    expect(deps[:kind]).to eq 'manifest'
+    guavas = deps[:dependencies].select {|item| item[:name] == "com.google.guava:guava" && item[:type] == "api"}
+    expect(guavas.length).to eq 1
+    expect(guavas[0][:requirement]).to eq '25.1-jre'
+  end
 end

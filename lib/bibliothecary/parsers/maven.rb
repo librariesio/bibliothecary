@@ -5,6 +5,12 @@ module Bibliothecary
     class Maven
       include Bibliothecary::Analyser
 
+      # e.g. "annotationProcessor - Annotation processors and their dependencies for source set 'main'."
+      GRADLE_TYPE_REGEX = /^(\w+)/
+
+      # "|    \\--- com.google.guava:guava:23.5-jre (*)"
+      GRADLE_DEP_REGEX = /(\+---|\\---){1}/
+
       def self.mapping
         {
           /^ivy\.xml$|.*\/ivy\.xml$/i => {
@@ -24,6 +30,10 @@ module Bibliothecary
             kind: 'lockfile',
             parser: :parse_ivy_report
           },
+          /^tidelift-gradle-resolved\.txt|.*\/tidelift-gradle-resolved\.txt$/i => {
+            kind: 'manifest',
+            parser: :parse_gradle_resolved
+          }
         }
       end
 
@@ -72,6 +82,23 @@ module Bibliothecary
             requirement: version,
             type: type
           }
+        end.compact
+      end
+
+      def self.parse_gradle_resolved(file_contents)
+        type = nil
+        file_contents.split("\n").map do |line|
+          type = GRADLE_TYPE_REGEX.match(line).captures[0] if GRADLE_TYPE_REGEX.match(line)
+
+          if GRADLE_DEP_REGEX.match(line)
+            split = GRADLE_DEP_REGEX.match(line).captures[0]
+            dep = line.split(split)[1].sub(/\(n\)$/, "").sub(/\(\*\)$/,"").strip.split(":")
+            {
+              name: dep[0, dep.length - 1].join(":"),
+              requirement: dep[-1],
+              type: type
+            }
+          end
         end.compact
       end
 
