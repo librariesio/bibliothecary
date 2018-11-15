@@ -31,7 +31,7 @@ module Bibliothecary
             parser: :parse_ivy_report
           },
           /^gradle-dependencies-q\.txt|.*\/gradle-dependencies-q\.txt$/i => {
-            kind: 'manifest',
+            kind: 'lockfile',
             parser: :parse_gradle_resolved
           }
         }
@@ -99,9 +99,11 @@ module Bibliothecary
           # org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
           # Lines can end with (n) or (*) to indicate that something was not resolved (n) or resolved previously (*).
           dep = line.split(split)[1].sub(/\(n\)$/, "").sub(/\(\*\)$/,"").strip.split(":")
+          version = dep[-1]
+          version = version.split("->")[-1].strip if line.include?("->")
           {
             name: dep[0, dep.length - 1].join(":"),
-            requirement: dep[-1],
+            requirement: version,
             type: type
           }
         end.compact

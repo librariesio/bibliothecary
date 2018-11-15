@@ -266,7 +266,7 @@ describe Bibliothecary::Parsers::Maven do
 
   it 'parses dependencies from gradle-dependencies-q.txt' do
     deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle-dependencies-q.txt'))
-    expect(deps[:kind]).to eq 'manifest'
+    expect(deps[:kind]).to eq 'lockfile'
     guavas = deps[:dependencies].select {|item| item[:name] == "com.google.guava:guava" && item[:type] == "api"}
     expect(guavas.length).to eq 1
     expect(guavas[0][:requirement]).to eq '25.1-jre'
