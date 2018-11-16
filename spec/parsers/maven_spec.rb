@@ -276,26 +276,17 @@ describe Bibliothecary::Parsers::Maven do
     deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle-dependencies-q.txt'))
 
     compile_classpath = deps[:dependencies].select {|item| item[:type] == "compileClasspath"}
-    expect(compile_classpath.length).to eq 262
-    expect(compile_classpath.select {|item| item[:name] == "org.apache.commons:commons-lang3"}.length).to eq 1
-
-    runtime_classpath = deps[:dependencies].select {|item| item[:type] == "runtimeClasspath"}
-
-    expect(runtime_classpath.length).to eq 259
-    expect(runtime_classpath.select {|item| item[:name] == "com.google.guava:guava"}.length).to eq 1
+    expect(compile_classpath.length > 0).to be true
 
     test_runtime_only = deps[:dependencies].select {|item| item[:type] == "testRuntimeOnly"}
 
     expect(test_runtime_only.length).to eq 0
+  end
 
-    test_runtime_classpath = deps[:dependencies].select {|item| item[:type] == "testRuntimeClasspath"}
+  it 'eliminates dulicates from gradle-dependencies-q.txt' do
+    deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle-dependencies-q.txt'))
 
-    expect(test_runtime_classpath.length).to eq 312
-    expect(test_runtime_classpath.select {|item| item[:name] == "org.glassfish.jaxb:jaxb-runtime"}.length).to eq 1
-
-    test_compile_classpath = deps[:dependencies].select {|item| item[:type] == "testRuntimeClasspath"}
-
-    expect(test_compile_classpath.length).to eq 312
-    expect(test_runtime_classpath.select {|item| item[:name] == "org.slf4j:jul-to-slf4j"}.length).to eq 2
+    commons_io = deps[:dependencies].select {|item| item[:name] == 'commons-io:commons-io' && item[:requirement] == '2.6'}
+    expect(commons_io.length).to eq 1
   end
 end
