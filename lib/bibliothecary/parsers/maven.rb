@@ -5,6 +5,12 @@ module Bibliothecary
     class Maven
       include Bibliothecary::Analyser
 
+      # e.g. "annotationProcessor - Annotation processors and their dependencies for source set 'main'."
+      GRADLE_TYPE_REGEX = /^(\w+)/
+
+      # "|    \\--- com.google.guava:guava:23.5-jre (*)"
+      GRADLE_DEP_REGEX = /(\+---|\\---){1}/
+
       def self.mapping
         {
           /^ivy\.xml$|.*\/ivy\.xml$/i => {
@@ -24,6 +30,10 @@ module Bibliothecary
             kind: 'lockfile',
             parser: :parse_ivy_report
           },
+          /^gradle-dependencies-q\.txt|.*\/gradle-dependencies-q\.txt$/i => {
+            kind: 'lockfile',
+            parser: :parse_gradle_resolved
+          }
         }
       end
 
@@ -73,6 +83,30 @@ module Bibliothecary
             type: type
           }
         end.compact
+      end
+
+      def self.parse_gradle_resolved(file_contents)
+        type = nil
+        file_contents.split("\n").map do |line|
+          type_match = GRADLE_TYPE_REGEX.match(line)
+          type = type_match.captures[0] if type_match
+
+          gradle_dep_match = GRADLE_DEP_REGEX.match(line)
+          next unless gradle_dep_match
+
+          split = gradle_dep_match.captures[0]
+
+          # org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
+          # Lines can end with (n) or (*) to indicate that something was not resolved (n) or resolved previously (*).
+          dep = line.split(split)[1].sub(/\(n\)$/, "").sub(/\(\*\)$/,"").strip.split(":")
+          version = dep[-1]
+          version = version.split("->")[-1].strip if line.include?("->")
+          {
+            name: dep[0, dep.length - 1].join(":"),
+            requirement: version,
+            type: type
+          }
+        end.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
       end
 
       def self.parse_pom_manifest(file_contents)
