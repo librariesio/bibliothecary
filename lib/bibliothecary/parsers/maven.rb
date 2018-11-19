@@ -106,7 +106,7 @@ module Bibliothecary
             requirement: version,
             type: type
           }
-        end.compact.uniq {|item| [item[:name], item[:requirement]]}
+        end.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
       end
 
       def self.parse_pom_manifest(file_contents)
