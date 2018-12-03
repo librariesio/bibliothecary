@@ -40,10 +40,15 @@ module Bibliothecary
       def self.parse_package_lock(file_contents)
         manifest = JSON.parse(file_contents)
         manifest.fetch('dependencies',[]).map do |name, requirement|
+          if requirement.fetch("dev", false)
+            type = 'development'
+          else
+            type = 'runtime'
+          end
           {
             name: name,
             requirement: requirement["version"],
-            type: 'runtime'
+            type: type
           }
         end
       end
