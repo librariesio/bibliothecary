@@ -89,6 +89,28 @@ describe Bibliothecary::Parsers::NPM do
     })
   end
 
+  it 'parses newer package-lock.json with dev and integrity fields' do
+    analysis = described_class.analyse_contents('2018-package-lock/package-lock.json', load_fixture('2018-package-lock/package-lock.json'))
+    expect(analysis.select { |k,v| k != :dependencies }).to eq({
+      platform: "npm",
+      path: "2018-package-lock/package-lock.json",
+      kind: 'lockfile',
+      success: true
+    })
+
+    # spot-check dependencies to avoid having them all inline here.
+    # Mostly for this "2018" lock file we want to be sure dev=true becomes
+    # type=development
+    dependencies = analysis[:dependencies]
+    expect(dependencies[0]).to eq({
+                                    :name => "@vue/test-utils",
+                                    :requirement => "1.0.0-beta.13",
+                                    :type => "runtime"
+                                  })
+    expect(dependencies.select { |dep| dep[:type] == "runtime" }.length).to eq(242)
+    expect(dependencies.select { |dep| dep[:type] == "development" }.length).to eq(905)
+  end
+
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('package.json')).to be_truthy
     expect(described_class.match?('npm-shrinkwrap.json')).to be_truthy
