@@ -79,6 +79,17 @@ describe Bibliothecary::Parsers::NPM do
     })
   end
 
+  it 'wont load package-lock.json from a package.json' do
+    expect(described_class.analyse_contents('package.json', load_fixture('package-lock.json'))).to eq({
+      platform: "npm",
+      path: "package.json",
+      dependencies: nil,
+      kind: 'manifest',
+      success: false,
+      error_message: "package.json: appears to be a lockfile rather than manifest format"
+    })
+  end
+
   it 'parses dependencies from package-lock.json' do
     expect(described_class.analyse_contents('package-lock.json', load_fixture('package-lock.json'))).to eq({
       :platform=>"npm",
