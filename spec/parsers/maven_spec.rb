@@ -89,7 +89,7 @@ describe Bibliothecary::Parsers::Maven do
   it 'raises FileParsingError on a broken pom.xml' do
     expect {
       described_class.parse_file('pom.xml', load_fixture('broken/pom.xml'))
-    }.to raise_error(Bibliothecary::FileParsingError, "pom.xml: invalid format, expected < at line 1, column 1 [parse.c:147]")
+    }.to raise_error(Bibliothecary::FileParsingError)
   end
 
   it 'parses dependencies from pom2.xml' do
