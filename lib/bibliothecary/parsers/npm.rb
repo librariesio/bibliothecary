@@ -55,6 +55,7 @@ module Bibliothecary
 
       def self.parse_manifest(file_contents)
         manifest = JSON.parse(file_contents)
+        raise "appears to be a lockfile rather than manifest format" if manifest.key?('lockfileVersion')
         map_dependencies(manifest, 'dependencies', 'runtime') +
         map_dependencies(manifest, 'devDependencies', 'development')
       end
