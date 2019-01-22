@@ -1,2 +1,2 @@
 ci:
-  extra_ignore_directories: [ fixtures ]
+  extra_ignore_directories: [ spec/fixtures ]
