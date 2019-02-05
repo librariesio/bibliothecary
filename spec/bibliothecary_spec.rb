@@ -183,6 +183,7 @@ describe Bibliothecary do
     analysis.each do |a|
       a[:dependencies] = []
     end
+
     expect(analysis).to eq(
       [{:platform=>"maven",
         :path=>"com.example-hello_2.12-compile.xml",
