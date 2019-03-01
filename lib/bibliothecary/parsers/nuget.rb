@@ -52,7 +52,7 @@ module Bibliothecary
         manifest.packages.locate('package').map do |dependency|
           {
             name: dependency.id,
-            requirement: dependency.version,
+            requirement: (dependency.version if dependency.respond_to? "version") || "*",
             type: 'runtime'
           }
         end
@@ -65,7 +65,7 @@ module Bibliothecary
         packages = manifest.locate('ItemGroup/PackageReference').map do |dependency|
           {
             name: dependency.Include,
-            requirement: dependency.Version,
+            requirement: (dependency.Version if dependency.respond_to? "Version") || "*",
             type: 'runtime'
           }
         end
