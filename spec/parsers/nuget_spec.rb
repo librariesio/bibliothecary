@@ -568,6 +568,19 @@ describe Bibliothecary::Parsers::Nuget do
     })
   end
 
+  it 'parses dependencies from example-no-version.csproj' do
+    expect(described_class.analyse_contents('example.csproj', load_fixture('example-no-version.csproj'))).to eq({
+      :platform=>"nuget",
+      :path=>"example.csproj",
+      :dependencies=>[
+        {:name=>"Microsoft.AspNetCore.App", :requirement=>"*", :type=>"runtime"},
+        {:name=>"Microsoft.AspNetCore.Razor.Design", :requirement=>"2.2.0", :type=>"runtime"}
+      ],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
   it 'parses dependencies from example.nuspec' do
     expect(described_class.analyse_contents('example.nuspec', load_fixture('example.nuspec'))).to eq({
       :platform=>"nuget",
