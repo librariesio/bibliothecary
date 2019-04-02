@@ -209,7 +209,12 @@ module Bibliothecary
         manifest.dependencies.inject([]) do |deps, dep|
           deps.push({
             name: dep.name,
-            requirement: dep.requirement.to_s,
+            requirement: dep
+              .requirement
+              .requirements
+              .sort_by(&:last)
+              .map { |op, version| "#{op} #{version}" }
+              .join(", "),
             type: dep.type
           })
         end.uniq
