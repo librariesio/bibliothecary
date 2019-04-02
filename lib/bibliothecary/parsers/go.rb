@@ -10,35 +10,35 @@ module Bibliothecary
 
       def self.mapping
         {
-          /(^glide\.yaml$|.*\/glide\.yaml$)/ => {
+          match_filename("glide.yaml") => {
             kind: 'manifest',
             parser: :parse_glide_yaml
           },
-          /(^glide\.lock$|.*\/glide\.lock$)/ => {
+          match_filename("glide.lock") => {
             kind: 'lockfile',
             parser: :parse_glide_lockfile
           },
-          /(^Godeps\/Godeps\.json$|.*\/Godeps\/Godeps\.json$)/ => {
+          match_filename("Godeps/Godeps.json") => {
             kind: 'manifest',
             parser: :parse_godep_json
           },
-          /(^Godeps$|.*\/Godeps$)/i => {
+          match_filename("Godeps", case_insensitive: true) => {
             kind: 'manifest',
             parser: :parse_gpm
           },
-          /(^vendor\/manifest$|.*\/vendor\/manifest$)/ => {
+          match_filename("vendor/manifest") => {
             kind: 'manifest',
             parser: :parse_gb_manifest
           },
-          /(^vendor\/vendor.json$|.*\/vendor\/vendor.json$)/ => {
+          match_filename("vendor/vendor.json") => {
             kind: 'manifest',
             parser: :parse_govendor
           },
-          /(^Gopkg\.toml$|.*\/Gopkg\.toml$)/ => {
+          match_filename("Gopkg.toml") => {
             kind: 'manifest',
             parser: :parse_dep_toml
           },
-          /(^Gopkg\.lock$|.*\/Gopkg\.lock$)/ => {
+          match_filename("Gopkg.lock") => {
             kind: 'lockfile',
             parser: :parse_dep_lockfile
           },

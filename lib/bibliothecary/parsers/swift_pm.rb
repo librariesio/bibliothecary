@@ -5,7 +5,7 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^Package\.swift$|.*\/Package\.swift$/i => {
+          match_filename("Package.swift", case_insensitive: true) => {
             kind: 'manifest',
             parser: :parse_package_swift
           }

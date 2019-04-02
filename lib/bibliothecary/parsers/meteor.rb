@@ -7,7 +7,7 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^versions\.json$|.*\/versions\.json$/ => {
+          match_filename("versions.json") => {
             kind: 'manifest',
             parser: :parse_json_runtime_manifest
           }

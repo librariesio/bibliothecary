@@ -7,19 +7,19 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^package\.json$|.*\/package\.json$/ => {
+          match_filename("package.json") => {
             kind: 'manifest',
             parser: :parse_manifest
           },
-          /^npm-shrinkwrap\.json$|.*\/npm-shrinkwrap\.json$/ => {
+          match_filename("npm-shrinkwrap.json") => {
             kind: 'lockfile',
             parser: :parse_shrinkwrap
           },
-          /^yarn\.lock$|.*\/yarn.lock$/ => {
+          match_filename("yarn.lock") => {
             kind: 'lockfile',
             parser: :parse_yarn_lock
           },
-          /^package-lock\.json$|.*\/package-lock\.json$/ => {
+          match_filename("package-lock.json") => {
             kind: 'lockfile',
             parser: :parse_package_lock
           }

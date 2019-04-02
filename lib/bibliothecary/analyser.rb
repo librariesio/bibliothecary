@@ -25,8 +25,8 @@ module Bibliothecary
       base.extend(ClassMethods)
     end
     module ClassMethods
-      def mapping_entry_match?(regex, details, info)
-        if info.relative_path.match(regex)
+      def mapping_entry_match?(matcher, details, info)
+        if matcher.call(info.relative_path)
           # we only want to load contents if we don't have them already
           # and there's a content_matcher method to use
           return true if details[:content_matcher].nil?
@@ -41,8 +41,8 @@ module Bibliothecary
       end
 
       def parse_file(filename, contents)
-        mapping.each do |regex, details|
-          if mapping_entry_match?(regex, details, FileInfo.new(nil, filename, contents))
+        mapping.each do |matcher, details|
+          if mapping_entry_match?(matcher, details, FileInfo.new(nil, filename, contents))
             begin
               # The `parser` method should raise an exception if the file is malformed,
               # should return empty [] if the file is fine but simply doesn't contain
@@ -73,8 +73,8 @@ module Bibliothecary
       end
 
       def match_info?(info)
-        mapping.any? do |regex, details|
-          mapping_entry_match?(regex, details, info)
+        mapping.any? do |matcher, details|
+          mapping_entry_match?(matcher, details, info)
         end
       end
 
@@ -182,8 +182,8 @@ module Bibliothecary
       end
 
       def determine_kind_from_info(info)
-        mapping.each do |regex, details|
-          if mapping_entry_match?(regex, details, info)
+        mapping.each do |matcher, details|
+          if mapping_entry_match?(matcher, details, info)
             return details[:kind]
           end
         end
@@ -197,8 +197,8 @@ module Bibliothecary
       end
 
       def determine_can_have_lockfile_from_info(info)
-        mapping.each do |regex, details|
-          if mapping_entry_match?(regex, details, info)
+        mapping.each do |matcher, details|
+          if mapping_entry_match?(matcher, details, info)
             return details.fetch(:can_have_lockfile, true)
           end
         end
@@ -218,6 +218,29 @@ module Bibliothecary
             type: dep.type
           })
         end.uniq
+      end
+
+      def match_filename(filename, case_insensitive: false)
+        if case_insensitive
+          lambda { |path| path.downcase == filename.downcase || path.downcase.end_with?("/" + filename.downcase) }
+        else
+          lambda { |path| path == filename || path.end_with?("/" + filename) }
+        end
+      end
+
+      def match_filenames(*filenames)
+        lambda do |path|
+          filenames.any? { |f| path == f } ||
+            filenames.any? { |f| path.end_with?("/" + f) }
+        end
+      end
+
+      def match_extension(filename, case_insensitive: false)
+        if case_insensitive
+          lambda { |path| path.downcase.end_with?(filename.downcase) }
+        else
+          lambda { |path| path.end_with?(filename) }
+        end
       end
     end
   end
