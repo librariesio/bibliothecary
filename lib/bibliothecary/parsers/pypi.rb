@@ -6,24 +6,25 @@ module Bibliothecary
       INSTALL_REGEXP = /install_requires\s*=\s*\[([\s\S]*?)\]/
       REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)([><=\w\.,]+)?/
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
+      MANIFEST_REGEXP = /.*require[^\/]*(\/)?[^\/]*\.(txt|pip)$/
 
       def self.mapping
         {
-          /.*require[^\/]*(\/)?[^\/]*\.(txt|pip)$/ => {
+          lambda { |p| MANIFEST_REGEXP.match(p) } => {
             kind: 'manifest',
             parser: :parse_requirements_txt,
             can_have_lockfile: false
           },
-          /^setup\.py$|.*\/setup.py$/ => {
+          match_filename("setup.py") => {
             kind: 'manifest',
             parser: :parse_setup_py,
             can_have_lockfile: false
           },
-          /^Pipfile$|.*\/Pipfile$/ => {
+          match_filename("Pipfile") => {
             kind: 'manifest',
             parser: :parse_pipfile
           },
-          /^Pipfile\.lock$|.*\/Pipfile\.lock$/ => {
+          match_filename("Pipfile.lock") => {
             kind: 'lockfile',
             parser: :parse_pipfile_lock
           }

@@ -5,15 +5,15 @@ module Bibliothecary
 
       def self.mapping
         {
-          /(^Cartfile$|.*\/Cartfile$)/ => {
+          match_filename("Cartfile") => {
             kind: 'manifest',
             parser: :parse_cartfile
           },
-          /(^Cartfile\.private$|.*\/Cartfile\.private$)/ => {
+          match_filename("Cartfile.private") => {
             kind: 'manifest',
             parser: :parse_cartfile_private
           },
-          /(^Cartfile\.resolved$|.*\/Cartfile\.resolved$)/ => {
+          match_filename("Cartfile.resolved") => {
             kind: 'lockfile',
             parser: :parse_cartfile_resolved
           }
