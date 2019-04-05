@@ -148,6 +148,7 @@ module Bibliothecary
         value = field.nodes.first
         match = value.match(/^\$\{(.+)\}/)
         if match
+          return value unless xml.respond_to? 'properties'
           prop_field = xml.properties.locate(match[1]).first
           if prop_field
             return prop_field.nodes.first
