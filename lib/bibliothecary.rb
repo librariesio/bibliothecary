@@ -40,6 +40,10 @@ module Bibliothecary
     runner.package_managers
   end
 
+  def self.find_manifests(path)
+    runner.find_manifests(path)
+  end
+
   def self.ignored_dirs
     configuration.ignored_dirs
   end

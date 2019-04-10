@@ -378,4 +378,9 @@ describe Bibliothecary do
     files = Bibliothecary.load_file_list(".")
     expect(files.select {|item| FileTest.directory?(item) }).to eq []
   end
+
+  it 'identifies all detected manifests in a subdirectory' do
+    manifests = Bibliothecary.find_manifests("spec/fixtures/multimanifest_dir/")
+    expect(manifests).to eq ["Gemfile", "Gemfile.lock", "com.example-hello_2.12-compile.xml", "package-lock.json", "package.json", "pom.xml", "setup.py", "subdir/Gemfile", "subdir/Gemfile.lock", "yarn.lock"]
+  end
 end

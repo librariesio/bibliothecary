@@ -61,6 +61,10 @@ module Bibliothecary
       file_list
     end
 
+    def find_manifests(path)
+      load_file_info_list(path).reject { |info| info.package_manager.nil? }.map { |info| info.relative_path }
+    end
+
     def analyse_file(file_path, contents)
       package_managers.select { |pm| pm.match?(file_path, contents) }.map do |pm|
         pm.analyse_contents(file_path, contents)
