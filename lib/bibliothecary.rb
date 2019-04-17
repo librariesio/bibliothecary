@@ -4,6 +4,7 @@ require "bibliothecary/configuration"
 require "bibliothecary/runner"
 require "bibliothecary/exceptions"
 require "bibliothecary/file_info"
+require "bibliothecary/path_info"
 require "find"
 
 Dir[File.expand_path('../bibliothecary/parsers/*.rb', __FILE__)].each do |file|
