@@ -1,5 +1,5 @@
 module Bibliothecary
-  class PathInfo
+  class RelatedFilesInfo
     attr_reader :folder_path
     attr_reader :platform
     attr_reader :manifests
@@ -11,7 +11,7 @@ module Bibliothecary
       paths.values.each do |path|
         same_pm = path.group_by { |info| info.package_manager}
         same_pm.values.each do |value|
-          returns.append(PathInfo.new(value))
+          returns.append(RelatedFilesInfo.new(value))
         end
       end
       returns

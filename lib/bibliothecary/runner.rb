@@ -62,7 +62,7 @@ module Bibliothecary
     end
 
     def find_manifests(path)
-        PathInfo.create_from_file_infos(load_file_info_list(path).reject { |info| info.package_manager.nil? })
+        RelatedFilesInfo.create_from_file_infos(load_file_info_list(path).reject { |info| info.package_manager.nil? })
     end
 
     def analyse_file(file_path, contents)
