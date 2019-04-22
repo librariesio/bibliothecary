@@ -387,12 +387,12 @@ describe Bibliothecary do
     expect(rubies.length).to eq 2
     expect(rubies.first.lockfiles).to eq ["Gemfile.lock"]
     expect(rubies.first.manifests).to eq ["Gemfile"]
-    expect(rubies.map(&:relative_folder_path)).to match_array [".", "subdir"]
+    expect(rubies.map(&:path)).to match_array [".", "subdir"]
 
     pythons = related_file_infos.select { |info| info.platform == "pypi"}
     expect(pythons.length).to eq 1
     expect(pythons.first.manifests).to eq ["setup.py"]
     expect(pythons.first.lockfiles).to eq []
-    expect(pythons.first.relative_folder_path).to eq "."
+    expect(pythons.first.path).to eq "."
   end
 end
