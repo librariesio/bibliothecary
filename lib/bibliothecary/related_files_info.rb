@@ -1,6 +1,6 @@
 module Bibliothecary
   class RelatedFilesInfo
-    attr_reader :folder_path
+    attr_reader :path
     attr_reader :platform
     attr_reader :manifests
     attr_reader :lockfiles
@@ -20,7 +20,7 @@ module Bibliothecary
     def initialize(file_infos)
       package_manager = file_infos.first.package_manager
       @platform = package_manager.platform_name
-      @folder_path = File.join(file_infos.first.folder_path, File.dirname(file_infos.first.relative_path))
+      @path = Pathname.new(File.dirname(file_infos.first.relative_path)).cleanpath.to_path
       @manifests = file_infos.select { |info| package_manager.determine_kind_from_info(info) == "manifest" }.map { |info| File.basename(info.relative_path) }
       @lockfiles = file_infos.select { |info| package_manager.determine_kind_from_info(info) == "lockfile" }.map { |info| File.basename(info.relative_path) }
     end
