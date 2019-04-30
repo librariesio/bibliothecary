@@ -203,13 +203,23 @@ module Bibliothecary
         return [] unless determine_can_have_lockfile_from_info(info)
 
         kind = determine_kind_from_info(info)
+        relate_to_kind = first_matching_mapping_details(info)
+          .fetch(:related_to, %w(manifest lockfile).reject { |k| k == kind })
         dirname = File.dirname(info.relative_path)
+
         infos
-          .reject { |i| determine_kind_from_info(i) == kind }
+          .reject { |i| i == info }
+          .select { |i| relate_to_kind.include?(determine_kind_from_info(i)) }
           .select { |i| File.dirname(i.relative_path) == dirname }
           .select(&method(:determine_can_have_lockfile_from_info))
           .map(&:relative_path)
           .sort
+      end
+
+      def first_matching_mapping_details(info)
+        mapping
+          .find { |matcher, details| mapping_entry_match?(matcher, details, info) }
+          &.last || {}
       end
     end
   end
