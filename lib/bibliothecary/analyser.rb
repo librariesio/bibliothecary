@@ -41,26 +41,24 @@ module Bibliothecary
       end
 
       def parse_file(filename, contents)
-        mapping.each do |matcher, details|
-          if mapping_entry_match?(matcher, details, FileInfo.new(nil, filename, contents))
-            begin
-              # The `parser` method should raise an exception if the file is malformed,
-              # should return empty [] if the file is fine but simply doesn't contain
-              # any dependencies, and should never return nil. At the time of writing
-              # this comment, some of the parsers return [] or nil to mean an error
-              # which is confusing to users.
-              return send(details[:parser], contents)
-            rescue Exception => e # default is StandardError but C bindings throw Exceptions
-              # the C xml parser also puts a newline at the end of the message
-              raise Bibliothecary::FileParsingError.new(e.message.strip, filename)
-            end
-          end
-        end
+        details = first_matching_mapping_details(FileInfo.new(nil, filename, contents))
+
         # this can be raised if we don't check match?/match_info?,
         # OR don't have the file contents when we check them, so
         # it turns out for example that a .xml file isn't a
         # manifest after all.
-        raise Bibliothecary::FileParsingError.new("No parser for this file type", filename)
+        raise Bibliothecary::FileParsingError.new("No parser for this file type", filename) unless details[:parser]
+
+        # The `parser` method should raise an exception if the file is malformed,
+        # should return empty [] if the file is fine but simply doesn't contain
+        # any dependencies, and should never return nil. At the time of writing
+        # this comment, some of the parsers return [] or nil to mean an error
+        # which is confusing to users.
+        send(details[:parser], contents)
+
+      rescue Exception => e # default is StandardError but C bindings throw Exceptions
+        # the C xml parser also puts a newline at the end of the message
+        raise Bibliothecary::FileParsingError.new(e.message.strip, filename)
       end
 
       # this is broken with contents=nil because it can't look at file
@@ -73,9 +71,7 @@ module Bibliothecary
       end
 
       def match_info?(info)
-        mapping.any? do |matcher, details|
-          mapping_entry_match?(matcher, details, info)
-        end
+        first_matching_mapping_details(info).any?
       end
 
       def platform_name
@@ -136,12 +132,8 @@ module Bibliothecary
       end
 
       def determine_kind_from_info(info)
-        mapping.each do |matcher, details|
-          if mapping_entry_match?(matcher, details, info)
-            return details[:kind]
-          end
-        end
-        return nil
+        first_matching_mapping_details(info)
+          .fetch(:kind, nil)
       end
 
       # calling this with contents=nil can produce less-informed
@@ -151,12 +143,8 @@ module Bibliothecary
       end
 
       def determine_can_have_lockfile_from_info(info)
-        mapping.each do |matcher, details|
-          if mapping_entry_match?(matcher, details, info)
-            return details.fetch(:can_have_lockfile, true)
-          end
-        end
-        return true
+        first_matching_mapping_details(info)
+          .fetch(:can_have_lockfile, true)
       end
 
       def parse_ruby_manifest(manifest)
