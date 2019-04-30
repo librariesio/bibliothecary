@@ -102,64 +102,18 @@ module Bibliothecary
         end
       end
 
-      def set_related_paths_field(by_dirname_dest, by_dirname_source)
-        by_dirname_dest.each do |dirname, analyses|
-          analyses.each do |(info, analysis)|
-            source_analyses = by_dirname_source[dirname].map { |(info, source_analysis)| info.relative_path }
-            analysis[:related_paths] = source_analyses.sort
-          end
-        end
-      end
-
-      def add_related_paths(analyses)
-        analyses.each do |(info, analysis)|
-          analysis[:related_paths] = []
-        end
-
-        # associate manifests and lockfiles in the same directory;
-
-        # note that right now we're in the context of a single
-        # package manager, so manifest and lockfile in the
-        # same directory is considered proof that they are
-        # matched.
-
-        by_dirname = {
-          "manifest" => Hash.new { |h, k| h[k] = [] },
-          "lockfile" => Hash.new { |h, k| h[k] = [] }
-        }
-
-        analyses.each do |(info, analysis)|
-          dirname = File.dirname(info.relative_path)
-          by_dirname[analysis[:kind]][dirname].push([info, analysis])
-        end
-
-        by_dirname["manifest"].each do |_, manifests|
-          # This determine_can_have_lockfile in theory needs the file contents but
-          # in practice doesn't right now since the only mapping that needs
-          # file contents is a lockfile and not a manifest so won't reach here.
-          manifests.delete_if { |(info, manifest)| !determine_can_have_lockfile_from_info(info) }
-        end
-
-        set_related_paths_field(by_dirname["manifest"], by_dirname["lockfile"])
-        set_related_paths_field(by_dirname["lockfile"], by_dirname["manifest"])
-      end
-
       def analyse(folder_path, file_list)
         analyse_file_info(file_list.map { |full_path| FileInfo.new(folder_path, full_path) })
       end
 
       def analyse_file_info(file_info_list)
-        analyses = file_info_list.map do |info|
-          next unless match_info?(info)
-          [info, analyse_contents_from_info(info)]
+        matching_info = file_info_list
+          .select(&method(:match_info?))
+
+        matching_info.map do |info|
+          analyse_contents_from_info(info)
+            .merge(related_paths: related_paths(info, matching_info))
         end
-
-        # strip the ones we failed to analyse
-        analyses = analyses.reject { |(info, analysis)| analysis.nil? }
-
-        add_related_paths(analyses)
-
-        analyses.map { |(info, analysis)| analysis }
       end
 
       def analyse_contents(filename, contents)
@@ -241,6 +195,21 @@ module Bibliothecary
         else
           lambda { |path| path.end_with?(filename) }
         end
+      end
+
+      private
+
+      def related_paths(info, infos)
+        return [] unless determine_can_have_lockfile_from_info(info)
+
+        kind = determine_kind_from_info(info)
+        dirname = File.dirname(info.relative_path)
+        infos
+          .reject { |i| determine_kind_from_info(i) == kind }
+          .select { |i| File.dirname(i.relative_path) == dirname }
+          .select(&method(:determine_can_have_lockfile_from_info))
+          .map(&:relative_path)
+          .sort
       end
     end
   end
