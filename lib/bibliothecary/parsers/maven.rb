@@ -111,18 +111,17 @@ module Bibliothecary
 
       def self.parse_pom_manifest(file_contents)
         manifest = Ox.parse file_contents
-        if manifest.respond_to?('project')
-          xml = manifest.project
-        else
-          xml = manifest
-        end
-        return [] unless xml.respond_to?('dependencies')
-        xml.dependencies.locate('dependency').map do |dependency|
-          {
-            name: "#{extract_pom_dep_info(xml, dependency, 'groupId')}:#{extract_pom_dep_info(xml, dependency, 'artifactId')}",
-            requirement: extract_pom_dep_info(xml, dependency, 'version'),
-            type: extract_pom_dep_info(xml, dependency, 'scope') || 'runtime'
-          }
+        xml = manifest.respond_to?('project') ? manifest.project : manifest
+        [].tap do |deps|
+          ['dependencies/dependency', 'dependencyManagement/dependencies/dependency'].each do |deps_xpath|
+            xml.locate(deps_xpath).each do |dep|
+              deps.push({
+                name: "#{extract_pom_dep_info(xml, dep, 'groupId')}:#{extract_pom_dep_info(xml, dep, 'artifactId')}",
+                requirement: extract_pom_dep_info(xml, dep, 'version'),
+                type: extract_pom_dep_info(xml, dep, 'scope') || 'runtime'
+              })
+            end
+          end
         end
       end
 

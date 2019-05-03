@@ -79,7 +79,10 @@ describe Bibliothecary::Parsers::Maven do
         :type=>"runtime"},
         {:name=>"com.typesafe:config", :requirement=>"1.2.1", :type=>"runtime"},
         {:name=>"org.testng:testng", :requirement=>"6.8.7", :type=>"test"},
-        {:name=>"org.mockito:mockito-all", :requirement=>"1.8.4", :type=>"test"}
+        {:name=>"org.mockito:mockito-all", :requirement=>"1.8.4", :type=>"test"},
+        # From dependencyManagement section
+        {:name=>"org.apache.ant:ant", :requirement=>"1.9.2", :type=>"runtime"},
+        {:name=>"commons-lang:commons-lang",:requirement=>"2.6", :type=>"runtime"}
       ],
       kind: 'manifest',
       success: true
