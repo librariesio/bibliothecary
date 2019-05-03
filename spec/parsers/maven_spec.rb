@@ -174,7 +174,7 @@ describe Bibliothecary::Parsers::Maven do
         {:name=>"com.android.support:appcompat-v7", :requirement=>"23.1.1", :type=>"compile"},
         {:name=>"com.android.support:recyclerview-v7", :requirement=>"23.1.1", :type=>"compile"},
         {:name=>"com.android.support:design", :requirement=>"23.1.1", :type=>"compile"},
-        {:name=>"com.android.support:customtabs", :requirement=>"23.1.1", :type=>"compile"},
+        {:name=>"com.android.support:customtabs", :requirement=>"23.1.1", :type=>"compile"}
       ],
       kind: 'manifest',
       success: true

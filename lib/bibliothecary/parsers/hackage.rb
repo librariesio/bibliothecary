@@ -15,7 +15,7 @@ module Bibliothecary
           match_extension("cabal.config") => {
             kind: 'lockfile',
             parser: :parse_cabal_config
-          },
+          }
         }
       end
 

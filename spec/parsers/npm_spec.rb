@@ -102,7 +102,7 @@ describe Bibliothecary::Parsers::NPM do
 
   it 'parses newer package-lock.json with dev and integrity fields' do
     analysis = described_class.analyse_contents('2018-package-lock/package-lock.json', load_fixture('2018-package-lock/package-lock.json'))
-    expect(analysis.select { |k,v| k != :dependencies }).to eq({
+    expect(analysis.select { |k,_v| k != :dependencies }).to eq({
       platform: "npm",
       path: "2018-package-lock/package-lock.json",
       kind: 'lockfile',
