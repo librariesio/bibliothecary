@@ -53,7 +53,7 @@ module Bibliothecary
         doc = Ox.parse file_contents
         root = doc&.locate("ivy-report")&.first
         return !root.nil?
-      rescue Exception => e
+      rescue Exception => e # rubocop:disable Lint/RescueException
         # We rescue exception here since native libs can throw a non-StandardError
         # We don't want to throw errors during the matching phase, only during
         # parsing after we match.
