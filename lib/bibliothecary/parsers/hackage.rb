@@ -8,11 +8,11 @@ module Bibliothecary
 
       def self.mapping
         {
-          /.*\.cabal$/ => {
+          match_extension(".cabal") => {
             kind: 'manifest',
             parser: :parse_cabal
           },
-          /^cabal\.config$|.*\/cabal\.config$/ => {
+          match_extension("cabal.config") => {
             kind: 'lockfile',
             parser: :parse_cabal_config
           }

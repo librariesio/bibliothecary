@@ -13,24 +13,24 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^ivy\.xml$|.*\/ivy\.xml$/i => {
+          match_filename("ivy.xml", case_insensitive: true) => {
             kind: 'manifest',
             parser: :parse_ivy_manifest
           },
-          /^pom\.xml$|.*\/pom\.xml$/i => {
+          match_filename("pom.xml", case_insensitive: true) => {
             kind: 'manifest',
             parser: :parse_pom_manifest
           },
-          /^build.gradle$|.*\/build.gradle$/i => {
+          match_filename("build.gradle", case_insensitive: true) => {
             kind: 'manifest',
             parser: :parse_gradle
           },
-          /^.+.xml$/i => {
+          match_extension(".xml", case_insensitive: true) => {
             content_matcher: :ivy_report?,
             kind: 'lockfile',
             parser: :parse_ivy_report
           },
-          /^gradle-dependencies-q\.txt|.*\/gradle-dependencies-q\.txt$/i => {
+          match_filename("gradle-dependencies-q.txt", case_insensitive: true) => {
             kind: 'lockfile',
             parser: :parse_gradle_resolved
           }
@@ -148,6 +148,7 @@ module Bibliothecary
         value = field.nodes.first
         match = value.match(/^\$\{(.+)\}/)
         if match
+          return value unless xml.respond_to? 'properties'
           prop_field = xml.properties.locate(match[1]).first
           if prop_field
             return prop_field.nodes.first

@@ -5,7 +5,7 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^REQUIRE$|.*\/REQUIRE$/i => {
+          match_filename("REQUIRE", case_insensitive: true) => {
             kind: "manifest",
             parser: :parse_require
           }

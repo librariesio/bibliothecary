@@ -9,7 +9,7 @@ module Bibliothecary
 
       def self.mapping
         {
-          /(^DESCRIPTION$|.*\/DESCRIPTION$)/i => {
+          match_filename("DESCRIPTION", case_insensitive: true) => {
             kind: 'manifest',
             parser: :parse_description
           }

@@ -11,20 +11,20 @@ module Bibliothecary
 
       def self.mapping
         {
-          /(^Podfile$|.*\/Podfile$)/ => {
+          match_filename("Podfile") => {
             kind: 'manifest',
             parser: :parse_podfile
           },
-          /(^[A-Za-z0-9_-]+\.podspec$|.*\/[A-Za-z0-9_-]+\.podspec$)/ => {
+          match_extension(".podspec") => {
             kind: 'manifest',
             parser: :parse_podspec,
             can_have_lockfile: false
           },
-          /(^Podfile\.lock$|.*\/Podfile\.lock$)/ => {
+          match_filename("Podfile.lock") => {
             kind: 'lockfile',
             parser: :parse_podfile_lock
           },
-          /(^[A-Za-z0-9_-]+\.podspec.json$|.*\/[A-Za-z0-9_-]+\.podspec.json$)/ => {
+          match_extension(".podspec.json") => {
             kind: 'manifest',
             parser: :parse_json_manifest,
             can_have_lockfile: false

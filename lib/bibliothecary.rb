@@ -4,6 +4,7 @@ require "bibliothecary/configuration"
 require "bibliothecary/runner"
 require "bibliothecary/exceptions"
 require "bibliothecary/file_info"
+require "bibliothecary/related_files_info"
 require "find"
 
 Dir[File.expand_path('../bibliothecary/parsers/*.rb', __FILE__)].each do |file|
@@ -38,6 +39,10 @@ module Bibliothecary
 
   def self.package_managers
     runner.package_managers
+  end
+
+  def self.find_manifests(path)
+    runner.find_manifests(path)
   end
 
   def self.ignored_dirs

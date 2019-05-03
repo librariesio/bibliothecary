@@ -25,8 +25,8 @@ module Bibliothecary
       base.extend(ClassMethods)
     end
     module ClassMethods
-      def mapping_entry_match?(regex, details, info)
-        if info.relative_path.match(regex)
+      def mapping_entry_match?(matcher, details, info)
+        if matcher.call(info.relative_path)
           # we only want to load contents if we don't have them already
           # and there's a content_matcher method to use
           return true if details[:content_matcher].nil?
@@ -41,26 +41,24 @@ module Bibliothecary
       end
 
       def parse_file(filename, contents)
-        mapping.each do |regex, details|
-          if mapping_entry_match?(regex, details, FileInfo.new(nil, filename, contents))
-            begin
-              # The `parser` method should raise an exception if the file is malformed,
-              # should return empty [] if the file is fine but simply doesn't contain
-              # any dependencies, and should never return nil. At the time of writing
-              # this comment, some of the parsers return [] or nil to mean an error
-              # which is confusing to users.
-              return send(details[:parser], contents)
-            rescue Exception => e # default is StandardError but C bindings throw Exceptions
-              # the C xml parser also puts a newline at the end of the message
-              raise Bibliothecary::FileParsingError.new(e.message.strip, filename)
-            end
-          end
-        end
+        details = first_matching_mapping_details(FileInfo.new(nil, filename, contents))
+
         # this can be raised if we don't check match?/match_info?,
         # OR don't have the file contents when we check them, so
         # it turns out for example that a .xml file isn't a
         # manifest after all.
-        raise Bibliothecary::FileParsingError.new("No parser for this file type", filename)
+        raise Bibliothecary::FileParsingError.new("No parser for this file type", filename) unless details[:parser]
+
+        # The `parser` method should raise an exception if the file is malformed,
+        # should return empty [] if the file is fine but simply doesn't contain
+        # any dependencies, and should never return nil. At the time of writing
+        # this comment, some of the parsers return [] or nil to mean an error
+        # which is confusing to users.
+        send(details[:parser], contents)
+
+      rescue Exception => e # default is StandardError but C bindings throw Exceptions
+        # the C xml parser also puts a newline at the end of the message
+        raise Bibliothecary::FileParsingError.new(e.message.strip, filename)
       end
 
       # this is broken with contents=nil because it can't look at file
@@ -73,9 +71,7 @@ module Bibliothecary
       end
 
       def match_info?(info)
-        mapping.any? do |regex, details|
-          mapping_entry_match?(regex, details, info)
-        end
+        first_matching_mapping_details(info).any?
       end
 
       def platform_name
@@ -102,64 +98,18 @@ module Bibliothecary
         end
       end
 
-      def set_related_paths_field(by_dirname_dest, by_dirname_source)
-        by_dirname_dest.each do |dirname, analyses|
-          analyses.each do |(_info, analysis)|
-            source_analyses = by_dirname_source[dirname].map { |(info, _source_analysis)| info.relative_path }
-            analysis[:related_paths] = source_analyses.sort
-          end
-        end
-      end
-
-      def add_related_paths(analyses)
-        analyses.each do |(_info, analysis)|
-          analysis[:related_paths] = []
-        end
-
-        # associate manifests and lockfiles in the same directory;
-
-        # note that right now we're in the context of a single
-        # package manager, so manifest and lockfile in the
-        # same directory is considered proof that they are
-        # matched.
-
-        by_dirname = {
-          "manifest" => Hash.new { |h, k| h[k] = [] },
-          "lockfile" => Hash.new { |h, k| h[k] = [] }
-        }
-
-        analyses.each do |(info, analysis)|
-          dirname = File.dirname(info.relative_path)
-          by_dirname[analysis[:kind]][dirname].push([info, analysis])
-        end
-
-        by_dirname["manifest"].each do |_, manifests|
-          # This determine_can_have_lockfile in theory needs the file contents but
-          # in practice doesn't right now since the only mapping that needs
-          # file contents is a lockfile and not a manifest so won't reach here.
-          manifests.delete_if { |(info, _manifest)| !determine_can_have_lockfile_from_info(info) }
-        end
-
-        set_related_paths_field(by_dirname["manifest"], by_dirname["lockfile"])
-        set_related_paths_field(by_dirname["lockfile"], by_dirname["manifest"])
-      end
-
       def analyse(folder_path, file_list)
         analyse_file_info(file_list.map { |full_path| FileInfo.new(folder_path, full_path) })
       end
 
       def analyse_file_info(file_info_list)
-        analyses = file_info_list.map do |info|
-          next unless match_info?(info)
-          [info, analyse_contents_from_info(info)]
+        matching_info = file_info_list
+          .select(&method(:match_info?))
+
+        matching_info.map do |info|
+          analyse_contents_from_info(info)
+            .merge(related_paths: related_paths(info, matching_info))
         end
-
-        # strip the ones we failed to analyse
-        analyses = analyses.reject { |(_info, analysis)| analysis.nil? }
-
-        add_related_paths(analyses)
-
-        analyses.map { |(_info, analysis)| analysis }
       end
 
       def analyse_contents(filename, contents)
@@ -182,12 +132,8 @@ module Bibliothecary
       end
 
       def determine_kind_from_info(info)
-        mapping.each do |regex, details|
-          if mapping_entry_match?(regex, details, info)
-            return details[:kind]
-          end
-        end
-        return nil
+        first_matching_mapping_details(info)
+          .fetch(:kind, nil)
       end
 
       # calling this with contents=nil can produce less-informed
@@ -197,22 +143,71 @@ module Bibliothecary
       end
 
       def determine_can_have_lockfile_from_info(info)
-        mapping.each do |regex, details|
-          if mapping_entry_match?(regex, details, info)
-            return details.fetch(:can_have_lockfile, true)
-          end
-        end
-        return true
+        first_matching_mapping_details(info)
+          .fetch(:can_have_lockfile, true)
       end
 
       def parse_ruby_manifest(manifest)
         manifest.dependencies.inject([]) do |deps, dep|
           deps.push({
             name: dep.name,
-            requirement: dep.requirement.to_s,
+            requirement: dep
+              .requirement
+              .requirements
+              .sort_by(&:last)
+              .map { |op, version| "#{op} #{version}" }
+              .join(", "),
             type: dep.type
           })
         end.uniq
+      end
+
+      def match_filename(filename, case_insensitive: false)
+        if case_insensitive
+          lambda { |path| path.downcase == filename.downcase || path.downcase.end_with?("/" + filename.downcase) }
+        else
+          lambda { |path| path == filename || path.end_with?("/" + filename) }
+        end
+      end
+
+      def match_filenames(*filenames)
+        lambda do |path|
+          filenames.any? { |f| path == f } ||
+            filenames.any? { |f| path.end_with?("/" + f) }
+        end
+      end
+
+      def match_extension(filename, case_insensitive: false)
+        if case_insensitive
+          lambda { |path| path.downcase.end_with?(filename.downcase) }
+        else
+          lambda { |path| path.end_with?(filename) }
+        end
+      end
+
+      private
+
+      def related_paths(info, infos)
+        return [] unless determine_can_have_lockfile_from_info(info)
+
+        kind = determine_kind_from_info(info)
+        relate_to_kind = first_matching_mapping_details(info)
+          .fetch(:related_to, %w(manifest lockfile).reject { |k| k == kind })
+        dirname = File.dirname(info.relative_path)
+
+        infos
+          .reject { |i| i == info }
+          .select { |i| relate_to_kind.include?(determine_kind_from_info(i)) }
+          .select { |i| File.dirname(i.relative_path) == dirname }
+          .select(&method(:determine_can_have_lockfile_from_info))
+          .map(&:relative_path)
+          .sort
+      end
+
+      def first_matching_mapping_details(info)
+        mapping
+          .find { |matcher, details| mapping_entry_match?(matcher, details, info) }
+          &.last || {}
       end
     end
   end

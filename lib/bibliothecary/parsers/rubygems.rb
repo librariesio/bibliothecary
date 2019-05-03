@@ -10,18 +10,20 @@ module Bibliothecary
 
       def self.mapping
         {
-          /^Gemfile$|^gems\.rb$|.*\/Gemfile$|.*\/gems\.rb$/ => {
+          match_filenames("Gemfile", "gems.rb") => {
             kind: 'manifest',
-            parser: :parse_gemfile
+            parser: :parse_gemfile,
+            related_to: [ 'manifest', 'lockfile' ]
           },
-          /^[A-Za-z0-9_-]+\.gemspec$|.*\/[A-Za-z0-9_-]+\.gemspec$/ => {
+          match_extension(".gemspec") => {
             kind: 'manifest',
             parser: :parse_gemspec,
-            can_have_lockfile: false
+            related_to: [ 'manifest', 'lockfile' ]
           },
-          /^Gemfile\.lock$|^gems\.locked$|.*\/gems\.locked$|.*\/Gemfile\.lock$/ => {
+          match_filenames("Gemfile.lock", "gems.locked") => {
             kind: 'lockfile',
-            parser: :parse_gemfile_lock
+            parser: :parse_gemfile_lock,
+            related_to: [ 'manifest', 'lockfile' ]
           }
         }
       end
@@ -49,8 +51,6 @@ module Bibliothecary
         manifest = Gemnasium::Parser.send(:gemspec, file_contents)
         parse_ruby_manifest(manifest)
       end
-
-
     end
   end
 end
