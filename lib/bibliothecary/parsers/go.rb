@@ -41,7 +41,7 @@ module Bibliothecary
           /(^Gopkg\.lock$|.*\/Gopkg\.lock$)/ => {
             kind: 'lockfile',
             parser: :parse_dep_lockfile
-          },
+          }
         }
       end
 

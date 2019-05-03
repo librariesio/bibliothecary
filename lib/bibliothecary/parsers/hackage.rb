@@ -15,7 +15,7 @@ module Bibliothecary
           /^cabal\.config$|.*\/cabal\.config$/ => {
             kind: 'lockfile',
             parser: :parse_cabal_config
-          },
+          }
         }
       end
 

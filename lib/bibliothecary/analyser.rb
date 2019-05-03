@@ -104,15 +104,15 @@ module Bibliothecary
 
       def set_related_paths_field(by_dirname_dest, by_dirname_source)
         by_dirname_dest.each do |dirname, analyses|
-          analyses.each do |(info, analysis)|
-            source_analyses = by_dirname_source[dirname].map { |(info, source_analysis)| info.relative_path }
+          analyses.each do |(_info, analysis)|
+            source_analyses = by_dirname_source[dirname].map { |(info, _source_analysis)| info.relative_path }
             analysis[:related_paths] = source_analyses.sort
           end
         end
       end
 
       def add_related_paths(analyses)
-        analyses.each do |(info, analysis)|
+        analyses.each do |(_info, analysis)|
           analysis[:related_paths] = []
         end
 
@@ -137,7 +137,7 @@ module Bibliothecary
           # This determine_can_have_lockfile in theory needs the file contents but
           # in practice doesn't right now since the only mapping that needs
           # file contents is a lockfile and not a manifest so won't reach here.
-          manifests.delete_if { |(info, manifest)| !determine_can_have_lockfile_from_info(info) }
+          manifests.delete_if { |(info, _manifest)| !determine_can_have_lockfile_from_info(info) }
         end
 
         set_related_paths_field(by_dirname["manifest"], by_dirname["lockfile"])
@@ -155,11 +155,11 @@ module Bibliothecary
         end
 
         # strip the ones we failed to analyse
-        analyses = analyses.reject { |(info, analysis)| analysis.nil? }
+        analyses = analyses.reject { |(_info, analysis)| analysis.nil? }
 
         add_related_paths(analyses)
 
-        analyses.map { |(info, analysis)| analysis }
+        analyses.map { |(_info, analysis)| analysis }
       end
 
       def analyse_contents(filename, contents)
