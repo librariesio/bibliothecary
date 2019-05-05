@@ -27,7 +27,7 @@ describe Bibliothecary::Parsers::Go do
 
         {:name=>"logrusorgru/aurora", :requirement=>"v0.0.0-20190428105938-cea283e61946", :type=>"runtime"}
       ],
-      kind: 'lockfile',
+      kind: 'checksum',
       success: true
     })
   end
