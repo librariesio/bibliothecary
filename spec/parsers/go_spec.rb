@@ -5,6 +5,33 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.platform_name).to eq('go')
   end
 
+  it 'parses depenencies from go.mod' do
+    expect(described_class.analyse_contents('go.mod', load_fixture('go.mod'))).to eq({
+      :platform=>"go",
+      :path=>"go.mod",
+      :dependencies=>[
+        {:name=>"logrusorgru/aurora", :requirement=>"v0.0.0-20190428105938-cea283e61946", :type=>"runtime"}
+      ],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
+  it 'parses depenencies from go.sum' do
+    expect(described_class.analyse_contents('go.sum', load_fixture('go.sum'))).to eq({
+      :platform=>"go",
+      :path=>"go.sum",
+      :dependencies=>[
+        # github.com/logrusorgru/aurora v0.0.0-20190428105938-cea283e61946 h1:z+WaKrgu3kCpcdnbK9YG+JThpOCd1nU5jO5ToVmSlR4=
+        # github.com/logrusorgru/aurora v0.0.0-20190428105938-cea283e61946/go.mod h1:7rIyQOR62GCctdiQpZ/zOJlFyk6y+94wXzv6RNZgaR4=
+
+        {:name=>"logrusorgru/aurora", :requirement=>"v0.0.0-20190428105938-cea283e61946", :type=>"runtime"}
+      ],
+      kind: 'lockfile',
+      success: true
+    })
+  end
+
   it 'parses dependencies from glide.yaml' do
     expect(described_class.analyse_contents('glide.yaml', load_fixture('glide.yaml'))).to eq({
       :platform=>"go",
