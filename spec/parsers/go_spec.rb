@@ -15,10 +15,10 @@ describe Bibliothecary::Parsers::Go do
          :type=>"runtime"},
         {:name=>"github.com/gomodule/redigo",
          :requirement=>"v2.0.0+incompatible",
-         :type=>"runtime"}
+         :type=>"runtime"},
         {:name=>"github.com/kr/pretty",
          :requirement=>"v0.1.0",
-         :type=>"runtime"}
+         :type=>"runtime"},
         {:name=>"github.com/replicon/fast-archiver",
          :requirement=>"v0.0.0-20121220195659-060bf9adec25",
          :type=>"runtime"}
@@ -43,7 +43,7 @@ describe Bibliothecary::Parsers::Go do
          :requirement=>"v0.1.0",
          :type=>"runtime"},
         {:name=>"github.com/kr/pty",
-         :requirement=>"v0.1.0",
+         :requirement=>"v1.1.1",
          :type=>"runtime"},
         {:name=>"github.com/kr/text",
          :requirement=>"v0.1.0",

@@ -7,9 +7,19 @@ module Bibliothecary
       include Bibliothecary::Analyser
 
       GPM_REGEXP = /^(.+)\s+(.+)$/
+      GOMOD_REGEX = /^(.+)\s+(.+)$/
+      GOSUM_REGEX = /^(.+)\s+(.+)\s+(.+)$/
 
       def self.mapping
         {
+          match_filename("go.mod") => {
+            kind: 'manifest',
+            parser: :parse_go_mod
+          },
+          match_filename("go.sum") => {
+            kind: 'checksum',
+            parser: :parse_go_sum
+          },
           match_filename("glide.yaml") => {
             kind: 'manifest',
             parser: :parse_glide_yaml
@@ -93,6 +103,39 @@ module Bibliothecary
       def self.parse_dep_lockfile(file_contents)
         manifest = TomlRB.parse file_contents
         map_dependencies(manifest, 'projects', 'name', 'revision', 'runtime')
+      end
+
+      def self.parse_go_mod(file_contents)
+        deps = []
+        file_contents.lines.map(&:strip).each do |line|
+          next if line.start_with?("module ")
+          next if line.start_with?("go ")
+          next if line.start_with?("require (")
+          next if line.start_with?(")")
+          match = line.gsub(/(\/\/(.*))/, '').match(GOMOD_REGEX)
+          next unless match
+          deps << {
+            name: match[1].strip,
+            requirement: match[2].strip || '*',
+            type: 'runtime'
+          }
+        end
+        deps
+      end
+
+      def self.parse_go_sum(file_contents)
+        deps = []
+        file_contents.lines.map(&:strip).each do |line|
+          match = line.match(GOSUM_REGEX)
+
+          next unless match
+          deps << {
+            name: match[1].strip,
+            requirement: match[2].strip.split('/').first || '*',
+            type: 'runtime'
+          }
+        end
+        deps.uniq
       end
 
       def self.map_dependencies(manifest, attr_name, dep_attr_name, version_attr_name, type)
