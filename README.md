@@ -135,6 +135,8 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - vendor/vendor.json
   - Gopkg.toml
   - Gopkg.lock
+  - go.mod
+  - go.sum
 - Elm
   - elm-package.json
   - elm_dependencies.json
