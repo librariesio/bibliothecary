@@ -10,7 +10,18 @@ describe Bibliothecary::Parsers::Go do
       :platform=>"go",
       :path=>"go.mod",
       :dependencies=>[
-        {:name=>"logrusorgru/aurora", :requirement=>"v0.0.0-20190428105938-cea283e61946", :type=>"runtime"}
+        {:name=>"github.com/go-check/check",
+         :requirement=>"v0.0.0-20180628173108-788fd7840127",
+         :type=>"runtime"},
+        {:name=>"github.com/gomodule/redigo",
+         :requirement=>"v2.0.0+incompatible",
+         :type=>"runtime"}
+        {:name=>"github.com/kr/pretty",
+         :requirement=>"v0.1.0",
+         :type=>"runtime"}
+        {:name=>"github.com/replicon/fast-archiver",
+         :requirement=>"v0.0.0-20121220195659-060bf9adec25",
+         :type=>"runtime"}
       ],
       kind: 'manifest',
       success: true
@@ -22,10 +33,24 @@ describe Bibliothecary::Parsers::Go do
       :platform=>"go",
       :path=>"go.sum",
       :dependencies=>[
-        # github.com/logrusorgru/aurora v0.0.0-20190428105938-cea283e61946 h1:z+WaKrgu3kCpcdnbK9YG+JThpOCd1nU5jO5ToVmSlR4=
-        # github.com/logrusorgru/aurora v0.0.0-20190428105938-cea283e61946/go.mod h1:7rIyQOR62GCctdiQpZ/zOJlFyk6y+94wXzv6RNZgaR4=
-
-        {:name=>"logrusorgru/aurora", :requirement=>"v0.0.0-20190428105938-cea283e61946", :type=>"runtime"}
+        {:name=>"github.com/go-check/check",
+         :requirement=>"v0.0.0-20180628173108-788fd7840127",
+         :type=>"runtime"},
+        {:name=>"github.com/gomodule/redigo",
+         :requirement=>"v2.0.0+incompatible",
+         :type=>"runtime"},
+        {:name=>"github.com/kr/pretty",
+         :requirement=>"v0.1.0",
+         :type=>"runtime"},
+        {:name=>"github.com/kr/pty",
+         :requirement=>"v0.1.0",
+         :type=>"runtime"},
+        {:name=>"github.com/kr/text",
+         :requirement=>"v0.1.0",
+         :type=>"runtime"},
+        {:name=>"github.com/replicon/fast-archiver",
+         :requirement=>"v0.0.0-20121220195659-060bf9adec25",
+         :type=>"runtime"}
       ],
       kind: 'checksum',
       success: true
@@ -218,6 +243,8 @@ describe Bibliothecary::Parsers::Go do
   end
 
   it 'matches valid manifest filepaths' do
+    expect(described_class.match?('go.mod')).to be_truthy
+    expect(described_class.match?('go.sum')).to be_truthy
     expect(described_class.match?('Godeps/Godeps.json')).to be_truthy
     expect(described_class.match?('vendor/manifest')).to be_truthy
     expect(described_class.match?('glide.yaml')).to be_truthy
