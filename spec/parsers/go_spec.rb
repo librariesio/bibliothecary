@@ -52,7 +52,7 @@ describe Bibliothecary::Parsers::Go do
          :requirement=>"v0.0.0-20121220195659-060bf9adec25",
          :type=>"runtime"}
       ],
-      kind: 'checksum',
+      kind: 'lockfile',
       success: true
     })
   end

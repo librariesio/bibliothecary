@@ -8,6 +8,7 @@ module Bibliothecary
 
       GPM_REGEXP = /^(.+)\s+(.+)$/
       GOMOD_REGEX = /^(.+)\s+(.+)$/
+      GOMOD_IGNORABLE_REGEX = /^(module\s|require\s+\(|go\s|\))/m
       GOSUM_REGEX = /^(.+)\s+(.+)\s+(.+)$/
 
       def self.mapping
@@ -17,7 +18,7 @@ module Bibliothecary
             parser: :parse_go_mod
           },
           match_filename("go.sum") => {
-            kind: 'checksum',
+            kind: 'lockfile',
             parser: :parse_go_sum
           },
           match_filename("glide.yaml") => {
@@ -108,17 +109,14 @@ module Bibliothecary
       def self.parse_go_mod(file_contents)
         deps = []
         file_contents.lines.map(&:strip).each do |line|
-          next if line.start_with?("module ")
-          next if line.start_with?("go ")
-          next if line.start_with?("require (")
-          next if line.start_with?(")")
-          match = line.gsub(/(\/\/(.*))/, '').match(GOMOD_REGEX)
-          next unless match
-          deps << {
-            name: match[1].strip,
-            requirement: match[2].strip || '*',
-            type: 'runtime'
-          }
+          next if line.match(GOMOD_IGNORABLE_REGEX)
+          if match = line.gsub(/(\/\/(.*))/, '').match(GOMOD_REGEX)
+            deps << {
+              name: match[1].strip,
+              requirement: match[2].strip || '*',
+              type: 'runtime'
+            }
+          end
         end
         deps
       end
