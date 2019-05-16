@@ -124,14 +124,13 @@ module Bibliothecary
       def self.parse_go_sum(file_contents)
         deps = []
         file_contents.lines.map(&:strip).each do |line|
-          match = line.match(GOSUM_REGEX)
-
-          next unless match
-          deps << {
-            name: match[1].strip,
-            requirement: match[2].strip.split('/').first || '*',
-            type: 'runtime'
-          }
+          if match = line.match(GOSUM_REGEX)
+            deps << {
+              name: match[1].strip,
+              requirement: match[2].strip.split('/').first || '*',
+              type: 'runtime'
+            }
+          end
         end
         deps.uniq
       end
