@@ -21,6 +21,9 @@ describe Bibliothecary::Parsers::Go do
          :type=>"runtime"},
         {:name=>"github.com/replicon/fast-archiver",
          :requirement=>"v0.0.0-20121220195659-060bf9adec25",
+         :type=>"runtime"},
+        {:name=>"gopkg.in/yaml.v1",
+         :requirement=>"v1.0.0-20140924161607-9f9df34309c0",
          :type=>"runtime"}
       ],
       kind: 'manifest',
@@ -50,8 +53,11 @@ describe Bibliothecary::Parsers::Go do
          :type=>"runtime"},
         {:name=>"github.com/replicon/fast-archiver",
          :requirement=>"v0.0.0-20121220195659-060bf9adec25",
-         :type=>"runtime"}
-      ],
+         :type=>"runtime"},
+        {:name=>"gopkg.in/yaml.v1",
+         :requirement=>"v1.0.0-20140924161607-9f9df34309c0",
+         :type=>"runtime"},
+        ],
       kind: 'lockfile',
       success: true
     })
