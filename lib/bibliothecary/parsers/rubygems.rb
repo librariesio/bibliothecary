@@ -29,8 +29,7 @@ module Bibliothecary
       end
 
       def self.parse_gemfile_lock(manifest)
-        manifest.each_line.map do |line|
-          line.chomp!
+        manifest.lines(chomp: true).map do |line|
           match = line.match(NAME_VERSION_4)
           next unless match
           name = match[1]
