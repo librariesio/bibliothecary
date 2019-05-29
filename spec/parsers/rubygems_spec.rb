@@ -82,17 +82,15 @@ describe Bibliothecary::Parsers::Rubygems do
     expect(fixture).to include("\r\n")
 
     expect(
-      described_class.analyse_contents(
-        "Gemfile.lock",
-        fixture)).to eq({
-          :platform=>"rubygems",
-          :path=>"Gemfile.lock",
-          :dependencies=>[
-            {:name=>"rails", :requirement=>"5.2.3", :type=>"runtime"},
-          ],
-          kind: 'lockfile',
-          success: true
-        })
+      described_class.analyse_contents("Gemfile.lock", fixture)).to eq({
+        :platform=>"rubygems",
+        :path=>"Gemfile.lock",
+        :dependencies=>[
+          {:name=>"rails", :requirement=>"5.2.3", :type=>"runtime"},
+        ],
+        kind: 'lockfile',
+        success: true
+      })
   end
 
   it 'matches valid manifest filepaths' do
