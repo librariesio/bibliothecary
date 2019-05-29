@@ -75,6 +75,21 @@ describe Bibliothecary::Parsers::Rubygems do
     })
   end
 
+  it 'parses dependencies from Gemfile.lock with windows line endings' do
+    expect(
+      described_class.analyse_contents(
+        "Gemfile.lock",
+        "GEM\r\n  remote: https://rubygems.org/\r\n  specs:\r\n    rails (5.2.3)\r\n")).to eq({
+          :platform=>"rubygems",
+          :path=>"Gemfile.lock",
+          :dependencies=>[
+            {:name=>"rails", :requirement=>"5.2.3", :type=>"runtime"},
+          ],
+          kind: 'lockfile',
+          success: true
+        })
+  end
+
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('devise.gemspec')).to be_truthy
     expect(described_class.match?('Gemfile')).to be_truthy
