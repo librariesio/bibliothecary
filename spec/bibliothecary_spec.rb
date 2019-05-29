@@ -282,20 +282,16 @@ describe Bibliothecary do
     Bibliothecary.configure do |config|
       config.ignored_dirs = ['foobar']
       config.ignored_files = ['hello']
+      config.ignored_deps = {
+        "composer.json" => [/^php$/i]
+      }
     end
 
     expect(Bibliothecary.ignored_dirs).to eq(['foobar'])
     expect(Bibliothecary.ignored_files).to eq(['hello'])
+    expect(Bibliothecary.ignored_deps).to eq({"composer.json" => [/^php$/i]})
 
     Bibliothecary.reset
-  end
-
-  it 'allows customization of config options' do
-    Bibliothecary.configure do |config|
-      config.ignored_dirs = ['foobar']
-    end
-
-    expect(Bibliothecary.ignored_dirs).to eq(['foobar'])
   end
 
   it 'allows resetting of config options' do

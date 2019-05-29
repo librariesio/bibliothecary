@@ -53,6 +53,10 @@ module Bibliothecary
     configuration.ignored_files
   end
 
+  def self.ignored_deps
+    configuration.ignored_deps
+  end
+
   class << self
     attr_writer :configuration
   end
