@@ -119,10 +119,18 @@ module Bibliothecary
       def analyse_contents_from_info(info)
         kind = determine_kind_from_info(info)
         dependencies = parse_file(info.relative_path, info.contents)
+        dependencies = remove_ignored_deps(File.basename(info.relative_path), dependencies)
 
         Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies || [])
       rescue Bibliothecary::FileParsingError => e
         Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, kind, e.message)
+      end
+
+      def remove_ignored_deps(filename, dependencies)
+        dependencies.reject { |dep|
+          Bibliothecary.configuration.ignored_deps.key?(filename) &&
+            Bibliothecary.configuration.ignored_deps[filename].any? { |re| dep[:name] =~ re }
+        }
       end
 
       # calling this with contents=nil can produce less-informed

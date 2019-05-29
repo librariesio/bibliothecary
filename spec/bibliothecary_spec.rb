@@ -58,6 +58,29 @@ describe Bibliothecary do
     }])
   end
 
+  it 'analyses contents of a file while ignoring ignored_deps' do
+    Bibliothecary.configure do |config|
+      config.ignored_deps = {
+        "composer.json" => [/^php$/i, /^ext-.+$/i],
+        "composer.lock" => [/^php$/i, /^ext-.+$/i],
+      }
+    end
+
+    expect(described_class.analyse_file('composer.json', load_fixture('composer.json'))).to eq([{
+      :platform=>"packagist",
+      :path=>"composer.json",
+      :dependencies=>[
+        {:name=>"laravel/framework", :requirement=>"5.0.*", :type=>"runtime"},
+        {:name=>"phpunit/phpunit", :requirement=>"~4.0", :type=>"development"},
+        {:name=>"phpspec/phpspec", :requirement=>"~2.1", :type=>"development"}
+      ],
+      :kind => 'manifest',
+      success: true
+    }])
+
+    Bibliothecary.reset
+  end
+
   it 'searches a folder for manifests and parses them' do
     Bibliothecary.configure do |config|
       config.ignored_dirs.push("spec/fixtures")
