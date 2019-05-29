@@ -14,7 +14,7 @@ module Bibliothecary
     def initialize
       @ignored_dirs = ['.git', 'node_modules', 'bower_components', 'vendor', 'dist']
       @ignored_files = []
-      @ignored_deps = {} # e.g. { 'packagist' => [/a_regexp/] }
+      @ignored_deps = {} # e.g. { 'composer.json' => [/some_depname_regexp/, /another_depname_regexp/] }
       @carthage_parser_host = 'https://carthage.libraries.io'
       @clojars_parser_host  = 'https://clojars.libraries.io'
       @mix_parser_host      = 'https://mix.libraries.io'
