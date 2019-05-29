@@ -11,8 +11,10 @@ describe Bibliothecary::Parsers::Packagist do
       :path=>"composer.json",
       :dependencies=>[
         {:name=>"laravel/framework", :requirement=>"5.0.*", :type=>"runtime"},
+        {:name=>"php", :requirement=>"^7.1", :type=>"runtime"},
+        {:name=>"ext-mbstring", :requirement=>"*", :type=>"runtime"},
         {:name=>"phpunit/phpunit", :requirement=>"~4.0", :type=>"development"},
-        {:name=>"phpspec/phpspec", :requirement=>"~2.1", :type=>"development"}
+        {:name=>"phpspec/phpspec", :requirement=>"~2.1", :type=>"development"},
       ],
       kind: 'manifest',
       success: true
