@@ -76,10 +76,15 @@ describe Bibliothecary::Parsers::Rubygems do
   end
 
   it 'parses dependencies from Gemfile.lock with windows line endings' do
+    fixture = load_fixture("GemfileLineEndings.lock")
+    # If this fails, the line endings changed, on this file.
+    # to fix it, run `vim spec/fixtures/GemfileLineEndings.lock +"set ff=dos" +wq`
+    expect(fixture).to include("\r\n")
+
     expect(
       described_class.analyse_contents(
         "Gemfile.lock",
-        "GEM\r\n  remote: https://rubygems.org/\r\n  specs:\r\n    rails (5.2.3)\r\n")).to eq({
+        fixture)).to eq({
           :platform=>"rubygems",
           :path=>"Gemfile.lock",
           :dependencies=>[
