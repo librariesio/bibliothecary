@@ -109,16 +109,16 @@ module Bibliothecary
         end.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
       end
 
-      def self.parse_pom_manifest(file_contents)
+      def self.parse_pom_manifest(file_contents, parent_properties = {})
         manifest = Ox.parse file_contents
         xml = manifest.respond_to?('project') ? manifest.project : manifest
         [].tap do |deps|
           ['dependencies/dependency', 'dependencyManagement/dependencies/dependency'].each do |deps_xpath|
             xml.locate(deps_xpath).each do |dep|
               deps.push({
-                name: "#{extract_pom_dep_info(xml, dep, 'groupId')}:#{extract_pom_dep_info(xml, dep, 'artifactId')}",
-                requirement: extract_pom_dep_info(xml, dep, 'version'),
-                type: extract_pom_dep_info(xml, dep, 'scope') || 'runtime'
+                name: "#{extract_pom_dep_info(xml, dep, 'groupId', parent_properties)}:#{extract_pom_dep_info(xml, dep, 'artifactId', parent_properties)}",
+                requirement: extract_pom_dep_info(xml, dep, 'version', parent_properties),
+                type: extract_pom_dep_info(xml, dep, 'scope', parent_properties) || 'runtime'
               })
             end
           end
@@ -141,16 +141,23 @@ module Bibliothecary
         end.compact
       end
 
-      def self.extract_pom_dep_info(xml, dependency, name)
+      def self.extract_pom_info(xml, location, parent_properties = {})
+        extract_pom_dep_info(xml, xml, location, parent_properties)
+      end
+
+      def self.extract_pom_dep_info(xml, dependency, name, parent_properties = {})
         field = dependency.locate(name).first
         return nil if field.nil?
         value = field.nodes.first
         match = value.match(/^\$\{(.+)\}/)
         if match
-          return value unless xml.respond_to? 'properties'
+          return value unless xml.respond_to? 'properties' || !parent_properties.empty?
           prop_field = xml.properties.locate(match[1]).first
+          parent_prop = parent_properties[match[1]]
           if prop_field
             return prop_field.nodes.first
+          elsif parent_prop
+            return parent_prop
           else
             return value
           end

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pry'
 
 describe Bibliothecary::Parsers::Maven do
   it 'has a platform name' do
@@ -80,9 +81,10 @@ describe Bibliothecary::Parsers::Maven do
         {:name=>"com.typesafe:config", :requirement=>"1.2.1", :type=>"runtime"},
         {:name=>"org.testng:testng", :requirement=>"6.8.7", :type=>"test"},
         {:name=>"org.mockito:mockito-all", :requirement=>"1.8.4", :type=>"test"},
+        {:name=>"io.libraries:bibliothecary", :requirement=>"${bibliothecary.version}", :type=>"test"},
         # From dependencyManagement section
         {:name=>"org.apache.ant:ant", :requirement=>"1.9.2", :type=>"runtime"},
-        {:name=>"commons-lang:commons-lang",:requirement=>"2.6", :type=>"runtime"}
+        {:name=>"commons-lang:commons-lang",:requirement=>"2.6", :type=>"runtime"},
       ],
       kind: 'manifest',
       success: true
@@ -300,5 +302,14 @@ describe Bibliothecary::Parsers::Maven do
 
     expect(test_compile_classpath.length).to eq 187
     expect(test_runtime_classpath.select {|item| item[:name] == "org.slf4j:jul-to-slf4j"}.length).to eq 1
+  end
+
+  it 'uses parent properties during resolve' do
+    parent_props = {"bibliothecary.version"=>"9.9.9"}
+    deps = described_class.parse_pom_manifest(load_fixture('pom.xml'), parent_props)
+    jersey_dep = deps.find do |dep| 
+      dep[:name] == "io.libraries:bibliothecary" 
+    end
+    expect(jersey_dep[:requirement]).to eq "9.9.9"
   end
 end
