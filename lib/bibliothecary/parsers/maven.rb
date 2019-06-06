@@ -11,8 +11,6 @@ module Bibliothecary
       # "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
-      MAVEN_DEP_REGEXT = /(\s+)([\w\.-]+)\:([\w\.-]+)\:([\w\.-]+)\:([\w\.-]+)\:([\w]+).+/
-
       def self.mapping
         {
           match_filename("ivy.xml", case_insensitive: true) => {
@@ -116,17 +114,18 @@ module Bibliothecary
       end
 
       def self.parse_maven_resolved(file_contents)
-        file_contents.split("\n").map do |line|
-          type_match = MAVEN_DEP_REGEXT.match(line)
-
-          next unless type_match
+        raw_deps = file_contents.split("\n").map do |line|
+          dep_parts = line.strip.split(":")
+          next unless dep_parts.length == 5
           # org.springframework.boot:spring-boot-starter-web:jar:2.0.3.RELEASE:compile[36m -- module spring.boot.starter.web[0;1m [auto][m
           {
-            name: type_match[2, 2].join(":"),
-            requirement: type_match[5],
-            type: type_match[6]
+            name: dep_parts[0, 2].join(":"),
+            requirement: dep_parts[3],
+            type: dep_parts[4].split("--").first.gsub(/\e\[(\d+)m/, '').strip #remove control characters from string
           }
-        end.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
+        end
+
+        raw_deps.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
       end
 
       def self.parse_pom_manifest(file_contents, parent_properties = {})
