@@ -316,7 +316,7 @@ describe Bibliothecary::Parsers::Maven do
   end
   
   it 'parses dependencies from maven-dependencies-q.txt' do
-    deps = described_class.analyse_contents('maven-dependencies-q.txt', load_fixture('maven-dependencies-q.txt'))
+    deps = described_class.analyse_contents('maven-resolved-dependencies.txt', load_fixture('maven-resolved-dependencies.txt'))
     expect(deps[:kind]).to eq 'lockfile'
     spring_boot = deps[:dependencies].select {|item| item[:name] == "org.springframework.boot:spring-boot-starter-web" }
     expect(spring_boot.length).to eq 1
