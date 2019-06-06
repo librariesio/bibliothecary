@@ -1,5 +1,5 @@
 require 'ox'
-
+require 'pry'
 module Bibliothecary
   module Parsers
     class Maven
@@ -10,6 +10,8 @@ module Bibliothecary
 
       # "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
+
+      MAVEN_DEP_REGEXT = /(\s+)([\w\.-]+)\:([\w\.-]+)\:([\w\.-]+)\:([\w\.-]+)\:([\w]+).+/
 
       def self.mapping
         {
@@ -33,6 +35,10 @@ module Bibliothecary
           match_filename("gradle-dependencies-q.txt", case_insensitive: true) => {
             kind: 'lockfile',
             parser: :parse_gradle_resolved
+          },
+          match_filename("maven-dependencies-q.txt", case_insensitive: true) => {
+            kind: 'lockfile',
+            parser: :parse_maven_resolved
           }
         }
       end
@@ -105,6 +111,20 @@ module Bibliothecary
             name: dep[0, dep.length - 1].join(":"),
             requirement: version,
             type: type
+          }
+        end.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
+      end
+
+      def self.parse_maven_resolved(file_contents)
+        file_contents.split("\n").map do |line|
+          type_match = MAVEN_DEP_REGEXT.match(line)
+
+          next unless type_match
+          # org.springframework.boot:spring-boot-starter-web:jar:2.0.3.RELEASE:compile[36m -- module spring.boot.starter.web[0;1m [auto][m
+          {
+            name: type_match[2, 2].join(":"),
+            requirement: type_match[5],
+            type: type_match[6]
           }
         end.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
       end
