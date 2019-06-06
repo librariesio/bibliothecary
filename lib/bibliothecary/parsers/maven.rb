@@ -1,5 +1,5 @@
 require 'ox'
-require 'pry'
+
 module Bibliothecary
   module Parsers
     class Maven
