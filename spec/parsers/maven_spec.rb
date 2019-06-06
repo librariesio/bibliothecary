@@ -11,6 +11,9 @@ describe Bibliothecary::Parsers::Maven do
       :platform=>"maven",
       :path=>"pom.xml",
       :dependencies=>[
+        {:name=>"org.accidia:echo-parent",
+        :requirement=>"0.1.23",
+        :type=>"runtime"},
         {:name=>"org.glassfish.jersey.core:jersey-server",
         :requirement=>"2.16",
         :type=>"runtime"},

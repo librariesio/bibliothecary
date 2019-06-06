@@ -151,13 +151,20 @@ module Bibliothecary
         value = field.nodes.first
         match = value.match(/^\$\{(.+)\}/)
         if match
-          return value if !xml.respond_to?('properties') && parent_properties.empty?
+          # the xml root is <project> so lookup the non property name in the xml
+          # this converts ${project/group.id} -> ${group/id}
+          non_prop_name = match[1].gsub('.', '/').gsub('project/', '')
+          return value if !xml.respond_to?('properties') && parent_properties.empty? && !xml.locate(non_prop_name)
           prop_field = xml.properties.locate(match[1]).first
           parent_prop = parent_properties[match[1]]
           if prop_field
             return prop_field.nodes.first
           elsif parent_prop
             return parent_prop
+          elsif xml.locate(non_prop_name).first
+            # see if the value to look up is a field under the project
+            # examples are ${project.groupId} or ${project.version}
+            return xml.locate(non_prop_name).first.nodes.first
           else
             return value
           end

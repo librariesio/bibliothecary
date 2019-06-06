@@ -84,6 +84,11 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>echo-parent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!--JERSEY SERVLET-->
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
