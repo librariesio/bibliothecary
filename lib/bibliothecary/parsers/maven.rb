@@ -114,18 +114,22 @@ module Bibliothecary
       end
 
       def self.parse_maven_resolved(file_contents)
-        raw_deps = file_contents.split("\n").map do |line|
-          dep_parts = line.strip.split(":")
-          next unless dep_parts.length == 5
-          # org.springframework.boot:spring-boot-starter-web:jar:2.0.3.RELEASE:compile[36m -- module spring.boot.starter.web[0;1m [auto][m
-          {
-            name: dep_parts[0, 2].join(":"),
-            requirement: dep_parts[3],
-            type: dep_parts[4].split("--").first.gsub(/\e\[(\d+)m/, '').strip #remove control characters from string
-          }
-        end
+        file_contents
+          .split("\n")
+          .map(&method(:parse_resolved_dep_line))
+          .compact
+          .uniq {|item| [item[:name], item[:requirement], item[:type]]}
+      end
 
-        raw_deps.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
+      def self.parse_resolved_dep_line(line)
+        dep_parts = line.strip.split(":")
+        return nil unless dep_parts.length == 5
+        # org.springframework.boot:spring-boot-starter-web:jar:2.0.3.RELEASE:compile[36m -- module spring.boot.starter.web[0;1m [auto][m
+        {
+          name: dep_parts[0, 2].join(":"),
+          requirement: dep_parts[3],
+          type: dep_parts[4].split("--").first.gsub(/\e\[(\d+)m/, '').strip #remove control characters from string
+        }
       end
 
       def self.parse_pom_manifest(file_contents, parent_properties = {})
