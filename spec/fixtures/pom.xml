@@ -84,6 +84,11 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>echo-parent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <!--JERSEY SERVLET-->
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -259,6 +264,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.8.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.libraries</groupId>
+            <artifactId>bibliothecary</artifactId>
+            <version>${bibliothecary.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
