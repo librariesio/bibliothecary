@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'pry'
 
 describe Bibliothecary::Parsers::Maven do
   it 'has a platform name' do

@@ -27,3 +27,5 @@ VCR.configure do |c|
   c.configure_rspec_metadata!
   c.hook_into :webmock
 end
+
+require 'pry'
