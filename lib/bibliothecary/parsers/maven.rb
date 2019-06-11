@@ -11,6 +11,8 @@ module Bibliothecary
       # "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
+      ANSI_MATCHER = '(\[)?\033(\[)?[;?\d]*[\dA-Za-z]([\];])?'
+
       def self.mapping
         {
           match_filename("ivy.xml", case_insensitive: true) => {
@@ -115,6 +117,7 @@ module Bibliothecary
 
       def self.parse_maven_resolved(file_contents)
         file_contents
+          .gsub(/#{ANSI_MATCHER}/, '')
           .split("\n")
           .map(&method(:parse_resolved_dep_line))
           .compact
@@ -128,7 +131,7 @@ module Bibliothecary
         {
           name: dep_parts[0, 2].join(":"),
           requirement: dep_parts[3],
-          type: dep_parts[4].split("--").first.gsub(/\e\[(\d+)m/, '').strip #remove control characters from string
+          type: dep_parts[4].split("--").first.strip
         }
       end
 
