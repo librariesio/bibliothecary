@@ -1,4 +1,5 @@
 require 'ox'
+require 'strings-ansi'
 
 module Bibliothecary
   module Parsers
@@ -33,6 +34,10 @@ module Bibliothecary
           match_filename("gradle-dependencies-q.txt", case_insensitive: true) => {
             kind: 'lockfile',
             parser: :parse_gradle_resolved
+          },
+          match_filename("maven-resolved-dependencies.txt", case_insensitive: true) => {
+            kind: 'lockfile',
+            parser: :parse_maven_resolved
           }
         }
       end
@@ -107,6 +112,25 @@ module Bibliothecary
             type: type
           }
         end.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
+      end
+
+      def self.parse_maven_resolved(file_contents)
+        Strings::ANSI.sanitize(file_contents)
+          .split("\n")
+          .map(&method(:parse_resolved_dep_line))
+          .compact
+          .uniq
+      end
+
+      def self.parse_resolved_dep_line(line)
+        dep_parts = line.strip.split(":")
+        return unless dep_parts.length == 5
+        # org.springframework.boot:spring-boot-starter-web:jar:2.0.3.RELEASE:compile[36m -- module spring.boot.starter.web[0;1m [auto][m
+        {
+          name: dep_parts[0, 2].join(":"),
+          requirement: dep_parts[3],
+          type: dep_parts[4].split("--").first.strip
+        }
       end
 
       def self.parse_pom_manifest(file_contents, parent_properties = {})
