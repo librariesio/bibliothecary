@@ -115,17 +115,16 @@ module Bibliothecary
       end
 
       def self.parse_maven_resolved(file_contents)
-        file_contents = Strings::ANSI.sanitize(file_contents)
-        file_contents
+        Strings::ANSI.sanitize(file_contents)
           .split("\n")
           .map(&method(:parse_resolved_dep_line))
           .compact
-          .uniq {|item| [item[:name], item[:requirement], item[:type]]}
+          .uniq
       end
 
       def self.parse_resolved_dep_line(line)
         dep_parts = line.strip.split(":")
-        return nil unless dep_parts.length == 5
+        return unless dep_parts.length == 5
         # org.springframework.boot:spring-boot-starter-web:jar:2.0.3.RELEASE:compile[36m -- module spring.boot.starter.web[0;1m [auto][m
         {
           name: dep_parts[0, 2].join(":"),
