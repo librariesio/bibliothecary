@@ -1,4 +1,5 @@
 require 'ox'
+require 'strings-ansi'
 
 module Bibliothecary
   module Parsers
@@ -10,8 +11,6 @@ module Bibliothecary
 
       # "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
-
-      ANSI_MATCHER = /(\[)?\033(\[)?[;?\d]*[\dA-Za-z]([\];])?/
 
       def self.mapping
         {
@@ -116,8 +115,8 @@ module Bibliothecary
       end
 
       def self.parse_maven_resolved(file_contents)
+        file_contents = Strings::ANSI.sanitize(file_contents)
         file_contents
-          .gsub(ANSI_MATCHER, '')
           .split("\n")
           .map(&method(:parse_resolved_dep_line))
           .compact
