@@ -11,7 +11,7 @@ module Bibliothecary
       # "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
-      ANSI_MATCHER = '(\[)?\033(\[)?[;?\d]*[\dA-Za-z]([\];])?'
+      ANSI_MATCHER = /(\[)?\033(\[)?[;?\d]*[\dA-Za-z]([\];])?/
 
       def self.mapping
         {
@@ -117,7 +117,7 @@ module Bibliothecary
 
       def self.parse_maven_resolved(file_contents)
         file_contents
-          .gsub(/#{ANSI_MATCHER}/, '')
+          .gsub(ANSI_MATCHER, '')
           .split("\n")
           .map(&method(:parse_resolved_dep_line))
           .compact
