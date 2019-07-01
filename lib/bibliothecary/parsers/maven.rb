@@ -12,7 +12,7 @@ module Bibliothecary
       # "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
-      MAVEN_PROPERTY_REGEX = /^(.*)\$\{(.+)\}(.*)/
+      MAVEN_PROPERTY_REGEX = /\$\{(.+?)\}/
       MAX_DEPTH = 5
 
       def self.mapping
@@ -179,7 +179,7 @@ module Bibliothecary
         value = field.nodes.first
         match = value.match(MAVEN_PROPERTY_REGEX)
         if match
-          return extract_property(xml, match[2], value, parent_properties)
+          return extract_property(xml, match[1], value, parent_properties)
         else
           return value
         end
@@ -199,7 +199,7 @@ module Bibliothecary
         match = resolved_value.match(MAVEN_PROPERTY_REGEX)
         if match && depth < MAX_DEPTH
           depth += 1
-          return extract_property(xml, match[2], resolved_value, parent_properties, depth)
+          return extract_property(xml, match[1], resolved_value, parent_properties, depth)
         else
           return resolved_value
         end 
