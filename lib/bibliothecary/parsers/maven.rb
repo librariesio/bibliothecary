@@ -173,14 +173,14 @@ module Bibliothecary
         field = dependency.locate(name).first
         return nil if field.nil?
         value = field.nodes.first
-        match = value.match(/^\$\{(.+)\}/)
+        match = value.match(/^(.*)\$\{(.+)\}(.*)/)
         if match
           # the xml root is <project> so lookup the non property name in the xml
           # this converts ${project/group.id} -> ${group/id}
-          non_prop_name = match[1].gsub('.', '/').gsub('project/', '')
+          non_prop_name = match[2].gsub('.', '/').gsub('project/', '')
           return value if !xml.respond_to?('properties') && parent_properties.empty? && !xml.locate(non_prop_name)
-          prop_field = xml.properties.locate(match[1]).first
-          parent_prop = parent_properties[match[1]]
+          prop_field = xml.properties.locate(match[2]).first
+          parent_prop = parent_properties[match[2]]
           if prop_field
             return prop_field.nodes.first
           elsif parent_prop
