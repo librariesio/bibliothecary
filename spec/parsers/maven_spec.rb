@@ -86,7 +86,7 @@ describe Bibliothecary::Parsers::Maven do
         {:name=>"io.libraries:bibliothecary", :requirement=>"${bibliothecary.version}", :type=>"test"},
         # From dependencyManagement section
         {:name=>"org.apache.ant:ant", :requirement=>"1.9.2", :type=>"runtime"},
-        {:name=>"commons-lang:commons-lang",:requirement=>"2.6", :type=>"runtime"},
+        {:name=>"commons-lang:commons-lang",:requirement=>"2.6", :type=>"runtime"}
       ],
       kind: 'manifest',
       success: true

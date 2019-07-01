@@ -86,7 +86,7 @@ describe Bibliothecary::Parsers::Rubygems do
         :platform=>"rubygems",
         :path=>"Gemfile.lock",
         :dependencies=>[
-          {:name=>"rails", :requirement=>"5.2.3", :type=>"runtime"},
+          {:name=>"rails", :requirement=>"5.2.3", :type=>"runtime"}
         ],
         kind: 'lockfile',
         success: true
