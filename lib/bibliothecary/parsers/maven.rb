@@ -13,6 +13,7 @@ module Bibliothecary
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
       MAVEN_PROPERTY_REGEX = /^(.*)\$\{(.+)\}(.*)/
+      MAX_DEPTH = 5
 
       def self.mapping
         {
@@ -189,9 +190,22 @@ module Bibliothecary
       end
 
       def self.extract_property(xml, property_name, value, parent_properties = {}, depth = 0)
+        prop_value = property_value(xml, property_name, parent_properties)
+        return value unless prop_value
         # don't resolve more than 5 levels deep to avoid potential circular references
-        max_depth = 5
+       
+        resolved_value = replace_value_with_prop(value, prop_value, property_name)
+        # check to see if we just resolved to another property name
+        match = resolved_value.match(MAVEN_PROPERTY_REGEX)
+        if match && depth < MAX_DEPTH
+          depth += 1
+          return extract_property(xml, match[2], resolved_value, parent_properties, depth)
+        else
+          return resolved_value
+        end 
+      end
 
+      def self.property_value(xml, property_name, parent_properties)
         # the xml root is <project> so lookup the non property name in the xml
         # this converts ${project/group.id} -> ${group/id}
         non_prop_name = property_name.gsub(".", "/").gsub("project/", "")
@@ -200,26 +214,14 @@ module Bibliothecary
         prop_field = xml.properties.locate(property_name).first
         parent_prop = parent_properties[property_name]
         if prop_field
-          prop_value = prop_field.nodes.first
+          prop_field.nodes.first
         elsif parent_prop
-          prop_value = parent_prop
+          parent_prop
         elsif xml.locate(non_prop_name).first
           # see if the value to look up is a field under the project
           # examples are ${project.groupId} or ${project.version}
-          prop_value = xml.locate(non_prop_name).first.nodes.first
-        else
-          # property not found
-          return value
+          xml.locate(non_prop_name).first.nodes.first
         end
-        resolved_value = replace_value_with_prop(value, prop_value, property_name)
-        # check to see if we just resolved to another property name
-        match = resolved_value.match(MAVEN_PROPERTY_REGEX)
-        if match && depth < max_depth
-          depth += 1
-          return extract_property(xml, match[2], resolved_value, parent_properties, depth)
-        else
-          return resolved_value
-        end 
       end
     end
   end
