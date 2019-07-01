@@ -172,29 +172,36 @@ module Bibliothecary
       def self.extract_pom_dep_info(xml, dependency, name, parent_properties = {})
         field = dependency.locate(name).first
         return nil if field.nil?
+
         value = field.nodes.first
         match = value.match(/^(.*)\$\{(.+)\}(.*)/)
         if match
           # the xml root is <project> so lookup the non property name in the xml
           # this converts ${project/group.id} -> ${group/id}
-          non_prop_name = match[2].gsub('.', '/').gsub('project/', '')
-          return value if !xml.respond_to?('properties') && parent_properties.empty? && !xml.locate(non_prop_name)
+          non_prop_name = match[2].gsub(".", "/").gsub("project/", "")
+          return value if !xml.respond_to?("properties") && parent_properties.empty? && !xml.locate(non_prop_name)
+
           prop_field = xml.properties.locate(match[2]).first
           parent_prop = parent_properties[match[2]]
           if prop_field
-            return prop_field.nodes.first
+            return replace_value_with_prop(value, prop_field.nodes.first, match[2])
           elsif parent_prop
-            return parent_prop
+            return replace_value_with_prop(value, parent_prop, match[2])
           elsif xml.locate(non_prop_name).first
             # see if the value to look up is a field under the project
             # examples are ${project.groupId} or ${project.version}
-            return xml.locate(non_prop_name).first.nodes.first
+            return replace_value_with_prop(value, xml.locate(non_prop_name).first.nodes.first, match[2])
           else
+            # property not found
             return value
           end
         else
           return value
         end
+      end
+
+      def self.replace_value_with_prop(original_value, property_value, property_name)
+        original_value.gsub("${#{property_name}}", property_value)
       end
     end
   end
