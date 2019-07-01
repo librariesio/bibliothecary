@@ -12,6 +12,8 @@ module Bibliothecary
       # "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
+      MAVEN_PROPERTY_REGEX = /^(.*)\$\{(.+)\}(.*)/
+
       def self.mapping
         {
           match_filename("ivy.xml", case_insensitive: true) => {
@@ -58,7 +60,7 @@ module Bibliothecary
         doc = Ox.parse file_contents
         root = doc&.locate("ivy-report")&.first
         return !root.nil?
-      rescue Exception => e # rubocop:disable Lint/RescueException
+      rescue Exception # rubocop:disable Lint/RescueException
         # We rescue exception here since native libs can throw a non-StandardError
         # We don't want to throw errors during the matching phase, only during
         # parsing after we match.
@@ -174,27 +176,9 @@ module Bibliothecary
         return nil if field.nil?
 
         value = field.nodes.first
-        match = value.match(/^(.*)\$\{(.+)\}(.*)/)
+        match = value.match(MAVEN_PROPERTY_REGEX)
         if match
-          # the xml root is <project> so lookup the non property name in the xml
-          # this converts ${project/group.id} -> ${group/id}
-          non_prop_name = match[2].gsub(".", "/").gsub("project/", "")
-          return value if !xml.respond_to?("properties") && parent_properties.empty? && !xml.locate(non_prop_name)
-
-          prop_field = xml.properties.locate(match[2]).first
-          parent_prop = parent_properties[match[2]]
-          if prop_field
-            return replace_value_with_prop(value, prop_field.nodes.first, match[2])
-          elsif parent_prop
-            return replace_value_with_prop(value, parent_prop, match[2])
-          elsif xml.locate(non_prop_name).first
-            # see if the value to look up is a field under the project
-            # examples are ${project.groupId} or ${project.version}
-            return replace_value_with_prop(value, xml.locate(non_prop_name).first.nodes.first, match[2])
-          else
-            # property not found
-            return value
-          end
+          return extract_property(xml, match[2], value, parent_properties)
         else
           return value
         end
@@ -202,6 +186,40 @@ module Bibliothecary
 
       def self.replace_value_with_prop(original_value, property_value, property_name)
         original_value.gsub("${#{property_name}}", property_value)
+      end
+
+      def self.extract_property(xml, property_name, value, parent_properties = {}, depth = 0)
+        # don't resolve more than 5 levels deep to avoid potential circular references
+        max_depth = 5
+
+        # the xml root is <project> so lookup the non property name in the xml
+        # this converts ${project/group.id} -> ${group/id}
+        non_prop_name = property_name.gsub(".", "/").gsub("project/", "")
+        return value if !xml.respond_to?("properties") && parent_properties.empty? && !xml.locate(non_prop_name)
+
+        prop_field = xml.properties.locate(property_name).first
+        parent_prop = parent_properties[property_name]
+        if prop_field
+          prop_value = prop_field.nodes.first
+        elsif parent_prop
+          prop_value = parent_prop
+        elsif xml.locate(non_prop_name).first
+          # see if the value to look up is a field under the project
+          # examples are ${project.groupId} or ${project.version}
+          prop_value = xml.locate(non_prop_name).first.nodes.first
+        else
+          # property not found
+          return value
+        end
+        resolved_value = replace_value_with_prop(value, prop_value, property_name)
+        # check to see if we just resolved to another property name
+        match = resolved_value.match(MAVEN_PROPERTY_REGEX)
+        if match && depth < max_depth
+          depth += 1
+          return extract_property(xml, match[2], resolved_value, parent_properties, depth)
+        else
+          return resolved_value
+        end 
       end
     end
   end
