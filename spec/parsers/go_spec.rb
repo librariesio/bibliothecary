@@ -56,7 +56,7 @@ describe Bibliothecary::Parsers::Go do
          :type=>"runtime"},
         {:name=>"gopkg.in/yaml.v1",
          :requirement=>"v1.0.0-20140924161607-9f9df34309c0",
-         :type=>"runtime"},
+         :type=>"runtime"}
         ],
       kind: 'lockfile',
       success: true
