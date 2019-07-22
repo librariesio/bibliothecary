@@ -5,7 +5,9 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.accidia</groupId>
+    <parent>
+      <groupId>org.accidia</groupId>
+    </parent>
     <artifactId>echo</artifactId>
     <packaging>jar</packaging>
     <name>echo</name>

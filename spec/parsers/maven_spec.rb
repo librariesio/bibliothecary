@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Bibliothecary::Parsers::Maven do
+RSpec.describe Bibliothecary::Parsers::Maven do
   it 'has a platform name' do
     expect(described_class.platform_name).to eq('maven')
   end
@@ -310,12 +310,14 @@ describe Bibliothecary::Parsers::Maven do
   it 'uses parent properties during resolve' do
     parent_props = {"bibliothecary.version"=>"9.9.9"}
     deps = described_class.parse_pom_manifest(load_fixture('pom.xml'), parent_props)
-    jersey_dep = deps.find do |dep| 
-      dep[:name] == "io.libraries:bibliothecary" 
-    end
-    expect(jersey_dep[:requirement]).to eq "9.9.9"
+
+    jersey_dep = deps.find { |dep| dep[:name] == "io.libraries:bibliothecary" }
+    expect(jersey_dep[:requirement]).to eq("9.9.9")
+
+    echo_parent_dep = deps.find { |dep| dep[:name] == "org.accidia:echo-parent" }
+    expect(echo_parent_dep[:requirement]).to eq("0.1.23")
   end
-  
+
   it 'parses dependencies from maven-dependencies-q.txt' do
     deps = described_class.analyse_contents('maven-resolved-dependencies.txt', load_fixture('maven-resolved-dependencies.txt'))
     expect(deps[:kind]).to eq 'lockfile'
