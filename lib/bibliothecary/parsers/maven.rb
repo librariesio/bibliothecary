@@ -193,7 +193,7 @@ module Bibliothecary
         prop_value = property_value(xml, property_name, parent_properties)
         return value unless prop_value
         # don't resolve more than 5 levels deep to avoid potential circular references
-       
+
         resolved_value = replace_value_with_prop(value, prop_value, property_name)
         # check to see if we just resolved to another property name
         match = resolved_value.match(MAVEN_PROPERTY_REGEX)
@@ -202,7 +202,7 @@ module Bibliothecary
           return extract_property(xml, match[1], resolved_value, parent_properties, depth)
         else
           return resolved_value
-        end 
+        end
       end
 
       def self.property_value(xml, property_name, parent_properties)
@@ -221,6 +221,10 @@ module Bibliothecary
           # see if the value to look up is a field under the project
           # examples are ${project.groupId} or ${project.version}
           xml.locate(non_prop_name).first.nodes.first
+        elsif xml.locate("parent/#{non_prop_name}").first
+          # see if the value to look up is a field under the project parent
+          # examples are ${project.groupId} or ${project.version}
+          xml.locate("parent/#{non_prop_name}").first.nodes.first
         end
       end
     end
