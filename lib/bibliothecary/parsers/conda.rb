@@ -23,6 +23,8 @@ module Bibliothecary
 
            fields << ">= 0" # Add fallback for version if no version specified
 
+           # Only get first two fields, which should be name and version
+           # Third argument is the conda build, which we're ignoring for now.
            fields[0..2]
         end
 
