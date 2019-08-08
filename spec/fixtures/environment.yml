@@ -1,0 +1,15 @@
+name: testingenv
+channels:
+  - defaults
+dependencies:
+  - beautifulsoup4=4.7.1=py37_1
+  - biopython=1.74=py37h7b6447c_0
+  - certifi=2019.6.16=py37_1
+  - ncurses=6.1=he6710b0_1
+  - numpy=1.16.4=py37h7e9f1db_0
+  - openssl=1.1.1c=h7b6447c_1
+  - pip
+  - python=3.7.3=h0371630_0
+  - readline=7.0=h7b6447c_5
+  - setuptools
+  - sqlite=3.29.0=h7b6447c_0
