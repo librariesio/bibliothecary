@@ -19,13 +19,16 @@ module Bibliothecary
 
         manifest = {}
         manifest["dependencies"] = unparsed_manifest["dependencies"].map do |dep|
-           fields = dep.split("=")
+          # fields seem to be  `name=version=build` or `name` or `name=version`
+          # Handling the `name` case by always appending a ">= 0" to the list, 
+          # and taking first two items.
+          fields = dep.split("=")
 
-           fields << ">= 0" # Add fallback for version if no version specified
+          fields << ">= 0" # Add fallback for version if no version specified
 
-           # Only get first two fields, which should be name and version
-           # Third argument is the conda build, which we're ignoring for now.
-           fields[0..2]
+          # Only get first two fields, which should be name and version
+          # Third argument is the conda build, which we're ignoring for now.
+          fields[0..2]
         end
 
         map_dependencies(manifest, 'dependencies', 'runtime')
