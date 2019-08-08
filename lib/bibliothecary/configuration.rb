@@ -7,6 +7,7 @@ module Bibliothecary
     attr_accessor :mix_parser_host
     attr_accessor :gradle_parser_host
     attr_accessor :yarn_parser_host
+    attr_accessor :conda_parser_host
     attr_accessor :swift_parser_host
     attr_accessor :cabal_parser_host
 
@@ -18,6 +19,7 @@ module Bibliothecary
       @mix_parser_host      = 'https://mix.libraries.io'
       @gradle_parser_host   = 'https://gradle-parser.libraries.io'
       @yarn_parser_host     = 'https://yarn-parser.libraries.io'
+      @conda_parser_host    = 'https://conda.libraries.io'
       @swift_parser_host    = 'http://swift.libraries.io'
       @cabal_parser_host    = 'http://cabal.libraries.io'
     end

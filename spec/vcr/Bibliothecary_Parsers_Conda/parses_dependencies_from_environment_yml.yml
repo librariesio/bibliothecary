@@ -1,0 +1,77 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://conda.libraries.io/parse
+    body:
+      encoding: UTF-8
+      string: file=name%3A%20testingenv%0Achannels%3A%0A%20%20-%20defaults%0Adependencies%3A%0A%20%20-%20beautifulsoup4%3D4.7.1%3Dpy37_1%0A%20%20-%20biopython%3D1.74%3Dpy37h7b6447c_0%0A%20%20-%20certifi%3D2019.6.16%3Dpy37_1%0A%20%20-%20ncurses%3D6.1%3Dhe6710b0_1%0A%20%20-%20numpy%3D1.16.4%3Dpy37h7e9f1db_0%0A%20%20-%20openssl%3D1.1.1c%3Dh7b6447c_1%0A%20%20-%20pip%0A%20%20-%20python%3D3.7.3%3Dh0371630_0%0A%20%20-%20readline%3D7.0%3Dh7b6447c_5%0A%20%20-%20setuptools%0A%20%20-%20sqlite%3D3.29.0%3Dh7b6447c_0&filename=environment.yml
+    headers:
+      User-Agent:
+      - Typhoeus - https://github.com/typhoeus/typhoeus
+      Contenttype:
+      - multipart/form-data
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3027'
+      Server:
+      - Werkzeug/0.15.4 Python/3.7.4
+      Date:
+      - Tue, 20 Aug 2019 18:23:41 GMT
+    body:
+      encoding: UTF-8
+      string: "{\n  \"channels\": [\n    \"defaults\"\n  ], \n  \"lockfile\": [\n
+        \   {\n      \"name\": \"_libgcc_mutex\", \n      \"requirement\": \"0.1\"\n
+        \   }, \n    {\n      \"name\": \"beautifulsoup4\", \n      \"requirement\":
+        \"4.7.1\"\n    }, \n    {\n      \"name\": \"biopython\", \n      \"requirement\":
+        \"1.74\"\n    }, \n    {\n      \"name\": \"blas\", \n      \"requirement\":
+        \"1.0\"\n    }, \n    {\n      \"name\": \"ca-certificates\", \n      \"requirement\":
+        \"2019.5.15\"\n    }, \n    {\n      \"name\": \"certifi\", \n      \"requirement\":
+        \"2019.6.16\"\n    }, \n    {\n      \"name\": \"intel-openmp\", \n      \"requirement\":
+        \"2019.4\"\n    }, \n    {\n      \"name\": \"libedit\", \n      \"requirement\":
+        \"3.1.20181209\"\n    }, \n    {\n      \"name\": \"libffi\", \n      \"requirement\":
+        \"3.2.1\"\n    }, \n    {\n      \"name\": \"libgcc-ng\", \n      \"requirement\":
+        \"9.1.0\"\n    }, \n    {\n      \"name\": \"libgfortran-ng\", \n      \"requirement\":
+        \"7.3.0\"\n    }, \n    {\n      \"name\": \"libstdcxx-ng\", \n      \"requirement\":
+        \"9.1.0\"\n    }, \n    {\n      \"name\": \"mkl\", \n      \"requirement\":
+        \"2019.4\"\n    }, \n    {\n      \"name\": \"mkl-service\", \n      \"requirement\":
+        \"2.0.2\"\n    }, \n    {\n      \"name\": \"mkl_fft\", \n      \"requirement\":
+        \"1.0.14\"\n    }, \n    {\n      \"name\": \"mkl_random\", \n      \"requirement\":
+        \"1.0.2\"\n    }, \n    {\n      \"name\": \"ncurses\", \n      \"requirement\":
+        \"6.1\"\n    }, \n    {\n      \"name\": \"numpy\", \n      \"requirement\":
+        \"1.16.4\"\n    }, \n    {\n      \"name\": \"numpy-base\", \n      \"requirement\":
+        \"1.16.4\"\n    }, \n    {\n      \"name\": \"openssl\", \n      \"requirement\":
+        \"1.1.1c\"\n    }, \n    {\n      \"name\": \"pip\", \n      \"requirement\":
+        \"19.2.2\"\n    }, \n    {\n      \"name\": \"python\", \n      \"requirement\":
+        \"3.7.3\"\n    }, \n    {\n      \"name\": \"readline\", \n      \"requirement\":
+        \"7.0\"\n    }, \n    {\n      \"name\": \"setuptools\", \n      \"requirement\":
+        \"41.0.1\"\n    }, \n    {\n      \"name\": \"six\", \n      \"requirement\":
+        \"1.12.0\"\n    }, \n    {\n      \"name\": \"soupsieve\", \n      \"requirement\":
+        \"1.9.2\"\n    }, \n    {\n      \"name\": \"sqlite\", \n      \"requirement\":
+        \"3.29.0\"\n    }, \n    {\n      \"name\": \"tk\", \n      \"requirement\":
+        \"8.6.8\"\n    }, \n    {\n      \"name\": \"wheel\", \n      \"requirement\":
+        \"0.33.4\"\n    }, \n    {\n      \"name\": \"xz\", \n      \"requirement\":
+        \"5.2.4\"\n    }, \n    {\n      \"name\": \"zlib\", \n      \"requirement\":
+        \"1.2.11\"\n    }\n  ], \n  \"manifest\": [\n    {\n      \"name\": \"beautifulsoup4\",
+        \n      \"requirement\": \"4.7.1\"\n    }, \n    {\n      \"name\": \"biopython\",
+        \n      \"requirement\": \"1.74\"\n    }, \n    {\n      \"name\": \"certifi\",
+        \n      \"requirement\": \"2019.6.16\"\n    }, \n    {\n      \"name\": \"ncurses\",
+        \n      \"requirement\": \"6.1\"\n    }, \n    {\n      \"name\": \"numpy\",
+        \n      \"requirement\": \"1.16.4\"\n    }, \n    {\n      \"name\": \"openssl\",
+        \n      \"requirement\": \"1.1.1c\"\n    }, \n    {\n      \"name\": \"pip\",
+        \n      \"requirement\": \"19.2.2\"\n    }, \n    {\n      \"name\": \"python\",
+        \n      \"requirement\": \"3.7.3\"\n    }, \n    {\n      \"name\": \"readline\",
+        \n      \"requirement\": \"7.0\"\n    }, \n    {\n      \"name\": \"setuptools\",
+        \n      \"requirement\": \"41.0.1\"\n    }, \n    {\n      \"name\": \"sqlite\",
+        \n      \"requirement\": \"3.29.0\"\n    }\n  ]\n}\n"
+    http_version:
+  recorded_at: Tue, 20 Aug 2019 18:23:41 GMT
+recorded_with: VCR 5.0.0
