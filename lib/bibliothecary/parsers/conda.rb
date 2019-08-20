@@ -31,6 +31,8 @@ module Bibliothecary
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{host}/parse", response.response_code) unless response.success?
 
         json = JSON.parse(response.body, symbolize_names: true)
+
+        # TODO: map these the right way, add `runtime` ?
       end
     end
   end
