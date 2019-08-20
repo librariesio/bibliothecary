@@ -1,4 +1,5 @@
 require 'json'
+require 'stringio'
 
 module Bibliothecary
   module Parsers
@@ -9,29 +10,27 @@ module Bibliothecary
         {
           match_filename("environment.yml") => {
             kind: 'manifest',
-            parser: :parse_yaml_manifest
+            parser: :parse_conda_environment
+          },
+          match_filename("environment.yaml") => {
+            kind: 'manifest',
+            parser: :parse_conda_environment
           }
         }
       end
 
-      def self.parse_yaml_manifest(file_contents)
-        unparsed_manifest = YAML.load file_contents
+      def self.parse_conda_environment(file_contents)
+        host = Bibliothecary.configuration.conda_parser_host
+        response = Typhoeus.post(
+          "#{host}/parse",
+          headers: {
+              ContentType: 'multipart/form-data'
+          },
+          body: {file: file_contents, filename: 'environment.yml'}
+        )
+        raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{host}/parse", response.response_code) unless response.success?
 
-        manifest = {}
-        manifest["dependencies"] = unparsed_manifest["dependencies"].map do |dep|
-          # fields seem to be  `name=version=build` or `name` or `name=version`
-          # Handling the `name` case by always appending a ">= 0" to the list, 
-          # and taking first two items.
-          fields = dep.split("=")
-
-          fields << ">= 0" # Add fallback for version if no version specified
-
-          # Only get first two fields, which should be name and version
-          # Third argument is the conda build, which we're ignoring for now.
-          fields[0..2]
-        end
-
-        map_dependencies(manifest, 'dependencies', 'runtime')
+        json = JSON.parse(response.body, symbolize_names: true)
       end
     end
   end
