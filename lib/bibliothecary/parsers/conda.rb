@@ -9,11 +9,9 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("environment.yml") => {
-            kind: 'manifest',
             parser: :parse_conda_environment
           },
           match_filename("environment.yaml") => {
-            kind: 'manifest',
             parser: :parse_conda_environment
           }
         }

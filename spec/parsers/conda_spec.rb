@@ -57,7 +57,7 @@ describe Bibliothecary::Parsers::Conda do
           {:name=>"sqlite", :requirement=>"3.29.0"}
         ]
       },
-      kind: 'manifest',
+      kind: nil,
       success: true
     })
   end
