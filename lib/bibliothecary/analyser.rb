@@ -89,6 +89,15 @@ module Bibliothecary
       end
 
       def map_dependencies(hash, key, type)
+        # determine if the items are hashes or arrays, and return appropriate results
+        if hash.fetch(key,[])[0].is_a?(Hash)
+          return map_dependencies_hash(hash, key, type)
+        else
+          return map_dependencies_array(hash, key, type)
+        end
+      end
+
+      def map_dependencies_array(hash, key, type)
         # map a two tuple of name,requirement to a hash of
         # name,requirement, type
         hash.fetch(key,[]).map do |name, requirement|

@@ -21,7 +21,7 @@ module Bibliothecary
 
       def self.parse_conda_manifest(file_contents)
         manifest = parse_conda(file_contents)
-        map_dependencies_hash(manifest, "manifest", "runtime")
+        map_dependencies(manifest, "manifest", "runtime")
       end
 
       def self.parse_conda(file_contents)
