@@ -130,7 +130,6 @@ module Bibliothecary
           .select(&method(:match_info?))
 
         matching_info.map do |info|
-          # TODO: Return multiple analysis for one info
           analyse_contents_from_info(info)
             .merge(related_paths: related_paths(info, matching_info))
         end
@@ -140,11 +139,21 @@ module Bibliothecary
         analyse_contents_from_info(FileInfo.new(nil, filename, contents))
       end
 
-      def analyse_contents_from_info(info)
-        kind = determine_kind_from_info(info)
-        dependencies = parse_file(info.relative_path, info.contents)
 
-        Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies || [])
+      def analyse_contents_from_info(info)
+        if determine_multiple_from_info(info)
+          # This method allows multiple analyses to come out
+          # set the mapping `multiple: true` and an array of `kinds`
+          kinds = determine_kind_from_info(info)
+          dependencies = parse_file(info.relative_path, info.contents)
+
+          kinds.map { |kind| create_analysis_for_dependencies(dependencies[kind], info, kind) }
+        else
+          kind = determine_kind_from_info(info)
+          dependencies = parse_file(info.relative_path, info.contents)
+          
+          create_analysis_for_dependencies(dependencies, info, kind)
+        end
       rescue Bibliothecary::FileParsingError => e
         Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, kind, e.message)
       end
@@ -158,6 +167,11 @@ module Bibliothecary
       def determine_kind_from_info(info)
         first_matching_mapping_details(info)
           .fetch(:kind, nil)
+      end
+
+      def determine_multiple_from_info(info)
+        first_matching_mapping_details(info)
+          .fetch(:multiple, nil)
       end
 
       # calling this with contents=nil can produce less-informed
@@ -210,6 +224,10 @@ module Bibliothecary
       end
 
       private
+
+      def create_analysis_for_dependencies(dependencies, info, kind)
+        Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies || [])
+      end
 
       def related_paths(info, infos)
         return [] unless determine_can_have_lockfile_from_info(info)
