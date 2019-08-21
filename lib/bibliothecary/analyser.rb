@@ -89,10 +89,24 @@ module Bibliothecary
       end
 
       def map_dependencies(hash, key, type)
+        # map a two tuple of name,requirement to a hash of
+        # name,requirement, type
         hash.fetch(key,[]).map do |name, requirement|
           {
             name: name,
             requirement: requirement,
+            type: type
+          }
+        end
+      end
+
+      def map_dependencies_hash(hash, key, type)
+        # map a hash of name,requirement/version to a hash of
+        # name, requirement, type
+        hash.fetch(key,[]).map do |dependency|
+          {
+            name: dependency["name"],
+            requirement: dependency["requirement"] || dependency["version"],
             type: type
           }
         end
@@ -107,6 +121,7 @@ module Bibliothecary
           .select(&method(:match_info?))
 
         matching_info.map do |info|
+          # TODO: Return multiple analysis for one info
           analyse_contents_from_info(info)
             .merge(related_paths: related_paths(info, matching_info))
         end

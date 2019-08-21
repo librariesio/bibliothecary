@@ -9,15 +9,22 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("environment.yml") => {
-            parser: :parse_conda_environment
+            parser: :parse_conda_manifest,
+            kind: "manifest"
           },
           match_filename("environment.yaml") => {
-            parser: :parse_conda_environment
+            parser: :parse_conda_manifest,
+            kind: "manifest"
           }
         }
       end
 
-      def self.parse_conda_environment(file_contents)
+      def self.parse_conda_manifest(file_contents)
+        manifest = parse_conda(file_contents)
+        map_dependencies_hash(manifest, "manifest", "runtime")
+      end
+
+      def self.parse_conda(file_contents)
         host = Bibliothecary.configuration.conda_parser_host
         response = Typhoeus.post(
           "#{host}/parse",
@@ -28,9 +35,7 @@ module Bibliothecary
         )
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{host}/parse", response.response_code) unless response.success?
 
-        json = JSON.parse(response.body, symbolize_names: true)
-
-        # TODO: map these the right way, add `runtime` ?
+        JSON.parse(response.body)
       end
     end
   end
