@@ -139,9 +139,11 @@ module Bibliothecary
         analyse_contents_from_info(FileInfo.new(nil, filename, contents))
       end
 
+
       def analyse_contents_from_info(info)
-        multiple = determine_multiple_from_info(info)
-        if multiple
+        if determine_multiple_from_info(info)
+          # This method allows multiple analyses to come out
+          # set the mapping `multiple: true` and an array of `kinds`
           kinds = determine_kind_from_info(info)
           dependencies = parse_file(info.relative_path, info.contents)
 
