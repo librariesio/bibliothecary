@@ -10,18 +10,24 @@ module Bibliothecary
         {
           match_filename("environment.yml") => {
             parser: :parse_conda_manifest,
-            kind: "manifest"
+            multiple: true,
+            kind: ["manifest", "lockfile"]
           },
           match_filename("environment.yaml") => {
             parser: :parse_conda_manifest,
-            kind: "manifest"
+            multiple: true,
+            kind: ["manifest", "lockfile"]
           }
         }
       end
 
       def self.parse_conda_manifest(file_contents)
         manifest = parse_conda(file_contents)
-        map_dependencies(manifest, "manifest", "runtime")
+
+        {
+            "manifest" => map_dependencies(manifest, "manifest", "runtime"),
+            "lockfile" => map_dependencies(manifest, "lockfile", "runtime"),
+        }
       end
 
       def self.parse_conda(file_contents)

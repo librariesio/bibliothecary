@@ -130,7 +130,6 @@ module Bibliothecary
           .select(&method(:match_info?))
 
         matching_info.map do |info|
-          # TODO: Return multiple analysis for one info
           analyse_contents_from_info(info)
             .merge(related_paths: related_paths(info, matching_info))
         end
@@ -141,10 +140,19 @@ module Bibliothecary
       end
 
       def analyse_contents_from_info(info)
-        kind = determine_kind_from_info(info)
-        dependencies = parse_file(info.relative_path, info.contents)
+        multiple = determine_multiple_from_info(info)
+        if multiple
+          kinds = determine_kind_from_info(info)
+          dependencies = parse_file(info.relative_path, info.contents)
 
-        Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies || [])
+          kinds.map do |kind|
+            Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies[kind] || [])
+          end
+        else
+          kind = determine_kind_from_info(info)
+          dependencies = parse_file(info.relative_path, info.contents)
+          Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies || [])
+        end
       rescue Bibliothecary::FileParsingError => e
         Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, kind, e.message)
       end
@@ -157,7 +165,12 @@ module Bibliothecary
 
       def determine_kind_from_info(info)
         first_matching_mapping_details(info)
-          .fetch(:kind, nil)
+            .fetch(:kind, nil)
+      end
+
+      def determine_multiple_from_info(info)
+        first_matching_mapping_details(info)
+            .fetch(:multiple, nil)
       end
 
       # calling this with contents=nil can produce less-informed
