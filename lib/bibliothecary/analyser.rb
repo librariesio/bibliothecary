@@ -151,6 +151,7 @@ module Bibliothecary
         else
           kind = determine_kind_from_info(info)
           dependencies = parse_file(info.relative_path, info.contents)
+          
           create_analysis_for_dependencies(dependencies, info, kind)
         end
       rescue Bibliothecary::FileParsingError => e
