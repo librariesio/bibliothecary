@@ -165,12 +165,12 @@ module Bibliothecary
 
       def determine_kind_from_info(info)
         first_matching_mapping_details(info)
-            .fetch(:kind, nil)
+          .fetch(:kind, nil)
       end
 
       def determine_multiple_from_info(info)
         first_matching_mapping_details(info)
-            .fetch(:multiple, nil)
+          .fetch(:multiple, nil)
       end
 
       # calling this with contents=nil can produce less-informed
