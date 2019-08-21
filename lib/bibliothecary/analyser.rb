@@ -145,13 +145,11 @@ module Bibliothecary
           kinds = determine_kind_from_info(info)
           dependencies = parse_file(info.relative_path, info.contents)
 
-          kinds.map do |kind|
-            Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies[kind] || [])
-          end
+          kinds.map { |kind| create_analysis_for_dependencies(dependencies[kind], info, kind) }
         else
           kind = determine_kind_from_info(info)
           dependencies = parse_file(info.relative_path, info.contents)
-          Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies || [])
+          create_analysis_for_dependencies(dependencies, info, kind)
         end
       rescue Bibliothecary::FileParsingError => e
         Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, kind, e.message)
@@ -223,6 +221,10 @@ module Bibliothecary
       end
 
       private
+
+      def create_analysis_for_dependencies(dependencies, info, kind)
+        Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies || [])
+      end
 
       def related_paths(info, infos)
         return [] unless determine_can_have_lockfile_from_info(info)
