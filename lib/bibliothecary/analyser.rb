@@ -90,34 +90,10 @@ module Bibliothecary
 
       def map_dependencies(hash, key, type)
         # determine if the items are hashes or arrays, and return appropriate results
-        if hash.fetch(key,[])[0].is_a?(Hash)
-          return map_dependencies_hash(hash, key, type)
+        if hash.fetch(key,[]).first.is_a?(Hash)
+          map_dependencies_hash(hash, key, type)
         else
-          return map_dependencies_array(hash, key, type)
-        end
-      end
-
-      def map_dependencies_array(hash, key, type)
-        # map a two tuple of name,requirement to a hash of
-        # name,requirement, type
-        hash.fetch(key,[]).map do |name, requirement|
-          {
-            name: name,
-            requirement: requirement,
-            type: type
-          }
-        end
-      end
-
-      def map_dependencies_hash(hash, key, type)
-        # map a hash of name,requirement/version to a hash of
-        # name, requirement, type
-        hash.fetch(key,[]).map do |dependency|
-          {
-            name: dependency["name"],
-            requirement: dependency["requirement"] || dependency["version"],
-            type: type
-          }
+          map_dependencies_array(hash, key, type)
         end
       end
 
@@ -129,7 +105,7 @@ module Bibliothecary
         matching_info = file_info_list
           .select(&method(:match_info?))
 
-        matching_info.map do |info|
+        matching_info.flat_map do |info|
           analyse_contents_from_info(info)
             .merge(related_paths: related_paths(info, matching_info))
         end
@@ -139,21 +115,13 @@ module Bibliothecary
         analyse_contents_from_info(FileInfo.new(nil, filename, contents))
       end
 
-
       def analyse_contents_from_info(info)
-        if determine_multiple_from_info(info)
-          # This method allows multiple analyses to come out
-          # set the mapping `multiple: true` and an array of `kinds`
-          kinds = determine_kind_from_info(info)
-          dependencies = parse_file(info.relative_path, info.contents)
+        # If your Parser needs to return multiple responses for one file, please override this method
+        # For example see conda.rb
+        kind = determine_kind_from_info(info)
+        dependencies = parse_file(info.relative_path, info.contents)
 
-          kinds.map { |kind| create_analysis_for_dependencies(dependencies[kind], info, kind) }
-        else
-          kind = determine_kind_from_info(info)
-          dependencies = parse_file(info.relative_path, info.contents)
-          
-          create_analysis_for_dependencies(dependencies, info, kind)
-        end
+        Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies || [])
       rescue Bibliothecary::FileParsingError => e
         Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, kind, e.message)
       end
@@ -167,11 +135,6 @@ module Bibliothecary
       def determine_kind_from_info(info)
         first_matching_mapping_details(info)
           .fetch(:kind, nil)
-      end
-
-      def determine_multiple_from_info(info)
-        first_matching_mapping_details(info)
-          .fetch(:multiple, nil)
       end
 
       # calling this with contents=nil can produce less-informed
@@ -225,9 +188,30 @@ module Bibliothecary
 
       private
 
-      def create_analysis_for_dependencies(dependencies, info, kind)
-        Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies || [])
+      def map_dependencies_array(hash, key, type)
+        # map a two tuple of name,requirement to a hash of
+        # name,requirement, type
+        hash.fetch(key,[]).map do |name, requirement|
+          {
+            name: name,
+            requirement: requirement,
+            type: type
+          }
+        end
       end
+
+      def map_dependencies_hash(hash, key, type)
+        # map a hash of name,requirement/version to a hash of
+        # name, requirement, type
+        hash.fetch(key,[]).map do |dependency|
+          {
+            name: dependency["name"],
+            requirement: dependency["requirement"] || dependency["version"],
+            type: type
+          }
+        end
+      end
+
 
       def related_paths(info, infos)
         return [] unless determine_can_have_lockfile_from_info(info)
