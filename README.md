@@ -97,6 +97,9 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - Podfile
   - Podfile.lock
   - *.podspec
+- Anaconda
+  - environment.yml
+  - environment.yaml
 - Clojars
   - project.clj
 - Meteor
