@@ -19,15 +19,9 @@ module Bibliothecary
         }
       end
 
-      def self.parse_conda_environment(file_contents)
-        manifest = call_conda_parser_web(file_contents)
-
-        Hash[FILE_KINDS.collect { |kind| [kind, map_dependencies(manifest, kind, "runtime")] }]
-      end
-
       # Overrides Analyser.analyse_contents_from_info
       def self.analyse_contents_from_info(info)
-        dependencies = parse_conda_environment(info.contents)
+        dependencies = call_conda_parser_web(info.contents)
 
         FILE_KINDS.map do |kind|
           Bibliothecary::Analyser.create_analysis(
@@ -56,7 +50,8 @@ module Bibliothecary
         )
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{host}/parse", response.response_code) unless response.success?
 
-        JSON.parse(response.body)
+        results = JSON.parse(response.body)
+        Hash[FILE_KINDS.collect { |kind| [kind, map_dependencies(results, kind, "runtime")] }]
       end
     end
   end
