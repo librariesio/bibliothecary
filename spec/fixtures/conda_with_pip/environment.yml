@@ -6,4 +6,5 @@ dependencies:
   - pip:
       - urllib3
       - Django==2.0.0
+        - git+https://github.com/blaze/dask.git#egg=dask[complete]
   - sqlite=3.29.0=h7b6447c_0
