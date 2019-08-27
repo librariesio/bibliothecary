@@ -11,11 +11,9 @@ module Bibliothecary
         # so TODO:determine if there is a need to parse other filenames
         {
           match_filename("environment.yml") => {
-            parser: :parse_conda_environment,
             kind: FILE_KINDS
           },
           match_filename("environment.yaml") => {
-            parser: :parse_conda_environment,
             kind: FILE_KINDS
           }
         }
