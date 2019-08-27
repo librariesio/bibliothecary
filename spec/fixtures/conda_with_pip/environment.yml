@@ -1,0 +1,9 @@
+name: testingenv
+channels:
+  - defaults
+dependencies:
+  - pip
+  - pip:
+      - urllib3
+      - Django==2.0.0
+  - sqlite=3.29.0=h7b6447c_0
