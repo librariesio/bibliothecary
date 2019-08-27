@@ -19,20 +19,20 @@ module Bibliothecary
 
       # Overrides Analyser.analyse_contents_from_info
       def self.analyse_contents_from_info(info)
-        dependencies = call_conda_parser_web(info.contents)
+        results = call_conda_parser_web(info.contents)
 
         FILE_KINDS.map do |kind|
           Bibliothecary::Analyser.create_analysis(
             "conda",
             info.relative_path,
             kind,
-            dependencies[kind]
+            results[kind].map { |dep| dep.slice("name", "requirement").merge("type" => "runtime") }
           )
         end
       rescue Bibliothecary::RemoteParsingError => e
         Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, "runtime", e.message)
       end
-    
+
       private
 
       def self.call_conda_parser_web(file_contents)
@@ -43,17 +43,11 @@ module Bibliothecary
               ContentType: 'multipart/form-data'
           },
           # hardcoding `environment.yml` to send to `conda.libraries.io`, downside is logs will always show `environment.yml` there
-          body: {file: file_contents, filename: 'environment.yml'} 
+          body: {file: file_contents, filename: 'environment.yml'}
         )
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{host}/parse", response.response_code) unless response.success?
 
-        results = JSON.parse(response.body)
-
-        FILE_KINDS.each do |kind|
-          results[kind] = results[kind].map { |dep| [dep["name"], dep["requirement"]] }
-        end
-         
-        Hash[FILE_KINDS.collect { |kind| [kind, map_dependencies(results, kind, "runtime")] }]
+        JSON.parse(response.body)
       end
     end
   end
