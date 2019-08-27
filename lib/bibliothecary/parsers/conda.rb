@@ -26,7 +26,7 @@ module Bibliothecary
             "conda",
             info.relative_path,
             kind.to_s,
-            results[kind].map { |dep| dep.slice(:name, :requirement).merge(:type => "runtime") }
+            results[kind].map { |dep| dep.slice(:name, :requirement).merge(type: "runtime") }
           )
         end
       rescue Bibliothecary::RemoteParsingError => e
