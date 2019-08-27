@@ -7,8 +7,6 @@ module Bibliothecary
       FILE_KINDS = %w[manifest lockfile]
 
       def self.mapping
-        # Map Conda to environment.yml or environment.yaml, this may not be all that people use, 
-        # so TODO:determine if there is a need to parse other filenames
         {
           match_filename("environment.yml") => {
             kind: FILE_KINDS
@@ -44,9 +42,8 @@ module Bibliothecary
           headers: {
               ContentType: 'multipart/form-data'
           },
-          # TODO: Can we ever get the filename from the method call from `match_filename` in the future?
-          # Would be nice to be able to send the file name that clients use for their environment to be able to log better.
-          body: {file: file_contents, filename: 'environment.yml'}
+          # hardcoding `environment.yml` to send to `conda.libraries.io`, downside is logs will always show `environment.yml` there
+          body: {file: file_contents, filename: 'environment.yml'} 
         )
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{host}/parse", response.response_code) unless response.success?
 
