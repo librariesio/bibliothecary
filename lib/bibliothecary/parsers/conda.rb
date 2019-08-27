@@ -48,6 +48,11 @@ module Bibliothecary
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{host}/parse", response.response_code) unless response.success?
 
         results = JSON.parse(response.body)
+
+        FILE_KINDS.each do |kind|
+          results[kind] = results[kind].map { |dep| [dep["name"], dep["requirement"]] }
+        end
+         
         Hash[FILE_KINDS.collect { |kind| [kind, map_dependencies(results, kind, "runtime")] }]
       end
     end

@@ -89,11 +89,14 @@ module Bibliothecary
       end
 
       def map_dependencies(hash, key, type)
-        # determine if the items are hashes or arrays, and return appropriate results
-        if hash.fetch(key,[]).first.is_a?(Hash)
-          map_dependencies_hash(hash, key, type)
-        else
-          map_dependencies_array(hash, key, type)
+        # map a two tuple of name,requirement to a hash of
+        # name,requirement, type
+        hash.fetch(key,[]).map do |name, requirement|
+          {
+            name: name,
+            requirement: requirement,
+            type: type
+          }
         end
       end
 
@@ -187,31 +190,6 @@ module Bibliothecary
       end
 
       private
-
-      def map_dependencies_array(hash, key, type)
-        # map a two tuple of name,requirement to a hash of
-        # name,requirement, type
-        hash.fetch(key,[]).map do |name, requirement|
-          {
-            name: name,
-            requirement: requirement,
-            type: type
-          }
-        end
-      end
-
-      def map_dependencies_hash(hash, key, type)
-        # map a hash of name,requirement/version to a hash of
-        # name, requirement, type
-        hash.fetch(key,[]).map do |dependency|
-          {
-            name: dependency["name"],
-            requirement: dependency["requirement"] || dependency["version"],
-            type: type
-          }
-        end
-      end
-
 
       def related_paths(info, infos)
         return [] unless determine_can_have_lockfile_from_info(info)
