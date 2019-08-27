@@ -106,7 +106,7 @@ module Bibliothecary
         matching_info = file_info_list
           .select(&method(:match_info?))
 
-        matching_info.map do |info|
+        matching_info.flat_map do |info|
           analyse_contents_from_info(info)
             .merge(related_paths: related_paths(info, matching_info))
         end
@@ -117,6 +117,8 @@ module Bibliothecary
       end
 
       def analyse_contents_from_info(info)
+        # If your Parser needs to return multiple responses for one file, please override this method
+        # For example see conda.rb
         kind = determine_kind_from_info(info)
         dependencies = parse_file(info.relative_path, info.contents)
 
