@@ -4,7 +4,7 @@ module Bibliothecary
   module Parsers
     class Conda
       include Bibliothecary::Analyser
-      FILE_KINDS = %w[manifest lockfile]
+      FILE_KINDS = %i[manifest lockfile]
 
       def self.mapping
         {
@@ -25,8 +25,8 @@ module Bibliothecary
           Bibliothecary::Analyser.create_analysis(
             "conda",
             info.relative_path,
-            kind,
-            results[kind].map { |dep| dep.slice("name", "requirement").merge("type" => "runtime") }
+            kind.to_s,
+            results[kind].map { |dep| dep.slice(:name, :requirement).merge(:type => "runtime") }
           )
         end
       rescue Bibliothecary::RemoteParsingError => e
@@ -47,7 +47,7 @@ module Bibliothecary
         )
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{host}/parse", response.response_code) unless response.success?
 
-        JSON.parse(response.body)
+        JSON.parse(response.body, symbolize_names: true)
       end
     end
   end
