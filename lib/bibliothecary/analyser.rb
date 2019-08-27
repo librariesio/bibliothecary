@@ -89,8 +89,6 @@ module Bibliothecary
       end
 
       def map_dependencies(hash, key, type)
-        # map a two tuple of name,requirement to a hash of
-        # name, requirement, type
         hash.fetch(key,[]).map do |name, requirement|
           {
             name: name,
