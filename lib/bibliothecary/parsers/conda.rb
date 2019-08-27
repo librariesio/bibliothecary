@@ -21,7 +21,7 @@ module Bibliothecary
       def self.analyse_contents_from_info(info)
         dependencies = call_conda_parser_web(info.contents)
 
-        FILE_KINDS.map do |kind|
+        analyses = FILE_KINDS.map do |kind|
           Bibliothecary::Analyser.create_analysis(
             "conda",
             info.relative_path,
@@ -29,11 +29,29 @@ module Bibliothecary
             dependencies[kind]
           )
         end
+
+        pip_dependencies = parse_pip(info)
+        analyses <<  pip_dependencies if pip_dependencies
+
+        analyses
       rescue Bibliothecary::RemoteParsingError => e
         Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, "runtime", e.message)
       end
     
       private
+
+      def self.parse_pip(info)
+        dependencies = YAML.load(info.contents).dig("dependencies")
+        pip = dependencies.find { |dep| dep.is_a?(Hash) && dep.dig("pip")}
+        return nil unless pip
+
+        Bibliothecary::Analyser.create_analysis(
+          "pypi",
+          info.relative_path,
+          "manifest",
+          Pypi.parse_requirements_txt(pip["pip"].join("\n"))
+        )
+      end
 
       def self.call_conda_parser_web(file_contents)
         host = Bibliothecary.configuration.conda_parser_host
