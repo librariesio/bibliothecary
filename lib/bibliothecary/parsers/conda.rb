@@ -49,7 +49,7 @@ module Bibliothecary
 
       def self.parse_pip(info)
         dependencies = YAML.load(info.contents)["dependencies"]
-        pip = dependencies.find { |dep| dep.is_a?(Hash) && dep.dig("pip")}
+        pip = dependencies.find { |dep| dep.is_a?(Hash) && dep["pip"]}
         return unless pip
 
         Bibliothecary::Analyser.create_analysis(
