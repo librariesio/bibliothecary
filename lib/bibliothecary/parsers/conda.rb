@@ -19,9 +19,25 @@ module Bibliothecary
 
       # Overrides Analyser.analyse_contents_from_info
       def self.analyse_contents_from_info(info)
-        results = call_conda_parser_web(info.contents)
 
-        analyses = FILE_KINDS.map do |kind|
+        conda_results = parse_conda(info)
+        pip_results = parse_pip(info)
+
+        file_analyses = []
+        file_analyses.push(conda_results)
+        file_analyses.push(pip_results)
+        file_analyses.flatten.compact
+      rescue Bibliothecary::RemoteParsingError => e
+        Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, "runtime", e.message)
+      rescue Psych::SyntaxError => e
+        Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, "runtime", e.message)
+      end
+
+      private
+
+      def self.parse_conda(info)
+        results = call_conda_parser_web(info.contents)
+        FILE_KINDS.map do |kind|
           Bibliothecary::Analyser.create_analysis(
             "conda",
             info.relative_path,
@@ -29,16 +45,7 @@ module Bibliothecary
             results[kind].map { |dep| dep.slice(:name, :requirement).merge(type: "runtime") }
           )
         end
-
-        pip_dependencies = parse_pip(info)
-        analyses <<  pip_dependencies if pip_dependencies
-
-        analyses
-      rescue Bibliothecary::RemoteParsingError => e
-        Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, "runtime", e.message)
       end
-
-      private
 
       def self.parse_pip(info)
         dependencies = YAML.load(info.contents)["dependencies"]
