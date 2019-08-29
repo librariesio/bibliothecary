@@ -19,14 +19,7 @@ module Bibliothecary
 
       # Overrides Analyser.analyse_contents_from_info
       def self.analyse_contents_from_info(info)
-
-        conda_results = parse_conda(info)
-        pip_results = parse_pip(info)
-
-        file_analyses = []
-        file_analyses.push(conda_results)
-        file_analyses.push(pip_results)
-        file_analyses.flatten.compact
+        [parse_conda(info), parse_pip(info)].flatten.compact
       rescue Bibliothecary::RemoteParsingError => e
         Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, "runtime", e.message)
       rescue Psych::SyntaxError => e
