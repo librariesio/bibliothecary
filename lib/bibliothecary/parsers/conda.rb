@@ -4,7 +4,7 @@ module Bibliothecary
   module Parsers
     class Conda
       include Bibliothecary::Analyser
-      FILE_KINDS = %i[manifest lockfile]
+      FILE_KINDS = %w[manifest lockfile]
 
       def self.mapping
         {
@@ -34,14 +34,14 @@ module Bibliothecary
           Bibliothecary::Analyser.create_analysis(
             "conda",
             info.relative_path,
-            kind.to_s,
-            results[kind].map { |dep| dep.slice(:name, :requirement).merge(type: "runtime") }
+            kind,
+            results[kind.to_sym].map { |dep| dep.slice(:name, :requirement).merge(:type => "runtime") }
           )
         end
       end
 
       def self.parse_pip(info)
-        dependencies = YAML.load(info.contents)["dependencies"]
+        dependencies = YAML.safe_load(info.contents)["dependencies"]
         pip = dependencies.find { |dep| dep.is_a?(Hash) && dep["pip"]}
         return unless pip
 
