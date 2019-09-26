@@ -36,8 +36,8 @@ describe Bibliothecary do
   end
 
   it 'identifys manifests from a list of file paths' do
-    expect(described_class.identify_manifests(['package.json', 'README.md', 'index.js'])).to eq([
-      'package.json'
+    expect(described_class.identify_manifests(['package.json', 'README.md', 'index.js', 'environment.yml'])).to eq([
+      'environment.yml', 'package.json'
       ])
   end
 
