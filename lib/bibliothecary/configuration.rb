@@ -19,7 +19,7 @@ module Bibliothecary
       @mix_parser_host      = 'https://mix.libraries.io'
       @gradle_parser_host   = 'https://gradle-parser.libraries.io'
       @yarn_parser_host     = 'https://yarn-parser.libraries.io'
-      @conda_parser_host    = 'https://conda.libraries.io'
+      @conda_parser_host    = 'https://conda-parser.libraries.io'
       @swift_parser_host    = 'http://swift.libraries.io'
       @cabal_parser_host    = 'http://cabal.libraries.io'
     end
