@@ -35,7 +35,7 @@ module Bibliothecary
             "conda",
             info.relative_path,
             kind,
-            results[kind.to_sym].map { |dep| dep.slice(:name, :requirement).merge(:type => "runtime") }
+            results[kind.to_sym].map { |dep| dep.slice(:name, :requirement).merge(type: "runtime") }
           )
         end
       end
