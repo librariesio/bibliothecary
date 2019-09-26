@@ -21,8 +21,22 @@ module Bibliothecary
       package_manager = file_infos.first.package_manager
       @platform = package_manager.platform_name
       @path = Pathname.new(File.dirname(file_infos.first.relative_path)).cleanpath.to_path
-      @manifests = file_infos.select { |info| package_manager.determine_kind_from_info(info) == "manifest" }.map { |info| File.basename(info.relative_path) }
-      @lockfiles = file_infos.select { |info| package_manager.determine_kind_from_info(info) == "lockfile" }.map { |info| File.basename(info.relative_path) }
+      @manifests = RelatedFilesInfo.get_kind(package_manager, file_infos, "manifest")
+      @lockfiles = RelatedFilesInfo.get_kind(package_manager, file_infos, "lockfile")
+    end
+
+    def self.get_kind(package_manager, file_infos, kind)
+      matched_kinds = file_infos.select do |info|
+        determined = package_manager.determine_kind_from_info(info)
+        # if the determined is an array, check if it includes a string of the kind, otherwise just check equality
+        if determined.is_a?(Array)
+          determined.map(&:to_s).include?(kind)
+        else
+          determined == kind
+        end
+      end
+
+      matched_kinds.map { |info| File.basename(info.relative_path) }
     end
   end
 end
