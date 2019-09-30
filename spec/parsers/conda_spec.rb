@@ -124,7 +124,7 @@ describe Bibliothecary::Parsers::Conda do
     expect(described_class.match?("environment.yml")).to be_truthy
   end
 
-  it "doesn"t match invalid manifest filepaths" do
+  it "doesn't match invalid manifest filepaths" do
     expect(described_class.match?("test/foo/aenvironment.yml")).to be_falsey
   end
 end
