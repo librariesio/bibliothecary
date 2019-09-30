@@ -4,7 +4,6 @@ module Bibliothecary
   module Parsers
     class Conda
       include Bibliothecary::Analyser
-      FILE_KINDS = %w[manifest lockfile].freeze
 
       def self.mapping
         {
