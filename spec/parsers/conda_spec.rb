@@ -1,12 +1,12 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Bibliothecary::Parsers::Conda do
-  it 'has a platform name' do
-    expect(described_class.platform_name).to eq('conda')
+  it "has a platform name" do
+    expect(described_class.platform_name).to eq("conda")
   end
 
-  it 'parses dependencies from environment.yml', :vcr do
-    expect(described_class.analyse_contents('environment.yml', load_fixture('environment.yml'))).to eq([
+  it "parses dependencies from environment.yml", :vcr do
+    expect(described_class.analyse_contents("environment.yml", load_fixture("environment.yml"))).to eq([
       {
         :platform=>"conda",
         :path=>"environment.yml",
@@ -25,7 +25,12 @@ describe Bibliothecary::Parsers::Conda do
         ],
         kind: "manifest",
         success: true
-      },
+      }
+    ])
+  end
+
+  it "parses dependencies from environment.yml.lock", :vcr do
+    expect(described_class.analyse_contents("environment.yml.lock", load_fixture("environment.yml"))).to eq([
       {
        :platform=>"conda",
        :path=>"environment.yml",
@@ -69,8 +74,8 @@ describe Bibliothecary::Parsers::Conda do
     )
   end
 
-  it 'parses dependencies from environment.yml with pip', :vcr do
-    expect(described_class.analyse_contents('conda_with_pip/environment.yml', load_fixture('conda_with_pip/environment.yml'))).to eq([
+  it "parses dependencies from environment.yml with pip", :vcr do
+    expect(described_class.analyse_contents("conda_with_pip/environment.yml", load_fixture("conda_with_pip/environment.yml"))).to eq([
        {
            :platform=>"conda",
            :path=>"conda_with_pip/environment.yml",
@@ -80,8 +85,13 @@ describe Bibliothecary::Parsers::Conda do
            ],
            kind: "manifest",
            success: true
-       },
-       {
+       }
+      ])
+  end
+
+  it "parses dependencies from environment.yml.lock with pip", :vcr do
+    expect(described_class.analyse_contents("conda_with_pip/environment.yml.lock", load_fixture("conda_with_pip/environment.yml"))).to eq([
+      {
            :platform=>"conda",
            :path=>"conda_with_pip/environment.yml",
            :dependencies=>[
@@ -106,27 +116,15 @@ describe Bibliothecary::Parsers::Conda do
            ],
            kind: "lockfile",
            success: true
-       },
-       {
-           :platform=>"pypi",
-           :path=>"conda_with_pip/environment.yml",
-           :dependencies=>[
-               {:name=>"urllib3", :requirement=>"*", :type=>"runtime"},
-               {:name=>"Django", :requirement=>"==2.0.0", :type=>"runtime"},
-
-           ],
-           kind: "manifest",
-           success: true
        }
-   ]
-  )
+    ])
   end
 
-  it 'matches valid manifest filepaths' do
-    expect(described_class.match?('environment.yml')).to be_truthy
+  it "matches valid manifest filepaths" do
+    expect(described_class.match?("environment.yml")).to be_truthy
   end
 
-  it "doesn't match invalid manifest filepaths" do
-    expect(described_class.match?('test/foo/aenvironment.yml')).to be_falsey
+  it "doesn"t match invalid manifest filepaths" do
+    expect(described_class.match?("test/foo/aenvironment.yml")).to be_falsey
   end
 end
