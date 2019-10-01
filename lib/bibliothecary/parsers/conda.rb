@@ -9,41 +9,35 @@ module Bibliothecary
         {
           match_filename("environment.yml") => {
             parser: :parse_conda,
-            kind: :manifest,
+            kind: "manifest",
           },
           match_filename("environment.yaml") => {
             parser: :parse_conda,
-            kind: :manifest,
+            kind: "manifest",
           },
           match_filename("environment.yml.lock") => {
             parser: :parse_conda_lockfile,
-            kind: :lockfile,
+            kind: "lockfile",
           },
           match_filename("environment.yaml.lock") => {
             parser: :parse_conda_lockfile,
-            kind: :lockfile,
+            kind: "lockfile",
           },
         }
       end
 
       def self.parse_conda(info)
-        results = call_conda_parser_web(info.contents, :manifest)
-        Bibliothecary::Analyser.create_analysis(
-          "conda",
-          info.relative_path,
-          :manifest,
-          results[:manifest].map { |dep| dep.slice(:name, :requirement).merge(type: "runtime") }
-        )
+        dependencies = call_conda_parser_web(info, :manifest)[:manifest]
+        dependencies.map do |dependency|
+          dependency.merge(type: "runtime")
+        end
       end
 
       def self.parse_conda_lockfile(info)
-        results = call_conda_parser_web(info.contents, :lockfile)
-        Bibliothecary::Analyser.create_analysis(
-          "conda",
-          info.relative_path,
-          :lockfile,
-          results[:lockfile].map { |dep| dep.slice(:name, :requirement).merge(type: "runtime") }
-        )
+        dependencies = call_conda_parser_web(info, :lockfile)[:lockfile]
+        dependencies.map do |dependency|
+          dependency.merge(type: "runtime")
+        end
       end
 
       private_class_method def self.call_conda_parser_web(file_contents, kind)
@@ -55,7 +49,7 @@ module Bibliothecary
           },
           body: {
             file: file_contents,
-            filename: kind == :manifest ? "environment.yml" : "environment.yml.lock",
+            filename: kind == "manifest" ? "environment.yml" : "environment.yml.lock",
           }
         )
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{host}/parse", response.response_code) unless response.success?
