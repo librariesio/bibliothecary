@@ -45,8 +45,7 @@ module Bibliothecary
           },
           body: {
             file: file_contents,
-            # Sending the filename with .lock if this is a lockfile, request, and just .yml if it is a manifest.
-            # This allows us to not have to create a .lock file anywhere, except in this post as the filename parameter
+            # Unfortunately we do not get the filename in the mapping parsers, so hardcoding the file name depending on the kind
             filename: kind == "manifest" ? "environment.yml" : "environment.yml.lock",
           }
         )
