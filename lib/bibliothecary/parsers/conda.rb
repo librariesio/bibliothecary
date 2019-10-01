@@ -28,16 +28,12 @@ module Bibliothecary
 
       def self.parse_conda(info)
         dependencies = call_conda_parser_web(info, :manifest)[:manifest]
-        dependencies.map do |dependency|
-          dependency.merge(type: "runtime")
-        end
+        dependencies.map { |dep| dep.merge(type: "runtime") }
       end
 
       def self.parse_conda_lockfile(info)
         dependencies = call_conda_parser_web(info, :lockfile)[:lockfile]
-        dependencies.map do |dependency|
-          dependency.merge(type: "runtime")
-        end
+        dependencies.map { |dep| dep.merge(type: "runtime") }
       end
 
       private_class_method def self.call_conda_parser_web(file_contents, kind)
@@ -45,7 +41,7 @@ module Bibliothecary
         response = Typhoeus.post(
           "#{host}/parse",
           headers: {
-            ContentType: "multipart/form-data"
+            ContentType: "multipart/form-data",
           },
           body: {
             file: file_contents,
