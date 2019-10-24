@@ -59,7 +59,8 @@ module Bibliothecary
           frameworks[framework] = deps.map do |name, details|
             {
               name: name,
-              # I think 'resolved' should always be set though
+              # 'resolved' has been set in all examples so far
+              # so fallback to requested is pure paranoia
               requirement: details.fetch('resolved', details.fetch('requested', '*')),
               type: 'runtime'
             }
