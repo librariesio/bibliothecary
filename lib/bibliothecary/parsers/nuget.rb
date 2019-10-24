@@ -16,6 +16,10 @@ module Bibliothecary
             kind: 'lockfile',
             parser: :parse_project_lock_json
           },
+          match_filename("packages.lock.json") => {
+            kind: 'lockfile',
+            parser: :parse_packages_lock_json
+          },
           match_filename("packages.config") => {
             kind: 'manifest',
             parser: :parse_packages_config
@@ -44,6 +48,30 @@ module Bibliothecary
             requirement: dep[1],
             type: 'runtime'
           }
+        end
+      end
+
+      def self.parse_packages_lock_json(file_contents)
+        manifest = JSON.parse file_contents
+
+        frameworks = {}
+        manifest.fetch('dependencies',[]).each do |framework, deps|
+          frameworks[framework] = deps.map do |name, details|
+            {
+              name: name,
+              # I think 'resolved' should always be set though
+              requirement: details.fetch('resolved', details.fetch('requested', '*')),
+              type: 'runtime'
+            }
+          end
+        end
+
+        if frameworks.size > 0
+          # we should really return multiple manifests, but bibliothecary doesn't
+          # do that yet so at least pick deterministically.
+          frameworks[frameworks.keys.sort.last]
+        else
+          []
         end
       end
 
