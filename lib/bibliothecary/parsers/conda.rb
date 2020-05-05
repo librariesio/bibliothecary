@@ -27,12 +27,12 @@ module Bibliothecary
       end
 
       def self.parse_conda(info)
-        dependencies = call_conda_parser_web(info, :manifest)[:manifest]
+        dependencies = call_conda_parser_web(info, "manifest")[:manifest]
         dependencies.map { |dep| dep.merge(type: "runtime") }
       end
 
       def self.parse_conda_lockfile(info)
-        dependencies = call_conda_parser_web(info, :lockfile)[:lockfile]
+        dependencies = call_conda_parser_web(info, "lockfile")[:lockfile]
         dependencies.map { |dep| dep.merge(type: "runtime") }
       end
 
