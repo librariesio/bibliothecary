@@ -15,6 +15,11 @@ module Bibliothecary
             parser: :parse_requirements_txt,
             can_have_lockfile: false
           },
+          match_filename('pip-resolved-dependencies.txt') => { # Inferred from pip
+            kind: 'lockfile',
+            parser: :parse_requirements_txt,
+            can_have_lockfile: false
+          },
           match_filename("setup.py") => {
             kind: 'manifest',
             parser: :parse_setup_py,
