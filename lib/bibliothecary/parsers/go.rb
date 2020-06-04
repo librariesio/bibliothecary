@@ -49,7 +49,7 @@ module Bibliothecary
             kind: 'manifest',
             parser: :parse_govendor
           },
-          // Go dep (https://github.com/golang/dep) 
+          // Go dep (deprecated: https://github.com/golang/dep#dep) 
           match_filename("Gopkg.toml") => {
             kind: 'manifest',
             parser: :parse_dep_toml
