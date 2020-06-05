@@ -13,6 +13,7 @@ module Bibliothecary
 
       def self.mapping
         {
+          // Go Modules (recommended)
           match_filename("go.mod") => {
             kind: 'manifest',
             parser: :parse_go_mod
@@ -21,6 +22,7 @@ module Bibliothecary
             kind: 'lockfile',
             parser: :parse_go_sum
           },
+          // Glide (unmaintained: https://github.com/Masterminds/glide#go-modules)
           match_filename("glide.yaml") => {
             kind: 'manifest',
             parser: :parse_glide_yaml
@@ -29,6 +31,7 @@ module Bibliothecary
             kind: 'lockfile',
             parser: :parse_glide_lockfile
           },
+          // Godep (unmaintained: https://github.com/tools/godep)
           match_filename("Godeps/Godeps.json") => {
             kind: 'manifest',
             parser: :parse_godep_json
@@ -37,6 +40,7 @@ module Bibliothecary
             kind: 'manifest',
             parser: :parse_gpm
           },
+          // Govendor (unmaintained: https://github.com/kardianos/govendor)
           match_filename("vendor/manifest") => {
             kind: 'manifest',
             parser: :parse_gb_manifest
@@ -45,6 +49,7 @@ module Bibliothecary
             kind: 'manifest',
             parser: :parse_govendor
           },
+          // Go dep (deprecated: https://github.com/golang/dep#dep) 
           match_filename("Gopkg.toml") => {
             kind: 'manifest',
             parser: :parse_dep_toml
