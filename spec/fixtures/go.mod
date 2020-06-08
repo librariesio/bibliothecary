@@ -9,3 +9,5 @@ require (
   github.com/replicon/fast-archiver v0.0.0-20121220195659-060bf9adec25 // indirect
   gopkg.in/yaml.v1 v1.0.0-20140924161607-9f9df34309c0
 )
+exclude old/thing 1.2.3
+replace bad/thing v1.4.5 => good/thing v1.4.5

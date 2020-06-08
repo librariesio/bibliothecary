@@ -7,13 +7,13 @@ module Bibliothecary
       include Bibliothecary::Analyser
 
       GPM_REGEXP = /^(.+)\s+(.+)$/
-      GOMOD_REGEX = /^(.+)\s+(.+)$/
-      GOMOD_IGNORABLE_REGEX = /^(module\s|require\s+\(|go\s|\))/m
+      GOMOD_REGEX = /^(require\s+)?(.+)\s+(.+)$/
+      GOMOD_IGNORABLE_REGEX = /^(\/\/|module\s|go\s|exclude\s|replace\s|require\s+\(|\))/m
       GOSUM_REGEX = /^(.+)\s+(.+)\s+(.+)$/
 
       def self.mapping
         {
-          // Go Modules (recommended)
+          # Go Modules (recommended)
           match_filename("go.mod") => {
             kind: 'manifest',
             parser: :parse_go_mod
@@ -22,7 +22,7 @@ module Bibliothecary
             kind: 'lockfile',
             parser: :parse_go_sum
           },
-          // Glide (unmaintained: https://github.com/Masterminds/glide#go-modules)
+          # Glide (unmaintained: https://github.com/Masterminds/glide#go-modules)
           match_filename("glide.yaml") => {
             kind: 'manifest',
             parser: :parse_glide_yaml
@@ -31,7 +31,7 @@ module Bibliothecary
             kind: 'lockfile',
             parser: :parse_glide_lockfile
           },
-          // Godep (unmaintained: https://github.com/tools/godep)
+          # Godep (unmaintained: https://github.com/tools/godep)
           match_filename("Godeps/Godeps.json") => {
             kind: 'manifest',
             parser: :parse_godep_json
@@ -40,7 +40,7 @@ module Bibliothecary
             kind: 'manifest',
             parser: :parse_gpm
           },
-          // Govendor (unmaintained: https://github.com/kardianos/govendor)
+          # Govendor (unmaintained: https://github.com/kardianos/govendor)
           match_filename("vendor/manifest") => {
             kind: 'manifest',
             parser: :parse_gb_manifest
@@ -49,7 +49,7 @@ module Bibliothecary
             kind: 'manifest',
             parser: :parse_govendor
           },
-          // Go dep (deprecated: https://github.com/golang/dep#dep) 
+          # Go dep (deprecated: https://github.com/golang/dep#dep)
           match_filename("Gopkg.toml") => {
             kind: 'manifest',
             parser: :parse_dep_toml
@@ -117,8 +117,8 @@ module Bibliothecary
           next if line.match(GOMOD_IGNORABLE_REGEX)
           if match = line.gsub(/(\/\/(.*))/, '').match(GOMOD_REGEX)
             deps << {
-              name: match[1].strip,
-              requirement: match[2].strip || '*',
+              name: match[2].strip,
+              requirement: match[3].strip || '*',
               type: 'runtime'
             }
           end
