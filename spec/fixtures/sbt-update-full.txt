@@ -1,0 +1,1878 @@
+[info] Loading settings for project scalismo-build from plugins.sbt ...
+[info] Loading project definition from /home/hp/checkout/tidelift/customer/scalismo/project
+[warn] insecure HTTP request is deprecated 'Patterns(ivyPatterns=Vector(http://dl.bintray.com/banno/oss/[organisation]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)([branch]/)[revision]/[type]s/[artifact](-[classifier]).[ext]), artifactPatterns=Vector(http://dl.bintray.com/banno/oss/[organisation]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)([branch]/)[revision]/[type]s/[artifact](-[classifier]).[ext]), isMavenCompatible=false, descriptorOptional=false, skipConsistencyCheck=false)'; switch to HTTPS or opt-in as Resolver.url("bintray-sbt-plugin-releases", url(...)).withAllowInsecureProtocol(true)
+[warn] insecure HTTP request is deprecated 'Patterns(ivyPatterns=Vector(http://dl.bintray.com/banno/oss/[organisation]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)([branch]/)[revision]/[type]s/[artifact](-[classifier]).[ext]), artifactPatterns=Vector(http://dl.bintray.com/banno/oss/[organisation]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)([branch]/)[revision]/[type]s/[artifact](-[classifier]).[ext]), isMavenCompatible=false, descriptorOptional=false, skipConsistencyCheck=false)'; switch to HTTPS or opt-in as Resolver.url("bintray-sbt-plugin-releases", url(...)).withAllowInsecureProtocol(true)
+[warn] insecure HTTP request is deprecated 'Patterns(ivyPatterns=Vector(http://dl.bintray.com/banno/oss/[organisation]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)([branch]/)[revision]/[type]s/[artifact](-[classifier]).[ext]), artifactPatterns=Vector(http://dl.bintray.com/banno/oss/[organisation]/[module]/(scala_[scalaVersion]/)(sbt_[sbtVersion]/)([branch]/)[revision]/[type]s/[artifact](-[classifier]).[ext]), isMavenCompatible=false, descriptorOptional=false, skipConsistencyCheck=false)'; switch to HTTPS or opt-in as Resolver.url("bintray-sbt-plugin-releases", url(...)).withAllowInsecureProtocol(true)
+[info] Loading settings for project root from build.sbt,bintray.sbt ...
+[info] Set current project to scalismo (in build file:/home/hp/checkout/tidelift/customer/scalismo/)
+[info] Update report:
+[info] 	Resolve time: -1 ms, Download time: -1 ms, Download size: -1 bytes
+[info] 	plugin:
+[info] 	pom:
+[info] 	test:
+[info] 	org.scala-lang:scala-library
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.slf4j:slf4j-nop
+[info] 		- 1.6.0
+[info] 			evicted: false
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.scala-lang.modules:scala-xml_2.12
+[info] 		- 1.0.5
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalatest:scalatest_2.12:3.0.1
+[info] 
+[info] 	com.github.wendykierp:JTransforms
+[info] 		- 3.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/wendykierp/JTransforms
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-win-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.typelevel:algebra_2.12
+[info] 		- 2.0.0-M2
+[info] 			evicted: false
+[info] 			homepage: http://typelevel.org/algebra
+[info] 			extraAttributes: Map(info.apiURL -> https://typelevel.org/algebra/api/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire-macros_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	org.scala-lang.modules:scala-parser-combinators_2.12
+[info] 		- 1.0.4
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalatest:scalatest_2.12:3.0.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-win-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-armhf
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.chuusai:shapeless_2.12
+[info] 		- 2.3.3
+[info] 			evicted: false
+[info] 			homepage: https://github.com/milessabin/shapeless
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.scala-lang:scala-reflect
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze-macros_2.12:1.0, org.scalatest:scalatest_2.12:3.0.1, org.typelevel:machinist_2.12:0.6.8, org.scalactic:scalactic_2.12:3.0.1
+[info] 
+[info] 	org.scalanlp:breeze-macros_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.scalactic:scalactic_2.12
+[info] 		- 3.0.1
+[info] 			evicted: false
+[info] 			homepage: http://www.scalatest.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalatest:scalatest_2.12:3.0.1
+[info] 
+[info] 	someorg:someproject-native-stub
+[info] 		- 4.0.0
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.scala-lang.modules:scala-collection-compat_2.12
+[info] 		- 2.1.1
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	pl.edu.icm:JLargeArrays
+[info] 		- 1.5
+[info] 			evicted: false
+[info] 			homepage: https://gitlab.com/ICM-VisLab/JLargeArrays
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.wendykierp:JTransforms:3.1
+[info] 
+[info] 	org.typelevel:spire-platform_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire_2.12:0.17.0-M1
+[info] 
+[info] 	org.typelevel:spire_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	net.sourceforge.f2j:arpack_combined_all
+[info] 		- 0.1
+[info] 			evicted: false
+[info] 			homepage: http://f2j.sourceforge.net
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_ref-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-linux-i686:1.1, com.github.fommil.netlib:netlib-native_system-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-win-x86_64:1.1, com.github.fommil.netlib:all:1.1.2, com.github.fommil.netlib:netlib-native_system-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-win-i686:1.1, com.github.fommil.netlib:native_ref-java:1.1, com.github.fommil.netlib:netlib-native_ref-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-i686:1.1, com.github.fommil.netlib:core:1.1.2, org.scalanlp:breeze_2.12:1.0, com.github.fommil.netlib:netlib-native_system-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-win-i686:1.1, com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-osx-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:core
+[info] 		- 1.1.2
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2, com.github.fommil.netlib:native_ref-java:1.1, org.scalanlp:breeze_2.12:1.0, com.github.fommil.netlib:native_system-java:1.1
+[info] 		- 1.1
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_ref-java:1.1
+[info] 		- 1.1
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-osx-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.scalanlp:breeze_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.fommil:jniloader
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/fommil/jniloader
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_ref-java:1.1, com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	org.typelevel:spire-macros_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	org.scalanlp:breeze-natives_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.typelevel:macro-compat_2.12
+[info] 		- 1.1.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/milessabin/macro-compat
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.chuusai:shapeless_2.12:2.3.3
+[info] 
+[info] 	com.github.fommil.netlib:native_ref-java
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_ref-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-linux-i686:1.1, com.github.fommil.netlib:netlib-native_ref-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-win-i686:1.1, com.github.fommil.netlib:netlib-native_ref-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-osx-x86_64:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-win-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.typelevel:cats-kernel_2.12
+[info] 		- 2.0.0-M4
+[info] 			evicted: false
+[info] 			homepage: https://github.com/typelevel/cats
+[info] 			extraAttributes: Map(info.apiURL -> http://typelevel.org/cats/api/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:algebra_2.12:2.0.0-M2
+[info] 
+[info] 	com.github.fommil.netlib:native_system-java
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_system-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_system-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-i686:1.1, com.github.fommil.netlib:netlib-native_system-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-win-i686:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-win-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	io.spray:spray-json_2.12
+[info] 		- 1.3.3
+[info] 			evicted: false
+[info] 			homepage: https://github.com/spray/spray-json
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	net.sf.opencsv:opencsv
+[info] 		- 2.3
+[info] 			evicted: false
+[info] 			homepage: http://opencsv.sf.net
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.typelevel:machinist_2.12
+[info] 		- 0.6.8
+[info] 			evicted: false
+[info] 			homepage: http://github.com/typelevel/machinist
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire-macros_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	someorg:someproject-native-all
+[info] 		- 4.0.0
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.typelevel:spire-util_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-armhf
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.slf4j:slf4j-api
+[info] 		- 1.7.5
+[info] 			evicted: false
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0, org.slf4j:slf4j-nop:1.6.0
+[info] 		- 1.6.0
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.slf4j:slf4j-nop:1.6.0
+[info] 
+[info] 	org.scalatest:scalatest_2.12
+[info] 		- 3.0.1
+[info] 			evicted: false
+[info] 			homepage: http://www.scalatest.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.apache.commons:commons-math3
+[info] 		- 3.5
+[info] 			evicted: false
+[info] 			homepage: http://commons.apache.org/proper/commons-math/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.wendykierp:JTransforms:3.1, org.scalanlp:breeze_2.12:1.0, pl.edu.icm:JLargeArrays:1.5
+[info] 		- 3.2
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			homepage: http://commons.apache.org/proper/commons-math/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	provided:
+[info] 	compile-internal:
+[info] 	org.scala-lang:scala-library
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.slf4j:slf4j-nop
+[info] 		- 1.6.0
+[info] 			evicted: false
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.wendykierp:JTransforms
+[info] 		- 3.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/wendykierp/JTransforms
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-win-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.typelevel:algebra_2.12
+[info] 		- 2.0.0-M2
+[info] 			evicted: false
+[info] 			homepage: http://typelevel.org/algebra
+[info] 			extraAttributes: Map(info.apiURL -> https://typelevel.org/algebra/api/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire-macros_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-win-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-armhf
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.chuusai:shapeless_2.12
+[info] 		- 2.3.3
+[info] 			evicted: false
+[info] 			homepage: https://github.com/milessabin/shapeless
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.scala-lang:scala-reflect
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze-macros_2.12:1.0, org.typelevel:machinist_2.12:0.6.8
+[info] 
+[info] 	org.scalanlp:breeze-macros_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	someorg:someproject-native-stub
+[info] 		- 4.0.0
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.scala-lang.modules:scala-collection-compat_2.12
+[info] 		- 2.1.1
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	pl.edu.icm:JLargeArrays
+[info] 		- 1.5
+[info] 			evicted: false
+[info] 			homepage: https://gitlab.com/ICM-VisLab/JLargeArrays
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.wendykierp:JTransforms:3.1
+[info] 
+[info] 	org.typelevel:spire-platform_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire_2.12:0.17.0-M1
+[info] 
+[info] 	org.typelevel:spire_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	net.sourceforge.f2j:arpack_combined_all
+[info] 		- 0.1
+[info] 			evicted: false
+[info] 			homepage: http://f2j.sourceforge.net
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_ref-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-linux-i686:1.1, com.github.fommil.netlib:netlib-native_system-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-win-x86_64:1.1, com.github.fommil.netlib:all:1.1.2, com.github.fommil.netlib:netlib-native_system-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-win-i686:1.1, com.github.fommil.netlib:native_ref-java:1.1, com.github.fommil.netlib:netlib-native_ref-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-i686:1.1, com.github.fommil.netlib:core:1.1.2, org.scalanlp:breeze_2.12:1.0, com.github.fommil.netlib:netlib-native_system-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-win-i686:1.1, com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-osx-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:core
+[info] 		- 1.1.2
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2, com.github.fommil.netlib:native_ref-java:1.1, org.scalanlp:breeze_2.12:1.0, com.github.fommil.netlib:native_system-java:1.1
+[info] 		- 1.1
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_ref-java:1.1
+[info] 		- 1.1
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-osx-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.scalanlp:breeze_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.fommil:jniloader
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/fommil/jniloader
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_ref-java:1.1, com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	org.typelevel:spire-macros_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	org.scalanlp:breeze-natives_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.typelevel:macro-compat_2.12
+[info] 		- 1.1.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/milessabin/macro-compat
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.chuusai:shapeless_2.12:2.3.3
+[info] 
+[info] 	com.github.fommil.netlib:native_ref-java
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_ref-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-linux-i686:1.1, com.github.fommil.netlib:netlib-native_ref-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-win-i686:1.1, com.github.fommil.netlib:netlib-native_ref-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-osx-x86_64:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-win-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.typelevel:cats-kernel_2.12
+[info] 		- 2.0.0-M4
+[info] 			evicted: false
+[info] 			homepage: https://github.com/typelevel/cats
+[info] 			extraAttributes: Map(info.apiURL -> http://typelevel.org/cats/api/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:algebra_2.12:2.0.0-M2
+[info] 
+[info] 	com.github.fommil.netlib:native_system-java
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_system-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_system-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-i686:1.1, com.github.fommil.netlib:netlib-native_system-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-win-i686:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-win-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	io.spray:spray-json_2.12
+[info] 		- 1.3.3
+[info] 			evicted: false
+[info] 			homepage: https://github.com/spray/spray-json
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	net.sf.opencsv:opencsv
+[info] 		- 2.3
+[info] 			evicted: false
+[info] 			homepage: http://opencsv.sf.net
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.typelevel:machinist_2.12
+[info] 		- 0.6.8
+[info] 			evicted: false
+[info] 			homepage: http://github.com/typelevel/machinist
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire-macros_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	org.typelevel:spire-util_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-armhf
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.slf4j:slf4j-api
+[info] 		- 1.7.5
+[info] 			evicted: false
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0, org.slf4j:slf4j-nop:1.6.0
+[info] 		- 1.6.0
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.slf4j:slf4j-nop:1.6.0
+[info] 
+[info] 	org.apache.commons:commons-math3
+[info] 		- 3.5
+[info] 			evicted: false
+[info] 			homepage: http://commons.apache.org/proper/commons-math/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.wendykierp:JTransforms:3.1, org.scalanlp:breeze_2.12:1.0, pl.edu.icm:JLargeArrays:1.5
+[info] 		- 3.2
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			homepage: http://commons.apache.org/proper/commons-math/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	docs:
+[info] 	optional:
+[info] 	compile:
+[info] 	org.scala-lang:scala-library
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.slf4j:slf4j-nop
+[info] 		- 1.6.0
+[info] 			evicted: false
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.wendykierp:JTransforms
+[info] 		- 3.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/wendykierp/JTransforms
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-win-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.typelevel:algebra_2.12
+[info] 		- 2.0.0-M2
+[info] 			evicted: false
+[info] 			homepage: http://typelevel.org/algebra
+[info] 			extraAttributes: Map(info.apiURL -> https://typelevel.org/algebra/api/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire-macros_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-win-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-armhf
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.chuusai:shapeless_2.12
+[info] 		- 2.3.3
+[info] 			evicted: false
+[info] 			homepage: https://github.com/milessabin/shapeless
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.scala-lang:scala-reflect
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze-macros_2.12:1.0, org.typelevel:machinist_2.12:0.6.8
+[info] 
+[info] 	org.scalanlp:breeze-macros_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	someorg:someproject-native-stub
+[info] 		- 4.0.0
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.scala-lang.modules:scala-collection-compat_2.12
+[info] 		- 2.1.1
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	pl.edu.icm:JLargeArrays
+[info] 		- 1.5
+[info] 			evicted: false
+[info] 			homepage: https://gitlab.com/ICM-VisLab/JLargeArrays
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.wendykierp:JTransforms:3.1
+[info] 
+[info] 	org.typelevel:spire-platform_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire_2.12:0.17.0-M1
+[info] 
+[info] 	org.typelevel:spire_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	net.sourceforge.f2j:arpack_combined_all
+[info] 		- 0.1
+[info] 			evicted: false
+[info] 			homepage: http://f2j.sourceforge.net
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_ref-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-linux-i686:1.1, com.github.fommil.netlib:netlib-native_system-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-win-x86_64:1.1, com.github.fommil.netlib:all:1.1.2, com.github.fommil.netlib:netlib-native_system-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-win-i686:1.1, com.github.fommil.netlib:native_ref-java:1.1, com.github.fommil.netlib:netlib-native_ref-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-i686:1.1, com.github.fommil.netlib:core:1.1.2, org.scalanlp:breeze_2.12:1.0, com.github.fommil.netlib:netlib-native_system-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-win-i686:1.1, com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-osx-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:core
+[info] 		- 1.1.2
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2, com.github.fommil.netlib:native_ref-java:1.1, org.scalanlp:breeze_2.12:1.0, com.github.fommil.netlib:native_system-java:1.1
+[info] 		- 1.1
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_ref-java:1.1
+[info] 		- 1.1
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-osx-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.scalanlp:breeze_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.fommil:jniloader
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/fommil/jniloader
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_ref-java:1.1, com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	org.typelevel:spire-macros_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	org.scalanlp:breeze-natives_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.typelevel:macro-compat_2.12
+[info] 		- 1.1.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/milessabin/macro-compat
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.chuusai:shapeless_2.12:2.3.3
+[info] 
+[info] 	com.github.fommil.netlib:native_ref-java
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_ref-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-linux-i686:1.1, com.github.fommil.netlib:netlib-native_ref-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-win-i686:1.1, com.github.fommil.netlib:netlib-native_ref-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-osx-x86_64:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-win-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.typelevel:cats-kernel_2.12
+[info] 		- 2.0.0-M4
+[info] 			evicted: false
+[info] 			homepage: https://github.com/typelevel/cats
+[info] 			extraAttributes: Map(info.apiURL -> http://typelevel.org/cats/api/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:algebra_2.12:2.0.0-M2
+[info] 
+[info] 	com.github.fommil.netlib:native_system-java
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_system-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_system-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-i686:1.1, com.github.fommil.netlib:netlib-native_system-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-win-i686:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-win-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	io.spray:spray-json_2.12
+[info] 		- 1.3.3
+[info] 			evicted: false
+[info] 			homepage: https://github.com/spray/spray-json
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	net.sf.opencsv:opencsv
+[info] 		- 2.3
+[info] 			evicted: false
+[info] 			homepage: http://opencsv.sf.net
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.typelevel:machinist_2.12
+[info] 		- 0.6.8
+[info] 			evicted: false
+[info] 			homepage: http://github.com/typelevel/machinist
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire-macros_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	org.typelevel:spire-util_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-armhf
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.slf4j:slf4j-api
+[info] 		- 1.7.5
+[info] 			evicted: false
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0, org.slf4j:slf4j-nop:1.6.0
+[info] 		- 1.6.0
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.slf4j:slf4j-nop:1.6.0
+[info] 
+[info] 	org.apache.commons:commons-math3
+[info] 		- 3.5
+[info] 			evicted: false
+[info] 			homepage: http://commons.apache.org/proper/commons-math/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.wendykierp:JTransforms:3.1, org.scalanlp:breeze_2.12:1.0, pl.edu.icm:JLargeArrays:1.5
+[info] 		- 3.2
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			homepage: http://commons.apache.org/proper/commons-math/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	test-internal:
+[info] 	org.scala-lang:scala-library
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.slf4j:slf4j-nop
+[info] 		- 1.6.0
+[info] 			evicted: false
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.scala-lang.modules:scala-xml_2.12
+[info] 		- 1.0.5
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalatest:scalatest_2.12:3.0.1
+[info] 
+[info] 	com.github.wendykierp:JTransforms
+[info] 		- 3.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/wendykierp/JTransforms
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-win-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.typelevel:algebra_2.12
+[info] 		- 2.0.0-M2
+[info] 			evicted: false
+[info] 			homepage: http://typelevel.org/algebra
+[info] 			extraAttributes: Map(info.apiURL -> https://typelevel.org/algebra/api/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire-macros_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	org.scala-lang.modules:scala-parser-combinators_2.12
+[info] 		- 1.0.4
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalatest:scalatest_2.12:3.0.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-win-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-armhf
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.chuusai:shapeless_2.12
+[info] 		- 2.3.3
+[info] 			evicted: false
+[info] 			homepage: https://github.com/milessabin/shapeless
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.scala-lang:scala-reflect
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze-macros_2.12:1.0, org.scalatest:scalatest_2.12:3.0.1, org.typelevel:machinist_2.12:0.6.8, org.scalactic:scalactic_2.12:3.0.1
+[info] 
+[info] 	org.scalanlp:breeze-macros_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.scalactic:scalactic_2.12
+[info] 		- 3.0.1
+[info] 			evicted: false
+[info] 			homepage: http://www.scalatest.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalatest:scalatest_2.12:3.0.1
+[info] 
+[info] 	someorg:someproject-native-stub
+[info] 		- 4.0.0
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.scala-lang.modules:scala-collection-compat_2.12
+[info] 		- 2.1.1
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	pl.edu.icm:JLargeArrays
+[info] 		- 1.5
+[info] 			evicted: false
+[info] 			homepage: https://gitlab.com/ICM-VisLab/JLargeArrays
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.wendykierp:JTransforms:3.1
+[info] 
+[info] 	org.typelevel:spire-platform_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire_2.12:0.17.0-M1
+[info] 
+[info] 	org.typelevel:spire_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	net.sourceforge.f2j:arpack_combined_all
+[info] 		- 0.1
+[info] 			evicted: false
+[info] 			homepage: http://f2j.sourceforge.net
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_ref-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-linux-i686:1.1, com.github.fommil.netlib:netlib-native_system-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-win-x86_64:1.1, com.github.fommil.netlib:all:1.1.2, com.github.fommil.netlib:netlib-native_system-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-win-i686:1.1, com.github.fommil.netlib:native_ref-java:1.1, com.github.fommil.netlib:netlib-native_ref-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-i686:1.1, com.github.fommil.netlib:core:1.1.2, org.scalanlp:breeze_2.12:1.0, com.github.fommil.netlib:netlib-native_system-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-win-i686:1.1, com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-osx-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:core
+[info] 		- 1.1.2
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2, com.github.fommil.netlib:native_ref-java:1.1, org.scalanlp:breeze_2.12:1.0, com.github.fommil.netlib:native_system-java:1.1
+[info] 		- 1.1
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_ref-java:1.1
+[info] 		- 1.1
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-osx-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.scalanlp:breeze_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.fommil:jniloader
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/fommil/jniloader
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_ref-java:1.1, com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	org.typelevel:spire-macros_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	org.scalanlp:breeze-natives_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.typelevel:macro-compat_2.12
+[info] 		- 1.1.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/milessabin/macro-compat
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.chuusai:shapeless_2.12:2.3.3
+[info] 
+[info] 	com.github.fommil.netlib:native_ref-java
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_ref-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-linux-i686:1.1, com.github.fommil.netlib:netlib-native_ref-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-win-i686:1.1, com.github.fommil.netlib:netlib-native_ref-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-osx-x86_64:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-win-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.typelevel:cats-kernel_2.12
+[info] 		- 2.0.0-M4
+[info] 			evicted: false
+[info] 			homepage: https://github.com/typelevel/cats
+[info] 			extraAttributes: Map(info.apiURL -> http://typelevel.org/cats/api/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:algebra_2.12:2.0.0-M2
+[info] 
+[info] 	com.github.fommil.netlib:native_system-java
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_system-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_system-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-i686:1.1, com.github.fommil.netlib:netlib-native_system-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-win-i686:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-win-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	io.spray:spray-json_2.12
+[info] 		- 1.3.3
+[info] 			evicted: false
+[info] 			homepage: https://github.com/spray/spray-json
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	net.sf.opencsv:opencsv
+[info] 		- 2.3
+[info] 			evicted: false
+[info] 			homepage: http://opencsv.sf.net
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.typelevel:machinist_2.12
+[info] 		- 0.6.8
+[info] 			evicted: false
+[info] 			homepage: http://github.com/typelevel/machinist
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire-macros_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	someorg:someproject-native-all
+[info] 		- 4.0.0
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.typelevel:spire-util_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-armhf
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.slf4j:slf4j-api
+[info] 		- 1.7.5
+[info] 			evicted: false
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0, org.slf4j:slf4j-nop:1.6.0
+[info] 		- 1.6.0
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.slf4j:slf4j-nop:1.6.0
+[info] 
+[info] 	org.scalatest:scalatest_2.12
+[info] 		- 3.0.1
+[info] 			evicted: false
+[info] 			homepage: http://www.scalatest.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.apache.commons:commons-math3
+[info] 		- 3.5
+[info] 			evicted: false
+[info] 			homepage: http://commons.apache.org/proper/commons-math/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.wendykierp:JTransforms:3.1, org.scalanlp:breeze_2.12:1.0, pl.edu.icm:JLargeArrays:1.5
+[info] 		- 3.2
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			homepage: http://commons.apache.org/proper/commons-math/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	scala-tool:
+[info] 	org.scala-lang:scala-compiler
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.scala-lang:scala-library
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.scala-lang.modules:scala-xml_2.12
+[info] 		- 1.0.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scala-lang:scala-compiler:2.12.6
+[info] 
+[info] 	org.scala-lang:scala-reflect
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scala-lang:scala-compiler:2.12.6
+[info] 
+[info] 	jline:jline
+[info] 		- 2.14.6
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scala-lang:scala-compiler:2.12.6
+[info] 
+[info] 	sources:
+[info] 	runtime:
+[info] 	org.scala-lang:scala-library
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.slf4j:slf4j-nop
+[info] 		- 1.6.0
+[info] 			evicted: false
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.wendykierp:JTransforms
+[info] 		- 3.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/wendykierp/JTransforms
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-win-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.typelevel:algebra_2.12
+[info] 		- 2.0.0-M2
+[info] 			evicted: false
+[info] 			homepage: http://typelevel.org/algebra
+[info] 			extraAttributes: Map(info.apiURL -> https://typelevel.org/algebra/api/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire-macros_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-win-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-armhf
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.chuusai:shapeless_2.12
+[info] 		- 2.3.3
+[info] 			evicted: false
+[info] 			homepage: https://github.com/milessabin/shapeless
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.scala-lang:scala-reflect
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze-macros_2.12:1.0, org.typelevel:machinist_2.12:0.6.8
+[info] 
+[info] 	org.scalanlp:breeze-macros_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	someorg:someproject-native-stub
+[info] 		- 4.0.0
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.scala-lang.modules:scala-collection-compat_2.12
+[info] 		- 2.1.1
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	pl.edu.icm:JLargeArrays
+[info] 		- 1.5
+[info] 			evicted: false
+[info] 			homepage: https://gitlab.com/ICM-VisLab/JLargeArrays
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.wendykierp:JTransforms:3.1
+[info] 
+[info] 	org.typelevel:spire-platform_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire_2.12:0.17.0-M1
+[info] 
+[info] 	org.typelevel:spire_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	net.sourceforge.f2j:arpack_combined_all
+[info] 		- 0.1
+[info] 			evicted: false
+[info] 			homepage: http://f2j.sourceforge.net
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_ref-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-linux-i686:1.1, com.github.fommil.netlib:netlib-native_system-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-win-x86_64:1.1, com.github.fommil.netlib:all:1.1.2, com.github.fommil.netlib:netlib-native_system-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-win-i686:1.1, com.github.fommil.netlib:native_ref-java:1.1, com.github.fommil.netlib:netlib-native_ref-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-i686:1.1, com.github.fommil.netlib:core:1.1.2, org.scalanlp:breeze_2.12:1.0, com.github.fommil.netlib:netlib-native_system-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-win-i686:1.1, com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-osx-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:core
+[info] 		- 1.1.2
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2, com.github.fommil.netlib:native_ref-java:1.1, org.scalanlp:breeze_2.12:1.0, com.github.fommil.netlib:native_system-java:1.1
+[info] 		- 1.1
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_ref-java:1.1
+[info] 		- 1.1
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-osx-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.scalanlp:breeze_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.fommil:jniloader
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/fommil/jniloader
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_ref-java:1.1, com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	org.typelevel:spire-macros_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	org.scalanlp:breeze-natives_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.typelevel:macro-compat_2.12
+[info] 		- 1.1.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/milessabin/macro-compat
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.chuusai:shapeless_2.12:2.3.3
+[info] 
+[info] 	com.github.fommil.netlib:native_ref-java
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_ref-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-linux-i686:1.1, com.github.fommil.netlib:netlib-native_ref-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-win-i686:1.1, com.github.fommil.netlib:netlib-native_ref-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-osx-x86_64:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-win-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.typelevel:cats-kernel_2.12
+[info] 		- 2.0.0-M4
+[info] 			evicted: false
+[info] 			homepage: https://github.com/typelevel/cats
+[info] 			extraAttributes: Map(info.apiURL -> http://typelevel.org/cats/api/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:algebra_2.12:2.0.0-M2
+[info] 
+[info] 	com.github.fommil.netlib:native_system-java
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_system-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_system-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-i686:1.1, com.github.fommil.netlib:netlib-native_system-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-win-i686:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-win-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	io.spray:spray-json_2.12
+[info] 		- 1.3.3
+[info] 			evicted: false
+[info] 			homepage: https://github.com/spray/spray-json
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	net.sf.opencsv:opencsv
+[info] 		- 2.3
+[info] 			evicted: false
+[info] 			homepage: http://opencsv.sf.net
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.typelevel:machinist_2.12
+[info] 		- 0.6.8
+[info] 			evicted: false
+[info] 			homepage: http://github.com/typelevel/machinist
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire-macros_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	org.typelevel:spire-util_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-armhf
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.slf4j:slf4j-api
+[info] 		- 1.7.5
+[info] 			evicted: false
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0, org.slf4j:slf4j-nop:1.6.0
+[info] 		- 1.6.0
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.slf4j:slf4j-nop:1.6.0
+[info] 
+[info] 	org.apache.commons:commons-math3
+[info] 		- 3.5
+[info] 			evicted: false
+[info] 			homepage: http://commons.apache.org/proper/commons-math/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.wendykierp:JTransforms:3.1, org.scalanlp:breeze_2.12:1.0, pl.edu.icm:JLargeArrays:1.5
+[info] 		- 3.2
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			homepage: http://commons.apache.org/proper/commons-math/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	runtime-internal:
+[info] 	org.scala-lang:scala-library
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.slf4j:slf4j-nop
+[info] 		- 1.6.0
+[info] 			evicted: false
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.wendykierp:JTransforms
+[info] 		- 3.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/wendykierp/JTransforms
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-win-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.typelevel:algebra_2.12
+[info] 		- 2.0.0-M2
+[info] 			evicted: false
+[info] 			homepage: http://typelevel.org/algebra
+[info] 			extraAttributes: Map(info.apiURL -> https://typelevel.org/algebra/api/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire-macros_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-win-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-armhf
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.chuusai:shapeless_2.12
+[info] 		- 2.3.3
+[info] 			evicted: false
+[info] 			homepage: https://github.com/milessabin/shapeless
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.scala-lang:scala-reflect
+[info] 		- 2.12.6
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			extraAttributes: Map(info.apiURL -> http://www.scala-lang.org/api/2.12.6/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze-macros_2.12:1.0, org.typelevel:machinist_2.12:0.6.8
+[info] 
+[info] 	org.scalanlp:breeze-macros_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	someorg:someproject-native-stub
+[info] 		- 4.0.0
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.scala-lang.modules:scala-collection-compat_2.12
+[info] 		- 2.1.1
+[info] 			evicted: false
+[info] 			homepage: http://www.scala-lang.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	pl.edu.icm:JLargeArrays
+[info] 		- 1.5
+[info] 			evicted: false
+[info] 			homepage: https://gitlab.com/ICM-VisLab/JLargeArrays
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.wendykierp:JTransforms:3.1
+[info] 
+[info] 	org.typelevel:spire-platform_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire_2.12:0.17.0-M1
+[info] 
+[info] 	org.typelevel:spire_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	net.sourceforge.f2j:arpack_combined_all
+[info] 		- 0.1
+[info] 			evicted: false
+[info] 			homepage: http://f2j.sourceforge.net
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_ref-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-linux-i686:1.1, com.github.fommil.netlib:netlib-native_system-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-win-x86_64:1.1, com.github.fommil.netlib:all:1.1.2, com.github.fommil.netlib:netlib-native_system-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-win-i686:1.1, com.github.fommil.netlib:native_ref-java:1.1, com.github.fommil.netlib:netlib-native_ref-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-i686:1.1, com.github.fommil.netlib:core:1.1.2, org.scalanlp:breeze_2.12:1.0, com.github.fommil.netlib:netlib-native_system-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-win-i686:1.1, com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-osx-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:core
+[info] 		- 1.1.2
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2, com.github.fommil.netlib:native_ref-java:1.1, org.scalanlp:breeze_2.12:1.0, com.github.fommil.netlib:native_system-java:1.1
+[info] 		- 1.1
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_ref-java:1.1
+[info] 		- 1.1
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-osx-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.scalanlp:breeze_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	com.github.fommil:jniloader
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/fommil/jniloader
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:native_ref-java:1.1, com.github.fommil.netlib:native_system-java:1.1
+[info] 
+[info] 	org.typelevel:spire-macros_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	org.scalanlp:breeze-natives_2.12
+[info] 		- 1.0
+[info] 			evicted: false
+[info] 			homepage: http://scalanlp.org/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	org.typelevel:macro-compat_2.12
+[info] 		- 1.1.1
+[info] 			evicted: false
+[info] 			homepage: https://github.com/milessabin/macro-compat
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.chuusai:shapeless_2.12:2.3.3
+[info] 
+[info] 	com.github.fommil.netlib:native_ref-java
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_ref-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_ref-linux-i686:1.1, com.github.fommil.netlib:netlib-native_ref-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-win-i686:1.1, com.github.fommil.netlib:netlib-native_ref-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_ref-osx-x86_64:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-win-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-i686
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.typelevel:cats-kernel_2.12
+[info] 		- 2.0.0-M4
+[info] 			evicted: false
+[info] 			homepage: https://github.com/typelevel/cats
+[info] 			extraAttributes: Map(info.apiURL -> http://typelevel.org/cats/api/)
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:algebra_2.12:2.0.0-M2
+[info] 
+[info] 	com.github.fommil.netlib:native_system-java
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:netlib-native_system-linux-armhf:1.1, com.github.fommil.netlib:netlib-native_system-win-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-linux-i686:1.1, com.github.fommil.netlib:netlib-native_system-osx-x86_64:1.1, com.github.fommil.netlib:netlib-native_system-win-i686:1.1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-win-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_ref-linux-x86_64
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	io.spray:spray-json_2.12
+[info] 		- 1.3.3
+[info] 			evicted: false
+[info] 			homepage: https://github.com/spray/spray-json
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: someorg:someproject_2.12:develop-10e24da884c0ea774126fb201b8706743a7bc863
+[info] 
+[info] 	net.sf.opencsv:opencsv
+[info] 		- 2.3
+[info] 			evicted: false
+[info] 			homepage: http://opencsv.sf.net
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[info] 	org.typelevel:machinist_2.12
+[info] 		- 0.6.8
+[info] 			evicted: false
+[info] 			homepage: http://github.com/typelevel/machinist
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire-util_2.12:0.17.0-M1, org.typelevel:spire-macros_2.12:0.17.0-M1, org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	org.typelevel:spire-util_2.12
+[info] 		- 0.17.0-M1
+[info] 			evicted: false
+[info] 			homepage: https://typelevel.org/spire/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.typelevel:spire_2.12:0.17.0-M1, org.typelevel:spire-platform_2.12:0.17.0-M1
+[info] 
+[info] 	com.github.fommil.netlib:netlib-native_system-linux-armhf
+[info] 		- 1.1
+[info] 			evicted: false
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.fommil.netlib:all:1.1.2
+[info] 
+[info] 	org.slf4j:slf4j-api
+[info] 		- 1.7.5
+[info] 			evicted: false
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0, org.slf4j:slf4j-nop:1.6.0
+[info] 		- 1.6.0
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			homepage: http://www.slf4j.org
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.slf4j:slf4j-nop:1.6.0
+[info] 
+[info] 	org.apache.commons:commons-math3
+[info] 		- 3.5
+[info] 			evicted: false
+[info] 			homepage: http://commons.apache.org/proper/commons-math/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: com.github.wendykierp:JTransforms:3.1, org.scalanlp:breeze_2.12:1.0, pl.edu.icm:JLargeArrays:1.5
+[info] 		- 3.2
+[info] 			evicted: true
+[info] 			evictedData: version selection
+[info] 			homepage: http://commons.apache.org/proper/commons-math/
+[info] 			configurations: test, optional, compile, default, runtime
+[info] 			callers: org.scalanlp:breeze_2.12:1.0
+[info] 
+[success] Total time: 2 s, completed Jun 15, 2020 1:36:50 PM
