@@ -326,4 +326,38 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(spring_boot.first[:requirement]).to eq '2.0.3.RELEASE'
     expect(spring_boot.first[:type]).to eq 'compile'
   end
+
+  it 'parses dependencies from sbt-update-full.txt' do
+    analysis = described_class.analyse_contents('sbt-update-full.txt', load_fixture('sbt-update-full.txt'))
+    expect(analysis[:platform]).to eq("maven")
+    expect(analysis[:path]).to eq("sbt-update-full.txt")
+    expect(analysis[:kind]).to eq("lockfile")
+    expect(analysis[:success]).to be true
+    deps = analysis[:dependencies]
+
+    # spot check we found a dep we expected
+    algebra = deps.select {|item| item[:name] == "org.typelevel:algebra_2.12" }
+    expect(algebra.map { |d| d[:requirement] }).to eq ['2.0.0-M2', '2.0.0-M2', '2.0.0-M2', '2.0.0-M2', '2.0.0-M2', '2.0.0-M2']
+    expect(algebra.map { |d| d[:type] }.sort).to eq ['compile', 'compile-internal', 'runtime', 'runtime-internal', 'test', 'test-internal']
+
+
+    # There's a 3.5 and a 3.2, where 3.2 gets evicted; we want to check that we evict 3.2
+    commons_maths = deps.select {|item| item[:name] == "org.apache.commons:commons-math3" }
+    expect(commons_maths.map { |d| d[:requirement] }).to eq ['3.5', '3.5', '3.5', '3.5', '3.5', '3.5']
+
+    # these are some types that are in the file but shouldn't be used
+    expect(deps.select {|item| item[:type] == "plugin" }).to eq []
+    expect(deps.select {|item| item[:type] == "pom" }).to eq []
+    expect(deps.select {|item| item[:type] == "provided" }).to eq []
+
+    # be sure we can parse a type with a hyphen
+    expect((deps.select {|item| item[:type] == "compile-internal" }).length).to eq 40
+
+    # be sure we have no extraneous entries like leaving ":fields" in there
+    keys = {}
+    deps.each { |d| d.keys.each { |k| keys[k] = true } }
+    expect(keys.keys.sort).to eq([:name, :requirement, :type])
+
+    expect(deps.length).to eq 255
+  end
 end

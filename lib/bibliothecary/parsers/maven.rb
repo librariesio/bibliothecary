@@ -15,6 +15,21 @@ module Bibliothecary
       MAVEN_PROPERTY_REGEX = /\$\{(.+?)\}/
       MAX_DEPTH = 5
 
+      # e.g. "[info]  test:"
+      SBT_TYPE_REGEX = /^\[info\]\s+([-\w]+):$/
+
+      # e.g. "[info]  org.typelevel:spire-util_2.12"
+      SBT_DEP_REGEX = /^\[info\]\s+(.+)$/
+
+      # e.g. "[info] 		- 1.7.5"
+      SBT_VERSION_REGEX = /^\[info\]\s+-\s+(.+)$/
+
+      # e.g. "[info] 			homepage: http://www.slf4j.org"
+      SBT_FIELD_REGEX = /^\[info\]\s+([^:]+):\s+(.+)$/
+
+      # e.g. "[info]  "
+      SBT_IGNORE_REGEX = /^\[info\]\s*$/
+
       def self.mapping
         {
           match_filename("ivy.xml", case_insensitive: true) => {
@@ -41,6 +56,10 @@ module Bibliothecary
           match_filename("maven-resolved-dependencies.txt", case_insensitive: true) => {
             kind: 'lockfile',
             parser: :parse_maven_resolved
+          },
+          match_filename("sbt-update-full.txt", case_insensitive: true) => {
+            kind: 'lockfile',
+            parser: :parse_sbt_update_full
           }
         }
       end
@@ -226,6 +245,103 @@ module Bibliothecary
           # examples are ${project.groupId} or ${project.version}
           xml.locate("parent/#{non_prop_name}").first.nodes.first
         end
+      end
+
+      def self.parse_sbt_update_full(file_contents)
+        all_deps = []
+        type = nil
+        lines = file_contents.split("\n")
+        while lines.any?
+          line = lines.shift
+
+          type_match = SBT_TYPE_REGEX.match(line)
+          next unless type_match
+          type = type_match.captures[0]
+
+          deps = parse_sbt_deps(type, lines)
+          all_deps.concat(deps)
+        end
+
+        # strip out evicted dependencies
+        all_deps.select! do |dep|
+          dep[:fields]["evicted"] != "true"
+        end
+
+        # in the future, we could use "callers" in the fields to
+        # decide which deps are direct root deps and which are
+        # pulled in by another dep.  The direct deps have the sbt
+        # project name as a caller.
+
+        # clean out any duplicates (I'm pretty sure sbt will have done this for
+        # us so this is paranoia, basically)
+        squished = all_deps.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
+
+        # get rid of the fields
+        squished.each do |dep|
+          dep.delete(:fields)
+        end
+
+        return squished
+      end
+
+      def self.parse_sbt_deps(type, lines)
+        deps = []
+        while lines.any? and not SBT_TYPE_REGEX.match(lines[0])
+          line = lines.shift
+
+          next if SBT_IGNORE_REGEX.match(line)
+
+          dep_match = SBT_DEP_REGEX.match(line)
+          if dep_match
+            versions = parse_sbt_versions(type, dep_match.captures[0], lines)
+            deps.concat(versions)
+          else
+            lines.unshift(line)
+            break
+          end
+        end
+
+        deps
+      end
+
+      def self.parse_sbt_versions(type, name, lines)
+        versions = []
+        while lines.any? and not SBT_TYPE_REGEX.match(lines[0])
+          line = lines.shift
+
+          version_match = SBT_VERSION_REGEX.match(line)
+          if version_match
+            versions.push(parse_sbt_version(type, name, version_match.captures[0], lines))
+          else
+            lines.unshift(line)
+            break
+          end
+        end
+
+        versions
+      end
+
+      def self.parse_sbt_version(type, name, version, lines)
+        fields = {}
+        while lines.any? and not SBT_TYPE_REGEX.match(lines[0])
+          line = lines.shift
+
+          field_match = SBT_FIELD_REGEX.match(line)
+          if field_match
+            fields[field_match.captures[0]] = field_match.captures[1]
+          else
+            lines.unshift(line)
+            break
+          end
+        end
+
+        {
+          name: name,
+          requirement: version,
+          type: type,
+          # we post-process using some of these fields and then delete them again
+          fields: fields
+        }
       end
     end
   end
