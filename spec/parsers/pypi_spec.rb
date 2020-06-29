@@ -135,7 +135,7 @@ describe Bibliothecary::Parsers::Pypi do
     })
   end
 
-  it 'parses dependencies from Pipfile.lock' do
+  it 'parses dependencies from Poetry.lock' do
     expect(described_class.analyse_contents('poetry.lock', load_fixture('poetry.lock'))).to eq({
       :platform=>"pypi",
       :path=>"poetry.lock",
