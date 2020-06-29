@@ -120,4 +120,46 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.match?('some-random-file.txt')).to be_falsey
     expect(described_class.match?('require/some/other/folder/myhomework.txt')).to be_falsey
   end
+
+  it 'parses dependencies from pyproject.toml' do
+    expect(described_class.analyse_contents('pyproject.toml', load_fixture('pyproject.toml'))).to eq({
+      :platform=>"pypi",
+      :path=>"pyproject.toml",
+      :dependencies=>[
+        {:name=>"python", :requirement=>"^3.7", :type=>"runtime"},
+        {:name=>"django", :requirement=>"^3.0.7", :type=>"runtime"},
+        {:name=>"pytest", :requirement=>"^5.2", :type=>"develop"},
+      ],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
+  it 'parses dependencies from Poetry.lock' do
+    expect(described_class.analyse_contents('poetry.lock', load_fixture('poetry.lock'))).to eq({
+      :platform=>"pypi",
+      :path=>"poetry.lock",
+      :dependencies=>[
+        {:name=>"asgiref", :requirement=>"3.2.10", :type=>"runtime"},
+        {:name=>"atomicwrites", :requirement=>"1.4.0", :type=>"develop"},
+        {:name=>"attrs", :requirement=>"19.3.0", :type=>"develop"},
+        {:name=>"colorama", :requirement=>"0.4.3", :type=>"develop"},
+        {:name=>"django", :requirement=>"3.0.7", :type=>"runtime"},
+        {:name=>"importlib-metadata", :requirement=>"1.7.0", :type=>"develop"},
+        {:name=>"more-itertools", :requirement=>"8.4.0", :type=>"develop"},
+        {:name=>"packaging", :requirement=>"20.4", :type=>"develop"},
+        {:name=>"pluggy", :requirement=>"0.13.1", :type=>"develop"},
+        {:name=>"py", :requirement=>"1.9.0", :type=>"develop"},
+        {:name=>"pyparsing", :requirement=>"2.4.7", :type=>"develop"},
+        {:name=>"pytest", :requirement=>"5.4.3", :type=>"develop"},
+        {:name=>"pytz", :requirement=>"2020.1", :type=>"runtime"},
+        {:name=>"six", :requirement=>"1.15.0", :type=>"develop"},
+        {:name=>"sqlparse", :requirement=>"0.3.1", :type=>"runtime"},
+        {:name=>"wcwidth", :requirement=>"0.2.5", :type=>"develop"},
+        {:name=>"zipp", :requirement=>"3.1.0", :type=>"develop"}
+      ],
+      kind: 'lockfile',
+      success: true
+    })
+  end
 end
