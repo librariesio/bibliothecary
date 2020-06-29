@@ -100,8 +100,12 @@ module Bibliothecary
         deps = []
         manifest["package"].each do |package|
           # next if group == "_meta"
-          group = 'runtime' if package['category'] == 'main'
-          group = 'develop' if package['category'] == 'dev'
+          group = case package['category']
+                  when 'main'
+                    'runtime'
+                  when 'dev'
+                    'develop'
+                  end
 
           deps << {
             name: package['name'],
