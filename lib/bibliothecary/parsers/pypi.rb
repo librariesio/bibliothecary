@@ -31,6 +31,14 @@ module Bibliothecary
           match_filename("Pipfile.lock") => {
             kind: 'lockfile',
             parser: :parse_pipfile_lock
+          },
+          match_filename("pyproject.toml") => {
+            kind: 'manifest',
+            parser: :parse_poetry
+          },
+          match_filename("poetry.lock") => {
+            kind: 'lockfile',
+            parser: :parse_poetry_lock
           }
         }
       end
@@ -38,6 +46,11 @@ module Bibliothecary
       def self.parse_pipfile(file_contents)
         manifest = TomlRB.parse(file_contents)
         map_dependencies(manifest['packages'], 'runtime') + map_dependencies(manifest['dev-packages'], 'develop')
+      end
+
+      def self.parse_poetry(file_contents)
+        manifest = TomlRB.parse(file_contents)['tool']['poetry']
+        map_dependencies(manifest['dependencies'], 'runtime') + map_dependencies(manifest['dev-dependencies'], 'develop')
       end
 
       def self.map_dependencies(packages, type)
@@ -78,6 +91,23 @@ module Bibliothecary
               type: group
             }
           end
+        end
+        deps
+      end
+
+      def self.parse_poetry_lock(file_contents)
+        manifest = TomlRB.parse(file_contents)
+        deps = []
+        manifest["package"].each do |package|
+          # next if group == "_meta"
+          group = 'runtime' if package['category'] == 'main'
+          group = 'develop' if package['category'] == 'dev'
+
+          deps << {
+            name: package['name'],
+            requirement: map_requirements(package),
+            type: group
+          }
         end
         deps
       end
