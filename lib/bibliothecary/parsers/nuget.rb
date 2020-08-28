@@ -91,7 +91,7 @@ module Bibliothecary
 
       def self.parse_csproj(file_contents)
         manifest = Ox.parse file_contents
-        packages = manifest.locate('ItemGroup/PackageReference').map do |dependency|
+        packages = manifest.locate('ItemGroup/PackageReference').select{ |dep| dep.respond_to? "Include" }.map do |dependency|
           {
             name: dependency.Include,
             requirement: (dependency.Version if dependency.respond_to? "Version") || "*",
