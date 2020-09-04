@@ -48,33 +48,56 @@ describe Bibliothecary::Parsers::NPM do
   end
 
   it 'parses dependencies from yarn.lock', :vcr do
-
     expect(described_class.analyse_contents('yarn.lock', load_fixture('yarn.lock'))).to eq({
       :platform=>"npm",
       :path=>"yarn.lock",
       :dependencies=>[
-        {name: "body-parser", requirement: "1.16.1", type: "runtime"},
-        {name: "bytes", requirement: "2.4.0", type: "runtime"},
-        {name: "content-type", requirement: "1.0.2", type: "runtime"},
-        {name: "debug", requirement: "2.6.1", type: "runtime"},
-        {name: "depd", requirement: "1.1.0", type: "runtime"},
-        {name: "ee-first", requirement: "1.1.1", type: "runtime"},
-        {name: "http-errors", requirement: "1.5.1", type: "runtime"},
-        {name: "iconv-lite", requirement: "0.4.15", type: "runtime"},
-        {name: "inherits", requirement: "2.0.3", type: "runtime"},
-        {name: "media-typer", requirement: "0.3.0", type: "runtime"},
-        {name: "mime-db", requirement: "1.26.0", type: "runtime"},
-        {name: "mime-types", requirement: "2.1.14", type: "runtime"},
-        {name: "ms", requirement: "0.7.2", type: "runtime"},
-        {name: "on-finished", requirement: "2.3.0", type: "runtime"},
-        {name: "qs", requirement: "6.2.1", type: "runtime"},
-        {name: "raw-body", requirement: "2.2.0", type: "runtime"},
-        {name: "setprototypeof", requirement: "1.0.2", type: "runtime"},
-        {name: "statuses", requirement: "1.3.1", type: "runtime"},
-        {name: "type-is", requirement: "1.6.14", type: "runtime"},
-        {name: "unpipe", requirement: "1.0.0", type: "runtime"}
+        {name: "body-parser", original_requirement: '^1.15.2', requirement: "1.16.1", type: "runtime"},
+        {name: "bytes", original_requirement: '2.4.0', requirement: "2.4.0", type: "runtime"},
+        {name: "content-type", original_requirement: '~1.0.2', requirement: "1.0.2", type: "runtime"},
+        {name: "debug", original_requirement: '2.6.1', requirement: "2.6.1", type: "runtime"},
+        {name: "depd", original_requirement: '~1.1.0', requirement: "1.1.0", type: "runtime"},
+        {name: "ee-first", original_requirement: '1.1.1', requirement: "1.1.1", type: "runtime"},
+        {name: "http-errors", original_requirement: '~1.5.1', requirement: "1.5.1", type: "runtime"},
+        {name: "iconv-lite", original_requirement: '0.4.15', requirement: "0.4.15", type: "runtime"},
+        {name: "inherits", original_requirement: '2.0.3', requirement: "2.0.3", type: "runtime"},
+        {name: "media-typer", original_requirement: '0.3.0', requirement: "0.3.0", type: "runtime"},
+        {name: "mime-db", original_requirement: '~1.26.0', requirement: "1.26.0", type: "runtime"},
+        {name: "mime-types", original_requirement: '~2.1.13', requirement: "2.1.14", type: "runtime"},
+        {name: "ms", original_requirement: '0.7.2', requirement: "0.7.2", type: "runtime"},
+        {name: "on-finished", original_requirement: '~2.3.0', requirement: "2.3.0", type: "runtime"},
+        {name: "qs", original_requirement: '6.2.1', requirement: "6.2.1", type: "runtime"},
+        {name: "raw-body", original_requirement: '~2.2.0', requirement: "2.2.0", type: "runtime"},
+        {name: "setprototypeof", original_requirement: '1.0.2', requirement: "1.0.2", type: "runtime"},
+        {name: "statuses", original_requirement: '>= 1.3.1 < 2', requirement: "1.3.1", type: "runtime"},
+        {name: "type-is", original_requirement: '~1.6.14', requirement: "1.6.14", type: "runtime"},
+        {name: "unpipe", original_requirement: '1.0.0', requirement: "1.0.0", type: "runtime"}
       ],
       kind: 'lockfile',
+      success: true
+    })
+  end
+
+  it 'parses git dependencies from yarn.lock', :vcr do
+    expect(described_class.analyse_contents('yarn.lock', load_fixture('yarn-with-git-repo/yarn.lock'))).to eq({
+      :platform=>"npm",
+      :path=>"yarn.lock",
+      :dependencies=>[
+        {name: "vue", original_requirement: "https://github.com/vuejs/vue.git#v2.6.12", requirement: '2.6.12', type: "runtime"}
+      ],
+      kind: 'lockfile',
+      success: true
+    })
+  end
+
+  it 'parses git dependencies from package.json' do
+    expect(described_class.analyse_contents('package.json', load_fixture('yarn-with-git-repo/package.json'))).to eq({
+      :platform=>"npm",
+      :path=>"package.json",
+      :dependencies=>[
+        {name: "vue", requirement: "https://github.com/vuejs/vue.git#v2.6.12", type: "runtime"}
+      ],
+      kind: 'manifest',
       success: true
     })
   end
