@@ -70,6 +70,7 @@ module Bibliothecary
           {
             name: dep[:name],
             requirement: dep[:version],
+            lockfile_requirement: dep[:requirement],
             type: dep[:type]
           }
         end
