@@ -318,6 +318,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(echo_parent_dep[:requirement]).to eq("0.1.23")
   end
 
+  it 'returns property name for missing property values' do
+    deps = described_class.parse_pom_manifest(load_fixture('pom_missing_props.xml'))
+
+    testng_dep = deps.find { |dep| dep[:name] == "org.testng:testng" }
+    expect(testng_dep[:requirement]).to eq("${missing_property}")
+  end
+
   it 'parses dependencies from maven-dependencies-q.txt' do
     deps = described_class.analyse_contents('maven-resolved-dependencies.txt', load_fixture('maven-resolved-dependencies.txt'))
     expect(deps[:kind]).to eq 'lockfile'
