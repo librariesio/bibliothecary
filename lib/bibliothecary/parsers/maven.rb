@@ -124,8 +124,9 @@ module Bibliothecary
           split = gradle_dep_match.captures[0]
 
           # org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
-          # Lines can end with (n) or (*) to indicate that something was not resolved (n) or resolved previously (*).
-          dep = line.split(split)[1].sub(/\(n\)$/, "").sub(/\(\*\)$/,"").strip.split(":")
+          # Lines can end with (c), (n), or (*)
+          # to indicate that something was a dependency constraint (c), not resolved (n), or resolved previously (*).
+          dep = line.split(split)[1].sub(/(\((c|n|\*)\))$/, "").strip.split(":")
           version = dep[-1]
           version = version.split("->")[-1].strip if line.include?("->")
           {
