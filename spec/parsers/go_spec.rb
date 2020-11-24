@@ -262,6 +262,30 @@ describe Bibliothecary::Parsers::Go do
     })
   end
 
+  it 'parses dependencies from go-resolved-dependencies.json file' do
+    expect(described_class.analyse_contents('go-resolved-dependencies.json', load_fixture('go-resolved-dependencies.json'))).to eq({
+      :platform=>"go",
+      :path=>"go-resolved-dependencies.json",
+      :dependencies=>[
+        {:name=>"cloud.google.com/go", :requirement=>"v0.36.0", :type=>"runtime"},
+        {:name=>"dmitri.shuralyov.com/app/changes", :requirement=>"v0.0.0-20180602232624-0a106ad413e3", :type=>"runtime"},
+        {:name=>"dmitri.shuralyov.com/html/belt", :requirement=>"v0.0.0-20180602232347-f7d459c86be0", :type=>"runtime"},
+        {:name=>"dmitri.shuralyov.com/service/change", :requirement=>"v0.0.0-20181023043359-a85b471d5412", :type=>"runtime"},
+        {:name=>"dmitri.shuralyov.com/state", :requirement=>"v0.0.0-20180228185332-28bcc343414c", :type=>"runtime"},
+        {:name=>"git.apache.org/thrift.git", :requirement=>"v0.0.0-20180902110319-2566ecd5d999", :type=>"runtime"},
+        {:name=>"github.com/BurntSushi/toml", :requirement=>"v0.3.1", :type=>"runtime"},
+        {:name=>"github.com/Masterminds/semver", :requirement=>"v1.5.0", :type=>"runtime"},
+        {:name=>"github.com/Masterminds/semver/v3", :requirement=>"v3.0.3", :type=>"runtime"},
+        {:name=>"github.com/OneOfOne/xxhash", :requirement=>"v1.2.2", :type=>"runtime"},
+        {:name=>"github.com/ajg/form", :requirement=>"v1.5.1", :type=>"runtime"},
+        {:name=>"github.com/alecthomas/template", :requirement=>"v0.0.0-20160405071501-a0175ee3bccc", :type=>"runtime"},
+        {:name=>"github.com/alecthomas/units", :requirement=>"v0.0.0-20151022065526-2efee857e7cf", :type=>"runtime"},
+      ],
+      kind: 'lockfile',
+      success: true
+    })
+  end
+
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('go.mod')).to be_truthy
     expect(described_class.match?('go.sum')).to be_truthy
@@ -273,5 +297,6 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.match?('vendor/vendor.json')).to be_truthy
     expect(described_class.match?('Gopkg.toml')).to be_truthy
     expect(described_class.match?('Gopkg.lock')).to be_truthy
+    expect(described_class.match?('go-resolved-dependencies.json')).to be_truthy
   end
 end
