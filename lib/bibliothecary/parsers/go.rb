@@ -146,7 +146,7 @@ module Bibliothecary
 
       def self.parse_go_resolved(file_contents)
         JSON.parse(file_contents)
-          .select { |dep| dep["Main"] == "false" }
+          .select { |dep| dep["Main"] != "true" }
           .map { |dep| { name: dep["Path"], requirement: dep["Version"], type: 'runtime' } }
       end
 
