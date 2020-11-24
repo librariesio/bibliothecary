@@ -145,7 +145,9 @@ module Bibliothecary
       end
 
       def self.parse_go_resolved(file_contents)
-        JSON.parse(file_contents).map { |dep| { name: dep["Path"], requirement: dep["Version"], type: 'runtime' } }
+        JSON.parse(file_contents)
+          .select { |dep| dep["Main"] == "false" }
+          .map { |dep| { name: dep["Path"], requirement: dep["Version"], type: 'runtime' } }
       end
 
       def self.map_dependencies(manifest, attr_name, dep_attr_name, version_attr_name, type)
