@@ -57,7 +57,11 @@ module Bibliothecary
           match_filename("Gopkg.lock") => {
             kind: 'lockfile',
             parser: :parse_dep_lockfile
-          }
+          },
+          match_filename("go-resolved-dependencies.json") => {
+            kind: 'lockfile',
+            parser: :parse_go_resolved
+          },
         }
       end
 
@@ -138,6 +142,10 @@ module Bibliothecary
           end
         end
         deps.uniq
+      end
+
+      def self.parse_go_resolved(file_contents)
+        JSON.parse(file_contents).map { |dep| { name: dep["Path"], requirement: dep["Version"], type: 'runtime' } }
       end
 
       def self.map_dependencies(manifest, attr_name, dep_attr_name, version_attr_name, type)
