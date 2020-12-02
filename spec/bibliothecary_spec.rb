@@ -396,4 +396,10 @@ describe Bibliothecary do
     expect(pythons.first.lockfiles).to eq []
     expect(pythons.first.path).to eq "."
   end
+
+  it 'identifies all detected manifests in a list of manifest path strings' do
+    file_infos = Bibliothecary.find_manifests_from_paths(["Gemfile", "Gemfile.lock", "go.mod", "yarn.lock"])
+    expect(file_infos.count).to eq 3
+    expect(file_infos.map(&:platform)).to eq ["rubygems", "go", "npm"]
+  end
 end

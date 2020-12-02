@@ -46,6 +46,19 @@ module Bibliothecary
       Bibliothecary::Parsers.constants.map{|c| Bibliothecary::Parsers.const_get(c) }.sort_by{|c| c.to_s.downcase }
     end
 
+    def load_file_info_list_from_paths(paths)
+      file_list = []
+      paths.each do |path|
+        info = FileInfo.new(nil, path)
+
+        next if ignored_files.include?(info.relative_path)
+
+        init_package_manager(info)
+        file_list.push(info)
+      end
+      file_list
+    end
+
     def load_file_info_list(path)
       file_list = []
       Find.find(path) do |subpath|
@@ -63,6 +76,10 @@ module Bibliothecary
 
     def find_manifests(path)
       RelatedFilesInfo.create_from_file_infos(load_file_info_list(path).reject { |info| info.package_manager.nil? })
+    end
+
+    def find_manifests_from_paths(paths)
+      RelatedFilesInfo.create_from_file_infos(load_file_info_list_from_paths(paths).reject { |info| info.package_manager.nil? })
     end
 
     def analyse_file(file_path, contents)
