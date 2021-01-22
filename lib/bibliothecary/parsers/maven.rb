@@ -126,11 +126,15 @@ module Bibliothecary
           # org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
           # Lines can end with (c), (n), or (*)
           # to indicate that something was a dependency constraint (c), not resolved (n), or resolved previously (*).
-          dep = line.split(split)[1].sub(/(\((c|n|\*)\))$/, "").strip.split(":")
+          dep = line.split(split)[1].sub(/(\((c|n|\*)\))$/, "").sub(" -> ", ":").strip.split(":")
+
+          # A testImplementation line can look like this so just skip those
+          # \--- org.springframework.security:spring-security-test (n)
+          next unless dep.length >= 3
+
           version = dep[-1]
-          version = version.split("->")[-1].strip if line.include?("->")
           {
-            name: dep[0, dep.length - 1].join(":"),
+            name: dep[0..1].join(":"),
             requirement: version,
             type: type
           }
