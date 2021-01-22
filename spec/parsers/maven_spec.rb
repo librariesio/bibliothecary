@@ -272,41 +272,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(described_class.match?(fixture_path('ivy_reports/invalid_syntax.xml'))).to be_falsey
   end
 
-  it 'parses dependencies from gradle-dependencies-q.txt' do
-    deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle-dependencies-q.txt'))
-    expect(deps[:kind]).to eq 'lockfile'
-    guavas = deps[:dependencies].select {|item| item[:name] == "com.google.guava:guava" && item[:type] == "api"}
-    expect(guavas.length).to eq 1
-    expect(guavas[0][:requirement]).to eq '25.1-jre'
-  end
-
-  it 'has the correct sections and dependencies from gradle-dependencies-q.txt' do
-    deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle-dependencies-q.txt'))
-
-    compile_classpath = deps[:dependencies].select {|item| item[:type] == "compileClasspath"}
-    expect(compile_classpath.length).to eq 158
-    expect(compile_classpath.select {|item| item[:name] == "org.apache.commons:commons-lang3"}.length).to eq 1
-
-    runtime_classpath = deps[:dependencies].select {|item| item[:type] == "runtimeClasspath"}
-
-    expect(runtime_classpath.length).to eq 156
-    expect(runtime_classpath.select {|item| item[:name] == "com.google.guava:guava"}.length).to eq 1
-
-    test_runtime_only = deps[:dependencies].select {|item| item[:type] == "testRuntimeOnly"}
-
-    expect(test_runtime_only.length).to eq 0
-
-    test_runtime_classpath = deps[:dependencies].select {|item| item[:type] == "testRuntimeClasspath"}
-
-    expect(test_runtime_classpath.length).to eq 187
-    expect(test_runtime_classpath.select {|item| item[:name] == "org.glassfish.jaxb:jaxb-runtime"}.length).to eq 1
-
-    test_compile_classpath = deps[:dependencies].select {|item| item[:type] == "testRuntimeClasspath"}
-
-    expect(test_compile_classpath.length).to eq 187
-    expect(test_runtime_classpath.select {|item| item[:name] == "org.slf4j:jul-to-slf4j"}.length).to eq 1
-  end
-
   it 'uses parent properties during resolve' do
     parent_props = {"bibliothecary.version"=>"9.9.9"}
     deps = described_class.parse_pom_manifest(load_fixture('pom.xml'), parent_props)
@@ -366,5 +331,67 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(keys.keys.sort).to eq([:name, :requirement, :type])
 
     expect(deps.length).to eq 255
+  end
+
+  context "gradle" do
+    it 'parses dependencies from gradle-dependencies-q.txt' do
+      deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle-dependencies-q.txt'))
+      expect(deps[:kind]).to eq 'lockfile'
+      guavas = deps[:dependencies].select {|item| item[:name] == "com.google.guava:guava" && item[:type] == "api"}
+      expect(guavas.length).to eq 1
+      expect(guavas[0][:requirement]).to eq '25.1-jre'
+    end
+
+    it 'has the correct sections and dependencies from gradle-dependencies-q.txt' do
+      deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle-dependencies-q.txt'))
+
+      compile_classpath = deps[:dependencies].select {|item| item[:type] == "compileClasspath"}
+      expect(compile_classpath.length).to eq 158
+      expect(compile_classpath.select {|item| item[:name] == "org.apache.commons:commons-lang3"}.length).to eq 1
+
+      runtime_classpath = deps[:dependencies].select {|item| item[:type] == "runtimeClasspath"}
+
+      expect(runtime_classpath.length).to eq 156
+      expect(runtime_classpath.select {|item| item[:name] == "com.google.guava:guava"}.length).to eq 1
+
+      test_runtime_only = deps[:dependencies].select {|item| item[:type] == "testRuntimeOnly"}
+
+      expect(test_runtime_only.length).to eq 0
+
+      test_runtime_classpath = deps[:dependencies].select {|item| item[:type] == "testRuntimeClasspath"}
+
+      expect(test_runtime_classpath.length).to eq 187
+      expect(test_runtime_classpath.select {|item| item[:name] == "org.glassfish.jaxb:jaxb-runtime"}.length).to eq 1
+
+      test_compile_classpath = deps[:dependencies].select {|item| item[:type] == "testRuntimeClasspath"}
+
+      expect(test_compile_classpath.length).to eq 187
+      expect(test_runtime_classpath.select {|item| item[:name] == "org.slf4j:jul-to-slf4j"}.length).to eq 1
+    end
+
+    it "excludes items in resolved deps file with no version" do
+      expect(described_class.parse_gradle_resolved("\\--- org.springframework.security:spring-security-test (n)")).to eq []
+    end
+
+    it "properly resolves versions with -> syntax" do
+      arrow_syntax = "+--- org.springframework:spring-core:5.2.3.RELEASE -> 5.2.5.RELEASE (*)"
+      expect(described_class.parse_gradle_resolved(arrow_syntax)).to eq [{
+                                                                           :name=>"org.springframework:spring-core",
+                                                                           :requirement=>"5.2.5.RELEASE",
+                                                                           :type => nil
+                                                                         }]
+
+    end
+
+    it "properly handles no version to resolved version syntax" do
+      no_version_to_version = "\\--- org.springframework.security:spring-security-test -> 5.2.2.RELEASE"
+      expect(described_class
+               .parse_gradle_resolved(no_version_to_version))
+               .to eq [{
+                         :name => "org.springframework.security:spring-security-test",
+                         :requirement => "5.2.2.RELEASE",
+                         :type => nil
+                       }]
+    end
   end
 end
