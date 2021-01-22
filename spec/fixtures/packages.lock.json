@@ -1,6 +1,7 @@
 {
   "version": 1,
   "dependencies": {
+    ".Empty-group-earlier-alphabetically": {},
     ".NETCoreApp,Version=v2.2": {
       "Microsoft.AspNetCore.App": {
         "type": "Direct",
@@ -3099,6 +3100,7 @@
           "System.Xml.XPath": "4.3.0"
         }
       }
-    }
+    },
+    "Empty-group-later-alphabetically": {}
   }
 }
