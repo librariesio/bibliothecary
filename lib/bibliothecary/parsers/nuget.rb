@@ -70,10 +70,12 @@ module Bibliothecary
         if frameworks.size > 0
           # we should really return multiple manifests, but bibliothecary doesn't
           # do that yet so at least pick deterministically.
-          frameworks[frameworks.keys.sort.last]
-        else
-          []
+
+          # Note, frameworks can be empty, so remove empty ones and then return the last sorted item if any
+          frameworks = frameworks.delete_if { |k, v| v.empty? }
+          return frameworks[frameworks.keys.sort.last] unless frameworks.empty?
         end
+        []
       end
 
       def self.parse_packages_config(file_contents)
