@@ -201,7 +201,7 @@ module Bibliothecary
         return nil if field.nil?
 
         value = field.nodes.first
-        match = value.match(MAVEN_PROPERTY_REGEX)
+        match = value&.match(MAVEN_PROPERTY_REGEX)
         if match
           return extract_property(xml, match[1], value, parent_properties)
         else
