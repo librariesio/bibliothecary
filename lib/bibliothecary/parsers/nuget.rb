@@ -93,10 +93,16 @@ module Bibliothecary
 
       def self.parse_csproj(file_contents)
         manifest = Ox.parse file_contents
+
         packages = manifest.locate('ItemGroup/PackageReference').map do |dependency|
+          requirement = (dependency.Version if dependency.respond_to? "Version") || "*"
+          if requirement.is_a?(Ox::Element)
+            requirement = dependency.nodes.detect{ |n| n.value == "Version" }&.text
+          end
+
           {
             name: dependency.Include,
-            requirement: (dependency.Version if dependency.respond_to? "Version") || "*",
+            requirement: requirement,
             type: 'runtime'
           }
         end

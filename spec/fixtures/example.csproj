@@ -13,5 +13,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
+    <PackageReference Include="System.Resources.Extensions">
+      <Version>4.7.0</Version>
+    </PackageReference>
   </ItemGroup>
 </Project>
