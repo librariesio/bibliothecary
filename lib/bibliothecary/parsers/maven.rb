@@ -153,7 +153,7 @@ module Bibliothecary
           .uniq
       end
       def self.parse_maven_tree(file_contents)
-        captures = file_contents.scan(/\s([\w\.-]+:[\w\.-]+:[\w\.-]+:[\w\.-]+:[a-zA-Z]+)/).flatten.uniq
+        captures = file_contents.scan(/\s([\w.-]+:[\w.-]+:[\w.-]+:[\w.-]+:[a-zA-Z]+)/).flatten.uniq
         captures.map do |item|
           {
             name: item.split(":")[0..1].join(":"),
