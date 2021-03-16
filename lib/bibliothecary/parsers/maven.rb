@@ -60,6 +60,10 @@ module Bibliothecary
           match_filename("sbt-update-full.txt", case_insensitive: true) => {
             kind: 'lockfile',
             parser: :parse_sbt_update_full
+          },
+          match_filename("maven-dependency-tree.txt", case_insensitive: true) => {
+            kind: 'lockfile',
+            parser: :parse_maven_tree
           }
         }
       end
@@ -147,6 +151,16 @@ module Bibliothecary
           .map(&method(:parse_resolved_dep_line))
           .compact
           .uniq
+      end
+      def self.parse_maven_tree(file_contents)
+        captures = file_contents.scan(/\s([\w\.-]+:[\w\.-]+:[\w\.-]+:[\w\.-]+:[a-zA-Z]+)/).flatten.uniq
+        captures.map do |item|
+          {
+            name: item.split(":")[0..1].join(":"),
+            requirement: item.split(":")[3],
+            type: item.split(":")[-1]
+          }
+        end
       end
 
       def self.parse_resolved_dep_line(line)
