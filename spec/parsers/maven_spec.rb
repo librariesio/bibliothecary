@@ -399,7 +399,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       output = described_class.parse_maven_tree(contents)
       expect(output.count).to eq 316
       expect(output.find {|item| item[:name] == "org.apache.commons:commons-lang3"}[:requirement]).to eq "3.8.1"
-      output.each { |item| puts "#{item[:name]},#{item[:requirement]}" }
     end
   end
 end
