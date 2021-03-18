@@ -153,12 +153,20 @@ module Bibliothecary
           .uniq
       end
       def self.parse_maven_tree(file_contents)
-        captures = file_contents.scan(/\s([\w.-]+:[\w.-]+:[\w.-]+:[\w.-]+:[a-zA-Z]+)/).flatten.uniq
+        captures = file_contents.scan(/^\[INFO\][\s|+-\\]+([[\w.-]+:]+)(?=$|\s\(optional\)$)/).flatten.uniq
         captures.map do |item|
+          parts = item.split(":")
+          case parts.count
+          when 4
+            version = parts[-1]
+            type = parts[-2]
+          when 5..6
+            version, type = parts[-2..]
+          end
           {
-            name: item.split(":")[0..1].join(":"),
-            requirement: item.split(":")[3],
-            type: item.split(":")[-1]
+            name: parts[0..1].join(":"),
+            requirement: version,
+            type: type
           }
         end
       end
