@@ -400,5 +400,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(output.count).to eq 316
       expect(output.find {|item| item[:name] == "org.apache.commons:commons-lang3"}[:requirement]).to eq "3.8.1"
     end
+
+    it "parses dependencies with windows line endings" do
+      contents = load_fixture("maven-dependency-tree.txt")
+      contents = contents.gsub("\n", "\r\n")
+      output = described_class.parse_maven_tree(contents)
+      expect(output.count).to eq 316
+      expect(output.find {|item| item[:name] == "org.apache.commons:commons-lang3"}[:requirement]).to eq "3.8.1"
+    end
   end
 end
