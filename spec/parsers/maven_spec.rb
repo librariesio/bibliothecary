@@ -397,7 +397,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     it "parses dependencies from maven-dependency-tree files" do
       contents = load_fixture("maven-dependency-tree.txt")
       output = described_class.parse_maven_tree(contents)
-      binding.pry
       expect(output.count).to eq 315
       expect(output.find {|item| item[:name] == "org.apache.commons:commons-lang3"}[:requirement]).to eq "3.8.1"
     end
