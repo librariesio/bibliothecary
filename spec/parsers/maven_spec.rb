@@ -408,5 +408,10 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(output.count).to eq 315
       expect(output.find {|item| item[:name] == "org.apache.commons:commons-lang3"}[:requirement]).to eq "3.8.1"
     end
+
+    it "parses dependencies with variables in version position" do
+      output = described_class.parse_maven_tree("[INFO] net.sourceforge.pmd:pmd-scala_2.12:jar:${someVariable}\n")
+      expect(output).to eq [{:name=>"net.sourceforge.pmd:pmd-scala_2.12", :requirement=>"${someVariable}", :type=>"jar"}]
+    end
   end
 end

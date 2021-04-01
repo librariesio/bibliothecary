@@ -154,7 +154,7 @@ module Bibliothecary
       end
       def self.parse_maven_tree(file_contents)
         file_contents = file_contents.gsub(/\r\n?/, "\n")
-        captures = file_contents.scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-]+)/).flatten.uniq
+        captures = file_contents.scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/).flatten.uniq
         captures.map do |item|
           parts = item.split(":")
           case parts.count
