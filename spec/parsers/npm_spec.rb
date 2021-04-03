@@ -5,6 +5,23 @@ describe Bibliothecary::Parsers::NPM do
     expect(described_class.platform_name).to eq('npm')
   end
 
+  it 'parses dependencies from npm-dependency-tree.json' do
+    expect(described_class.analyse_contents('npm-dependency-tree.json', load_fixture('npm-dependency-tree.json'))).to eq({
+      platform: "npm",
+      path: "npm-dependency-tree.json",
+      dependencies: [
+        {lockfile_requirement: "1.1.93", name: "ansicolor", requirement: "1.1.93", type: "runtime"},
+        {lockfile_requirement: "^6.26.0", name: "babel-cli", requirement: "6.26.0", type: "runtime"},
+        {lockfile_requirement: nil,    name: "debug", requirement: "2.6.9", type: "runtime"},
+        {lockfile_requirement: "^6.26.0", name:"babel-polyfill", requirement: "6.26.0", type: "runtime"},
+        {lockfile_requirement: "2.6.12", name:"core-js", requirement: "2.6.12", type: "runtime"},
+        {lockfile_requirement: "4.17.21", name:"lodash", requirement: "4.17.21", type: "runtime"},
+      ],
+      kind: "lockfile",
+      success: true
+    })
+  end
+
   it 'parses dependencies from package.json' do
     expect(described_class.analyse_contents('package.json', load_fixture('package.json'))).to eq({
       :platform=>"npm",
