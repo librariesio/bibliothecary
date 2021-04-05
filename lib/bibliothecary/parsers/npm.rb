@@ -25,7 +25,7 @@ module Bibliothecary
           },
           match_filename("npm-ls.json") => {
             kind: 'lockfile',
-            parser: :parse_tree
+            parser: :parse_ls
           }
         }
       end
@@ -80,7 +80,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_tree(file_contents)
+      def self.parse_ls(file_contents)
         manifest = JSON.parse(file_contents)
 
         transform_tree_to_array(manifest.fetch('dependencies', {}))
