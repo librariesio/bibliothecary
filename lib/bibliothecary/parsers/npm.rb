@@ -23,8 +23,7 @@ module Bibliothecary
             kind: 'lockfile',
             parser: :parse_package_lock
           },
-          # The output of `npm ls --json`
-          match_filename("npm-dependency-tree.json") => {
+          match_filename("npm-ls.json") => {
             kind: 'lockfile',
             parser: :parse_tree
           }
