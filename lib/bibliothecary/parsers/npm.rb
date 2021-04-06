@@ -22,6 +22,10 @@ module Bibliothecary
           match_filename("package-lock.json") => {
             kind: 'lockfile',
             parser: :parse_package_lock
+          },
+          match_filename("npm-ls.json") => {
+            kind: 'lockfile',
+            parser: :parse_ls
           }
         }
       end
@@ -74,6 +78,25 @@ module Bibliothecary
             type: dep[:type]
           }
         end
+      end
+
+      def self.parse_ls(file_contents)
+        manifest = JSON.parse(file_contents)
+
+        transform_tree_to_array(manifest.fetch('dependencies', {}))
+      end
+
+      private_class_method def self.transform_tree_to_array(deps_by_name)
+        deps_by_name.map do |name, metadata|
+          [
+            {
+              name: name,
+              requirement: metadata["version"],
+              lockfile_requirement: metadata.fetch("from", "").split('@').last,
+              type: "runtime"
+            }
+          ] + transform_tree_to_array(metadata.fetch("dependencies", {}))
+        end.flatten(1)
       end
     end
   end
