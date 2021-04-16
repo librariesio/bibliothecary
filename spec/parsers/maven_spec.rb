@@ -167,7 +167,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
   end
 
   context 'gradle' do
-    it 'removes comments', :vcr do
+    it 'cleans up incorrectly parsed dependencies', :vcr do
       source = <<~FILE
         dependencies {
           compile 'com.whatever:liblib:1.2.3'
