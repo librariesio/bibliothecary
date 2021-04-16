@@ -1,0 +1,21 @@
+version: 2.1
+orbs:
+  ruby: circleci/ruby@0.1.2
+
+jobs:
+  test:
+    docker:
+      - image: circleci/ruby:2.6.6-stretch-node
+    executor: ruby/default
+    steps:
+      - checkout
+      - run:
+          name: Which bundler?
+          command: bundle -v
+      - ruby/bundle-install
+      - run:
+        name: Run specs
+        command: bundle exec rake spec
+      - run:
+          name: CodeClimate
+          command: bundle exec codeclimate-test-reporter
