@@ -5,10 +5,10 @@ describe Bibliothecary::Parsers::NPM do
     expect(described_class.platform_name).to eq('npm')
   end
 
-  it 'parses dependencies from npm-dependency-tree.json' do
-    expect(described_class.analyse_contents('npm-dependency-tree.json', load_fixture('npm-dependency-tree.json'))).to eq({
+  it 'parses dependencies from npm-ls.json' do
+    expect(described_class.analyse_contents('npm-ls.json', load_fixture('npm-ls.json'))).to eq({
       platform: "npm",
-      path: "npm-dependency-tree.json",
+      path: "npm-ls.json",
       dependencies: [
         {lockfile_requirement: "1.1.93", name: "ansicolor", requirement: "1.1.93", type: "runtime"},
         {lockfile_requirement: "^6.26.0", name: "babel-cli", requirement: "6.26.0", type: "runtime"},
