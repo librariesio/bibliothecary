@@ -205,14 +205,28 @@ module Bibliothecary
         json = JSON.parse(response.body)
         return [] unless json['dependencies']
         json['dependencies'].map do |dependency|
-          name = [dependency["group"], dependency["name"]].join(':')
-          next unless name =~ (/[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+(\.[A-Za-z0-9_-])?\:[A-Za-z0-9_-]/)
+          name = gradle_dependency_name(dependency["group"], dependency["name"])
+          next unless name =~ /[\w-]+\.[\w_-]+(\.[\w-])?\:[\w-]/
           {
             name: name,
             requirement: dependency["version"],
             type: dependency["type"]
           }
         end.compact
+      end
+
+      def self.gradle_dependency_name(group, name)
+        if group.empty? && name.include?(":")
+          group, name = name.split(":", 2)
+        end
+
+        # Strip comments, and single/doublequotes
+        [group, name].map do |part|
+          part
+            .gsub(/\s*\/\/.*$/, "") # Comments
+            .gsub(/^["']/, "") # Beginning single/doublequotes
+            .gsub(/["']$/, "") # Ending single/doublequotes
+        end.join(":")
       end
 
       def self.extract_pom_info(xml, location, parent_properties = {})

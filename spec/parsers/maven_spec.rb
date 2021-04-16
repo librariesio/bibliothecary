@@ -166,24 +166,46 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     })
   end
 
-  it 'parses dependencies from build.gradle', :vcr do
-    expect(described_class.analyse_contents('build.gradle', load_fixture('build.gradle'))).to eq({
-      :platform=>"maven",
-      :path=>"build.gradle",
-      :dependencies=>[
-        {:name=>"com.squareup.okhttp:okhttp", :requirement=>"2.1.0", :type=>"compile"},
-        {:name=>"com.squareup.okhttp:okhttp-urlconnection", :requirement=>"2.1.0", :type=>"compile"},
-        {:name=>"com.squareup.picasso:picasso", :requirement=>"2.4.0", :type=>"compile"},
-        {:name=>"com.google.android.gms:play-services-wearable", :requirement=>"8.3.0", :type=>"compile"},
-        {:name=>"de.greenrobot:eventbus", :requirement=>"2.4.0", :type=>"compile"},
-        {:name=>"com.android.support:appcompat-v7", :requirement=>"23.1.1", :type=>"compile"},
-        {:name=>"com.android.support:recyclerview-v7", :requirement=>"23.1.1", :type=>"compile"},
-        {:name=>"com.android.support:design", :requirement=>"23.1.1", :type=>"compile"},
-        {:name=>"com.android.support:customtabs", :requirement=>"23.1.1", :type=>"compile"}
-      ],
-      kind: 'manifest',
-      success: true
-    })
+  context 'gradle' do
+    it 'cleans up incorrectly parsed dependencies', :vcr do
+      source = <<~FILE
+        dependencies {
+          compile 'com.whatever:liblib:1.2.3'
+          compile 'this.is.a.group:greatlib'
+          compile "com.fasterxml.jackson.core:jackson-databind"
+          compileOnly "this.thing:neat" // I am a comment
+          testCompile "hello.there:im.a.dep:$versionThing" // I am a comment
+        }
+      FILE
+
+      expect(described_class.analyse_contents('build.gradle', source)[:dependencies]).to match_array([
+        {:name=>"com.whatever:liblib", :requirement=>"1.2.3", :type=>"compile"},
+        {:name=>"this.is.a.group:greatlib", :requirement=>"", :type=>"compile"},
+        {:name=>"com.fasterxml.jackson.core:jackson-databind", :requirement=>"", :type=>"compile"},
+        {:name=>"this.thing:neat", :requirement=>"", :type=>"compileOnly"},
+        {:name=>"hello.there:im.a.dep:$versionThing", :requirement=>"", :type=>"testCompile"},
+      ])
+    end
+
+    it 'parses dependencies from build.gradle', :vcr do
+      expect(described_class.analyse_contents('build.gradle', load_fixture('build.gradle'))).to eq({
+        :platform=>"maven",
+        :path=>"build.gradle",
+        :dependencies=>[
+          {:name=>"com.squareup.okhttp:okhttp", :requirement=>"2.1.0", :type=>"compile"},
+          {:name=>"com.squareup.okhttp:okhttp-urlconnection", :requirement=>"2.1.0", :type=>"compile"},
+          {:name=>"com.squareup.picasso:picasso", :requirement=>"2.4.0", :type=>"compile"},
+          {:name=>"com.google.android.gms:play-services-wearable", :requirement=>"8.3.0", :type=>"compile"},
+          {:name=>"de.greenrobot:eventbus", :requirement=>"2.4.0", :type=>"compile"},
+          {:name=>"com.android.support:appcompat-v7", :requirement=>"23.1.1", :type=>"compile"},
+          {:name=>"com.android.support:recyclerview-v7", :requirement=>"23.1.1", :type=>"compile"},
+          {:name=>"com.android.support:design", :requirement=>"23.1.1", :type=>"compile"},
+          {:name=>"com.android.support:customtabs", :requirement=>"23.1.1", :type=>"compile"}
+        ],
+        kind: 'manifest',
+        success: true
+      })
+    end
   end
 
   it 'parses dependencies from an ivy report for a root project / type compile' do
