@@ -14,8 +14,8 @@ jobs:
           command: bundle -v
       - ruby/bundle-install
       - run:
-        name: Run specs
-        command: bundle exec rake spec
+          name: Run specs
+          command: bundle exec rake spec
       - run:
           name: CodeClimate
           command: bundle exec codeclimate-test-reporter
