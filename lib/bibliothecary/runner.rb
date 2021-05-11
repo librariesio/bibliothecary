@@ -33,7 +33,8 @@ module Bibliothecary
     end
 
     def applicable_package_managers(info)
-      package_managers.select { |pm| pm.match_info?(info) }
+      managers = package_managers.select { |pm| pm.match_info?(info) }
+      managers.length > 0 ? managers : [nil]
     end
 
     def package_managers

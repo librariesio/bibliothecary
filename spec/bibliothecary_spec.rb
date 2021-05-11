@@ -245,7 +245,14 @@ describe Bibliothecary do
         :dependencies=>[],
         :kind=>"lockfile",
         success: true,
-        :related_paths=>["subdir/Gemfile"]}])
+        :related_paths=>["subdir/Gemfile"]},
+      {:platform=>"unknown",
+        :path=>"unknown_non_manifest.txt",
+        :dependencies=>[],
+        :kind=>"unknown",
+        :success=>false,
+        :error_message=>"No parser for this file type"}
+      ])
 
     Bibliothecary.reset
   end
