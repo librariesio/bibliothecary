@@ -26,15 +26,6 @@ module Bibliothecary
         }
       end
 
-      # Overrides Analyser.analyse_contents_from_info
-      def self.analyse_contents_from_info(info)
-        [super, parse_pip(info)].flatten.compact
-      rescue Bibliothecary::RemoteParsingError => e
-        Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, "runtime", e.message)
-      rescue Psych::SyntaxError => e
-        Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, "runtime", e.message)
-      end
-
       def self.parse_conda(info, kind = "manifest")
         dependencies = call_conda_parser_web(info, kind)[kind.to_sym]
         dependencies.map { |dep| dep.merge(type: "runtime") }
@@ -42,19 +33,6 @@ module Bibliothecary
 
       def self.parse_conda_lockfile(info)
         parse_conda(info, "lockfile")
-      end
-
-      def self.parse_pip(info)
-        dependencies = YAML.safe_load(info.contents)["dependencies"]
-        pip = dependencies.find { |dep| dep.is_a?(Hash) && dep["pip"]}
-        return unless pip
-
-        Bibliothecary::Analyser.create_analysis(
-          "pypi",
-          info.relative_path,
-          "manifest",
-          Pypi.parse_requirements_txt(pip["pip"].join("\n"))
-        )
       end
 
       private_class_method def self.call_conda_parser_web(file_contents, kind)

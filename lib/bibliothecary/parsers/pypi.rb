@@ -39,7 +39,24 @@ module Bibliothecary
           match_filename("poetry.lock") => {
             kind: 'lockfile',
             parser: :parse_poetry_lock
-          }
+          },
+          # Pip dependencies can be embedded in conda environment files
+          match_filename("environment.yml") => {
+            parser: :parse_conda,
+            kind: "manifest",
+          },
+          match_filename("environment.yaml") => {
+            parser: :parse_conda,
+            kind: "manifest",
+          },
+          match_filename("environment.yml.lock") => {
+            parser: :parse_conda,
+            kind: "lockfile",
+          },
+          match_filename("environment.yaml.lock") => {
+            parser: :parse_conda,
+            kind: "lockfile",
+          },
         }
       end
 
@@ -51,6 +68,17 @@ module Bibliothecary
       def self.parse_poetry(file_contents)
         manifest = TomlRB.parse(file_contents)['tool']['poetry']
         map_dependencies(manifest['dependencies'], 'runtime') + map_dependencies(manifest['dev-dependencies'], 'develop')
+      end
+
+      def self.parse_conda(file_contents)
+        contents = YAML.safe_load(file_contents)
+        return [] unless contents
+
+        dependencies = contents["dependencies"]
+        pip = dependencies.find { |dep| dep.is_a?(Hash) && dep["pip"]}
+        return [] unless pip
+
+        Pypi.parse_requirements_txt(pip["pip"].join("\n"))
       end
 
       def self.map_dependencies(packages, type)

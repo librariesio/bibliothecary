@@ -107,6 +107,21 @@ describe Bibliothecary::Parsers::Pypi do
     })
   end
 
+  it "parses dependencies from conda environment.yml.lock with pip" do
+    expect(described_class.analyse_contents("conda_with_pip/environment.yml.lock", load_fixture("conda_with_pip/environment.yml"))).to eq(
+      {
+        :platform=>"pypi",
+        :path=>"conda_with_pip/environment.yml.lock",
+        :dependencies=>[
+          {:name=>"urllib3", :requirement=>"*", :type=>"runtime"},
+          {:name=>"Django", :requirement=>"==2.0.0", :type=>"runtime"},
+        ],
+        kind: "lockfile",
+        success: true
+       }
+    )
+  end
+
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('requirements.txt')).to be_truthy
     expect(described_class.match?('requirements.pip')).to be_truthy
