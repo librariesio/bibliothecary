@@ -32,14 +32,9 @@ module Bibliothecary
       load_file_info_list(path).map { |info| info.full_path }
     end
 
-    def init_package_manager(info)
-      # set the package manager on each info
-      matches = package_managers.select { |pm| pm.match_info?(info) }
-
-      info.package_manager = matches[0] if matches.length == 1
-
-      # this is a bug at the moment if it's raised (we don't handle it sensibly)
-      raise "Multiple package managers fighting over #{info.relative_path}: #{matches.map(&:to_s)}" if matches.length > 1
+    def applicable_package_managers(info)
+      managers = package_managers.select { |pm| pm.match_info?(info) }
+      managers.length > 0 ? managers : [nil]
     end
 
     def package_managers
@@ -48,29 +43,41 @@ module Bibliothecary
 
     def load_file_info_list_from_paths(paths)
       file_list = []
+
       paths.each do |path|
         info = FileInfo.new(nil, path)
 
         next if ignored_files.include?(info.relative_path)
 
-        init_package_manager(info)
-        file_list.push(info)
+        applicable_package_managers(info).each do |package_manager|
+          file = info.dup
+          file.package_manager = package_manager
+
+          file_list.push(file)
+        end
       end
+
       file_list
     end
 
     def load_file_info_list(path)
       file_list = []
+
       Find.find(path) do |subpath|
         info = FileInfo.new(path, subpath)
+
         Find.prune if FileTest.directory?(subpath) && ignored_dirs.include?(info.relative_path)
         next unless FileTest.file?(subpath)
         next if ignored_files.include?(info.relative_path)
 
-        init_package_manager(info)
+        applicable_package_managers(info).each do |package_manager|
+          file = info.dup
+          file.package_manager = package_manager
 
-        file_list.push(info)
+          file_list.push(file)
+        end
       end
+
       file_list
     end
 

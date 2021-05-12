@@ -172,7 +172,7 @@ describe Bibliothecary do
     Bibliothecary.reset
   end
 
-  it 'handles a complicated folder with many manifests complaining about no-parser files', :vcr do
+  it 'handles a complicated folder with many manifests', :vcr do
     # If we run the analysis in pwd, confusion about absolute vs.
     # relative paths is concealed because both work
     orig_pwd = Dir.pwd
@@ -246,12 +246,44 @@ describe Bibliothecary do
         :kind=>"lockfile",
         success: true,
         :related_paths=>["subdir/Gemfile"]},
-       {:platform=>"unknown",
+      {:platform=>"unknown",
         :path=>"unknown_non_manifest.txt",
         :dependencies=>[],
         :kind=>"unknown",
         :success=>false,
-        :error_message=>"No parser for this file type"}])
+        :error_message=>"No parser for this file type"}
+      ])
+
+    Bibliothecary.reset
+  end
+
+  it 'handles a dual-platformed file (pip/conda)', :vcr do
+    # If we run the analysis in pwd, confusion about absolute vs.
+    # relative paths is concealed because both work
+    orig_pwd = Dir.pwd
+    analysis = Dir.chdir("/") do
+      described_class.analyse(File.join(orig_pwd, 'spec/fixtures/conda_with_pip'))
+    end
+    # empty out any dependencies to make the test more reliable.
+    # we test specific manifest parsers in the parsers specs
+    analysis.each do |a|
+      a[:dependencies] = []
+    end
+
+    expect(analysis).to eq(
+      [{ dependencies: [],
+          kind: "manifest",
+          path: "environment.yml",
+          platform: "conda",
+          related_paths: [],
+          success: true },
+        { dependencies: [],
+          kind: "manifest",
+          path: "environment.yml",
+          platform: "pypi",
+          related_paths: [],
+          success: true }]
+    )
 
     Bibliothecary.reset
   end

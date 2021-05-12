@@ -21,8 +21,8 @@ module Bibliothecary
     runner.load_file_list(path)
   end
 
-  def self.init_package_manager(info)
-    runner.init_package_manager(info)
+  def self.applicable_package_managers(info)
+    runner.applicable_package_managers(info)
   end
 
   def self.load_file_info_list(path)
