@@ -149,9 +149,10 @@ module Bibliothecary
         manifest.fetch("targets",[]).each do |framework, deps|
           frameworks[framework] = deps.filter_map do |name, details|
             if details["type"] == "package"
+              name_split = name.split("/")
               {
-                name: name.split("/").first,
-                requirement: name.split("/").last,
+                name: name_split[0],
+                requirement: name_split[1],
                 type: "runtime"
               }
             end

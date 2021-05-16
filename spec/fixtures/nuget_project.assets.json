@@ -1,6 +1,12 @@
 {
   "version": 3,
   "targets": {
+    "empty-group-earlier-alphabetically": {},
+    "net2.2": {
+      "c/1.0.0": {
+        "type": "package"
+      }
+    },
     "net5.0": {
       "a/1.0.0": {
         "type": "package"
@@ -20,6 +26,7 @@
           "c": "1.0.0"
         }
       }
-    }
+    },
+    "z-empty-group-later-alphabetically": {}
   }
 }
