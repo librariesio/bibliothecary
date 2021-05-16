@@ -906,6 +906,23 @@ describe Bibliothecary::Parsers::Nuget do
     })
   end
 
+  it 'parses dependencies from project.assets.json' do
+    expected = {
+      :platform=>"nuget",
+      :path=>"project.assets.json",
+      :dependencies=>[
+        {:name=>"a", :requirement=>"1.0.0", :type=>"runtime"},
+        {:name=>"b", :requirement=>"1.0.0", :type=>"runtime"},
+      ],
+      kind: 'lockfile',
+      success: true
+    }
+
+    result = described_class.analyse_contents('project.assets.json', load_fixture('nuget_project.assets.json'))
+
+    expect(result).to eq(expected)
+  end
+
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('Project.json')).to be_truthy
     expect(described_class.match?('Project.lock.json')).to be_truthy
@@ -913,5 +930,6 @@ describe Bibliothecary::Parsers::Nuget do
     expect(described_class.match?('paket.lock')).to be_truthy
     expect(described_class.match?('example.nuspec')).to be_truthy
     expect(described_class.match?('example.csproj')).to be_truthy
+    expect(described_class.match?('project.assets.json')).to be_truthy
   end
 end
