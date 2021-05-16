@@ -88,6 +88,7 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - *.nuspec
   - paket.lock
   - *.csproj
+  - project.assets.json
 - Bower
   - bower.json
 - CPAN
