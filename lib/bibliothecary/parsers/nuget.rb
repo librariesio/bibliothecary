@@ -147,15 +147,15 @@ module Bibliothecary
 
         frameworks = {}
         manifest.fetch("targets",[]).each do |framework, deps|
-          frameworks[framework] = deps.filter_map do |name, details|
-            if details["type"] == "package"
-              name_split = name.split("/")
-              {
-                name: name_split[0],
-                requirement: name_split[1],
-                type: "runtime"
-              }
-            end
+          frameworks[framework] = deps
+                                    .select { |name, details| details["type"] == "package" }
+                                    .map do |name, details|
+            name_split = name.split("/")
+            {
+              name: name_split[0],
+              requirement: name_split[1],
+              type: "runtime"
+            }
           end
         end
 
