@@ -35,7 +35,11 @@ module Bibliothecary
           match_filename("paket.lock") => {
             kind: 'lockfile',
             parser: :parse_paket_lock
-          }
+          },
+          match_filename("project.assets.json") => {
+            kind: 'lockfile',
+            parser: :parse_project_assets_json
+          },
         }
       end
 
@@ -136,6 +140,34 @@ module Bibliothecary
         end
         # we only have to enforce uniqueness by name because paket ensures that there is only the single version globally in the project
         packages.uniq {|package| package[:name] }
+      end
+
+      def self.parse_project_assets_json(file_contents)
+        manifest = JSON.parse file_contents
+
+        frameworks = {}
+        manifest.fetch("targets",[]).each do |framework, deps|
+          frameworks[framework] = deps
+                                    .select { |name, details| details["type"] == "package" }
+                                    .map do |name, details|
+            name_split = name.split("/")
+            {
+              name: name_split[0],
+              requirement: name_split[1],
+              type: "runtime"
+            }
+          end
+        end
+
+        if frameworks.size > 0
+          # we should really return multiple manifests, but bibliothecary doesn't
+          # do that yet so at least pick deterministically.
+
+          # Note, frameworks can be empty, so remove empty ones and then return the last sorted item if any
+          frameworks = frameworks.delete_if { |k, v| v.empty? }
+          return frameworks[frameworks.keys.sort.last] unless frameworks.empty?
+        end
+        []
       end
     end
   end
