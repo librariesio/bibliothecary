@@ -26,6 +26,7 @@ module Bibliothecary
 
       analyses
     end
+    alias analyze analyse
 
     # deprecated; use load_file_info_list.
     def load_file_list(path)
@@ -87,6 +88,7 @@ module Bibliothecary
         pm.analyse_contents(file_path, contents)
       end.flatten.uniq.compact
     end
+    alias analyze_file analyse_file
 
     # this skips manifests sometimes because it doesn't look at file
     # contents and can't establish from only regexes that the thing
