@@ -59,6 +59,11 @@ describe Bibliothecary do
     }])
   end
 
+  it "aliases analyse and analyse_file" do
+    expect(Bibliothecary.method(:analyse)).to eq(Bibliothecary.method(:analyze))
+    expect(Bibliothecary.method(:analyse_file)).to eq(Bibliothecary.method(:analyze_file))
+  end
+
   it 'searches a folder for manifests and parses them' do
     Bibliothecary.configure do |config|
       config.ignored_dirs.push("spec/fixtures")

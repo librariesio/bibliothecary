@@ -63,6 +63,8 @@ module Bibliothecary
 
   class << self
     attr_writer :configuration
+    alias analyze analyse
+    alias analyze_file analyse_file
   end
 
   def self.runner

@@ -101,6 +101,7 @@ module Bibliothecary
       def analyse(folder_path, file_list)
         analyse_file_info(file_list.map { |full_path| FileInfo.new(folder_path, full_path) })
       end
+      alias analyze analyse
 
       def analyse_file_info(file_info_list)
         matching_info = file_info_list
@@ -111,10 +112,12 @@ module Bibliothecary
             .merge(related_paths: related_paths(info, matching_info))
         end
       end
+      alias analyze_file_info analyse_file_info
 
       def analyse_contents(filename, contents)
         analyse_contents_from_info(FileInfo.new(nil, filename, contents))
       end
+      alias analyze_contents analyse_contents
 
       def analyse_contents_from_info(info)
         # If your Parser needs to return multiple responses for one file, please override this method
@@ -126,6 +129,7 @@ module Bibliothecary
       rescue Bibliothecary::FileParsingError => e
         Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, kind, e.message)
       end
+      alias analyze_contents_from_info analyse_contents_from_info
 
       # calling this with contents=nil can produce less-informed
       # results, but kept for back compat
