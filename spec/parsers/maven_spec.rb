@@ -1,8 +1,11 @@
 require 'spec_helper'
 
 RSpec.describe Bibliothecary::Parsers::Maven do
-  it 'has a platform name' do
-    expect(described_class.platform_name).to eq('maven')
+  it 'parses specific info from pom.xml' do
+    xml = Ox.parse load_fixture('pom.xml')
+
+    cdata = Bibliothecary::Parsers::Maven.extract_pom_info(xml, "project/foo", {})
+    expect(cdata).to match("this is some CDATA")
   end
 
   it 'parses dependencies from pom.xml' do
