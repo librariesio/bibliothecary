@@ -140,6 +140,37 @@ describe Bibliothecary::Parsers::NPM do
     })
   end
 
+  it 'parses package-lock.json with scm based versions' do
+    contents = JSON.dump(
+      {
+        "name": "js-app",
+        "version": "1.0.0",
+        "lockfileVersion": 1,
+        "requires": true,
+        "dependencies": {
+          "tagged": {
+            "version": "git+ssh://git@github.com/some-co/tagged.git#7404d32056c7f0250aa27e038136011b",
+            "from": "git+ssh://git@github.com/some-co/tagged.git#v2.10.0"
+          },
+          "semver": {
+            "version": "git+ssh://git@github.com/some-co/semver.git#b8979ec5e34d5fac0f0b3b660dc67f2e",
+            "from": "git+ssh://git@github.com/some-co/semver.git#semver:v5.5.5"
+          },
+          "head": {
+            "version": "git+ssh://git@github.com/some-co/head.git#ecce958093a5451452ee1dd0c0d723c9",
+            "from": "git+ssh://git@github.com/some-co/semver.git"
+          }
+        }
+      }
+    )
+
+    expect(described_class.analyse_contents('package-lock.json', contents)[:dependencies]).to eq([
+      { name: "tagged", requirement: "2.10.0", type: "runtime"},
+      { name: "semver", requirement: "5.5.5", type: "runtime"},
+      { name: "head", requirement: "ecce958093a5451452ee1dd0c0d723c9", type: "runtime"}
+    ])
+  end
+
   it 'parses newer package-lock.json with dev and integrity fields' do
     analysis = described_class.analyse_contents('2018-package-lock/package-lock.json', load_fixture('2018-package-lock/package-lock.json'))
     expect(analysis.select { |k,_v| k != :dependencies }).to eq({

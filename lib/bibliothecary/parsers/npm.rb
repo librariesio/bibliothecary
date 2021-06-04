@@ -49,9 +49,18 @@ module Bibliothecary
           else
             type = 'runtime'
           end
+
+          version = nil
+
+          if requirement.key?("from")
+            version = requirement["from"][/#(?:semver:)?v?(.*)/, 1]
+          end
+
+          version ||= requirement["version"].split("#").last
+
           {
             name: name,
-            requirement: requirement["version"],
+            requirement: version,
             type: type
           }
         end
