@@ -6,6 +6,7 @@ require "bibliothecary/exceptions"
 require "bibliothecary/file_info"
 require "bibliothecary/related_files_info"
 require "find"
+require "tomlrb"
 
 Dir[File.expand_path('../bibliothecary/parsers/*.rb', __FILE__)].each do |file|
   require file

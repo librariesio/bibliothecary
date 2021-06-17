@@ -1,5 +1,3 @@
-require 'toml-rb'
-
 module Bibliothecary
   module Parsers
     class Cargo
@@ -19,7 +17,7 @@ module Bibliothecary
       end
 
       def self.parse_manifest(file_contents)
-        manifest = TomlRB.parse(file_contents)
+        manifest = Tomlrb.parse(file_contents)
         manifest.fetch('dependencies', []).map do |name, requirement|
           if requirement.respond_to?(:fetch)
             requirement = requirement['version'] or next
@@ -34,7 +32,7 @@ module Bibliothecary
       end
 
       def self.parse_lockfile(file_contents)
-        manifest = TomlRB.parse(file_contents)
+        manifest = Tomlrb.parse(file_contents)
         manifest.fetch('package',[]).map do |dependency|
           next if not dependency['source'] or not dependency['source'].start_with?('registry+')
           {
