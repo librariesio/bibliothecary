@@ -61,12 +61,12 @@ module Bibliothecary
       end
 
       def self.parse_pipfile(file_contents)
-        manifest = TomlRB.parse(file_contents)
+        manifest = Tomlrb.parse(file_contents)
         map_dependencies(manifest['packages'], 'runtime') + map_dependencies(manifest['dev-packages'], 'develop')
       end
 
       def self.parse_poetry(file_contents)
-        manifest = TomlRB.parse(file_contents)['tool']['poetry']
+        manifest = Tomlrb.parse(file_contents)['tool']['poetry']
         map_dependencies(manifest['dependencies'], 'runtime') + map_dependencies(manifest['dev-dependencies'], 'develop')
       end
 
@@ -124,7 +124,7 @@ module Bibliothecary
       end
 
       def self.parse_poetry_lock(file_contents)
-        manifest = TomlRB.parse(file_contents)
+        manifest = Tomlrb.parse(file_contents)
         deps = []
         manifest["package"].each do |package|
           # next if group == "_meta"
