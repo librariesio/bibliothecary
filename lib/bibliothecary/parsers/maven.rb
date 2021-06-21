@@ -152,9 +152,12 @@ module Bibliothecary
           .compact
           .uniq
       end
+
       def self.parse_maven_tree(file_contents)
         file_contents = file_contents.gsub(/\r\n?/, "\n")
         captures = file_contents.scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/).flatten.uniq
+        captures.shift if captures.size > 1 # first dep line will be the package itself (unless we're only analyzing a single line)
+
         captures.map do |item|
           parts = item.split(":")
           case parts.count

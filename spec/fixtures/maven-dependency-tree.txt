@@ -56,6 +56,7 @@
 [INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-core ---
 [INFO] net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT
 [INFO] +- org.apache.ant:ant:jar:1.10.9:provided
+[INFO] -  +- net.sourceforge.pmd:pmd:pom:6.32.0-SNAPSHOT
 [INFO] |  \- org.apache.ant:ant-launcher:jar:1.10.9:provided
 [INFO] +- net.java.dev.javacc:javacc:jar:5.0:provided
 [INFO] +- org.antlr:antlr4-runtime:jar:4.7.2:compile
