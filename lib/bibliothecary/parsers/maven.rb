@@ -156,9 +156,8 @@ module Bibliothecary
       def self.parse_maven_tree(file_contents)
         file_contents = file_contents.gsub(/\r\n?/, "\n")
         captures = file_contents.scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/).flatten.uniq
-        captures.shift if captures.size > 1 # first dep line will be the package itself (unless we're only analyzing a single line)
 
-        captures.map do |item|
+        deps = captures.map do |item|
           parts = item.split(":")
           case parts.count
           when 4
@@ -173,6 +172,10 @@ module Bibliothecary
             type: type
           }
         end
+
+        # First dep line will be the package itself (unless we're only analyzing a single line)
+        package = deps[0]
+        deps.size < 2 ? deps : deps[1..-1].reject { |d| d[:name] == package[:name] && d[:requirement] == package[:requirement] }
       end
 
       def self.parse_resolved_dep_line(line)
