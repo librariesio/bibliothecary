@@ -175,7 +175,7 @@ module Bibliothecary
 
         # First dep line will be the package itself (unless we're only analyzing a single line)
         package = deps[0]
-        deps.size == 1 ? deps : deps[1..-1].reject { |d| d[:name] == package[:name] && d[:requirement] == package[:requirement] }
+        deps.size < 2 ? deps : deps[1..-1].reject { |d| d[:name] == package[:name] && d[:requirement] == package[:requirement] }
       end
 
       def self.parse_resolved_dep_line(line)
