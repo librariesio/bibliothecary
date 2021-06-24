@@ -1,0 +1,23 @@
+repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v2.3.0
+      hooks:
+          - id: check-yaml
+          - id: end-of-file-fixer
+          - id: trailing-whitespace
+    - repo: https://github.com/psf/black
+      rev: 19.3b0
+      hooks:
+          - id: black
+    - repo: meta
+      hooks:
+          - id: check-hooks-apply
+          - id: check-useless-excludes
+    - repo: local
+      hooks:
+          - id: scss-lint
+            name: scss-lint
+            entry: scss-lint
+            types: [scss]
+            language: ruby
+            additional_dependencies: ['scss_lint:0.57.0']
