@@ -26,7 +26,8 @@ module Bibliothecary
             requirement: dependency["version"],
             type: "runtime"
           }.tap do |result|
-            result[:drupal_requirement] = dependency.dig("source", "reference") if is_drupal_module(dependency)
+            # Store Drupal version if Drupal, but include the original manifest version for reference
+            result[:original_requirement], result[:requirement] = result[:requirement], dependency.dig("source", "reference") if is_drupal_module(dependency)
           end
         end + manifest.fetch('packages-dev',[]).map do |dependency|
           {
@@ -34,7 +35,8 @@ module Bibliothecary
             requirement: dependency["version"],
             type: "development"
           }.tap do |result|
-            result[:drupal_requirement] = dependency.dig("source", "reference") if is_drupal_module(dependency)
+            # Store Drupal version if Drupal, but include the original manifest version for reference
+            result[:original_requirement], result[:requirement] = result[:requirement], dependency.dig("source", "reference") if is_drupal_module(dependency)
           end
         end
       end
