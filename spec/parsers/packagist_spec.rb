@@ -28,7 +28,7 @@ describe Bibliothecary::Parsers::Packagist do
         {:name=>"doctrine/annotations", :requirement=>"v1.2.1", :type=>"runtime"},
         {:name=>"doctrine/cache", :requirement=>"v1.3.1", :type=>"runtime"},
         {:name=>"doctrine/collections", :requirement=>"v1.2", :type=>"runtime"},
-        {:name=>"drupal/address", :requirement=>"8.x-1.9", :type=>"runtime"},
+        {:name=>"drupal/address", :requirement=>"8.x-1.9", :original_requirement => "1.9.0", :type=>"runtime"},
         {:name=>"symfony/monolog-bundle", :requirement=>"v2.6.1", :type=>"runtime"},
         {:name=>"symfony/swiftmailer-bundle", :requirement=>"v2.3.8", :type=>"runtime"},
         {:name=>"symfony/symfony", :requirement=>"v2.6.1", :type=>"runtime"},
