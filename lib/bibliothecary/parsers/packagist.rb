@@ -25,13 +25,17 @@ module Bibliothecary
             name: dependency["name"],
             requirement: dependency["version"],
             type: "runtime"
-          }.then { |result| handle_drupal_versions(result, dependency) }
+          }.tap do |result|
+            result[:drupal_requirement] = dependency.dig("source", "reference") if is_drupal_module(dependency)
+          end
         end + manifest.fetch('packages-dev',[]).map do |dependency|
           {
             name: dependency["name"],
             requirement: dependency["version"],
             type: "development"
-          }.then { |result| handle_drupal_versions(result, dependency) }
+          }.tap do |result|
+            result[:drupal_requirement] = dependency.dig("source", "reference") if is_drupal_module(dependency)
+          end
         end
       end
 
@@ -48,15 +52,8 @@ module Bibliothecary
       # The Drupal team also setup its own mapper of Composer semver -> Drupal tool-specfic versions
       # (https://www.drupal.org/project/project_composer/issues/2622450),
       # so we return the Drupal requirement instead of semver requirement if it's here.
-      private_class_method def self.handle_drupal_versions(result, dependency)
-        if (dependency["type"] =~ /drupal/ && dependency.dig("source", "reference"))
-          result.merge(
-            original_requirement: dependency["version"],
-            requirement: dependency.dig("source", "reference"),
-          )
-        else
-          result
-        end
+      private_class_method def self.is_drupal_module(dependency)
+        dependency["type"] =~ /drupal/ && dependency.dig("source", "reference")
       end
     end
   end
