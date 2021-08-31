@@ -53,7 +53,8 @@ module Bibliothecary
       # but you may only have composer.lock, so we test if the type is "drupal-*" (e.g. "drupal-module" or "drupal-theme")
       # The Drupal team also setup its own mapper of Composer semver -> Drupal tool-specfic versions
       # (https://www.drupal.org/project/project_composer/issues/2622450),
-      # so we return the Drupal requirement instead of semver requirement if it's here.
+      # so we return the Drupal requirement instead of semver requirement if it's here
+      # (https://www.drupal.org/docs/develop/using-composer/using-composer-to-install-drupal-and-manage-dependencies#s-about-semantic-versioning)
       private_class_method def self.is_drupal_module(dependency)
         dependency["type"] =~ /drupal/ && dependency.dig("source", "reference")
       end
