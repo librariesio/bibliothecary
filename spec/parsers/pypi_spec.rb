@@ -62,6 +62,55 @@ describe Bibliothecary::Parsers::Pypi do
     })
   end
 
+  it 'parses dependencies from requirements.txt as lockfile because of pip-compile' do
+    expect(described_class.analyse_contents('requirements.txt', load_fixture('pip-compile/requirements.txt'))).to eq({
+      :platform=>"pypi",
+      :path=>"requirements.txt",
+      :dependencies=>[
+        {:name=>"black", :requirement=>"==21.9b0", :type=>"runtime"},
+        {:name=>"cachetools", :requirement=>"==4.2.2", :type=>"runtime"},
+        {:name=>"certifi", :requirement=>"==2021.5.30", :type=>"runtime"},
+        {:name=>"charset-normalizer", :requirement=>"==2.0.6", :type=>"runtime"},
+        {:name=>"click", :requirement=>"==8.0.1", :type=>"runtime"},
+        {:name=>"google-api-core", :requirement=>"==2.0.1", :type=>"runtime"},
+        {:name=>"google-auth", :requirement=>"==2.1.0", :type=>"runtime"},
+        {:name=>"google-cloud-core", :requirement=>"==2.0.0", :type=>"runtime"},
+        {:name=>"google-cloud-storage", :requirement=>"==1.42.2", :type=>"runtime"},
+        {:name=>"google-crc32c", :requirement=>"==1.2.0", :type=>"runtime"},
+        {:name=>"google-resumable-media", :requirement=>"==2.0.3", :type=>"runtime"},
+        {:name=>"googleapis-common-protos", :requirement=>"==1.53.0", :type=>"runtime"},
+        {:name=>"idna", :requirement=>"==3.2", :type=>"runtime"},
+        {:name=>"invoke", :requirement=>"==1.6.0", :type=>"runtime"},
+        {:name=>"jinja2", :requirement=>"==3.0.1", :type=>"runtime"},
+        {:name=>"markupsafe", :requirement=>"==2.0.1", :type=>"runtime"},
+        {:name=>"mypy-extensions", :requirement=>"==0.4.3", :type=>"runtime"},
+        {:name=>"pathspec", :requirement=>"==0.9.0", :type=>"runtime"},
+        {:name=>"pep517", :requirement=>"==0.11.0", :type=>"runtime"},
+        {:name=>"pip-tools", :requirement=>"==6.2.0", :type=>"runtime"},
+        {:name=>"platformdirs", :requirement=>"==2.3.0", :type=>"runtime"},
+        {:name=>"progress", :requirement=>"==1.6", :type=>"runtime"},
+        {:name=>"prompt-toolkit", :requirement=>"==3.0.20", :type=>"runtime"},
+        {:name=>"protobuf", :requirement=>"==3.18.0", :type=>"runtime"},
+        {:name=>"pyasn1", :requirement=>"==0.4.8", :type=>"runtime"},
+        {:name=>"pyasn1-modules", :requirement=>"==0.2.8", :type=>"runtime"},
+        {:name=>"pyyaml", :requirement=>"==5.4.1", :type=>"runtime"},
+        {:name=>"questionary", :requirement=>"==1.10.0", :type=>"runtime"},
+        {:name=>"regex", :requirement=>"==2021.8.28", :type=>"runtime"},
+        {:name=>"requests", :requirement=>"==2.26.0", :type=>"runtime"},
+        {:name=>"rsa", :requirement=>"==4.7.2", :type=>"runtime"},
+        {:name=>"semver", :requirement=>"==2.13.0", :type=>"runtime"},
+        {:name=>"six", :requirement=>"==1.16.0", :type=>"runtime"},
+        {:name=>"tomli", :requirement=>"==1.2.1", :type=>"runtime"},
+        {:name=>"typing-extensions", :requirement=>"==3.10.0.2", :type=>"runtime"},
+        {:name=>"urllib3", :requirement=>"==1.26.6", :type=>"runtime"},
+        {:name=>"wcwidth", :requirement=>"==0.2.5", :type=>"runtime"},
+        {:name=>"wheel", :requirement=>"==0.37.0", :type=>"runtime"}
+      ],
+      kind: 'lockfile',
+      success: true
+    })
+  end
+
   it 'parses dependencies from pip-resolved-dependencies.txt' do
     expect(described_class.analyse_contents('pip-resolved-dependencies.txt', load_fixture('pip-resolved-dependencies.txt'))).to eq({
       :platform=>"pypi",
