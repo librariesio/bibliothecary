@@ -62,6 +62,26 @@ describe Bibliothecary::Parsers::Pypi do
     })
   end
 
+  it 'parses dependencies from requirements.in' do
+    expect(described_class.analyse_contents('requirements.in', load_fixture('pip-compile/requirements.in'))).to eq({
+      :platform=>"pypi",
+      :path=>"requirements.in",
+      :dependencies=>[
+        {:name=>"invoke", :requirement=>"*", :type=>"runtime"},
+        {:name=>"black", :requirement=>"*", :type=>"runtime"},
+        {:name=>"google-cloud-storage", :requirement=>"*", :type=>"runtime"},
+        {:name=>"six", :requirement=>"*", :type=>"runtime"},
+        {:name=>"progress", :requirement=>"*", :type=>"runtime"},
+        {:name=>"questionary", :requirement=>"*", :type=>"runtime"},
+        {:name=>"pyyaml", :requirement=>"*", :type=>"runtime"},
+        {:name=>"semver", :requirement=>"*", :type=>"runtime"},
+        {:name=>"Jinja2", :requirement=>"*", :type=>"runtime"},
+        {:name=>"pip-tools", :requirement=>"*", :type=>"runtime"}
+      ],
+      kind: 'manifest',
+      success: true
+    })
+  end
   it 'parses dependencies from requirements.txt as lockfile because of pip-compile' do
     expect(described_class.analyse_contents('requirements.txt', load_fixture('pip-compile/requirements.txt'))).to eq({
       :platform=>"pypi",

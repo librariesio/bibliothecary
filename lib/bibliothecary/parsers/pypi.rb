@@ -6,7 +6,7 @@ module Bibliothecary
       INSTALL_REGEXP = /install_requires\s*=\s*\[([\s\S]*?)\]/
       REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)([><=\w\.,]+)?/
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
-      MANIFEST_REGEXP = /.*require[^\/]*(\/)?[^\/]*\.(txt|pip)$/
+      MANIFEST_REGEXP = /.*require[^\/]*(\/)?[^\/]*\.(txt|pip|in)$/
       PIP_COMPILE_REGEXP = /.*require.*$/
 
       def self.mapping
