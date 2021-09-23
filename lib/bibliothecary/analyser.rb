@@ -172,10 +172,6 @@ module Bibliothecary
         end
       end
 
-      def match_all()
-        lambda { |path| true }
-      end
-
       def match_filenames(*filenames)
         lambda do |path|
           filenames.any? { |f| path == f } ||
