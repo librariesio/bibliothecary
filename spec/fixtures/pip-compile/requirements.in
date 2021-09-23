@@ -1,0 +1,10 @@
+invoke
+black
+google-cloud-storage
+six
+progress
+questionary
+pyyaml
+semver
+Jinja2
+pip-tools
