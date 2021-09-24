@@ -34,6 +34,10 @@ module Bibliothecary
     runner.load_file_info_list_from_paths(paths)
   end
 
+  def self.load_file_info_list_from_files(files)
+    runner.load_file_info_list_from_files(files)
+  end
+
   def self.analyse_file(file_path, contents)
     runner.analyse_file(file_path, contents)
   end
@@ -52,6 +56,10 @@ module Bibliothecary
 
   def self.find_manifests_from_paths(paths)
     runner.find_manifests_from_paths(paths)
+  end
+
+  def self.find_manifests_from_files(files)
+    runner.find_manifests_from_files(files)
   end
 
   def self.ignored_dirs

@@ -42,6 +42,22 @@ module Bibliothecary
       Bibliothecary::Parsers.constants.map{|c| Bibliothecary::Parsers.const_get(c) }.sort_by{|c| c.to_s.downcase }
     end
 
+    def load_file_info_list_from_files(files)
+      # Parses an array of format [{file_path: "", contents: ""},] to match
+      #  on both filename matches, and one content_match patterns.
+      file_list = []
+
+      files.each do |file|
+        info = FileInfo.new(nil, file[:file_path], file[:contents])
+
+        next if ignored_files.include?(info.relative_path)
+
+        add_files_to_list(file_list, info)
+      end
+
+      file_list
+    end
+
     def load_file_info_list_from_paths(paths)
       file_list = []
 
@@ -50,12 +66,7 @@ module Bibliothecary
 
         next if ignored_files.include?(info.relative_path)
 
-        applicable_package_managers(info).each do |package_manager|
-          file = info.dup
-          file.package_manager = package_manager
-
-          file_list.push(file)
-        end
+        add_files_to_list(file_list, info)
       end
 
       file_list
@@ -71,12 +82,7 @@ module Bibliothecary
         next unless FileTest.file?(subpath)
         next if ignored_files.include?(info.relative_path)
 
-        applicable_package_managers(info).each do |package_manager|
-          file = info.dup
-          file.package_manager = package_manager
-
-          file_list.push(file)
-        end
+        add_files_to_list(file_list, info)
       end
 
       file_list
@@ -88,6 +94,10 @@ module Bibliothecary
 
     def find_manifests_from_paths(paths)
       RelatedFilesInfo.create_from_file_infos(load_file_info_list_from_paths(paths).reject { |info| info.package_manager.nil? })
+    end
+
+    def find_manifests_from_files(files)
+      RelatedFilesInfo.create_from_file_infos(load_file_info_list_from_files(files).reject { |info| info.package_manager.nil? })
     end
 
     def analyse_file(file_path, contents)
@@ -123,6 +133,17 @@ module Bibliothecary
 
     def ignored_files
       @configuration.ignored_files
+    end
+
+    private
+
+    def add_files_to_list(file_list, info)
+      applicable_package_managers(info).each do |package_manager|
+        file = info.dup
+        file.package_manager = package_manager
+
+        file_list.push(file)
+      end
     end
   end
 end
