@@ -58,8 +58,8 @@ module Bibliothecary
     runner.find_manifests_from_paths(paths)
   end
 
-  def self.find_manifests_from_files(files)
-    runner.find_manifests_from_files(files)
+  def self.find_manifests_from_contents(file_path_contents_hash)
+    runner.find_manifests_from_contents(file_path_contents_hash)
   end
 
   def self.ignored_dirs
