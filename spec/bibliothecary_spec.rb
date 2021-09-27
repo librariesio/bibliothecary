@@ -435,14 +435,14 @@ describe Bibliothecary do
   end
 
   it 'matches package manager from names and contents of files.' do
-    files =[
+    file_path_contents_hash =[
       {
         file_path: "requirements.frozen",
         contents: load_fixture('pip-compile/requirements.frozen')
       }
     ]
 
-    expect(described_class.load_file_info_list_from_files(files).first.package_manager).to eq(Bibliothecary::Parsers::Pypi)
+    expect(described_class.load_file_info_list_from_contents(file_path_contents_hash).first.package_manager).to eq(Bibliothecary::Parsers::Pypi)
   end
 
 

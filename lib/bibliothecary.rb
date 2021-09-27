@@ -34,8 +34,8 @@ module Bibliothecary
     runner.load_file_info_list_from_paths(paths)
   end
 
-  def self.load_file_info_list_from_files(files)
-    runner.load_file_info_list_from_files(files)
+  def self.load_file_info_list_from_contents(file_path_contents_hash)
+    runner.load_file_info_list_from_contents(file_path_contents_hash)
   end
 
   def self.analyse_file(file_path, contents)

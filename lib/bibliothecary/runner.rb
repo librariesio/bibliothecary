@@ -42,12 +42,12 @@ module Bibliothecary
       Bibliothecary::Parsers.constants.map{|c| Bibliothecary::Parsers.const_get(c) }.sort_by{|c| c.to_s.downcase }
     end
 
-    def load_file_info_list_from_files(files)
+    def load_file_info_list_from_contents(file_path_contents_hash)
       # Parses an array of format [{file_path: "", contents: ""},] to match
       #  on both filename matches, and one content_match patterns.
       file_list = []
 
-      files.each do |file|
+      file_path_contents_hash.each do |file|
         info = FileInfo.new(nil, file[:file_path], file[:contents])
 
         next if ignored_files.include?(info.relative_path)
@@ -96,8 +96,8 @@ module Bibliothecary
       RelatedFilesInfo.create_from_file_infos(load_file_info_list_from_paths(paths).reject { |info| info.package_manager.nil? })
     end
 
-    def find_manifests_from_files(files)
-      RelatedFilesInfo.create_from_file_infos(load_file_info_list_from_files(files).reject { |info| info.package_manager.nil? })
+    def find_manifests_from_contents(file_path_contents_hash)
+      RelatedFilesInfo.create_from_file_infos(load_file_info_list_from_contents(file_path_contents_hash).reject { |info| info.package_manager.nil? })
     end
 
     def analyse_file(file_path, contents)
