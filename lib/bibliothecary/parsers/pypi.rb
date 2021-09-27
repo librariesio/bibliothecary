@@ -4,7 +4,12 @@ module Bibliothecary
       include Bibliothecary::Analyser
 
       INSTALL_REGEXP = /install_requires\s*=\s*\[([\s\S]*?)\]/
-      REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)([><=\w\.,]+)?/
+
+      # Capture Group 1 is package.
+      # Optional Group 2 is [extras].
+      # Capture Group 3 is Version
+      REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)(?:\[.*?\])*([><=\w\.,]+)?/
+
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
       MANIFEST_REGEXP = /.*require[^\/]*(\/)?[^\/]*\.(txt|pip|in)$/
       PIP_COMPILE_REGEXP = /.*require.*$/
@@ -160,7 +165,7 @@ module Bibliothecary
           next unless match
           deps << {
             name: match[1],
-            requirement: match[2] || '*',
+            requirement: match[-1] || '*',
             type: 'runtime'
           }
         end
@@ -174,7 +179,7 @@ module Bibliothecary
           next unless match
           deps << {
             name: match[1],
-            requirement: match[2] || '*',
+            requirement: match[-1] || '*',
             type: 'runtime'
           }
         end

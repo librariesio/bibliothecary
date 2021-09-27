@@ -59,6 +59,19 @@ describe Bibliothecary do
     }])
   end
 
+  it 'analyses contents of a python file with [extras] format' do
+    expect(described_class.analyse_file('requirements-extras.in', load_fixture('pip-compile/requirements-extras.in'))).to eq([{
+      :dependencies=>[
+        {:name=>"urllib3", :requirement=>"==1.0.0", :type=>"runtime"},
+        {:name=>"django-dbfilestorage", :requirement=>"==1.0.0", :type=>"runtime"}
+      ],
+      :kind=>"manifest",
+      :path=>"requirements-extras.in",
+      :platform=>"pypi",
+      :success=>true
+    }])
+  end
+
   it "aliases analyse and analyse_file" do
     expect(Bibliothecary.method(:analyse)).to eq(Bibliothecary.method(:analyze))
     expect(Bibliothecary.method(:analyse_file)).to eq(Bibliothecary.method(:analyze_file))
