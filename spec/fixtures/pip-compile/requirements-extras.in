@@ -1,0 +1,2 @@
+urllib3[secure]==1.0.0
+django-dbfilestorage==1.0.0
