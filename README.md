@@ -81,6 +81,8 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - requirements/*.pip
   - Pipfile
   - Pipfile.lock
+  - pyproject.toml
+  - poetry.lock
 - Nuget
   - packages.config
   - Project.json
