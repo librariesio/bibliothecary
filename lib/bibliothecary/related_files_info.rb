@@ -22,8 +22,8 @@ module Bibliothecary
       @platform = package_manager.platform_name
       @path = Pathname.new(File.dirname(file_infos.first.relative_path)).cleanpath.to_path
       # `package_manager.determine_kind_from_info(info)` can be an Array, so use include? which also works for string
-      @manifests = file_infos.select { |info| package_manager.determine_kind_from_info(info).include? "manifest" }.map { |info| File.basename(info.relative_path) }
-      @lockfiles = file_infos.select { |info| package_manager.determine_kind_from_info(info).include? "lockfile" }.map { |info| File.basename(info.relative_path) }
+      @manifests = file_infos.select { |info| package_manager.determine_kind_from_info(info).include? "manifest" }.map(&:relative_path)
+      @lockfiles = file_infos.select { |info| package_manager.determine_kind_from_info(info).include? "lockfile" }.map(&:relative_path)
     end
   end
 end
