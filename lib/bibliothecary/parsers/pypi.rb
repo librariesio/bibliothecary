@@ -26,6 +26,10 @@ module Bibliothecary
             parser: :parse_requirements_txt,
             can_have_lockfile: false
           },
+          match_filename('requirements.frozen') => { # pattern exists to store frozen deps in requirements.frozen
+            parser: :parse_requirements_txt,
+            kind: 'lockfile',
+          },
           match_filename('pip-resolved-dependencies.txt') => { # Inferred from pip
             kind: 'lockfile',
             parser: :parse_requirements_txt,

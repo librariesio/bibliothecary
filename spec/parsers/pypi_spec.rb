@@ -145,6 +145,20 @@ describe Bibliothecary::Parsers::Pypi do
     })
   end
 
+  it 'parses dependencies from requirements.frozen' do
+    expect(described_class.analyse_contents('requirements.frozen', load_fixture('requirements.frozen'))).to eq({
+      :platform=>"pypi",
+      :path=>"requirements.frozen",
+      :dependencies=>[
+        {:name=>"asgiref", :requirement=>"==3.2.7", :type=>"runtime"},
+        {:name=>"Django", :requirement=>"==3.0.6", :type=>"runtime"},
+        {:name=>"sqlparse", :requirement=>"==0.3.1", :type=>"runtime"}
+      ],
+      kind: 'lockfile',
+      success: true
+    })
+  end
+
   it 'parses dependencies from Pipfile' do
     expect(described_class.analyse_contents('Pipfile', load_fixture('Pipfile'))).to eq({
       :platform=>"pypi",
