@@ -17,6 +17,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::CRAN,
           Bibliothecary::Parsers::Dub,
           Bibliothecary::Parsers::Elm,
+          Bibliothecary::Parsers::Generic,
           Bibliothecary::Parsers::Go,
           Bibliothecary::Parsers::Hackage,
           Bibliothecary::Parsers::Haxelib,

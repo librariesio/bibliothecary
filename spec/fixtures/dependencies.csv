@@ -1,0 +1,3 @@
+platform,name,requirement,type
+maven,com.example:something,1.0.3,runtime
+maven,com.example:something-dev,1.0.4,development
