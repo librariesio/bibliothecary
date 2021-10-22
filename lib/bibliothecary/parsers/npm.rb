@@ -54,7 +54,11 @@ module Bibliothecary
           type = requirement.fetch("dev", false) ? 'development' : 'runtime'
           version = requirement.key?("from") ? requirement["from"][/#(?:semver:)?v?(.*)/, 1] : nil
           version ||= requirement["version"].split("#").last
-          dependencies = depth >= PACKAGE_LOCK_JSON_MAX_DEPTH ? [] : parse_package_lock_deps_recursively(requirement.fetch('dependencies', []), depth + 1)
+          dependencies = if depth >= PACKAGE_LOCK_JSON_MAX_DEPTH
+            []
+          else
+            parse_package_lock_deps_recursively(requirement.fetch('dependencies', []), depth + 1)
+          end
 
           [{
             name: name,
