@@ -189,8 +189,10 @@ describe Bibliothecary::Parsers::NPM do
                                     :requirement => "1.0.0-beta.13",
                                     :type => "runtime"
                                   })
-    expect(dependencies.select { |dep| dep[:type] == "runtime" }.length).to eq(242)
-    expect(dependencies.select { |dep| dep[:type] == "development" }.length).to eq(905)
+    expect(dependencies.select { |dep| dep[:type] == "runtime" }.length).to eq(373)
+    expect(dependencies.select { |dep| dep[:type] == "development" }.length).to eq(1601)
+    # a nested dependency
+    expect(dependencies).to include({name: "acorn", requirement: "4.0.13", type: "development"})
   end
 
   it 'matches valid manifest filepaths' do
@@ -209,5 +211,19 @@ describe Bibliothecary::Parsers::NPM do
     expect(described_class.match?('anpm-shrinkwrap.json')).to be_falsey
     expect(described_class.match?('test/pass/yarn.locks')).to be_falsey
     expect(described_class.match?('sa/apackage-lock..json')).to be_falsey
+  end
+
+  it 'parses dependencies that have multiple versions in package-lock.json' do
+    expect(described_class.analyse_contents('package-lock.json', load_fixture('multiple_versions/package-lock.json'))).to eq({
+      dependencies: [
+        {name: "find-versions", requirement: "4.0.0", type: "runtime"},
+        {name: "semver-regex", requirement: "3.1.3", type: "runtime"},
+        {name: "semver-regex", requirement: "4.0.2", type: "runtime"}
+      ],
+      kind: 'lockfile',
+      path: 'package-lock.json',
+      platform: 'npm',
+      success: true
+    })
   end
 end

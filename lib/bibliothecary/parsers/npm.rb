@@ -5,6 +5,9 @@ module Bibliothecary
     class NPM
       include Bibliothecary::Analyser
 
+      # Max depth to recurse into the "dependencies" property of package-lock.json
+      PACKAGE_LOCK_JSON_MAX_DEPTH = 10
+
       def self.mapping
         {
           match_filename("package.json") => {
@@ -43,26 +46,21 @@ module Bibliothecary
 
       def self.parse_package_lock(file_contents)
         manifest = JSON.parse(file_contents)
-        manifest.fetch('dependencies',[]).map do |name, requirement|
-          if requirement.fetch("dev", false)
-            type = 'development'
-          else
-            type = 'runtime'
-          end
+        parse_package_lock_deps_recursively(manifest.fetch('dependencies', []))
+      end
 
-          version = nil
-
-          if requirement.key?("from")
-            version = requirement["from"][/#(?:semver:)?v?(.*)/, 1]
-          end
-
+      def self.parse_package_lock_deps_recursively(dependencies, depth=1)
+        dependencies.flat_map do |name, requirement|
+          type = requirement.fetch("dev", false) ? 'development' : 'runtime'
+          version = requirement.key?("from") ? requirement["from"][/#(?:semver:)?v?(.*)/, 1] : nil
           version ||= requirement["version"].split("#").last
+          dependencies = depth >= PACKAGE_LOCK_JSON_MAX_DEPTH ? [] : parse_package_lock_deps_recursively(requirement.fetch('dependencies', []), depth + 1)
 
-          {
+          [{
             name: name,
             requirement: version,
             type: type
-          }
+          }] + dependencies
         end
       end
 
