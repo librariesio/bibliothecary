@@ -226,4 +226,18 @@ describe Bibliothecary::Parsers::NPM do
       success: true
     })
   end
+
+  it 'parses dependencies that have multiple versions in yarnjson' do
+    expect(described_class.analyse_contents('yarn.lock', load_fixture('multiple_versions/yarn.lock'))).to eq({
+      dependencies: [
+        {name: "find-versions", requirement: "4.0.0", type: "runtime"},
+        {name: "semver-regex", requirement: "3.1.3", type: "runtime"},
+        {name: "semver-regex", requirement: "4.0.2", type: "runtime"}
+      ],
+      kind: 'lockfile',
+      path: 'yarn.lock',
+      platform: 'yarn',
+      success: true
+    })
+  end
 end
