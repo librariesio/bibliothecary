@@ -1399,6 +1399,8 @@ testCompileClasspath - Compile classpath for source set 'test'.
 +--- org.springframework:spring-test:5.1.0.RC3
 |    \--- org.springframework:spring-core:5.1.0.RC3 (*)
 +--- org.json:json:20160810
++--- org.projectlombok:lombok FAILED
++--- org.apiguardian:apiguardian-api:1.1.0 FAILED
 \--- project :api:cas-server-core-api-test-category
 
 testCompileOnly - Compile only dependencies for source set 'test'.

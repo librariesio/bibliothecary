@@ -388,14 +388,26 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(test_runtime_classpath.length).to eq 187
       expect(test_runtime_classpath.select {|item| item[:name] == "org.glassfish.jaxb:jaxb-runtime"}.length).to eq 1
 
-      test_compile_classpath = deps[:dependencies].select {|item| item[:type] == "testRuntimeClasspath"}
+      test_compile_classpath = deps[:dependencies].select {|item| item[:type] == "testCompileClasspath"}
 
-      expect(test_compile_classpath.length).to eq 187
-      expect(test_runtime_classpath.select {|item| item[:name] == "org.slf4j:jul-to-slf4j"}.length).to eq 1
+      expect(test_compile_classpath.length).to eq 189
+      expect(test_compile_classpath.select {|item| item[:name] == "org.slf4j:jul-to-slf4j"}.length).to eq 1
     end
 
     it "excludes items in resolved deps file with no version" do
       expect(described_class.parse_gradle_resolved("\\--- org.springframework.security:spring-security-test (n)")).to eq []
+    end
+
+    it "excludes failed items with no version" do
+      expect(described_class.parse_gradle_resolved("+--- org.projectlombok:lombok FAILED")).to eq []
+    end
+
+    it "includes failed items with a version" do
+      expect(described_class.parse_gradle_resolved("+--- org.apiguardian:apiguardian-api:1.1.0 FAILED")).to eq [{
+        name: "org.apiguardian:apiguardian-api",
+        requirement: "1.1.0",
+        type: nil
+      }]
     end
 
     it "properly resolves versions with -> syntax" do

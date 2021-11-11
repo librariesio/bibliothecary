@@ -127,10 +127,12 @@ module Bibliothecary
 
           split = gradle_dep_match.captures[0]
 
-          # org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
-          # Lines can end with (c), (n), or (*)
-          # to indicate that something was a dependency constraint (c), not resolved (n), or resolved previously (*).
-          dep = line.split(split)[1].sub(/(\((c|n|\*)\))$/, "").sub(" -> ", ":").strip.split(":")
+
+          dep = line
+            .split(split)[1].sub(/(\((c|n|\*)\))$/, "") # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
+            .sub(/ FAILED$/, "") # dependency could not be resolved (but still may have a version)
+            .sub(" -> ", ":") # handle version arrow syntax
+            .strip.split(":")
 
           # A testImplementation line can look like this so just skip those
           # \--- org.springframework.security:spring-security-test (n)
