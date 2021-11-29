@@ -97,6 +97,18 @@ module Bibliothecary
         transform_tree_to_array(manifest.fetch('dependencies', {}))
       end
 
+      def self.lockfile_preference_order(file_infos)
+        files = file_infos.each_with_object({}) do |file_info, obj|
+          obj[File.basename(file_info.full_path)] = file_info
+        end
+
+        if files["npm-shrinkwrap.json"]
+          [files["npm-shrinkwrap.json"]] + files.values.reject { |fi| File.basename(fi.full_path) == "npm-shrinkwrap.json" }
+        else
+          files.values
+        end
+      end
+
       private_class_method def self.transform_tree_to_array(deps_by_name)
         deps_by_name.map do |name, metadata|
           [

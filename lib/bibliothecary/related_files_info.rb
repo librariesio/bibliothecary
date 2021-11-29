@@ -19,6 +19,9 @@ module Bibliothecary
 
     def initialize(file_infos)
       package_manager = file_infos.first.package_manager
+      if package_manager.respond_to?(:lockfile_preference_order)
+        file_infos = package_manager.lockfile_preference_order(file_infos)
+      end
       @platform = package_manager.platform_name
       @path = Pathname.new(File.dirname(file_infos.first.relative_path)).cleanpath.to_path
       # `package_manager.determine_kind_from_info(info)` can be an Array, so use include? which also works for string
