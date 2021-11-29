@@ -240,4 +240,22 @@ describe Bibliothecary::Parsers::NPM do
       success: true
     })
   end
+
+  describe ".lockfile_preference_order" do
+    let!(:shrinkwrap) { Bibliothecary::FileInfo.new(".", "npm-shrinkwrap.json") }
+    let!(:package_lock) { Bibliothecary::FileInfo.new(".", "package-lock.json") }
+    let!(:package) { Bibliothecary::FileInfo.new(".", "package.json") }
+
+    it 'prefers npm-shrinkwrap file infos first' do
+      expect(described_class.lockfile_preference_order([
+        package, package_lock, shrinkwrap
+      ])).to eq([ shrinkwrap, package, package_lock ])
+    end
+
+    it 'changes nothing if no shrinkwrap' do
+      expect(described_class.lockfile_preference_order([
+        package, package_lock
+      ])).to eq([ package, package_lock ])
+    end
+  end
 end
