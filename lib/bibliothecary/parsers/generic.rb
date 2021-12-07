@@ -18,27 +18,21 @@ module Bibliothecary
         table = CSV.parse(file_contents, headers: true)
 
         required_headers = ["platform", "name", "requirement"]
-        missing_headers = []
-        for h in required_headers
-          missing_headers.push(h) unless table.headers.include?(h)
-        end
+        missing_headers = required_headers - table.headers
         raise "Missing headers #{missing_headers} in CSV" unless missing_headers.empty?
 
-        deps = []
-        line = 1
-        for row in table
-          for h in required_headers
+        table.map.with_index do |row, idx|
+          line = idx + 1
+          required_headers.each do |h|
             raise "missing field '#{h}' on line #{line}" if row[h].empty?
           end
-          line += 1
-          deps.push({
-                      platform: row['platform'],
-                      name: row['name'],
-                      requirement: row['requirement'],
-                      type: row.fetch('type', 'runtime'),
-                    })
+          {
+            platform: row['platform'],
+            name: row['name'],
+            requirement: row['requirement'],
+            type: row.fetch('type', 'runtime'),
+          }
         end
-        deps
       end
     end
   end
