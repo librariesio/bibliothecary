@@ -25,6 +25,10 @@ module Bibliothecary
       base.extend(ClassMethods)
     end
     module ClassMethods
+      def generic?
+        platform_name == "generic"
+      end
+
       def mapping_entry_match?(matcher, details, info)
         if matcher.call(info.relative_path)
           # we only want to load contents if we don't have them already
@@ -119,13 +123,32 @@ module Bibliothecary
       end
       alias analyze_contents analyse_contents
 
+      def dependencies_to_analysis(info, kind, dependencies)
+        dependencies = dependencies || [] # work around any legacy parsers that return nil
+        if generic?
+          analyses = []
+          grouped = dependencies.group_by { |dep| dep[:platform] }
+          all_analyses = grouped.keys.map do |platform|
+            deplatformed_dependencies = grouped[platform].map { |d| d.delete(:platform); d }
+            Bibliothecary::Analyser::create_analysis(platform, info.relative_path, kind, deplatformed_dependencies)
+          end
+          # this is to avoid a larger refactor for the time being. The larger refactor
+          # needs to make analyse_contents return multiple analysis, or add another
+          # method that can return multiple and deprecate analyse_contents, perhaps.
+          raise "File contains zero or multiple platforms, currently must have exactly one" if all_analyses.length != 1
+          all_analyses.first
+        else
+          Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies)
+        end
+      end
+
       def analyse_contents_from_info(info)
         # If your Parser needs to return multiple responses for one file, please override this method
         # For example see conda.rb
         kind = determine_kind_from_info(info)
         dependencies = parse_file(info.relative_path, info.contents)
 
-        Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies || [])
+        dependencies_to_analysis(info, kind, dependencies)
       rescue Bibliothecary::FileParsingError => e
         Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, kind, e.message)
       end
