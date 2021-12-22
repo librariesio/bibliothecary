@@ -281,7 +281,7 @@ module Bibliothecary
         non_prop_name = property_name.gsub(".", "/").gsub("project/", "")
         return "${#{property_name}}" if !xml.respond_to?("properties") && parent_properties.empty? && xml.locate(non_prop_name).empty?
 
-        prop_field = xml.properties.locate(property_name).first
+        prop_field = xml.properties.locate(property_name).first if xml.respond_to?("properties")
         parent_prop = parent_properties[property_name]
         if prop_field
           prop_field.nodes.first
