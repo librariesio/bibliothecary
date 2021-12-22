@@ -308,6 +308,14 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(echo_parent_dep[:requirement]).to eq("0.1.23")
   end
 
+  it 'uses parent properties during resolve when there are no properties in the pom file', focus: true do
+    parent_props = {"bibliothecary.version"=>"9.9.9"}
+    deps = described_class.parse_pom_manifest(load_fixture('pom_no_props.xml'), parent_props)
+
+    bibliothecary_dep = deps.find { |dep| dep[:name] == "io.libraries:bibliothecary" }
+    expect(bibliothecary_dep[:requirement]).to eq("9.9.9")
+  end
+
   it 'returns property name for missing property values' do
     deps = described_class.parse_pom_manifest(load_fixture('pom_missing_props.xml'))
 
