@@ -459,5 +459,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       output = described_class.parse_maven_tree("[INFO] net.sourceforge.pmd:pmd-scala_2.12:jar:${someVariable}\n")
       expect(output).to eq [{:name=>"net.sourceforge.pmd:pmd-scala_2.12", :requirement=>"${someVariable}", :type=>"jar"}]
     end
+
+    it 'parses dependencies from gradle-kotlin-dependencies-q.txt' do
+      deps = described_class.analyse_contents('gradle-kotlin-dependencies-q.txt', load_fixture('gradle-kotlin-dependencies-q.txt'))
+      expect(deps[:kind]).to eq 'lockfile'
+      guavas = deps[:dependencies].select {|item| item[:name] == "com.google.guava:guava" && item[:type] == "testCompileClasspath"}
+      expect(guavas.length).to eq 1
+      expect(guavas[0][:requirement]).to eq '30.1.1-jre'
+    end
   end
 end

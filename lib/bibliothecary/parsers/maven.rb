@@ -53,6 +53,10 @@ module Bibliothecary
             kind: 'lockfile',
             parser: :parse_gradle_resolved
           },
+          match_filename("gradle-kotlin-dependencies-q.txt", case_insensitive: true) => {
+            kind: 'lockfile',
+            parser: :parse_gradle_resolved
+          },
           match_filename("maven-resolved-dependencies.txt", case_insensitive: true) => {
             kind: 'lockfile',
             parser: :parse_maven_resolved
