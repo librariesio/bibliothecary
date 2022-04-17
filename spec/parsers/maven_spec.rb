@@ -284,6 +284,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(described_class.match?('pom.xml')).to be_truthy
     expect(described_class.match?('ivy.xml')).to be_truthy
     expect(described_class.match?('build.gradle')).to be_truthy
+    expect(described_class.match?('build.gradle.kts')).to be_truthy
     # since the file doesn't really exist, we can't say it's a manifest file
     expect(described_class.match?('whatever.xml')).to be_falsey
     # but if it's a real file with contents we should be able to identify it has <ivy-report> in it
