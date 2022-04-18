@@ -472,7 +472,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     end
 
     it 'parses dependencies from gradle-dependencies-q.txt, generated from build.gradle.kts' do
-      # This should be the same but including it since the source file is in Groovy instead of Kotlin
+      # This output should be the same format as from build.gradle, but including it just to have a fixture from build.gradle.kts documented.
       deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle_with_kotlin/gradle-dependencies-q.txt'))
       expect(deps[:kind]).to eq 'lockfile'
       guavas = deps[:dependencies].select {|item| item[:name] == "com.google.guava:guava" && item[:type] == "testCompileClasspath"}
