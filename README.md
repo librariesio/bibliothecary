@@ -62,6 +62,7 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - pom.xml
   - ivy.xml
   - build.gradle
+  - gradle-dependencies-q.txt
 - RubyGems
   - Gemfile
   - Gemfile.lock
