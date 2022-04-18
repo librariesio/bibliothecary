@@ -209,6 +209,16 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         success: true
       })
     end
+
+    it 'parses dependencies from build.gradle', :vcr do
+      expect(described_class.analyse_contents('build.gradle.kts', load_fixture('build.gradle.kts'))).to eq({
+        :platform=>"maven",
+        :path=>"build.gradle.kts",
+        :dependencies=>[], # TODO
+        kind: 'manifest',
+        success: true
+      })
+    end
   end
 
   it 'parses dependencies from an ivy report for a root project / type compile' do
@@ -284,6 +294,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(described_class.match?('pom.xml')).to be_truthy
     expect(described_class.match?('ivy.xml')).to be_truthy
     expect(described_class.match?('build.gradle')).to be_truthy
+    expect(described_class.match?('build.gradle.kts')).to be_truthy
     # since the file doesn't really exist, we can't say it's a manifest file
     expect(described_class.match?('whatever.xml')).to be_falsey
     # but if it's a real file with contents we should be able to identify it has <ivy-report> in it
@@ -458,6 +469,15 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     it "parses dependencies with variables in version position" do
       output = described_class.parse_maven_tree("[INFO] net.sourceforge.pmd:pmd-scala_2.12:jar:${someVariable}\n")
       expect(output).to eq [{:name=>"net.sourceforge.pmd:pmd-scala_2.12", :requirement=>"${someVariable}", :type=>"jar"}]
+    end
+
+    it 'parses dependencies from gradle-dependencies-q.txt, generated from build.gradle.kts' do
+      # This should be the same but including it since the source file is in Groovy instead of Kotlin
+      deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle_with_kotlin/gradle-dependencies-q.txt'))
+      expect(deps[:kind]).to eq 'lockfile'
+      guavas = deps[:dependencies].select {|item| item[:name] == "com.google.guava:guava" && item[:type] == "testCompileClasspath"}
+      expect(guavas.length).to eq 1
+      expect(guavas[0][:requirement]).to eq '30.1.1-jre'
     end
   end
 end

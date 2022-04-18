@@ -44,6 +44,10 @@ module Bibliothecary
             kind: 'manifest',
             parser: :parse_gradle
           },
+          match_filename("build.gradle.kts", case_insensitive: true) => {
+            kind: 'manifest',
+            parser: :parse_gradle_kts
+          },
           match_extension(".xml", case_insensitive: true) => {
             content_matcher: :ivy_report?,
             kind: 'lockfile',
@@ -221,6 +225,11 @@ module Bibliothecary
             type: dependency["type"]
           }
         end.compact
+      end
+
+      def self.parse_gradle_kts(manifest)
+        # TODO: the gradle-parser side needs to be implemented for this, coming soon.
+        []
       end
 
       def self.gradle_dependency_name(group, name)
