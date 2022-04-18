@@ -1,0 +1,312 @@
+
+------------------------------------------------------------
+Project ':app'
+------------------------------------------------------------
+
+annotationProcessor - Annotation processors and their dependencies for source set 'main'.
+No dependencies
+
+api - API dependencies for compilation 'main' (target  (jvm)). (n)
+No dependencies
+
+apiDependenciesMetadata
+No dependencies
+
+apiElements - API elements for main. (n)
+No dependencies
+
+apiElements-published (n)
+No dependencies
+
+archives - Configuration for archive artifacts. (n)
+No dependencies
+
+compileClasspath - Compile classpath for compilation 'main' (target  (jvm)).
++--- org.jetbrains.kotlin:kotlin-bom:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0 (c)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0 (c)
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0
+|    |    +--- org.jetbrains:annotations:13.0
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0
+|         \--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+\--- com.google.guava:guava:30.1.1-jre
+     +--- com.google.guava:failureaccess:1.0.1
+     +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+     +--- com.google.code.findbugs:jsr305:3.0.2
+     +--- org.checkerframework:checker-qual:3.8.0
+     +--- com.google.errorprone:error_prone_annotations:2.5.1
+     \--- com.google.j2objc:j2objc-annotations:1.3
+
+compileOnly - Compile only dependencies for compilation 'main' (target  (jvm)).
+No dependencies
+
+compileOnlyDependenciesMetadata
+No dependencies
+
+default - Configuration for default artifacts. (n)
+No dependencies
+
+implementation - Implementation only dependencies for compilation 'main' (target  (jvm)). (n)
++--- org.jetbrains.kotlin:kotlin-bom:1.5.0 (n)
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0 (n)
+\--- com.google.guava:guava:30.1.1-jre (n)
+
+implementationDependenciesMetadata
++--- org.jetbrains.kotlin:kotlin-bom:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0 (c)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0 (c)
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0
+|    |    +--- org.jetbrains:annotations:13.0
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0
+|         \--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+\--- com.google.guava:guava:30.1.1-jre
+     +--- com.google.guava:failureaccess:1.0.1
+     +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+     +--- com.google.code.findbugs:jsr305:3.0.2
+     +--- org.checkerframework:checker-qual:3.8.0
+     +--- com.google.errorprone:error_prone_annotations:2.5.1
+     \--- com.google.j2objc:j2objc-annotations:1.3
+
+kotlinCompilerClasspath
+\--- org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0
+     |    +--- org.jetbrains:annotations:13.0
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0
+     +--- org.jetbrains.kotlin:kotlin-script-runtime:1.5.0
+     +--- org.jetbrains.kotlin:kotlin-reflect:1.5.0
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+     +--- org.jetbrains.kotlin:kotlin-daemon-embeddable:1.5.0
+     \--- org.jetbrains.intellij.deps:trove4j:1.0.20181211
+
+kotlinCompilerPluginClasspath
+No dependencies
+
+kotlinCompilerPluginClasspathMain - Kotlin compiler plugins for compilation 'main' (target  (jvm))
+\--- org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:1.5.0
+     +--- org.jetbrains.kotlin:kotlin-scripting-compiler-impl-embeddable:1.5.0
+     |    +--- org.jetbrains.kotlin:kotlin-scripting-common:1.5.0
+     |    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0
+     |    |    |    +--- org.jetbrains:annotations:13.0
+     |    |    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0
+     |    |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8
+     |    |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.5.0 (*)
+     |    |         \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.71 -> 1.5.0
+     |    +--- org.jetbrains.kotlin:kotlin-scripting-jvm:1.5.0
+     |    |    +--- org.jetbrains.kotlin:kotlin-script-runtime:1.5.0
+     |    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+     |    |    \--- org.jetbrains.kotlin:kotlin-scripting-common:1.5.0 (*)
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8 (*)
+     \--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+
+kotlinCompilerPluginClasspathTest - Kotlin compiler plugins for compilation 'test' (target  (jvm))
+\--- org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:1.5.0
+     +--- org.jetbrains.kotlin:kotlin-scripting-compiler-impl-embeddable:1.5.0
+     |    +--- org.jetbrains.kotlin:kotlin-scripting-common:1.5.0
+     |    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0
+     |    |    |    +--- org.jetbrains:annotations:13.0
+     |    |    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0
+     |    |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8
+     |    |         +--- org.jetbrains.kotlin:kotlin-stdlib:1.3.71 -> 1.5.0 (*)
+     |    |         \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.3.71 -> 1.5.0
+     |    +--- org.jetbrains.kotlin:kotlin-scripting-jvm:1.5.0
+     |    |    +--- org.jetbrains.kotlin:kotlin-script-runtime:1.5.0
+     |    |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+     |    |    \--- org.jetbrains.kotlin:kotlin-scripting-common:1.5.0 (*)
+     |    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+     |    \--- org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.8 (*)
+     \--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+
+kotlinKlibCommonizerClasspath
+\--- org.jetbrains.kotlin:kotlin-klib-commonizer-embeddable:1.5.0
+     +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0
+     |    +--- org.jetbrains:annotations:13.0
+     |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0
+     \--- org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.0
+          +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+          +--- org.jetbrains.kotlin:kotlin-script-runtime:1.5.0
+          +--- org.jetbrains.kotlin:kotlin-reflect:1.5.0
+          |    \--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+          +--- org.jetbrains.kotlin:kotlin-daemon-embeddable:1.5.0
+          \--- org.jetbrains.intellij.deps:trove4j:1.0.20181211
+
+kotlinNativeCompilerPluginClasspath
+No dependencies
+
+kotlinScriptDef - Script filename extensions discovery classpath configuration
+No dependencies
+
+kotlinScriptDefExtensions
+No dependencies
+
+runtimeClasspath - Runtime classpath of compilation 'main' (target  (jvm)).
++--- org.jetbrains.kotlin:kotlin-bom:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0 (c)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0 (c)
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0
+|    |    +--- org.jetbrains:annotations:13.0
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0
+|         \--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+\--- com.google.guava:guava:30.1.1-jre
+     +--- com.google.guava:failureaccess:1.0.1
+     +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+     +--- com.google.code.findbugs:jsr305:3.0.2
+     +--- org.checkerframework:checker-qual:3.8.0
+     +--- com.google.errorprone:error_prone_annotations:2.5.1
+     \--- com.google.j2objc:j2objc-annotations:1.3
+
+runtimeElements - Elements of runtime for main. (n)
+No dependencies
+
+runtimeElements-published (n)
+No dependencies
+
+runtimeOnly - Runtime only dependencies for compilation 'main' (target  (jvm)). (n)
+No dependencies
+
+runtimeOnlyDependenciesMetadata
+No dependencies
+
+sourceArtifacts (n)
+No dependencies
+
+testAnnotationProcessor - Annotation processors and their dependencies for source set 'test'.
+No dependencies
+
+testApi - API dependencies for compilation 'test' (target  (jvm)). (n)
+No dependencies
+
+testApiDependenciesMetadata
+No dependencies
+
+testCompileClasspath - Compile classpath for compilation 'test' (target  (jvm)).
++--- org.jetbrains.kotlin:kotlin-bom:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-test:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-test-junit:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0 (c)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0 (c)
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0
+|    |    +--- org.jetbrains:annotations:13.0
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0
+|         \--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
++--- com.google.guava:guava:30.1.1-jre
+|    +--- com.google.guava:failureaccess:1.0.1
+|    +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+|    +--- com.google.code.findbugs:jsr305:3.0.2
+|    +--- org.checkerframework:checker-qual:3.8.0
+|    +--- com.google.errorprone:error_prone_annotations:2.5.1
+|    \--- com.google.j2objc:j2objc-annotations:1.3
++--- org.jetbrains.kotlin:kotlin-test:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+|    \--- org.jetbrains.kotlin:kotlin-test-junit:1.5.0
+|         +--- org.jetbrains.kotlin:kotlin-test:1.5.0 (*)
+|         \--- junit:junit:4.12
+|              \--- org.hamcrest:hamcrest-core:1.3
++--- org.jetbrains.kotlin:kotlin-test-junit:1.5.0 (*)
+\--- org.jetbrains.kotlin:kotlin-test:1.5.0 (*)
+
+testCompileOnly - Compile only dependencies for compilation 'test' (target  (jvm)).
+No dependencies
+
+testCompileOnlyDependenciesMetadata
+No dependencies
+
+testImplementation - Implementation only dependencies for compilation 'test' (target  (jvm)). (n)
++--- org.jetbrains.kotlin:kotlin-test:1.5.0 (n)
++--- org.jetbrains.kotlin:kotlin-test-junit:1.5.0 (n)
+\--- org.jetbrains.kotlin:kotlin-test:1.5.0 (n)
+
+testImplementationDependenciesMetadata
++--- org.jetbrains.kotlin:kotlin-bom:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-test:1.5.0 FAILED
+|    +--- org.jetbrains.kotlin:kotlin-test-junit:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-test-common:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-test-annotations-common:1.5.0 (c)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0 (c)
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0
+|    |    +--- org.jetbrains:annotations:13.0
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0
+|         \--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
++--- com.google.guava:guava:30.1.1-jre
+|    +--- com.google.guava:failureaccess:1.0.1
+|    +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+|    +--- com.google.code.findbugs:jsr305:3.0.2
+|    +--- org.checkerframework:checker-qual:3.8.0
+|    +--- com.google.errorprone:error_prone_annotations:2.5.1
+|    \--- com.google.j2objc:j2objc-annotations:1.3
++--- org.jetbrains.kotlin:kotlin-test:1.5.0 FAILED
++--- org.jetbrains.kotlin:kotlin-test-junit:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-test:1.5.0 FAILED
+|    \--- junit:junit:4.12
+|         \--- org.hamcrest:hamcrest-core:1.3
+\--- org.jetbrains.kotlin:kotlin-test:1.5.0 FAILED
+
+testKotlinScriptDef - Script filename extensions discovery classpath configuration
+No dependencies
+
+testKotlinScriptDefExtensions
+No dependencies
+
+testRuntimeClasspath - Runtime classpath of compilation 'test' (target  (jvm)).
++--- org.jetbrains.kotlin:kotlin-bom:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-test:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-test-junit:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (c)
+|    +--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0 (c)
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0 (c)
++--- org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0
+|    |    +--- org.jetbrains:annotations:13.0
+|    |    \--- org.jetbrains.kotlin:kotlin-stdlib-common:1.5.0
+|    \--- org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.0
+|         \--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
++--- com.google.guava:guava:30.1.1-jre
+|    +--- com.google.guava:failureaccess:1.0.1
+|    +--- com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava
+|    +--- com.google.code.findbugs:jsr305:3.0.2
+|    +--- org.checkerframework:checker-qual:3.8.0
+|    +--- com.google.errorprone:error_prone_annotations:2.5.1
+|    \--- com.google.j2objc:j2objc-annotations:1.3
++--- org.jetbrains.kotlin:kotlin-test:1.5.0
+|    +--- org.jetbrains.kotlin:kotlin-stdlib:1.5.0 (*)
+|    \--- org.jetbrains.kotlin:kotlin-test-junit:1.5.0
+|         +--- org.jetbrains.kotlin:kotlin-test:1.5.0 (*)
+|         \--- junit:junit:4.12
+|              \--- org.hamcrest:hamcrest-core:1.3
++--- org.jetbrains.kotlin:kotlin-test-junit:1.5.0 (*)
+\--- org.jetbrains.kotlin:kotlin-test:1.5.0 (*)
+
+testRuntimeOnly - Runtime only dependencies for compilation 'test' (target  (jvm)). (n)
+No dependencies
+
+testRuntimeOnlyDependenciesMetadata
+No dependencies
+
+(c) - dependency constraint
+(*) - dependencies omitted (listed previously)
+
+(n) - Not resolved (configuration is not meant to be resolved)
+
+A web-based, searchable dependency report is available by adding the --scan option.
