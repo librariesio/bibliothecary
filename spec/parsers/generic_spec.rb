@@ -21,4 +21,10 @@ describe Bibliothecary::Parsers::Generic do
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('dependencies.csv')).to be_truthy
   end
+
+  it 'raises an error for blank required fields' do
+    csv = %Q!platform,name,requirement\ngo,something,!
+    result = described_class.analyse_contents('dependencies.csv', csv)
+    expect(result[:error_message]).to eq("dependencies.csv: missing field 'requirement' on line 1")
+  end
 end

@@ -24,7 +24,7 @@ module Bibliothecary
         table.map.with_index do |row, idx|
           line = idx + 1
           required_headers.each do |h|
-            raise "missing field '#{h}' on line #{line}" if row[h].empty?
+            raise "missing field '#{h}' on line #{line}" if row[h].nil? || row[h].empty?
           end
           {
             platform: row['platform'],
