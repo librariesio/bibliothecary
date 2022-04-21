@@ -25,6 +25,6 @@ describe Bibliothecary::Parsers::Generic do
   it 'raises an error for blank required fields' do
     csv = %Q!platform,name,requirement\ngo,something,!
     result = described_class.analyse_contents('dependencies.csv', csv)
-    expect(result[:error_message]).to eq("dependencies.csv: missing field 'requirement' on line 1")
+    expect(result[:error_message]).to eq("dependencies.csv: missing field 'requirement' on line 2")
   end
 end
