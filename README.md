@@ -93,8 +93,8 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - *.csproj
   - project.assets.json
 - CycloneDX
-  - XML
-  - JSON
+  - XML as cyclonedx.xml
+  - JSON as cyclonedx.json
   - Note that CycloneDX manifests can contain information on multiple
     package manager's packages!
 - Bower
