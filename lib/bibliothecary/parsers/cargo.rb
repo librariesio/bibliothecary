@@ -16,6 +16,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
       def self.parse_manifest(file_contents)
         manifest = Tomlrb.parse(file_contents)
         manifest.fetch('dependencies', []).map do |name, requirement|

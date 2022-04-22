@@ -15,7 +15,6 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Conda,
           Bibliothecary::Parsers::CPAN,
           Bibliothecary::Parsers::CRAN,
-          Bibliothecary::Parsers::CycloneDX,
           Bibliothecary::Parsers::Dub,
           Bibliothecary::Parsers::Elm,
           Bibliothecary::Parsers::Generic,

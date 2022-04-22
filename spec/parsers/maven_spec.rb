@@ -8,6 +8,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(cdata).to match("this is some CDATA")
   end
 
+  it_behaves_like 'CycloneDX'
+
   it 'parses dependencies from pom.xml' do
     expect(described_class.analyse_contents('pom.xml', load_fixture('pom.xml'))).to eq({
       :platform=>"maven",

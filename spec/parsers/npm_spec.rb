@@ -5,6 +5,8 @@ describe Bibliothecary::Parsers::NPM do
     expect(described_class.platform_name).to eq('npm')
   end
 
+  it_behaves_like 'CycloneDX'
+
   it 'parses dependencies from npm-ls.json' do
     expect(described_class.analyse_contents('npm-ls.json', load_fixture('npm-ls.json'))).to eq({
       platform: "npm",

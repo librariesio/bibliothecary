@@ -72,6 +72,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser Bibliothecary::MultiParsers::CycloneDX
+
       def self.parse_ivy_manifest(file_contents)
         manifest = Ox.parse file_contents
         manifest.dependencies.locate('dependency').map do |dependency|

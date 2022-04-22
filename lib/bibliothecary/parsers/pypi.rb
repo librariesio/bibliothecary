@@ -75,6 +75,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
       def self.parse_pipfile(file_contents)
         manifest = Tomlrb.parse(file_contents)
         map_dependencies(manifest['packages'], 'runtime') + map_dependencies(manifest['dev-packages'], 'develop')

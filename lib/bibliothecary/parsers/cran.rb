@@ -16,6 +16,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
       def self.parse_description(file_contents)
         manifest = DebControl::ControlFileBase.parse(file_contents)
         parse_section(manifest, 'Depends') +

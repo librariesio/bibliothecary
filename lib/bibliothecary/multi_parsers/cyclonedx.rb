@@ -9,23 +9,9 @@ require 'package_url'
 Warning[:experimental] = true
 
 module Bibliothecary
-  module Parsers
-    # Parse CycloneDX JSON or XML files.
-    class CycloneDX
+  module MultiParsers
+    module CycloneDX
       include Bibliothecary::Analyser
-
-      def self.mapping
-        {
-          match_filename("cyclonedx.json") => {
-            kind: 'lockfile',
-            parser: :parse_json
-          },
-          match_filename("cyclonedx.xml") => {
-            kind: 'lockfile',
-            parser: :parse_xml
-          },
-        }
-      end
 
       NoComponents = Class.new(StandardError)
 
@@ -68,6 +54,10 @@ module Bibliothecary
           }
         end
 
+        def [](key)
+          @manifests[key]&.to_a
+        end
+
         # @return [String] The properly namespaced package name
         def self.full_name_for_purl(purl)
           parts = [purl.namespace, purl.name].compact
@@ -81,13 +71,26 @@ module Bibliothecary
         end
       end
 
+      def self.mapping
+        {
+          match_filename('cyclonedx.json') => {
+            kind: 'lockfile',
+            parser: :parse_cyclonedx_json
+          },
+          match_filename('cyclonedx.xml') => {
+            kind: 'lockfile',
+            parser: :parse_cyclonedx_xml
+          }
+        }
+      end
+
       # CycloneDX files contain more than one
       # package manager type! This method differs
       # from other methods -- it will return an array
       # of parsed manifests.
       #
       # @return [Hash<{String => Hash{String => String}}>] Array of manifests from the CycloneDX JSON file
-      def self.parse_json(file_contents)
+      def parse_cyclonedx_json(file_contents)
         manifest = JSON.parse(file_contents)
 
         raise NoComponents unless manifest["components"]
@@ -102,10 +105,10 @@ module Bibliothecary
           obj << purl
         end
 
-        entries.manifests
+        entries[platform_name.to_sym]
       end
 
-      def self.parse_xml(file_contents)
+      def parse_cyclonedx_xml(file_contents)
         manifest = Ox.parse(file_contents)
 
         root = manifest
@@ -127,7 +130,7 @@ module Bibliothecary
           obj << purl
         end
 
-        entries.manifests
+        entries[platform_name.to_sym]
       end
     end
   end

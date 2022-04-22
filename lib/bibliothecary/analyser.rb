@@ -215,6 +215,24 @@ module Bibliothecary
         end
       end
 
+      # Add a MultiParser module to a Parser class. This extends the
+      # self.mapping method on the parser to include the multi parser's
+      # files to watch for, and it extends the Parser class with
+      # the multi parser for you.
+      #
+      # @param klass [Class] A Bibliothecary::MultiParsers class
+      def add_multi_parser(klass)
+        raise "No mapping found! You should place the add_multi_parser call below def self.mapping." unless respond_to?(:mapping)
+
+        original_mapping = self.mapping
+
+        define_singleton_method(:mapping) do
+          original_mapping.merge(klass.mapping)
+        end
+
+        send(:extend, klass)
+      end
+
       private
 
       def related_paths(info, infos)

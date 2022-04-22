@@ -43,6 +43,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
       def self.parse_project_lock_json(file_contents)
         manifest = JSON.parse file_contents
         manifest.fetch('libraries',[]).map do |name, _requirement|

@@ -26,6 +26,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
       def self.parse_conda(info, kind = "manifest")
         dependencies = call_conda_parser_web(info, kind)[kind.to_sym]
         dependencies.map { |dep| dep.merge(type: "runtime") }

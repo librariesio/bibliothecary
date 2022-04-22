@@ -65,6 +65,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
       def self.parse_godep_json(file_contents)
         manifest = JSON.parse file_contents
         map_dependencies(manifest, 'Deps', 'ImportPath', 'Rev', 'runtime')

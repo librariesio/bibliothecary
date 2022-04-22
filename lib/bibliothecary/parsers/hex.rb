@@ -18,6 +18,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
       def self.parse_mix(manifest)
         response = Typhoeus.post("#{Bibliothecary.configuration.mix_parser_host}/", body: manifest)
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.mix_parser_host}/", response.response_code) unless response.success?

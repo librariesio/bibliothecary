@@ -18,6 +18,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
       def self.parse_lockfile(file_contents)
         manifest = JSON.parse file_contents
         manifest.fetch('packages',[]).map do |dependency|

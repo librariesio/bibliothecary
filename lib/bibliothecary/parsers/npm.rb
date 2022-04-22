@@ -33,6 +33,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
       def self.parse_shrinkwrap(file_contents)
         manifest = JSON.parse(file_contents)
         manifest.fetch('dependencies',[]).map do |name, requirement|
