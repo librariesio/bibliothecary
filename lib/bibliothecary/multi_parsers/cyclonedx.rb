@@ -84,12 +84,6 @@ module Bibliothecary
         }
       end
 
-      # CycloneDX files contain more than one
-      # package manager type! This method differs
-      # from other methods -- it will return an array
-      # of parsed manifests.
-      #
-      # @return [Hash<{String => Hash{String => String}}>] Array of manifests from the CycloneDX JSON file
       def parse_cyclonedx_json(file_contents)
         manifest = JSON.parse(file_contents)
 
