@@ -197,7 +197,10 @@ module Bibliothecary
         }
       end
 
-      def self.parse_pom_manifest(file_contents, parent_properties = {})
+      def self.parse_pom_manifest(file_contents)
+        # TODO: is this even used?
+        parent_properties = {}
+
         manifest = Ox.parse file_contents
         xml = manifest.respond_to?('project') ? manifest.project : manifest
         [].tap do |deps|

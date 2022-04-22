@@ -28,13 +28,17 @@ module Bibliothecary
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
 
-      def self.parse_conda(info, kind = "manifest")
-        dependencies = call_conda_parser_web(info, kind)[kind.to_sym]
-        dependencies.map { |dep| dep.merge(type: "runtime") }
+      def self.parse_conda(info)
+        parse_conda_with_kind(info, "manifest")
       end
 
       def self.parse_conda_lockfile(info)
-        parse_conda(info, "lockfile")
+        parse_conda_with_kind(info, "lockfile")
+      end
+
+      def self.parse_conda_with_kind(info, kind)
+        dependencies = call_conda_parser_web(info, kind)[kind.to_sym]
+        dependencies.map { |dep| dep.merge(type: "runtime") }
       end
 
       private_class_method def self.call_conda_parser_web(file_contents, kind)
