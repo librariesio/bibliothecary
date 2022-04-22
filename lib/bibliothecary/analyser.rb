@@ -24,6 +24,7 @@ module Bibliothecary
     def self.included(base)
       base.extend(ClassMethods)
     end
+
     module ClassMethods
       def generic?
         platform_name == "generic"

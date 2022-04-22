@@ -7,6 +7,8 @@ Dependency manifest parsing library for https://libraries.io
 
 ## Installation
 
+Requires Ruby 2.7 or above.
+
 Add this line to your application's Gemfile:
 
 ```ruby
@@ -90,6 +92,11 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - paket.lock
   - *.csproj
   - project.assets.json
+- CycloneDX
+  - XML
+  - JSON
+  - Note that CycloneDX manifests can contain information on multiple
+    package manager's packages!
 - Bower
   - bower.json
 - CPAN
