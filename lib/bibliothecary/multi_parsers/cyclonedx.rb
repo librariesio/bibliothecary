@@ -12,6 +12,7 @@ module Bibliothecary
   module MultiParsers
     module CycloneDX
       include Bibliothecary::Analyser
+      include Bibliothecary::Analyser::TryCache
 
       NoComponents = Class.new(StandardError)
 

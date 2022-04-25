@@ -34,6 +34,18 @@ module Bibliothecary
       base.extend(Bibliothecary::Analyser::Analysis)
     end
 
+    module TryCache
+      def try_cache(options, key)
+        if options[:cache]
+          options[:cache][key] ||= yield
+
+          options[:cache][key]
+        else
+          yield
+        end
+      end
+    end
+
     module ClassMethods
       def generic?
         platform_name == "generic"
@@ -50,16 +62,6 @@ module Bibliothecary
             requirement: requirement,
             type: type
           }
-        end
-      end
-
-      def try_cache(options, key)
-        if options[:cache]
-          options[:cache][key] ||= yield
-
-          options[:cache][key]
-        else
-          yield
         end
       end
 
