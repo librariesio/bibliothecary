@@ -197,7 +197,7 @@ module Bibliothecary
         }
       end
 
-      def self.parse_standalone_pom_manifest(file_contents, options: ())
+      def self.parse_standalone_pom_manifest(file_contents, options: {})
         parse_pom_manifest(file_contents, {}, options: options)
       end
 
