@@ -12,8 +12,10 @@ module Bibliothecary
         }
       end
 
-      def self.parse_package_swift(manifest)
-        response = Typhoeus.post("#{Bibliothecary.configuration.swift_parser_host}/to-json", body: manifest)
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
+      def self.parse_package_swift(file_contents, options: {})
+        response = Typhoeus.post("#{Bibliothecary.configuration.swift_parser_host}/to-json", body: file_contents)
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.swift_parser_host}/to-json", response.response_code) unless response.success?
         json = JSON.parse(response.body)
         json["dependencies"].map do |dependency|

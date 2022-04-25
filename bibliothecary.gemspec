@@ -27,6 +27,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "commander"
   spec.add_dependency "strings-ansi"
   spec.add_dependency "strings"
+  spec.add_dependency "packageurl-ruby"
 
   spec.add_development_dependency "pry"
   spec.add_development_dependency "rake", "~> 12.0"

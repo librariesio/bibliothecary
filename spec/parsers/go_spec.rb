@@ -5,6 +5,8 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.platform_name).to eq('go')
   end
 
+  it_behaves_like 'CycloneDX'
+
   it 'parses depenencies from go.mod' do
     expect(described_class.analyse_contents('go.mod', load_fixture('go.mod'))).to eq({
       :platform=>"go",

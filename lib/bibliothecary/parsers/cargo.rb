@@ -16,7 +16,9 @@ module Bibliothecary
         }
       end
 
-      def self.parse_manifest(file_contents)
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
+      def self.parse_manifest(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
         manifest.fetch('dependencies', []).map do |name, requirement|
           if requirement.respond_to?(:fetch)
@@ -31,7 +33,7 @@ module Bibliothecary
           .compact
       end
 
-      def self.parse_lockfile(file_contents)
+      def self.parse_lockfile(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
         manifest.fetch('package',[]).map do |dependency|
           next if not dependency['source'] or not dependency['source'].start_with?('registry+')

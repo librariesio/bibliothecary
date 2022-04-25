@@ -14,7 +14,7 @@ module Bibliothecary
         }
       end
 
-      def self.parse_lockfile(file_contents)
+      def self.parse_lockfile(file_contents, options: {})
         table = CSV.parse(file_contents, headers: true)
 
         required_headers = ["platform", "name", "requirement"]
