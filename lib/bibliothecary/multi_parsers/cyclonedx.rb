@@ -84,7 +84,7 @@ module Bibliothecary
         }
       end
 
-      def parse_cyclonedx_json(file_contents)
+      def parse_cyclonedx_json(file_contents, options: {})
         manifest = JSON.parse(file_contents)
 
         raise NoComponents unless manifest["components"]
@@ -102,7 +102,7 @@ module Bibliothecary
         entries[platform_name.to_sym]
       end
 
-      def parse_cyclonedx_xml(file_contents)
+      def parse_cyclonedx_xml(file_contents, options: {})
         manifest = Ox.parse(file_contents)
 
         root = manifest

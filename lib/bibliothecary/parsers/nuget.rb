@@ -5,6 +5,7 @@ module Bibliothecary
   module Parsers
     class Nuget
       include Bibliothecary::Analyser
+      extend Bibliothecary::MultiParsers::JSONRuntime
 
       def self.mapping
         {

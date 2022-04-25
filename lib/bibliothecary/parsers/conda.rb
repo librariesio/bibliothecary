@@ -28,12 +28,12 @@ module Bibliothecary
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
 
-      def self.parse_conda(info)
-        parse_conda_with_kind(info, "manifest")
+      def self.parse_conda(file_contents, options: {})
+        parse_conda_with_kind(file_contents, "manifest")
       end
 
-      def self.parse_conda_lockfile(info)
-        parse_conda_with_kind(info, "lockfile")
+      def self.parse_conda_lockfile(file_contents, options: {})
+        parse_conda_with_kind(file_contents, "lockfile")
       end
 
       def self.parse_conda_with_kind(info, kind)

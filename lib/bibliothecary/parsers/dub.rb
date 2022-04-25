@@ -5,6 +5,7 @@ module Bibliothecary
   module Parsers
     class Dub
       include Bibliothecary::Analyser
+      extend Bibliothecary::MultiParsers::JSONRuntime
 
       def self.mapping
         {
@@ -19,8 +20,8 @@ module Bibliothecary
         }
       end
 
-      def self.parse_sdl_manifest(manifest)
-        SdlParser.new(:runtime, manifest).dependencies
+      def self.parse_sdl_manifest(file_contents, options: {})
+        SdlParser.new(:runtime, file_contents).dependencies
       end
     end
   end

@@ -216,8 +216,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_gradle(manifest)
-        response = Typhoeus.post("#{Bibliothecary.configuration.gradle_parser_host}/parse", body: manifest)
+      def self.parse_gradle(file_contents, options: {})
+        response = Typhoeus.post("#{Bibliothecary.configuration.gradle_parser_host}/parse", body: file_contents)
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.gradle_parser_host}/parse", response.response_code) unless response.success?
         json = JSON.parse(response.body)
         return [] unless json['dependencies']
@@ -232,7 +232,7 @@ module Bibliothecary
         end.compact
       end
 
-      def self.parse_gradle_kts(manifest)
+      def self.parse_gradle_kts(file_contents, options: {})
         # TODO: the gradle-parser side needs to be implemented for this, coming soon.
         []
       end

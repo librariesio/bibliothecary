@@ -161,8 +161,8 @@ module Bibliothecary
         deps
       end
 
-      def self.parse_setup_py(manifest)
-        match = manifest.match(INSTALL_REGEXP)
+      def self.parse_setup_py(file_contents, options: {})
+        match = file_contents.match(INSTALL_REGEXP)
         return [] unless match
         deps = []
         match[1].gsub(/',(\s)?'/, "\n").split("\n").each do |line|
@@ -178,9 +178,9 @@ module Bibliothecary
         deps
       end
 
-      def self.parse_requirements_txt(manifest)
+      def self.parse_requirements_txt(file_contents, options: {})
         deps = []
-        manifest.split("\n").each do |line|
+        file_contents.split("\n").each do |line|
           match = line.delete(' ').match(REQUIREMENTS_REGEXP)
           next unless match
           deps << {

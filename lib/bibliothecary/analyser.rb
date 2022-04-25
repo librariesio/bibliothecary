@@ -45,6 +45,8 @@ module Bibliothecary
         end
       end
 
+      # Call the matching parse class method for this file with
+      # these contents
       def parse_file(filename, contents)
         details = first_matching_mapping_details(FileInfo.new(nil, filename, contents))
 
@@ -59,7 +61,7 @@ module Bibliothecary
         # any dependencies, and should never return nil. At the time of writing
         # this comment, some of the parsers return [] or nil to mean an error
         # which is confusing to users.
-        send(details[:parser], contents)
+        send(details[:parser], contents, options: {})
 
       rescue Exception => e # default is StandardError but C bindings throw Exceptions
         # the C xml parser also puts a newline at the end of the message
@@ -81,16 +83,6 @@ module Bibliothecary
 
       def platform_name
         self.name.to_s.split('::').last.downcase
-      end
-
-      def parse_json_runtime_manifest(file_contents)
-        JSON.parse(file_contents).fetch('dependencies',[]).map do |name, requirement|
-          {
-            name: name,
-            requirement: requirement,
-            type: 'runtime'
-          }
-        end
       end
 
       def map_dependencies(hash, key, type)

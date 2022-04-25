@@ -30,8 +30,8 @@ module Bibliothecary
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
 
-      def self.parse_gemfile_lock(manifest)
-        manifest.lines(chomp: true).map do |line|
+      def self.parse_gemfile_lock(file_contents, options: {})
+        file_contents.lines(chomp: true).map do |line|
           match = line.match(NAME_VERSION_4)
           next unless match
           name = match[1]
