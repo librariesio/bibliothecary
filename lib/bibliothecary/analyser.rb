@@ -53,6 +53,16 @@ module Bibliothecary
         end
       end
 
+      def try_cache(options, key)
+        if options[:cache]
+          options[:cache][key] ||= yield
+
+          options[:cache][key]
+        else
+          yield
+        end
+      end
+
       # Add a MultiParser module to a Parser class. This extends the
       # self.mapping method on the parser to include the multi parser's
       # files to watch for, and it extends the Parser class with

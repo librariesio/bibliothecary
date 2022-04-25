@@ -85,7 +85,11 @@ module Bibliothecary
       end
 
       def parse_cyclonedx_json(file_contents, options: {})
-        manifest = JSON.parse(file_contents)
+        manifest = nil
+
+        manifest = try_cache(options, :cyclonedx_json) do
+          JSON.parse(file_contents)
+        end
 
         raise NoComponents unless manifest["components"]
 
@@ -103,7 +107,9 @@ module Bibliothecary
       end
 
       def parse_cyclonedx_xml(file_contents, options: {})
-        manifest = Ox.parse(file_contents)
+        manifest = try_cache(options, :cyclonedx_xml) do
+          Ox.parse(file_contents)
+        end
 
         root = manifest
         if root.respond_to?(:bom)

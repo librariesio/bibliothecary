@@ -8,7 +8,7 @@ module Bibliothecary
       # @param file_list [Array<String>]
       # @param options [Hash]
       def analyse(folder_path, file_list, options: {})
-        analyse_file_info(file_list.map { |full_path| FileInfo.new(folder_path, full_path) })
+        analyse_file_info(file_list.map { |full_path| FileInfo.new(folder_path, full_path) }, options: options)
       end
       alias analyze analyse
 
@@ -20,7 +20,7 @@ module Bibliothecary
           .select(&method(:match_info?))
 
         matching_info.flat_map do |info|
-          analyse_contents_from_info(info)
+          analyse_contents_from_info(info, options: options)
             .merge(related_paths: related_paths(info, matching_info))
         end
       end

@@ -1,9 +1,14 @@
 module Bibliothecary
-  # A class that allows bibliothecary to run with multiple configurations at once, rather than with one global
+  # A class that allows bibliothecary to run with multiple configurations at once, rather than with one global.
+  # A runner is created every time a file is targeted to be parsed. Don't call
+  # parse methods directory! Use a Runner.
   class Runner
 
     def initialize(configuration)
       @configuration = configuration
+      @options = {
+        cache: {}
+      }
     end
 
     def analyse(path, ignore_unparseable_files: true)
@@ -15,7 +20,7 @@ module Bibliothecary
       # associate related manifests and lockfiles for example.
       analyses = package_managers.map do |pm|
         matching_infos = info_list.select { |info| info.package_manager == pm }
-        pm.analyse_file_info(matching_infos)
+        pm.analyse_file_info(matching_infos, options: @options)
       end
       analyses = analyses.flatten.compact
 
@@ -102,7 +107,7 @@ module Bibliothecary
 
     def analyse_file(file_path, contents)
       package_managers.select { |pm| pm.match?(file_path, contents) }.map do |pm|
-        pm.analyse_contents(file_path, contents)
+        pm.analyse_contents(file_path, contents, options: @options)
       end.flatten.uniq.compact
     end
     alias analyze_file analyse_file
