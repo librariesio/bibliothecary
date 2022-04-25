@@ -1,6 +1,8 @@
 module Bibliothecary
   module MultiParsers
-    module RubyManifest
+    module BundlerLikeManifest
+      # this takes parsed Bundler and Bundler-like (CocoaPods)
+      # manifests and turns them into a list of dependencies.
       def parse_ruby_manifest(manifest)
         manifest.dependencies.inject([]) do |deps, dep|
           deps.push({
