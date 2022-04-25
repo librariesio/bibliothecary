@@ -80,7 +80,7 @@ module Bibliothecary
         # any dependencies, and should never return nil. At the time of writing
         # this comment, some of the parsers return [] or nil to mean an error
         # which is confusing to users.
-        send(details[:parser], contents, options: options)
+        send(details[:parser], contents, options: options.merge(filename: filename))
 
       rescue Exception => e # default is StandardError but C bindings throw Exceptions
         # the C xml parser also puts a newline at the end of the message

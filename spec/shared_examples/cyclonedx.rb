@@ -62,13 +62,13 @@ RSpec.shared_examples 'CycloneDX' do
       it 'uses the cache for json' do
         described_class.analyse_contents('cyclonedx.json', load_fixture('cyclonedx.json'), options: options)
 
-        expect(options[:cache][:cyclonedx_json]).not_to eq(nil)
+expect(options[:cache]['cyclonedx.json']).not_to eq(nil)
       end
 
       it 'uses the cache for xml' do
         described_class.analyse_contents('cyclonedx.xml', load_fixture('cyclonedx.xml'), options: options)
 
-        expect(options[:cache][:cyclonedx_xml]).not_to eq(nil)
+        expect(options[:cache]['cyclonedx.xml']).not_to eq(nil)
       end
     end
   end

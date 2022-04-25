@@ -88,7 +88,7 @@ module Bibliothecary
       def parse_cyclonedx_json(file_contents, options: {})
         manifest = nil
 
-        manifest = try_cache(options, :cyclonedx_json) do
+        manifest = try_cache(options, options[:filename]) do
           JSON.parse(file_contents)
         end
 
@@ -108,7 +108,7 @@ module Bibliothecary
       end
 
       def parse_cyclonedx_xml(file_contents, options: {})
-        manifest = try_cache(options, :cyclonedx_xml) do
+        manifest = try_cache(options, options[:filename]) do
           Ox.parse(file_contents)
         end
 
