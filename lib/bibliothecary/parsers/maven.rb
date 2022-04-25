@@ -74,7 +74,7 @@ module Bibliothecary
 
       add_multi_parser Bibliothecary::MultiParsers::CycloneDX
 
-      def self.parse_ivy_manifest(file_contents)
+      def self.parse_ivy_manifest(file_contents, options: {})
         manifest = Ox.parse file_contents
         manifest.dependencies.locate('dependency').map do |dependency|
           attrs = dependency.attributes
@@ -97,7 +97,7 @@ module Bibliothecary
         false
       end
 
-      def self.parse_ivy_report(file_contents)
+      def self.parse_ivy_report(file_contents, options: {})
         doc = Ox.parse file_contents
         root = doc.locate("ivy-report").first
         raise "ivy-report document does not have ivy-report at the root" if root.nil?
@@ -122,7 +122,7 @@ module Bibliothecary
         end.compact
       end
 
-      def self.parse_gradle_resolved(file_contents)
+      def self.parse_gradle_resolved(file_contents, options: {})
         type = nil
         file_contents.split("\n").map do |line|
           type_match = GRADLE_TYPE_REGEX.match(line)
@@ -153,7 +153,7 @@ module Bibliothecary
         end.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
       end
 
-      def self.parse_maven_resolved(file_contents)
+      def self.parse_maven_resolved(file_contents, options: {})
         Strings::ANSI.sanitize(file_contents)
           .split("\n")
           .map(&method(:parse_resolved_dep_line))
@@ -161,7 +161,7 @@ module Bibliothecary
           .uniq
       end
 
-      def self.parse_maven_tree(file_contents)
+      def self.parse_maven_tree(file_contents, options: {})
         file_contents = file_contents.gsub(/\r\n?/, "\n")
         captures = file_contents.scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/).flatten.uniq
 
@@ -197,7 +197,7 @@ module Bibliothecary
         }
       end
 
-      def self.parse_pom_manifest(file_contents)
+      def self.parse_pom_manifest(file_contents, options: {})
         # TODO: is this even used?
         parent_properties = {}
 
@@ -312,7 +312,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_sbt_update_full(file_contents)
+      def self.parse_sbt_update_full(file_contents, options: {})
         all_deps = []
         type = nil
         lines = file_contents.split("\n")

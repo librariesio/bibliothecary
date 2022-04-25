@@ -77,17 +77,17 @@ module Bibliothecary
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
 
-      def self.parse_pipfile(file_contents)
+      def self.parse_pipfile(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
         map_dependencies(manifest['packages'], 'runtime') + map_dependencies(manifest['dev-packages'], 'develop')
       end
 
-      def self.parse_poetry(file_contents)
+      def self.parse_poetry(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)['tool']['poetry']
         map_dependencies(manifest['dependencies'], 'runtime') + map_dependencies(manifest['dev-dependencies'], 'develop')
       end
 
-      def self.parse_conda(file_contents)
+      def self.parse_conda(file_contents, options: {})
         contents = YAML.safe_load(file_contents)
         return [] unless contents
 
@@ -123,7 +123,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_pipfile_lock(file_contents)
+      def self.parse_pipfile_lock(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         deps = []
         manifest.each do |group, dependencies|
@@ -140,7 +140,7 @@ module Bibliothecary
         deps
       end
 
-      def self.parse_poetry_lock(file_contents)
+      def self.parse_poetry_lock(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
         deps = []
         manifest["package"].each do |package|

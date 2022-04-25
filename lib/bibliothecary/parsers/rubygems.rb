@@ -44,12 +44,12 @@ module Bibliothecary
         end.compact
       end
 
-      def self.parse_gemfile(file_contents)
+      def self.parse_gemfile(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:gemfile, file_contents)
         parse_ruby_manifest(manifest)
       end
 
-      def self.parse_gemspec(file_contents)
+      def self.parse_gemspec(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:gemspec, file_contents)
         parse_ruby_manifest(manifest)
       end

@@ -18,7 +18,7 @@ module Bibliothecary
         }
       end
 
-      def self.parse_json_lock(file_contents)
+      def self.parse_json_lock(file_contents, options: {})
         manifest = JSON.parse file_contents
         manifest.map do |name, requirement|
           {

@@ -20,7 +20,7 @@ module Bibliothecary
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
 
-      def self.parse_lockfile(file_contents)
+      def self.parse_lockfile(file_contents, options: {})
         manifest = JSON.parse file_contents
         manifest.fetch('packages',[]).map do |dependency|
           {
@@ -43,7 +43,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_manifest(file_contents)
+      def self.parse_manifest(file_contents, options: {})
         manifest = JSON.parse file_contents
         map_dependencies(manifest, 'require', 'runtime') +
         map_dependencies(manifest, 'require-dev', 'development')

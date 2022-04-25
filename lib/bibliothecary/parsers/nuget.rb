@@ -45,7 +45,7 @@ module Bibliothecary
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
 
-      def self.parse_project_lock_json(file_contents)
+      def self.parse_project_lock_json(file_contents, options: {})
         manifest = JSON.parse file_contents
         manifest.fetch('libraries',[]).map do |name, _requirement|
           dep = name.split('/')
@@ -57,7 +57,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_packages_lock_json(file_contents)
+      def self.parse_packages_lock_json(file_contents, options: {})
         manifest = JSON.parse file_contents
 
         frameworks = {}
@@ -84,7 +84,7 @@ module Bibliothecary
         []
       end
 
-      def self.parse_packages_config(file_contents)
+      def self.parse_packages_config(file_contents, options: {})
         manifest = Ox.parse file_contents
         manifest.packages.locate('package').map do |dependency|
           {
@@ -97,7 +97,7 @@ module Bibliothecary
         []
       end
 
-      def self.parse_csproj(file_contents)
+      def self.parse_csproj(file_contents, options: {})
         manifest = Ox.parse file_contents
 
         packages = manifest.locate('ItemGroup/PackageReference').map do |dependency|
@@ -117,7 +117,7 @@ module Bibliothecary
         []
       end
 
-      def self.parse_nuspec(file_contents)
+      def self.parse_nuspec(file_contents, options: {})
         manifest = Ox.parse file_contents
         manifest.package.metadata.dependencies.locate('dependency').map do |dependency|
           {
@@ -130,7 +130,7 @@ module Bibliothecary
         []
       end
 
-      def self.parse_paket_lock(file_contents)
+      def self.parse_paket_lock(file_contents, options: {})
         lines = file_contents.split("\n")
         package_version_re = /\s+(?<name>\S+)\s\((?<version>\d+\.\d+[\.\d+[\.\d+]*]*)\)/
         packages = lines.select { |line| package_version_re.match(line) }.map { |line| package_version_re.match(line) }.map do |match|
@@ -144,7 +144,7 @@ module Bibliothecary
         packages.uniq {|package| package[:name] }
       end
 
-      def self.parse_project_assets_json(file_contents)
+      def self.parse_project_assets_json(file_contents, options: {})
         manifest = JSON.parse file_contents
 
         frameworks = {}
