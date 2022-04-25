@@ -49,7 +49,6 @@ module Bibliothecary
       def dependencies_to_analysis(info, kind, dependencies)
         dependencies = dependencies || [] # work around any legacy parsers that return nil
         if generic?
-          analyses = []
           grouped = dependencies.group_by { |dep| dep[:platform] }
           all_analyses = grouped.keys.map do |platform|
             deplatformed_dependencies = grouped[platform].map { |d| d.delete(:platform); d }
