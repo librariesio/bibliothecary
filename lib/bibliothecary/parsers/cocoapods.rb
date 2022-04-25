@@ -5,6 +5,7 @@ module Bibliothecary
   module Parsers
     class CocoaPods
       include Bibliothecary::Analyser
+      extend Bibliothecary::MultiParsers::RubyManifest
 
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/

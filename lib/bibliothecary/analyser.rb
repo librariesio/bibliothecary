@@ -169,21 +169,6 @@ module Bibliothecary
           .fetch(:can_have_lockfile, true)
       end
 
-      def parse_ruby_manifest(manifest)
-        manifest.dependencies.inject([]) do |deps, dep|
-          deps.push({
-            name: dep.name,
-            requirement: dep
-              .requirement
-              .requirements
-              .sort_by(&:last)
-              .map { |op, version| "#{op} #{version}" }
-              .join(", "),
-            type: dep.type
-          })
-        end.uniq
-      end
-
       def match_filename(filename, case_insensitive: false)
         if case_insensitive
           lambda { |path| path.downcase == filename.downcase || path.downcase.end_with?("/" + filename.downcase) }
