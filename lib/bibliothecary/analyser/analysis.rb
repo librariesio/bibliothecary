@@ -1,12 +1,21 @@
 module Bibliothecary
   module Analyser
     module Analysis
-      def analyse(folder_path, file_list)
+      # Convenience method to create FileInfo objects from folder path and
+      # file list.
+      #
+      # @param folder_path [String]
+      # @param file_list [Array<String>]
+      # @param options [Hash]
+      def analyse(folder_path, file_list, options: {})
         analyse_file_info(file_list.map { |full_path| FileInfo.new(folder_path, full_path) })
       end
       alias analyze analyse
 
-      def analyse_file_info(file_info_list)
+      # Analyze a set of FileInfo objects and extract manifests from them all.
+      #
+      # @params file_info_list [Array<FileInfo>]
+      def analyse_file_info(file_info_list, options: {})
         matching_info = file_info_list
           .select(&method(:match_info?))
 
@@ -17,16 +26,19 @@ module Bibliothecary
       end
       alias analyze_file_info analyse_file_info
 
-      def analyse_contents(filename, contents)
-        analyse_contents_from_info(FileInfo.new(nil, filename, contents))
+      def analyse_contents(filename, contents, options: {})
+        analyse_contents_from_info(FileInfo.new(nil, filename, contents), options: options)
       end
       alias analyze_contents analyse_contents
 
-      def analyse_contents_from_info(info)
+      # This is the place a parsing operation will eventually end up.
+      #
+      # @param info [FileInfo]
+      def analyse_contents_from_info(info, options: {})
         # If your Parser needs to return multiple responses for one file, please override this method
         # For example see conda.rb
         kind = determine_kind_from_info(info)
-        dependencies = parse_file(info.relative_path, info.contents)
+        dependencies = parse_file(info.relative_path, info.contents, options: options)
 
         dependencies_to_analysis(info, kind, dependencies)
       rescue Bibliothecary::FileParsingError => e
@@ -55,7 +67,7 @@ module Bibliothecary
 
       # Call the matching parse class method for this file with
       # these contents
-      def parse_file(filename, contents)
+      def parse_file(filename, contents, options: {})
         details = first_matching_mapping_details(FileInfo.new(nil, filename, contents))
 
         # this can be raised if we don't check match?/match_info?,
@@ -69,7 +81,7 @@ module Bibliothecary
         # any dependencies, and should never return nil. At the time of writing
         # this comment, some of the parsers return [] or nil to mean an error
         # which is confusing to users.
-        send(details[:parser], contents, options: {})
+        send(details[:parser], contents, options: options)
 
       rescue Exception => e # default is StandardError but C bindings throw Exceptions
         # the C xml parser also puts a newline at the end of the message
