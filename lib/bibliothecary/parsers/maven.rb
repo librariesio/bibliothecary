@@ -38,7 +38,7 @@ module Bibliothecary
           },
           match_filename("pom.xml", case_insensitive: true) => {
             kind: 'manifest',
-            parser: :parse_pom_manifest
+            parser: :parse_standalone_pom_manifest
           },
           match_filename("build.gradle", case_insensitive: true) => {
             kind: 'manifest',
@@ -197,10 +197,13 @@ module Bibliothecary
         }
       end
 
-      def self.parse_pom_manifest(file_contents, options: {})
-        # TODO: is this even used?
-        parent_properties = {}
+      def self.parse_standalone_pom_manifest(file_contents, options: ())
+        parse_pom_manifest(file_contents, {}, options: options)
+      end
 
+      # parent_properties is used by Libraries:
+      # https://github.com/librariesio/libraries.io/blob/e970925aade2596a03268b6e1be785eba8502c62/app/models/package_manager/maven.rb#L129
+      def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {})
         manifest = Ox.parse file_contents
         xml = manifest.respond_to?('project') ? manifest.project : manifest
         [].tap do |deps|
