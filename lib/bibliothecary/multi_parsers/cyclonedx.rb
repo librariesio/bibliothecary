@@ -41,6 +41,10 @@ module Bibliothecary
 
         def initialize(parse_queue:)
           @manifests = {}
+
+          # Instead of recursing, we'll work through a queue of components
+          # to process, letting the different parser add components to the
+          # queue however they need to  pull them from the source document.
           @parse_queue = parse_queue
         end
 
@@ -135,6 +139,8 @@ module Bibliothecary
         entries = ManifestEntries.new(parse_queue: root.locate('components/*'))
 
         entries.parse! do |component, parse_queue|
+          # #locate returns an empty array if nothing is found, so we can
+          # always safely concatenate it to the parse queue.
           parse_queue.concat(component.locate('components/*'))
 
           component.locate("purl").first&.text
