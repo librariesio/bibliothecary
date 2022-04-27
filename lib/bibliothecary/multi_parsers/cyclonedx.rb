@@ -39,8 +39,9 @@ module Bibliothecary
 
         attr_reader :manifests
 
-        def initialize
+        def initialize(parse_queue:)
           @manifests = {}
+          @parse_queue = parse_queue
         end
 
         def <<(purl)
@@ -53,6 +54,20 @@ module Bibliothecary
             requirement: purl.version,
             type: 'lockfile'
           }
+        end
+
+        def parse!
+          while @parse_queue.length > 0
+            component = @parse_queue.shift
+
+            purl_text = yield component, @parse_queue
+
+            next unless purl_text
+
+            purl = PackageURL.parse(purl_text)
+
+            self << purl
+          end
         end
 
         def [](key)
@@ -94,14 +109,12 @@ module Bibliothecary
 
         raise NoComponents unless manifest["components"]
 
-        entries = ManifestEntries.new
+        entries = ManifestEntries.new(parse_queue: manifest["components"])
 
-        manifest["components"].each_with_object(entries) do |component, obj|
-          next unless component["purl"]
+        entries.parse! do |component, parse_queue|
+          parse_queue.concat(component["components"]) if component["components"]
 
-          purl = PackageURL.parse(component["purl"])
-
-          obj << purl
+          component["purl"]
         end
 
         entries[platform_name.to_sym]
@@ -119,16 +132,12 @@ module Bibliothecary
 
         raise NoComponents unless root.locate('components').first
 
-        entries = ManifestEntries.new
+        entries = ManifestEntries.new(parse_queue: root.locate('components/*'))
 
-        root.locate('components/*').each_with_object(entries) do |component, obj|
-          purl_node = component.locate("purl").first
+        entries.parse! do |component, parse_queue|
+          parse_queue.concat(component.locate('components/*'))
 
-          next unless purl_node
-
-          purl = PackageURL.parse(purl_node.text)
-
-          obj << purl
+          component.locate("purl").first&.text
         end
 
         entries[platform_name.to_sym]

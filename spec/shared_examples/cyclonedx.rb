@@ -44,6 +44,18 @@ RSpec.shared_examples 'CycloneDX' do
       end
     end
 
+    it 'parses deeply nested dependencies from cyclonedx.json' do
+      result = described_class.analyse_contents('cyclonedx.json', load_fixture('cyclonedx-nested.json'))
+
+      dependencies_for_platform.each do |dependency|
+        expect(result[:dependencies].find { |d| d[:name] == dependency[:name] }).to eq({
+          name: dependency[:name],
+          requirement: dependency[:version],
+          type: 'lockfile'
+        })
+      end
+    end
+
     it 'parses dependencies from cyclonedx.xml' do
       result = described_class.analyse_contents('cyclonedx.xml', load_fixture('cyclonedx.xml'))
 
@@ -55,6 +67,19 @@ RSpec.shared_examples 'CycloneDX' do
         })
       end
     end
+
+    it 'parses deeply nested dependencies from cyclonedx.xml' do
+      result = described_class.analyse_contents('cyclonedx.xml', load_fixture('cyclonedx-nested.xml'))
+
+      dependencies_for_platform.each do |dependency|
+        expect(result[:dependencies].find { |d| d[:name] == dependency[:name] }).to eq({
+          name: dependency[:name],
+          requirement: dependency[:version],
+          type: 'lockfile'
+        })
+      end
+    end
+
 
     context 'with cache' do
       let(:options) { { cache: {} } }
