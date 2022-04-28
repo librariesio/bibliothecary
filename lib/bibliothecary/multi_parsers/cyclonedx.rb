@@ -39,8 +39,13 @@ module Bibliothecary
 
         attr_reader :manifests
 
-        def initialize
+        def initialize(parse_queue:)
           @manifests = {}
+
+          # Instead of recursing, we'll work through a queue of components
+          # to process, letting the different parser add components to the
+          # queue however they need to  pull them from the source document.
+          @parse_queue = parse_queue
         end
 
         def <<(purl)
@@ -53,6 +58,23 @@ module Bibliothecary
             requirement: purl.version,
             type: 'lockfile'
           }
+        end
+
+        # Iterates over each manifest entry in the parse_queue, and accepts a block which will
+        # be called on each component. The block has two jobs: 1) add more sub-components
+        # to parse (if they exist), and 2) return the components purl.
+        def parse!(&block)
+          while @parse_queue.length > 0
+            component = @parse_queue.shift
+
+            purl_text = block.call(component, @parse_queue)
+
+            next unless purl_text
+
+            purl = PackageURL.parse(purl_text)
+
+            self << purl
+          end
         end
 
         def [](key)
@@ -94,14 +116,12 @@ module Bibliothecary
 
         raise NoComponents unless manifest["components"]
 
-        entries = ManifestEntries.new
+        entries = ManifestEntries.new(parse_queue: manifest["components"])
 
-        manifest["components"].each_with_object(entries) do |component, obj|
-          next unless component["purl"]
+        entries.parse! do |component, parse_queue|
+          parse_queue.concat(component["components"]) if component["components"]
 
-          purl = PackageURL.parse(component["purl"])
-
-          obj << purl
+          component["purl"]
         end
 
         entries[platform_name.to_sym]
@@ -119,16 +139,14 @@ module Bibliothecary
 
         raise NoComponents unless root.locate('components').first
 
-        entries = ManifestEntries.new
+        entries = ManifestEntries.new(parse_queue: root.locate('components/*'))
 
-        root.locate('components/*').each_with_object(entries) do |component, obj|
-          purl_node = component.locate("purl").first
+        entries.parse! do |component, parse_queue|
+          # #locate returns an empty array if nothing is found, so we can
+          # always safely concatenate it to the parse queue.
+          parse_queue.concat(component.locate('components/*'))
 
-          next unless purl_node
-
-          purl = PackageURL.parse(purl_node.text)
-
-          obj << purl
+          component.locate("purl").first&.text
         end
 
         entries[platform_name.to_sym]

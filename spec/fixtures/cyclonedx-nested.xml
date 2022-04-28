@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<bom>
+  <components>
+    <component type="application">
+      <name>wow</name>
+      <components>
+        <component type="library">
+          <name>1to2</name>
+          <purl>pkg:npm/1to2@1.0.0</purl>
+          <components>
+            <component type="library">
+              <name>go</name>
+              <purl>pkg:golang/cloud.google.com/go@v0.38.0</purl>
+              <components>
+                <component type="library">
+                  <name>HdrHistogram</name>
+                  <purl>pkg:maven/org.hdrhistogram/HdrHistogram@2.1.9</purl>
+                </component>
+              </components>
+            </component>
+          </components>
+        </component>
+      </components>
+    </component>
+  </components>
+</bom>
