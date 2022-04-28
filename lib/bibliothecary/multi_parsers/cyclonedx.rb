@@ -60,11 +60,14 @@ module Bibliothecary
           }
         end
 
-        def parse!
+        # Iterates over each manifest entry in the parse_queue, and accepts a block which will
+        # be called on each component. The block has two jobs: 1) add more sub-components
+        # to parse (if they exist), and 2) return the components purl.
+        def parse!(&block)
           while @parse_queue.length > 0
             component = @parse_queue.shift
 
-            purl_text = yield component, @parse_queue
+            purl_text = block.call(component, @parse_queue)
 
             next unless purl_text
 
