@@ -19,7 +19,9 @@ module Bibliothecary
         }
       end
 
-      def self.parse_cabal(file_contents)
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
+      def self.parse_cabal(file_contents, options: {})
         headers = {
           'Content-Type' => "text/plain;charset=utf-8"
         }
@@ -30,7 +32,7 @@ module Bibliothecary
         JSON.parse(response.body, symbolize_names: true)
       end
 
-      def self.parse_cabal_config(file_contents)
+      def self.parse_cabal_config(file_contents, options: {})
         manifest = DebControl::ControlFileBase.parse(file_contents)
         deps = manifest.first['constraints'].delete("\n").split(',').map(&:strip)
         deps.map do |dependency|

@@ -33,7 +33,9 @@ module Bibliothecary
         }
       end
 
-      def self.parse_shrinkwrap(file_contents)
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+
+      def self.parse_shrinkwrap(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         manifest.fetch('dependencies',[]).map do |name, requirement|
           {
@@ -44,7 +46,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_package_lock(file_contents)
+      def self.parse_package_lock(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         parse_package_lock_deps_recursively(manifest.fetch('dependencies', []))
       end
@@ -68,14 +70,14 @@ module Bibliothecary
         end
       end
 
-      def self.parse_manifest(file_contents)
+      def self.parse_manifest(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         raise "appears to be a lockfile rather than manifest format" if manifest.key?('lockfileVersion')
         map_dependencies(manifest, 'dependencies', 'runtime') +
         map_dependencies(manifest, 'devDependencies', 'development')
       end
 
-      def self.parse_yarn_lock(file_contents)
+      def self.parse_yarn_lock(file_contents, options: {})
         response = Typhoeus.post("#{Bibliothecary.configuration.yarn_parser_host}/parse", body: file_contents)
 
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.yarn_parser_host}/parse", response.response_code) unless response.success?
@@ -91,7 +93,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_ls(file_contents)
+      def self.parse_ls(file_contents, options: {})
         manifest = JSON.parse(file_contents)
 
         transform_tree_to_array(manifest.fetch('dependencies', {}))

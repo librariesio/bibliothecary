@@ -1,0 +1,29 @@
+{
+  "components": [
+    {
+      "type": "application",
+      "name": "wow",
+      "components": [
+        {
+          "type": "library",
+          "name": "1to2",
+          "purl": "pkg:npm/1to2@1.0.0",
+          "components": [
+            {
+              "type": "library",
+              "name": "go",
+              "purl": "pkg:golang/cloud.google.com/go@v0.38.0",
+              "components": [
+                {
+                  "type": "library",
+                  "name": "HdrHistogram",
+                  "purl": "pkg:maven/org.hdrhistogram/HdrHistogram@2.1.9"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

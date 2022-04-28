@@ -8,6 +8,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(cdata).to match("this is some CDATA")
   end
 
+  it_behaves_like 'CycloneDX'
+
   it 'parses dependencies from pom.xml' do
     expect(described_class.analyse_contents('pom.xml', load_fixture('pom.xml'))).to eq({
       :platform=>"maven",
@@ -209,6 +211,16 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         success: true
       })
     end
+
+    it 'parses dependencies from build.gradle', :vcr do
+      expect(described_class.analyse_contents('build.gradle.kts', load_fixture('build.gradle.kts'))).to eq({
+        :platform=>"maven",
+        :path=>"build.gradle.kts",
+        :dependencies=>[], # TODO
+        kind: 'manifest',
+        success: true
+      })
+    end
   end
 
   it 'parses dependencies from an ivy report for a root project / type compile' do
@@ -298,23 +310,36 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(described_class.match?(fixture_path('ivy_reports/invalid_syntax.xml'))).to be_falsey
   end
 
-  it 'uses parent properties during resolve' do
-    parent_props = {"bibliothecary.version"=>"9.9.9"}
-    deps = described_class.parse_pom_manifest(load_fixture('pom.xml'), parent_props)
+  describe 'parent properties' do
+    it 'totally ignores parent propes' do
+      parent_props = {}
+      deps = described_class.parse_pom_manifest(load_fixture('pom.xml'), parent_props)
 
-    jersey_dep = deps.find { |dep| dep[:name] == "io.libraries:bibliothecary" }
-    expect(jersey_dep[:requirement]).to eq("9.9.9")
+      jersey_dep = deps.find { |dep| dep[:name] == "io.libraries:bibliothecary" }
+      expect(jersey_dep[:requirement]).to eq("${bibliothecary.version}")
 
-    echo_parent_dep = deps.find { |dep| dep[:name] == "org.accidia:echo-parent" }
-    expect(echo_parent_dep[:requirement]).to eq("0.1.23")
-  end
+      echo_parent_dep = deps.find { |dep| dep[:name] == "org.accidia:echo-parent" }
+      expect(echo_parent_dep[:requirement]).to eq("0.1.23")
+    end
 
-  it 'uses parent properties during resolve when there are no properties in the pom file', focus: true do
-    parent_props = {"bibliothecary.version"=>"9.9.9"}
-    deps = described_class.parse_pom_manifest(load_fixture('pom_no_props.xml'), parent_props)
+    it 'uses parent properties during resolve' do
+      parent_props = {"bibliothecary.version"=>"9.9.9"}
+      deps = described_class.parse_pom_manifest(load_fixture('pom.xml'), parent_props)
 
-    bibliothecary_dep = deps.find { |dep| dep[:name] == "io.libraries:bibliothecary" }
-    expect(bibliothecary_dep[:requirement]).to eq("9.9.9")
+      jersey_dep = deps.find { |dep| dep[:name] == "io.libraries:bibliothecary" }
+      expect(jersey_dep[:requirement]).to eq("9.9.9")
+
+      echo_parent_dep = deps.find { |dep| dep[:name] == "org.accidia:echo-parent" }
+      expect(echo_parent_dep[:requirement]).to eq("0.1.23")
+    end
+
+    it 'uses parent properties during resolve when there are no properties in the pom file', focus: true do
+      parent_props = {"bibliothecary.version"=>"9.9.9"}
+      deps = described_class.parse_pom_manifest(load_fixture('pom_no_props.xml'), parent_props)
+
+      bibliothecary_dep = deps.find { |dep| dep[:name] == "io.libraries:bibliothecary" }
+      expect(bibliothecary_dep[:requirement]).to eq("9.9.9")
+    end
   end
 
   it 'returns property name for missing property values' do
@@ -461,8 +486,9 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(output).to eq [{:name=>"net.sourceforge.pmd:pmd-scala_2.12", :requirement=>"${someVariable}", :type=>"jar"}]
     end
 
-    it 'parses dependencies from gradle-kotlin-dependencies-q.txt' do
-      deps = described_class.analyse_contents('gradle-kotlin-dependencies-q.txt', load_fixture('gradle-kotlin-dependencies-q.txt'))
+    it 'parses dependencies from gradle-dependencies-q.txt, generated from build.gradle.kts' do
+      # This output should be the same format as from build.gradle, but including it just to have a fixture from build.gradle.kts documented.
+      deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle_with_kotlin/gradle-dependencies-q.txt'))
       expect(deps[:kind]).to eq 'lockfile'
       guavas = deps[:dependencies].select {|item| item[:name] == "com.google.guava:guava" && item[:type] == "testCompileClasspath"}
       expect(guavas.length).to eq 1

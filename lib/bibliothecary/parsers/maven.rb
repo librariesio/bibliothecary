@@ -38,7 +38,7 @@ module Bibliothecary
           },
           match_filename("pom.xml", case_insensitive: true) => {
             kind: 'manifest',
-            parser: :parse_pom_manifest
+            parser: :parse_standalone_pom_manifest
           },
           match_filename("build.gradle", case_insensitive: true) => {
             kind: 'manifest',
@@ -76,7 +76,9 @@ module Bibliothecary
         }
       end
 
-      def self.parse_ivy_manifest(file_contents)
+      add_multi_parser Bibliothecary::MultiParsers::CycloneDX
+
+      def self.parse_ivy_manifest(file_contents, options: {})
         manifest = Ox.parse file_contents
         manifest.dependencies.locate('dependency').map do |dependency|
           attrs = dependency.attributes
@@ -99,7 +101,7 @@ module Bibliothecary
         false
       end
 
-      def self.parse_ivy_report(file_contents)
+      def self.parse_ivy_report(file_contents, options: {})
         doc = Ox.parse file_contents
         root = doc.locate("ivy-report").first
         raise "ivy-report document does not have ivy-report at the root" if root.nil?
@@ -124,7 +126,7 @@ module Bibliothecary
         end.compact
       end
 
-      def self.parse_gradle_resolved(file_contents)
+      def self.parse_gradle_resolved(file_contents, options: {})
         type = nil
         file_contents.split("\n").map do |line|
           type_match = GRADLE_TYPE_REGEX.match(line)
@@ -155,7 +157,7 @@ module Bibliothecary
         end.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
       end
 
-      def self.parse_maven_resolved(file_contents)
+      def self.parse_maven_resolved(file_contents, options: {})
         Strings::ANSI.sanitize(file_contents)
           .split("\n")
           .map(&method(:parse_resolved_dep_line))
@@ -163,7 +165,7 @@ module Bibliothecary
           .uniq
       end
 
-      def self.parse_maven_tree(file_contents)
+      def self.parse_maven_tree(file_contents, options: {})
         file_contents = file_contents.gsub(/\r\n?/, "\n")
         captures = file_contents.scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/).flatten.uniq
 
@@ -199,7 +201,13 @@ module Bibliothecary
         }
       end
 
-      def self.parse_pom_manifest(file_contents, parent_properties = {})
+      def self.parse_standalone_pom_manifest(file_contents, options: {})
+        parse_pom_manifest(file_contents, {}, options: options)
+      end
+
+      # parent_properties is used by Libraries:
+      # https://github.com/librariesio/libraries.io/blob/e970925aade2596a03268b6e1be785eba8502c62/app/models/package_manager/maven.rb#L129
+      def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {})
         manifest = Ox.parse file_contents
         xml = manifest.respond_to?('project') ? manifest.project : manifest
         [].tap do |deps|
@@ -215,8 +223,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_gradle(manifest)
-        response = Typhoeus.post("#{Bibliothecary.configuration.gradle_parser_host}/parse", body: manifest)
+      def self.parse_gradle(file_contents, options: {})
+        response = Typhoeus.post("#{Bibliothecary.configuration.gradle_parser_host}/parse", body: file_contents)
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.gradle_parser_host}/parse", response.response_code) unless response.success?
         json = JSON.parse(response.body)
         return [] unless json['dependencies']
@@ -231,8 +239,7 @@ module Bibliothecary
         end.compact
       end
 
-
-      def self.parse_gradle_kts(manifest)
+      def self.parse_gradle_kts(file_contents, options: {})
         # TODO: the gradle-parser side needs to be implemented for this, coming soon.
         []
       end
@@ -312,7 +319,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_sbt_update_full(file_contents)
+      def self.parse_sbt_update_full(file_contents, options: {})
         all_deps = []
         type = nil
         lines = file_contents.split("\n")

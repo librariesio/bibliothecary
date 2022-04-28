@@ -20,16 +20,16 @@ module Bibliothecary
         }
       end
 
-      def self.parse_cartfile(manifest)
-        map_dependencies(manifest, 'cartfile')
+      def self.parse_cartfile(file_contents, options: {})
+        map_dependencies(file_contents, 'cartfile')
       end
 
-      def self.parse_cartfile_private(manifest)
-        map_dependencies(manifest, 'cartfile.private')
+      def self.parse_cartfile_private(file_contents, options: {})
+        map_dependencies(file_contents, 'cartfile.private')
       end
 
-      def self.parse_cartfile_resolved(manifest)
-        map_dependencies(manifest, 'cartfile.resolved')
+      def self.parse_cartfile_resolved(file_contents, options: {})
+        map_dependencies(file_contents, 'cartfile.resolved')
       end
 
       def self.map_dependencies(manifest, path)
