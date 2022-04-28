@@ -45,7 +45,7 @@ module Bibliothecary
           # Instead of recursing, we'll work through a queue of components
           # to process, letting the different parser add components to the
           # queue however they need to  pull them from the source document.
-          @parse_queue = parse_queue
+          @parse_queue = parse_queue.dup
         end
 
         def <<(purl)
