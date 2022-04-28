@@ -42,6 +42,20 @@ describe Bibliothecary::MultiParsers::CycloneDX do
     expect(parser.parse_cyclonedx_xml(%{<bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>})).to eq(nil)
   end
 
+  describe 'ManifestEntries#parse!' do
+    it 'should not mutate the manifest sent in' do
+      queue = [1, 2, 3]
+
+      entries = described_class::ManifestEntries.new(parse_queue: queue)
+
+      entries.parse! do |item, parse_queue|
+        nil
+      end
+
+      expect(queue.count).to eq(3)
+    end
+  end
+
   describe 'ManifestEntries.full_name_for_purl' do
     it 'should handle formats correctly' do
       maven = PackageURL.parse("pkg:maven/cat/dog@1.2.3")
