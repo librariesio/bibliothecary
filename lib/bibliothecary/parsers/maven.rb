@@ -12,6 +12,18 @@ module Bibliothecary
       # "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
+      # Builtin methods: https://docs.gradle.org/current/userguide/java_plugin.html#tab:configurations
+      GRADLE_KTS_DEPENDENCY_METHODS = %w(api compile compileOnlyApi implementation runtimeOnly testCompileOnly testRuntimeOnly testImplementation)
+      
+      # An intentionally overly-simplified regex to scrape deps from build.gradle.kts files. 
+      # To be truly useful bibliothecary would need a full Kotlin parser that speaks Gradle, 
+      # because the Kotlin DSL has many dynamic ways of declaring dependencies.
+      
+      GRADLE_KTS_SIMPLE_PREGEX = /(#{GRADLE_KTS_DEPENDENCY_METHODS.join('|')})\(\s*"([^"]+)"\s*\)/m
+      
+      # e.g. "group:artifactId:1.2.3"
+      GRADLE_KTS_GAV_REGEX = /([\w.-]+)\:([\w.-]+)(?:\:([\w.-]+))?/
+
       MAVEN_PROPERTY_REGEX = /\$\{(.+?)\}/
       MAX_DEPTH = 5
 
@@ -240,8 +252,17 @@ module Bibliothecary
       end
 
       def self.parse_gradle_kts(file_contents, options: {})
-        # TODO: the gradle-parser side needs to be implemented for this, coming soon.
-        []
+        file_contents
+          .scan(GRADLE_KTS_SIMPLE_PREGEX)                                                  # match 'implementation("group:artifactId:version")'
+          .map { |(_type, dep_match)| GRADLE_KTS_GAV_REGEX.match(dep_match) }              # extract ["group", "artifactId", ?"version"]
+          .reject { |gav_match| gav_match.nil? || gav_match[1].nil? || gav_match[2].nil? } # remove any with missing group/artifactId
+          .map { |gav_match|
+            {
+              name: [gav_match[1], gav_match[2]].join(":"),
+              requirement: gav_match[3] || "*",
+              type: nil # TODO: we could probably infer some basic types from the 
+            }
+          }
       end
 
       def self.gradle_dependency_name(group, name)

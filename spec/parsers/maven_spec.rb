@@ -216,7 +216,12 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(described_class.analyse_contents('build.gradle.kts', load_fixture('build.gradle.kts'))).to eq({
         :platform=>"maven",
         :path=>"build.gradle.kts",
-        :dependencies=>[], # TODO
+        :dependencies=>[
+          {name: "org.jetbrains.kotlin:kotlin-stdlib-jdk8", requirement: "*", type: nil},
+          {name: "com.google.guava:guava", requirement: "30.1.1-jre", type: nil},
+          {name: "org.jetbrains.kotlin:kotlin-test", requirement: "*", type: nil},
+          {name: "org.jetbrains.kotlin:kotlin-test-junit", requirement: "1.0.0", type: nil}
+        ],
         kind: 'manifest',
         success: true
       })
