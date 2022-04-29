@@ -18,7 +18,6 @@ module Bibliothecary
       # An intentionally overly-simplified regex to scrape deps from build.gradle.kts files. 
       # To be truly useful bibliothecary would need a full Kotlin parser that speaks Gradle, 
       # because the Kotlin DSL has many dynamic ways of declaring dependencies.
-      
       GRADLE_KTS_SIMPLE_PREGEX = /(#{GRADLE_KTS_DEPENDENCY_METHODS.join('|')})\s*\(\s*"([^"]+)"\s*\)/m
       
       # e.g. "group:artifactId:1.2.3"
@@ -68,10 +67,6 @@ module Bibliothecary
           match_filename("gradle-dependencies-q.txt", case_insensitive: true) => {
             kind: 'lockfile',
             parser: :parse_gradle_resolved
-          },
-          match_filename("gradle-kotlin-dependencies-q.txt", case_insensitive: true) => {
-            kind: 'lockfile',
-            parser: :parse_gradle_resolved # dependencies output should be same as build.gradle.
           },
           match_filename("maven-resolved-dependencies.txt", case_insensitive: true) => {
             kind: 'lockfile',
