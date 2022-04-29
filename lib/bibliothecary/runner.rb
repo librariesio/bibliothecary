@@ -47,9 +47,11 @@ module Bibliothecary
       Bibliothecary::Parsers.constants.map{|c| Bibliothecary::Parsers.const_get(c) }.sort_by{|c| c.to_s.downcase }
     end
 
+    # Parses an array of format [{file_path: "", contents: ""},] to match
+    # on both filename matches and on content_match patterns.
+    #
+    # @return [Array<Bibliothecary::FileInfo>] A list of FileInfo, one for each package manager match for each file
     def load_file_info_list_from_contents(file_path_contents_hash)
-      # Parses an array of format [{file_path: "", contents: ""},] to match
-      #  on both filename matches, and one content_match patterns.
       file_list = []
 
       file_path_contents_hash.each do |file|
@@ -57,7 +59,7 @@ module Bibliothecary
 
         next if ignored_files.include?(info.relative_path)
 
-        add_files_to_list(file_list, info)
+        add_matching_package_managers_for_file_to_list(file_list, info)
       end
 
       file_list
@@ -71,7 +73,7 @@ module Bibliothecary
 
         next if ignored_files.include?(info.relative_path)
 
-        add_files_to_list(file_list, info)
+        add_matching_package_managers_for_file_to_list(file_list, info)
       end
 
       file_list
@@ -87,7 +89,7 @@ module Bibliothecary
         next unless FileTest.file?(subpath)
         next if ignored_files.include?(info.relative_path)
 
-        add_files_to_list(file_list, info)
+        add_matching_package_managers_for_file_to_list(file_list, info)
       end
 
       file_list
@@ -101,8 +103,13 @@ module Bibliothecary
       RelatedFilesInfo.create_from_file_infos(load_file_info_list_from_paths(paths).reject { |info| info.package_manager.nil? })
     end
 
+    # file_path_contents_hash contains an Array of { file_path, contents }
     def find_manifests_from_contents(file_path_contents_hash)
-      RelatedFilesInfo.create_from_file_infos(load_file_info_list_from_contents(file_path_contents_hash).reject { |info| info.package_manager.nil? })
+      RelatedFilesInfo.create_from_file_infos(
+        load_file_info_list_from_contents(
+          file_path_contents_hash
+        ).reject { |info| info.package_manager.nil? }
+      )
     end
 
     def analyse_file(file_path, contents)
@@ -142,12 +149,15 @@ module Bibliothecary
 
     private
 
-    def add_files_to_list(file_list, info)
-      applicable_package_managers(info).each do |package_manager|
-        file = info.dup
-        file.package_manager = package_manager
+    # Get the list of all package managers that apply to the file provided
+    # as file_info, and, for each one, duplicate file_info and fill in
+    # the appropriate package manager.
+    def add_matching_package_managers_for_file_to_list(file_list, file_info)
+      applicable_package_managers(file_info).each do |package_manager|
+        new_file_info = file_info.dup
+        new_file_info.package_manager = package_manager
 
-        file_list.push(file)
+        file_list.push(new_file_info)
       end
     end
   end
