@@ -19,7 +19,7 @@ module Bibliothecary
       # To be truly useful bibliothecary would need a full Kotlin parser that speaks Gradle, 
       # because the Kotlin DSL has many dynamic ways of declaring dependencies.
       
-      GRADLE_KTS_SIMPLE_PREGEX = /(#{GRADLE_KTS_DEPENDENCY_METHODS.join('|')})\(\s*"([^"]+)"\s*\)/m
+      GRADLE_KTS_SIMPLE_PREGEX = /(#{GRADLE_KTS_DEPENDENCY_METHODS.join('|')})\s*\(\s*"([^"]+)"\s*\)/m
       
       # e.g. "group:artifactId:1.2.3"
       GRADLE_KTS_GAV_REGEX = /([\w.-]+)\:([\w.-]+)(?:\:([\w.-]+))?/
