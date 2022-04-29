@@ -255,7 +255,7 @@ module Bibliothecary
             {
               name: [gav_match[1], gav_match[2]].join(":"),
               requirement: gav_match[3] || "*",
-              type: nil # TODO: we may be able to infer dep tyeps using the _type var above.
+              type: nil # TODO: we may be able to infer dep types using the _type var above.
             }
           }
       end
