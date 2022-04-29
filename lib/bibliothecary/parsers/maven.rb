@@ -13,7 +13,7 @@ module Bibliothecary
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
       # Builtin methods: https://docs.gradle.org/current/userguide/java_plugin.html#tab:configurations
-      GRADLE_KTS_DEPENDENCY_METHODS = %w(api compile compileOnlyApi implementation runtimeOnly testCompileOnly testRuntimeOnly testImplementation)
+      GRADLE_KTS_DEPENDENCY_METHODS = %w(api compile compileOnlyApi implementation runtimeOnly testCompileOnly testImplementation testRuntimeOnly)
       
       # An intentionally overly-simplified regex to scrape deps from build.gradle.kts files. 
       # To be truly useful bibliothecary would need a full Kotlin parser that speaks Gradle, 
