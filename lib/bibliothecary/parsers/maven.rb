@@ -248,7 +248,7 @@ module Bibliothecary
 
       def self.parse_gradle_kts(file_contents, options: {})
         file_contents
-          .scan(GRADLE_KTS_SIMPLE_REGEX)                                                  # match 'implementation("group:artifactId:version")'
+          .scan(GRADLE_KTS_SIMPLE_REGEX)                                                   # match 'implementation("group:artifactId:version")'
           .map { |(_type, dep_match)| GRADLE_KTS_GAV_REGEX.match(dep_match) }              # extract ["group", "artifactId", ?"version"]
           .reject { |gav_match| gav_match.nil? || gav_match[1].nil? || gav_match[2].nil? } # remove any with missing group/artifactId
           .map { |gav_match|
