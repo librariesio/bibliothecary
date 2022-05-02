@@ -14,6 +14,8 @@ module Bibliothecary
           }
         }
       end
+
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
     end
   end
 end

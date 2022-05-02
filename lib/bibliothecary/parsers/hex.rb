@@ -19,6 +19,7 @@ module Bibliothecary
       end
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
       def self.parse_mix(file_contents, options: {})
         response = Typhoeus.post("#{Bibliothecary.configuration.mix_parser_host}/", body: file_contents)

@@ -67,4 +67,18 @@ describe Bibliothecary::MultiParsers::CycloneDX do
       expect(described_class::ManifestEntries.full_name_for_purl(npm)).to eq("cat/dog")
     end
   end
+
+  context 'correct parsers implement it' do
+    Bibliothecary::MultiParsers::CycloneDX::ManifestEntries::PURL_TYPE_MAPPING.each_value do |parser|
+      constant_symbol = Bibliothecary::Parsers.constants.find { |c| c.to_s.downcase.gsub(/[^a-z]/, '') == parser.to_s.downcase.gsub(/[^a-z]/, '') }
+      constant = Bibliothecary::Parsers.const_get(constant_symbol)
+
+      # only analyzers have platform_name on the class
+      if constant.respond_to?(:platform_name)
+        it "#{constant_symbol} should implement CycloneDX" do
+          expect(constant.respond_to?(:parse_cyclonedx_xml)).to eq(true)
+        end
+      end
+    end
+  end
 end

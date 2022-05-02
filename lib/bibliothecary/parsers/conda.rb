@@ -27,6 +27,7 @@ module Bibliothecary
       end
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
       def self.parse_conda(file_contents, options: {})
         parse_conda_with_kind(file_contents, "manifest")

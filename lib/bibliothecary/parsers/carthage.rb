@@ -20,6 +20,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
       def self.parse_cartfile(file_contents, options: {})
         map_dependencies(file_contents, 'cartfile')
       end
