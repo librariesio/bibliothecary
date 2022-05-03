@@ -147,6 +147,16 @@ module Bibliothecary
       @configuration.ignored_files
     end
 
+    # We don't know what file groups are in multi file manifests until
+    # we process them. In those cases, process those, then reject the
+    # RelatedFilesInfo objects that aren't in the manifest.
+    #
+    # This means we're likely analyzing these files twice in processing,
+    # but we need that accurate package manager information.
+    def filter_multi_manifest_entries(path, related_files_info_entries)
+      MultiManifestFilter.new(path: path, related_files_info_entries: related_files_info_entries , runner: self).results
+    end
+
     private
 
     # Get the list of all package managers that apply to the file provided
@@ -162,3 +172,5 @@ module Bibliothecary
     end
   end
 end
+
+require_relative './runner/multi_manifest_filter.rb'
