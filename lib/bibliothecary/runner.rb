@@ -3,7 +3,6 @@ module Bibliothecary
   # A runner is created every time a file is targeted to be parsed. Don't call
   # parse methods directory! Use a Runner.
   class Runner
-
     def initialize(configuration)
       @configuration = configuration
       @options = {
@@ -95,6 +94,9 @@ module Bibliothecary
       file_list
     end
 
+    # Get a list of files in this path grouped by filename and repeated by package manager.
+    #
+    # @return [Array<Bibliothecary::RelatedFilesInfo>]
     def find_manifests(path)
       RelatedFilesInfo.create_from_file_infos(load_file_info_list(path).reject { |info| info.package_manager.nil? })
     end
@@ -112,6 +114,7 @@ module Bibliothecary
       )
     end
 
+    # Read a manifest file and extract the list of dependencies from that file.
     def analyse_file(file_path, contents)
       package_managers.select { |pm| pm.match?(file_path, contents) }.map do |pm|
         pm.analyse_contents(file_path, contents, options: @options)
