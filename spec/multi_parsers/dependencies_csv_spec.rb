@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Bibliothecary::MultiParsers::DependenciesCSV, :focus do
+describe Bibliothecary::MultiParsers::DependenciesCSV do
   let!(:parser_class) do
     k = Class.new do
       def platform_name; "whatever"; end
@@ -73,8 +73,8 @@ hiss,raow,2.2.1,bird
         result = parser.parse_dependencies_csv(csv, options: options)
 
         expect(result).to eq([
-          { platform: "hiss", name: "wow", lockfile_requirement: "2.2.0", type: "runtime" },
-          { platform: "hiss", name: "raow", lockfile_requirement: "2.2.1", type: "bird" }
+        { platform: "hiss", name: "wow", lockfile_requirement: "2.2.0", type: "runtime", requirement: "2.2.0" },
+        { platform: "hiss", name: "raow", lockfile_requirement: "2.2.1", type: "bird", requirement: "2.2.1" }
         ])
 
         # the cache should contain a CSVFile
@@ -93,14 +93,14 @@ hiss,raow,2.2.1,bird,
           CSV
         end
 
-        it 'parses, filters, and caches' do
+        it 'parses, filters, and caches', :focus do
           allow(parser).to receive(:platform_name).and_return("hiss")
 
           result = parser.parse_dependencies_csv(csv, options: options)
 
           expect(result).to eq([
-          { platform: "hiss", name: "wow", lockfile_requirement: "2.2.0", type: "runtime", requirement: "= 2.2.0" },
-            { platform: "hiss", name: "raow", lockfile_requirement: "2.2.1", type: "bird" }
+            { platform: "hiss", name: "wow", lockfile_requirement: "2.2.0", type: "runtime", requirement: "= 2.2.0" },
+            { platform: "hiss", name: "raow", lockfile_requirement: "2.2.1", type: "bird", requirement: "2.2.1" }
           ])
 
           # the cache should contain a CSVFile
@@ -124,10 +124,10 @@ hiss,raow,2.2.0,bird,2.2.1
           result = parser.parse_dependencies_csv(csv, options: options)
 
           expect(result).to eq([
-            { platform: "hiss", name: "wow", type: "runtime", lockfile_requirement:"2.2.0"  },
+            { platform: "hiss", name: "wow", type: "runtime", lockfile_requirement:"2.2.0", requirement: "2.2.0" },
             # headers are searched left to right for each field, and the
             # first matching one wins
-            { platform: "hiss", name: "raow", type: "bird", lockfile_requirement: "2.2.0" }
+            { platform: "hiss", name: "raow", type: "bird", lockfile_requirement: "2.2.0", requirement: "2.2.0" }
           ])
 
           # the cache should contain a CSVFile

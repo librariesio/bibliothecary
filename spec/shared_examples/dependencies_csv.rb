@@ -29,6 +29,7 @@ RSpec.shared_examples 'dependencies.csv' do
           platform: dependency[:platform],
           name: dependency[:name],
           lockfile_requirement: dependency[:version],
+          requirement: dependency[:version],
           type: dependency[:type]
         })
       end
