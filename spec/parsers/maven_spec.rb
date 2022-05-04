@@ -212,15 +212,16 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       })
     end
 
-    it 'parses dependencies from build.gradle', :vcr do
+    it 'parses dependencies from build.gradle.kts' do
       expect(described_class.analyse_contents('build.gradle.kts', load_fixture('build.gradle.kts'))).to eq({
         :platform=>"maven",
         :path=>"build.gradle.kts",
         :dependencies=>[
-          {name: "org.jetbrains.kotlin:kotlin-stdlib-jdk8", requirement: "*", type: nil},
-          {name: "com.google.guava:guava", requirement: "30.1.1-jre", type: nil},
-          {name: "org.jetbrains.kotlin:kotlin-test", requirement: "*", type: nil},
-          {name: "org.jetbrains.kotlin:kotlin-test-junit", requirement: "1.0.0", type: nil}
+          {name: "org.jetbrains.kotlin:kotlin-stdlib-jdk8", requirement: "*", type: "implementation"},
+          {name: "com.google.guava:guava", requirement: "30.1.1-jre", type: "implementation"},
+          {name: "org.jetbrains.kotlin:kotlin-test", requirement: "*", type: "testImplementation"},
+          {name: "org.jetbrains.kotlin:kotlin-test-junit", requirement: "1.0.0", type: "testImplementation"},
+          {name: "androidx.annotation:annotation", requirement: "${rootProject.extra[\"androidx_annotation_version\"]}", type: "implementation"}
         ],
         kind: 'manifest',
         success: true

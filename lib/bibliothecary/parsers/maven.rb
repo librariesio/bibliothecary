@@ -18,10 +18,11 @@ module Bibliothecary
       # An intentionally overly-simplified regex to scrape deps from build.gradle.kts files. 
       # To be truly useful bibliothecary would need a full Kotlin parser that speaks Gradle, 
       # because the Kotlin DSL has many dynamic ways of declaring dependencies.
-      GRADLE_KTS_SIMPLE_REGEX = /(#{GRADLE_KTS_DEPENDENCY_METHODS.join('|')})\s*\(\s*"([^"]+)"\s*\)/m
       
-      # e.g. "group:artifactId:1.2.3"
-      GRADLE_KTS_GAV_REGEX = /([\w.-]+)\:([\w.-]+)(?:\:([\w.-]+))?/
+      GRADLE_KTS_VERSION_REGEX = /[\w.-]+/ # e.g. '1.2.3'
+      GRADLE_KTS_INTERPOLATED_VERSION_REGEX = /\$\{.*\}/ # e.g. '${my-project-settings["version"]}'
+      GRADLE_KTS_GAV_REGEX = /([\w.-]+)\:([\w.-]+)(?:\:(#{GRADLE_KTS_VERSION_REGEX}|#{GRADLE_KTS_INTERPOLATED_VERSION_REGEX}))?/
+      GRADLE_KTS_SIMPLE_REGEX = /(#{GRADLE_KTS_DEPENDENCY_METHODS.join('|')})\s*\(\s*"#{GRADLE_KTS_GAV_REGEX}"\s*\)\s*$/m # e.g. "group:artifactId:1.2.3"
 
       MAVEN_PROPERTY_REGEX = /\$\{(.+?)\}/
       MAX_DEPTH = 5
@@ -248,14 +249,13 @@ module Bibliothecary
 
       def self.parse_gradle_kts(file_contents, options: {})
         file_contents
-          .scan(GRADLE_KTS_SIMPLE_REGEX)                                                   # match 'implementation("group:artifactId:version")'
-          .map { |(_type, dep_match)| GRADLE_KTS_GAV_REGEX.match(dep_match) }              # extract ["group", "artifactId", ?"version"]
-          .reject { |gav_match| gav_match.nil? || gav_match[1].nil? || gav_match[2].nil? } # remove any with missing group/artifactId
-          .map { |gav_match|
+          .scan(GRADLE_KTS_SIMPLE_REGEX)                                                  # match 'implementation("group:artifactId:version")'
+          .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
+          .map { |(type, group, artifactId, version)|
             {
-              name: [gav_match[1], gav_match[2]].join(":"),
-              requirement: gav_match[3] || "*",
-              type: nil # TODO: we may be able to infer dep types using the _type var above.
+              name: [group, artifactId].join(":"),
+              requirement: version || "*",
+              type: type
             }
           }
       end
