@@ -15,7 +15,7 @@ module Bibliothecary
         }
       end
 
-      # Processing a CVS file isn't as exact as using a real manifest file,
+      # Processing a CSV file isn't as exact as using a real manifest file,
       # but you can get pretty close as long as the data you're importing
       # is simple.
       class CSVFile
