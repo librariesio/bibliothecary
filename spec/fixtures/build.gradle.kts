@@ -34,6 +34,11 @@ dependencies {
 
     // Use the Kotlin JUnit integration.
     testImplementation(     "org.jetbrains.kotlin:kotlin-test-junit:1.0.0"     )
+
+    implementation(project(":my-internal-lib"))
+
+    // --- Androidx ---
+    implementation("androidx.annotation:annotation:${rootProject.extra["androidx_annotation_version"]}")
 }
 
 application {
