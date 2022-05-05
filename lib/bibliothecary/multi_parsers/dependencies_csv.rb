@@ -22,7 +22,7 @@ module Bibliothecary
         # Header structures are:
         #
         # <field to fill in for dependency> => {
-        #   match: [<regexp of incoming column name to match in priority order>...],
+        #   match: [<regexp of incoming column name to match in priority order, highest priority first>...],
         #   [default]: <optional default value for this field>
         # }
         HEADERS = {
@@ -78,7 +78,7 @@ module Bibliothecary
           @result = table.map.with_index do |row, idx|
             HEADERS.each_with_object({}) do |(header, info), obj|
               # find the first non-empty field in the row for this header, or nil if not found
-              row_data = @header_mappings[header]&.map { |mapping| row[mapping] }&.compact&.first
+              row_data = row[@header_mappings[header]]
 
               # some column have default data to fall back on
               if row_data
@@ -109,18 +109,27 @@ module Bibliothecary
         end
 
         def map_table_headers_to_local_lookups(table, local_lookups)
-          local_lookups.each_with_object({ found: {}, missing: [] }) do |(header, info), obj|
-            results = table.headers.find_all { |table_header| info[:match].any? { |match_regexp| table_header[match_regexp] } }
+          result = local_lookups.each_with_object({ found: {}, missing: [] }) do |(header, info), obj|
+            results = table.headers.each_with_object([]) do |table_header, matches|
+              info[:match].each_with_index do |match_regexp, index|
+                matches << [table_header, index] if table_header[match_regexp]
+              end
+            end
 
             if results.empty?
               # if a header has a default value it's optional
               obj[:missing] << header unless info.has_key?(:default)
             else
-              # select every possible header that can match this field
-              obj[:found][header] ||= []
-              obj[:found][header].concat(results)
+              # select the highest priority header possible
+              obj[:found][header] ||= nil
+              obj[:found][header] = ([obj[:found][header]] + results).compact.min_by(&:last)
             end
           end
+
+          # strip off the priorities. only one mapping should remain.
+          result[:found].transform_values!(&:first)
+
+          result
         end
       end
 
