@@ -3,7 +3,6 @@ module Bibliothecary
   # A runner is created every time a file is targeted to be parsed. Don't call
   # parse methods directory! Use a Runner.
   class Runner
-
     def initialize(configuration)
       @configuration = configuration
       @options = {
@@ -47,9 +46,11 @@ module Bibliothecary
       Bibliothecary::Parsers.constants.map{|c| Bibliothecary::Parsers.const_get(c) }.sort_by{|c| c.to_s.downcase }
     end
 
+    # Parses an array of format [{file_path: "", contents: ""},] to match
+    # on both filename matches and on content_match patterns.
+    #
+    # @return [Array<Bibliothecary::FileInfo>] A list of FileInfo, one for each package manager match for each file
     def load_file_info_list_from_contents(file_path_contents_hash)
-      # Parses an array of format [{file_path: "", contents: ""},] to match
-      #  on both filename matches, and one content_match patterns.
       file_list = []
 
       file_path_contents_hash.each do |file|
@@ -57,7 +58,7 @@ module Bibliothecary
 
         next if ignored_files.include?(info.relative_path)
 
-        add_files_to_list(file_list, info)
+        add_matching_package_managers_for_file_to_list(file_list, info)
       end
 
       file_list
@@ -71,7 +72,7 @@ module Bibliothecary
 
         next if ignored_files.include?(info.relative_path)
 
-        add_files_to_list(file_list, info)
+        add_matching_package_managers_for_file_to_list(file_list, info)
       end
 
       file_list
@@ -87,12 +88,15 @@ module Bibliothecary
         next unless FileTest.file?(subpath)
         next if ignored_files.include?(info.relative_path)
 
-        add_files_to_list(file_list, info)
+        add_matching_package_managers_for_file_to_list(file_list, info)
       end
 
       file_list
     end
 
+    # Get a list of files in this path grouped by filename and repeated by package manager.
+    #
+    # @return [Array<Bibliothecary::RelatedFilesInfo>]
     def find_manifests(path)
       RelatedFilesInfo.create_from_file_infos(load_file_info_list(path).reject { |info| info.package_manager.nil? })
     end
@@ -101,10 +105,16 @@ module Bibliothecary
       RelatedFilesInfo.create_from_file_infos(load_file_info_list_from_paths(paths).reject { |info| info.package_manager.nil? })
     end
 
+    # file_path_contents_hash contains an Array of { file_path, contents }
     def find_manifests_from_contents(file_path_contents_hash)
-      RelatedFilesInfo.create_from_file_infos(load_file_info_list_from_contents(file_path_contents_hash).reject { |info| info.package_manager.nil? })
+      RelatedFilesInfo.create_from_file_infos(
+        load_file_info_list_from_contents(
+          file_path_contents_hash
+        ).reject { |info| info.package_manager.nil? }
+      )
     end
 
+    # Read a manifest file and extract the list of dependencies from that file.
     def analyse_file(file_path, contents)
       package_managers.select { |pm| pm.match?(file_path, contents) }.map do |pm|
         pm.analyse_contents(file_path, contents, options: @options)
@@ -140,15 +150,30 @@ module Bibliothecary
       @configuration.ignored_files
     end
 
+    # We don't know what file groups are in multi file manifests until
+    # we process them. In those cases, process those, then reject the
+    # RelatedFilesInfo objects that aren't in the manifest.
+    #
+    # This means we're likely analyzing these files twice in processing,
+    # but we need that accurate package manager information.
+    def filter_multi_manifest_entries(path, related_files_info_entries)
+      MultiManifestFilter.new(path: path, related_files_info_entries: related_files_info_entries , runner: self).results
+    end
+
     private
 
-    def add_files_to_list(file_list, info)
-      applicable_package_managers(info).each do |package_manager|
-        file = info.dup
-        file.package_manager = package_manager
+    # Get the list of all package managers that apply to the file provided
+    # as file_info, and, for each one, duplicate file_info and fill in
+    # the appropriate package manager.
+    def add_matching_package_managers_for_file_to_list(file_list, file_info)
+      applicable_package_managers(file_info).each do |package_manager|
+        new_file_info = file_info.dup
+        new_file_info.package_manager = package_manager
 
-        file_list.push(file)
+        file_list.push(new_file_info)
       end
     end
   end
 end
+
+require_relative './runner/multi_manifest_filter.rb'

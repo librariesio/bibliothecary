@@ -9,6 +9,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
   end
 
   it_behaves_like 'CycloneDX'
+  it_behaves_like 'dependencies.csv'
 
   it 'parses dependencies from pom.xml' do
     expect(described_class.analyse_contents('pom.xml', load_fixture('pom.xml'))).to eq({
@@ -339,7 +340,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(echo_parent_dep[:requirement]).to eq("0.1.23")
     end
 
-    it 'uses parent properties during resolve when there are no properties in the pom file', focus: true do
+    it 'uses parent properties during resolve when there are no properties in the pom file' do
       parent_props = {"bibliothecary.version"=>"9.9.9"}
       deps = described_class.parse_pom_manifest(load_fixture('pom_no_props.xml'), parent_props)
 

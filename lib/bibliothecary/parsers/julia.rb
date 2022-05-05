@@ -12,6 +12,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
       def self.parse_require(file_contents, options: {})
         deps = []
         file_contents.split("\n").each do |line|

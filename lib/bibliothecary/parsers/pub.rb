@@ -18,6 +18,8 @@ module Bibliothecary
         }
       end
 
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
       def self.parse_yaml_manifest(file_contents, options: {})
         manifest = YAML.load file_contents
         map_dependencies(manifest, 'dependencies', 'runtime') +

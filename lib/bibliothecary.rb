@@ -16,6 +16,8 @@ Dir[File.expand_path('../bibliothecary/parsers/*.rb', __FILE__)].each do |file|
 end
 
 module Bibliothecary
+  VERSION_OPERATORS = /[~^<>*"]/
+
   def self.analyse(path, ignore_unparseable_files: true)
     runner.analyse(path, ignore_unparseable_files: ignore_unparseable_files)
   end
