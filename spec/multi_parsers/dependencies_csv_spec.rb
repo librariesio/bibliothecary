@@ -18,7 +18,7 @@ describe Bibliothecary::MultiParsers::DependenciesCSV, :focus do
   context 'with missing headers' do
     let!(:csv) do
       <<-CSV
-cat,dog,requirement
+cat,dog,version
 meow,woof,2.2.0
       CSV
     end
@@ -31,7 +31,7 @@ meow,woof,2.2.0
   context 'missing field' do
     let!(:csv) do
       <<-CSV
-platform,name,requirement
+platform,name,version
 meow,wow,2.2.0
 ,wow,2.2.0
       CSV
@@ -45,7 +45,7 @@ meow,wow,2.2.0
   context 'requirement is ' do
     let!(:csv) do
       <<-CSV
-platform,name,requirement
+platform,name,version
 meow,wow,2.2.0
 ,wow,2.2.0
       CSV
@@ -60,7 +60,7 @@ meow,wow,2.2.0
     context 'original field names' do
       let!(:csv) do
         <<-CSV
-platform,name,requirement,type
+platform,name,version,type
 meow,wow,2.2.0,bird
 hiss,wow,2.2.0,
 hiss,raow,2.2.1,bird
@@ -73,8 +73,8 @@ hiss,raow,2.2.1,bird
         result = parser.parse_dependencies_csv(csv, options: options)
 
         expect(result).to eq([
-          { platform: "hiss", name: "wow", requirement: "2.2.0", type: "runtime" },
-          { platform: "hiss", name: "raow", requirement: "2.2.1", type: "bird" }
+          { platform: "hiss", name: "wow", lockfile_requirement: "2.2.0", type: "runtime" },
+          { platform: "hiss", name: "raow", lockfile_requirement: "2.2.1", type: "bird" }
         ])
 
         # the cache should contain a CSVFile
@@ -86,10 +86,10 @@ hiss,raow,2.2.1,bird
       context 'without fallback' do
         let!(:csv) do
           <<-CSV
-Platform,Name,Manifest Requirement,Lockfile Type
-meow,wow,2.2.0,bird
-hiss,wow,2.2.0,
-hiss,raow,2.2.1,bird
+Platform,Name,Lockfile Requirement,Lockfile Type,Manifest Requirement
+meow,wow,2.2.0,bird,
+hiss,wow,2.2.0,,= 2.2.0
+hiss,raow,2.2.1,bird,
           CSV
         end
 
@@ -99,8 +99,8 @@ hiss,raow,2.2.1,bird
           result = parser.parse_dependencies_csv(csv, options: options)
 
           expect(result).to eq([
-            { platform: "hiss", name: "wow", requirement: "2.2.0", type: "runtime" },
-            { platform: "hiss", name: "raow", requirement: "2.2.1", type: "bird" }
+          { platform: "hiss", name: "wow", lockfile_requirement: "2.2.0", type: "runtime", requirement: "= 2.2.0" },
+            { platform: "hiss", name: "raow", lockfile_requirement: "2.2.1", type: "bird" }
           ])
 
           # the cache should contain a CSVFile
@@ -114,7 +114,7 @@ hiss,raow,2.2.1,bird
 Platform,Name,Lockfile Requirement,Lockfile Type,Version
 meow,wow,2.2.0,bird,2.2.0
 hiss,wow,2.2.0,,2.2.0
-hiss,raow,>= 2.2.1,bird,>= 2.2.1
+hiss,raow,2.2.0,bird,2.2.1
           CSV
         end
 
@@ -124,8 +124,10 @@ hiss,raow,>= 2.2.1,bird,>= 2.2.1
           result = parser.parse_dependencies_csv(csv, options: options)
 
           expect(result).to eq([
-            { platform: "hiss", name: "wow", requirement: "2.2.0", type: "runtime", lockfile_requirement:"2.2.0"  },
-            { platform: "hiss", name: "raow", requirement: "2.2.1", type: "bird", lockfile_requirement: ">= 2.2.1" }
+            { platform: "hiss", name: "wow", type: "runtime", lockfile_requirement:"2.2.0"  },
+            # headers are searched left to right for each field, and the
+            # first matching one wins
+            { platform: "hiss", name: "raow", type: "bird", lockfile_requirement: "2.2.0" }
           ])
 
           # the cache should contain a CSVFile

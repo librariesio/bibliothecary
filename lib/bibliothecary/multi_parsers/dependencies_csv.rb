@@ -36,22 +36,19 @@ module Bibliothecary
               /^name$/i
             ]
           },
-          # The "requirement" column in this case is going to want exact
-          # versions. Prefer those over requirements, and don't use the
-          # Lockfile Requirement column from CVS exports.
-          "requirement" => {
-            match: [
-              /^(manifest |)requirement$/i,
-              /^version$/i,
-            ],
-            # strip anything from the front that doesn't look like a version number.
-            process: lambda do |value|
-              value.gsub(/^[^\dvV]*/, '')
-            end
-          },
+          # Lockfiles have exact versions.
           "lockfile_requirement" => {
             match: [
-              /^lockfile requirement$/i,
+              /^version$/i,
+              /^(lockfile |)requirement$/i,
+            ],
+          },
+          # Manifests have versions that can have operators.
+          "requirement" => {
+            match: [
+              /^manifest requirement$/i,
+              /^version$/i,
+              /^(lockfile |)requirement$/i,
             ],
             default: nil
           },
@@ -83,23 +80,15 @@ module Bibliothecary
               # find the first non-empty field in the row for this header, or nil if not found
               row_data = @header_mappings[header]&.map { |mapping| row[mapping] }&.compact&.first
 
-              row_data = info[:process].call(row_data) if info[:process]
-
-              # some columsn have default data to fall back on
-              if info.has_key?(:default)
-                if row_data
-                  obj[header.to_sym] = row_data
-                # if the default is nil, don't even add the key to the hash
-                elsif info[:default]
-                  obj[header.to_sym] = info[:default]
-                end
-              else
-                if row_data.nil? || row_data.empty?
-                  # use 1-based index just like the 'csv' std lib, and count the headers as first row.
-                  raise "Missing required field '#{header}' on line #{idx + 2}."
-                end
-
+              # some column have default data to fall back on
+              if row_data
                 obj[header.to_sym] = row_data
+              elsif info.has_key?(:default)
+                # if the default is nil, don't even add the key to the hash
+                obj[header.to_sym] = info[:default] if info[:default]
+              else
+                # use 1-based index just like the 'csv' std lib, and count the headers as first row.
+                raise "Missing required field '#{header}' on line #{idx + 2}."
               end
             end
           end

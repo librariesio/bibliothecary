@@ -28,7 +28,7 @@ RSpec.shared_examples 'dependencies.csv' do
         expect(result[:dependencies].find { |d| d[:name] == dependency[:name] }).to eq({
           platform: dependency[:platform],
           name: dependency[:name],
-          requirement: dependency[:version],
+          lockfile_requirement: dependency[:version],
           type: dependency[:type]
         })
       end
