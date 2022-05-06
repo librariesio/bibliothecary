@@ -39,18 +39,20 @@ module Bibliothecary
           # Lockfiles have exact versions.
           "lockfile_requirement" => {
             match: [
-              /^version$/i,
               /^(lockfile |)requirement$/i,
+              /^version$/i,
             ],
           },
           # Manifests have versions that can have operators.
+          # However, since Bibliothecary only currently supports analyzing a
+          # single file as a single thing (either manifest or lockfile)
+          # we can't return manifest-y data. Only take the lockfile requirement
+          # when processing dependencies.csv for now.
           "requirement" => {
             match: [
-              /^manifest requirement$/i,
-              /^version$/i,
               /^(lockfile |)requirement$/i,
+              /^version$/i,
             ],
-            default: nil
           },
           "type" => {
             default: "runtime",
