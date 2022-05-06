@@ -179,6 +179,10 @@ module Bibliothecary
         deps
       end
 
+      # While the thing in the repo that PyPI is using might be either in
+      # egg format or wheel format, PyPI uses "egg" in the fragment of the
+      # VCS URL to specify what package in the PyPI index the VCS URL
+      # should be treated as.
       NoEggSpecified = Class.new(ArgumentError)
 
       # Parses a requirements.txt file, following the
