@@ -62,6 +62,45 @@ describe Bibliothecary::Parsers::Pypi do
     })
   end
 
+  context 'git urls' do
+    it 'parses dependencies from requirements-git.txt' do
+      expect(described_class.analyse_contents('requirements-git.txt', load_fixture('requirements-git.txt'))).to eq({
+        :platform=>"pypi",
+        :path=>"requirements-git.txt",
+        :dependencies=>[
+          {:name=>"pygame", :requirement=>"2.1.2", :type=>"runtime"},
+        ],
+        kind: 'manifest',
+        success: true
+      })
+    end
+
+    it 'skips poorly-formed lines' do
+      result = described_class.analyse_contents(
+        'requirements.git.txt', <<-REQ
+git://what@::/:/:/
+        REQ
+      )
+
+      expect(result[:dependencies].count).to eq(0)
+    end
+
+    it 'parses URLs with no version' do
+      result = described_class.parse_requirements_txt_url('git+http://github.com/libraries/test#egg=test')
+
+      expect(result).to eq(
+        name: "test",
+        requirement: "*"
+      )
+    end
+
+    it 'fails if there is no egg specified' do
+      expect {
+        described_class.parse_requirements_txt_url('git+http://github.com/libraries/test@2.1.3')
+      }.to raise_error(described_class::NoEggSpecified)
+    end
+  end
+
   it 'parses dependencies from requirements.in' do
     expect(described_class.analyse_contents('requirements.in', load_fixture('pip-compile/requirements.in'))).to eq({
       :platform=>"pypi",

@@ -179,18 +179,49 @@ module Bibliothecary
         deps
       end
 
+      NoEggSpecified = Class.new(ArgumentError)
+
+      # Parses a requirements.txt file, following the
+      # https://pip.pypa.io/en/stable/cli/pip_install/#requirement-specifiers
+      # and https://pip.pypa.io/en/stable/topics/vcs-support/#git.
+      # Invalid lines in requirements.txt are skipped.
       def self.parse_requirements_txt(file_contents, options: {})
         deps = []
         file_contents.split("\n").each do |line|
-          match = line.delete(' ').match(REQUIREMENTS_REGEXP)
-          next unless match
-          deps << {
-            name: match[1],
-            requirement: match[-1] || '*',
-            type: 'runtime'
-          }
+          if line['://']
+            begin
+              result = parse_requirements_txt_url(line)
+            rescue URI::Error, NoEggSpecified => e
+              next
+            end
+
+            deps << result.merge(
+              type: 'runtime'
+            )
+          else
+            match = line.delete(' ').match(REQUIREMENTS_REGEXP)
+            next unless match
+
+            deps << {
+              name: match[1],
+              requirement: match[-1] || '*',
+              type: 'runtime'
+            }
+          end
         end
         deps
+      end
+
+      def self.parse_requirements_txt_url(url)
+        uri = URI.parse(url)
+        raise NoEggSpecified, "No egg specified in #{url}" unless uri.fragment
+
+        name = uri.fragment[/^egg=([^&]+)([&]|$)/, 1]
+        raise NoEggSpecified, "No egg specified in #{url}" unless name
+
+        requirement = uri.path[/@(.+)$/, 1]
+
+        { name: name, requirement: requirement || "*" }
       end
 
       def self.pip_compile?(file_contents)
