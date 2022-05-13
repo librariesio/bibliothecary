@@ -49,5 +49,9 @@ module Bibliothecary
 
       @package_manager = nil
     end
+
+    def groupable?
+      @package_manager&.groupable?(self)
+    end
   end
 end
