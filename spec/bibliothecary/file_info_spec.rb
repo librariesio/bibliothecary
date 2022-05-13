@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Bibliothecary::FileInfo, :focus do
+describe Bibliothecary::FileInfo do
   describe "#ungroupable?" do
     let(:file_info) { described_class.new(folder_path, full_path, contents) }
     let(:folder_path) { "spec/fixtures" }
