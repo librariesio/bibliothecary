@@ -98,11 +98,13 @@ module Bibliothecary
         {
           match_filename('cyclonedx.json') => {
             kind: 'lockfile',
-            parser: :parse_cyclonedx_json
+            parser: :parse_cyclonedx_json,
+            ungroupable: true
           },
           match_filename('cyclonedx.xml') => {
             kind: 'lockfile',
-            parser: :parse_cyclonedx_xml
+            parser: :parse_cyclonedx_xml,
+            ungroupable: true
           }
         }
       end

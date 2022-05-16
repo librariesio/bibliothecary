@@ -12,7 +12,14 @@ module Bibliothecary
 
       file_infos_by_directory = file_infos.group_by { |info| File.dirname(info.relative_path) }
       file_infos_by_directory.values.each do |file_infos_for_path|
-        file_infos_by_directory_by_package_manager = file_infos_for_path.group_by { |info| info.package_manager}
+        groupable, ungroupable = file_infos_for_path.partition(&:groupable?)
+
+        # add ungroupable ones as separate RFIs
+        ungroupable.each do |file_info|
+          returns.append(RelatedFilesInfo.new([file_info]))
+        end
+
+        file_infos_by_directory_by_package_manager = groupable.group_by { |info| info.package_manager}
 
         file_infos_by_directory_by_package_manager.values.each do |file_infos_in_directory_for_package_manager|
           returns.append(RelatedFilesInfo.new(file_infos_in_directory_for_package_manager))

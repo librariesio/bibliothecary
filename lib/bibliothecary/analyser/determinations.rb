@@ -22,6 +22,12 @@ module Bibliothecary
         first_matching_mapping_details(info)
           .fetch(:can_have_lockfile, true)
       end
+
+      def groupable?(info)
+        # More package managers are groupable than ungroupable, but the methods
+        # to get this information should be positive.
+        !first_matching_mapping_details(info).fetch(:ungroupable, false)
+      end
     end
   end
 end
