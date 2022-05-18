@@ -13,16 +13,19 @@ module Bibliothecary
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
       # Builtin methods: https://docs.gradle.org/current/userguide/java_plugin.html#tab:configurations
-      GRADLE_KTS_DEPENDENCY_METHODS = %w(api compile compileOnlyApi implementation runtimeOnly testCompileOnly testImplementation testRuntimeOnly)
-      
-      # An intentionally overly-simplified regex to scrape deps from build.gradle.kts files. 
-      # To be truly useful bibliothecary would need a full Kotlin parser that speaks Gradle, 
-      # because the Kotlin DSL has many dynamic ways of declaring dependencies.
-      
-      GRADLE_KTS_VERSION_REGEX = /[\w.-]+/ # e.g. '1.2.3'
-      GRADLE_KTS_INTERPOLATED_VERSION_REGEX = /\$\{.*\}/ # e.g. '${my-project-settings["version"]}'
-      GRADLE_KTS_GAV_REGEX = /([\w.-]+)\:([\w.-]+)(?:\:(#{GRADLE_KTS_VERSION_REGEX}|#{GRADLE_KTS_INTERPOLATED_VERSION_REGEX}))?/
-      GRADLE_KTS_SIMPLE_REGEX = /(#{GRADLE_KTS_DEPENDENCY_METHODS.join('|')})\s*\(\s*"#{GRADLE_KTS_GAV_REGEX}"\s*\)\s*$/m # e.g. "group:artifactId:1.2.3"
+      # Deprecated methods: https://docs.gradle.org/current/userguide/upgrading_version_6.html#sec:configuration_removal
+      GRADLE_DEPENDENCY_METHODS = %w(api compile compileClasspath compileOnly compileOnlyApi implementation runtime runtimeClasspath runtimeOnly testCompile testCompileOnly testImplementation testRuntime testRuntimeOnly)
+
+      # Intentionally overly-simplified regexes to scrape deps from build.gradle (Groovy) and build.gradle.kts (Kotlin) files. 
+      # To be truly useful bibliothecary would need full Groovy / Kotlin parsers that speaks Gradle, 
+      # because the Groovy and Kotlin DSLs have many dynamic ways of declaring dependencies.
+      GRADLE_VERSION_REGEX = /[\w.-]+/ # e.g. '1.2.3'
+      GRADLE_VAR_INTERPOLATION_REGEX = /\$\w+/ # e.g. '$myVersion'
+      GRADLE_CODE_INTERPOLATION_REGEX = /\$\{.*\}/ # e.g. '${my-project-settings["version"]}'
+      GRADLE_GAV_REGEX = /([\w.-]+)\:([\w.-]+)(?:\:(#{GRADLE_VERSION_REGEX}|#{GRADLE_VAR_INTERPOLATION_REGEX}|#{GRADLE_CODE_INTERPOLATION_REGEX}))?/ # e.g. "group:artifactId:1.2.3"
+      GRADLE_COMMENT_REGEX = /\/\/.*|\/\*.*\*\// # '// hello' or '/* hello */'
+      GRADLE_GROOVY_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s+['"]#{GRADLE_GAV_REGEX}['"]\s*(?:#{GRADLE_COMMENT_REGEX})*$/m 
+      GRADLE_KOTLIN_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(\s*"#{GRADLE_GAV_REGEX}"\s*\)\s*(?:#{GRADLE_COMMENT_REGEX})*$/m 
 
       MAVEN_PROPERTY_REGEX = /\$\{(.+?)\}/
       MAX_DEPTH = 5
@@ -233,24 +236,21 @@ module Bibliothecary
       end
 
       def self.parse_gradle(file_contents, options: {})
-        response = Typhoeus.post("#{Bibliothecary.configuration.gradle_parser_host}/parse", body: file_contents)
-        raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.gradle_parser_host}/parse", response.response_code) unless response.success?
-        json = JSON.parse(response.body)
-        return [] unless json['dependencies']
-        json['dependencies'].map do |dependency|
-          name = gradle_dependency_name(dependency["group"], dependency["name"])
-          next unless name =~ /[\w-]+\.[\w_-]+(\.[\w-])?\:[\w-]/
+        file_contents
+        .scan(GRADLE_GROOVY_SIMPLE_REGEX)                                                # match 'implementation "group:artifactId:version"'
+        .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
+        .map { |(type, group, artifactId, version)|
           {
-            name: name,
-            requirement: dependency["version"],
-            type: dependency["type"]
+            name: [group, artifactId].join(":"),
+            requirement: version || "*",
+            type: type
           }
-        end.compact
+        }
       end
 
       def self.parse_gradle_kts(file_contents, options: {})
         file_contents
-          .scan(GRADLE_KTS_SIMPLE_REGEX)                                                  # match 'implementation("group:artifactId:version")'
+          .scan(GRADLE_KOTLIN_SIMPLE_REGEX)                                                  # match 'implementation("group:artifactId:version")'
           .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
           .map { |(type, group, artifactId, version)|
             {

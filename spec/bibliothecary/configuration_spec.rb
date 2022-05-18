@@ -19,10 +19,6 @@ describe Bibliothecary::Configuration do
     expect(config.mix_parser_host).to eq('https://mix.libraries.io')
   end
 
-  it 'should have a default host for gradle parser' do
-    expect(config.gradle_parser_host).to eq('https://gradle-parser.libraries.io')
-  end
-
   it 'should have a default host for yarn parser' do
     expect(config.yarn_parser_host).to eq('https://yarn-parser.libraries.io')
   end
