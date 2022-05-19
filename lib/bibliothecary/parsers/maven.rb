@@ -23,9 +23,8 @@ module Bibliothecary
       GRADLE_VAR_INTERPOLATION_REGEX = /\$\w+/ # e.g. '$myVersion'
       GRADLE_CODE_INTERPOLATION_REGEX = /\$\{.*\}/ # e.g. '${my-project-settings["version"]}'
       GRADLE_GAV_REGEX = /([\w.-]+)\:([\w.-]+)(?:\:(#{GRADLE_VERSION_REGEX}|#{GRADLE_VAR_INTERPOLATION_REGEX}|#{GRADLE_CODE_INTERPOLATION_REGEX}))?/ # e.g. "group:artifactId:1.2.3"
-      GRADLE_COMMENT_REGEX = /\/\/.*|\/\*.*\*\// # '// hello' or '/* hello */'
-      GRADLE_GROOVY_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(?\s*['"]#{GRADLE_GAV_REGEX}['"]\s*\)?\s*(?:#{GRADLE_COMMENT_REGEX})*$/m 
-      GRADLE_KOTLIN_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(\s*"#{GRADLE_GAV_REGEX}"\s*\)\s*(?:#{GRADLE_COMMENT_REGEX})*$/m 
+      GRADLE_GROOVY_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(?\s*['"]#{GRADLE_GAV_REGEX}['"]/m 
+      GRADLE_KOTLIN_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(\s*"#{GRADLE_GAV_REGEX}"/m 
 
       MAVEN_PROPERTY_REGEX = /\$\{(.+?)\}/
       MAX_DEPTH = 5
