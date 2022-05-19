@@ -173,7 +173,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
   end
 
   context 'gradle' do
-    it 'cleans up incorrectly parsed dependencies', :vcr do
+    it 'cleans up incorrectly parsed dependencies' do
       source = <<~FILE
         dependencies {
           compile 'com.whatever:liblib:1.2.3'
@@ -186,14 +186,14 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
       expect(described_class.analyse_contents('build.gradle', source)[:dependencies]).to match_array([
         {:name=>"com.whatever:liblib", :requirement=>"1.2.3", :type=>"compile"},
-        {:name=>"this.is.a.group:greatlib", :requirement=>"", :type=>"compile"},
-        {:name=>"com.fasterxml.jackson.core:jackson-databind", :requirement=>"", :type=>"compile"},
-        {:name=>"this.thing:neat", :requirement=>"", :type=>"compileOnly"},
-        {:name=>"hello.there:im.a.dep:$versionThing", :requirement=>"", :type=>"testCompile"},
+        {:name=>"this.is.a.group:greatlib", :requirement=>"*", :type=>"compile"},
+        {:name=>"com.fasterxml.jackson.core:jackson-databind", :requirement=>"*", :type=>"compile"},
+        {:name=>"this.thing:neat", :requirement=>"*", :type=>"compileOnly"},
+        {:name=>"hello.there:im.a.dep", :requirement=>"$versionThing", :type=>"testCompile"},
       ])
     end
 
-    it 'parses dependencies from build.gradle', :vcr do
+    it 'parses dependencies from build.gradle' do
       expect(described_class.analyse_contents('build.gradle', load_fixture('build.gradle'))).to eq({
         :platform=>"maven",
         :path=>"build.gradle",
@@ -206,7 +206,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
           {:name=>"com.android.support:appcompat-v7", :requirement=>"23.1.1", :type=>"compile"},
           {:name=>"com.android.support:recyclerview-v7", :requirement=>"23.1.1", :type=>"compile"},
           {:name=>"com.android.support:design", :requirement=>"23.1.1", :type=>"compile"},
-          {:name=>"com.android.support:customtabs", :requirement=>"23.1.1", :type=>"compile"}
+          {:name=>"com.android.support:customtabs", :requirement=>"23.1.1", :type=>"compile"},
+          {:name=>"com.google.guava:guava", :requirement=>"${guavaVersions['latest']}", :type=>"implementation"}
         ],
         kind: 'manifest',
         success: true
