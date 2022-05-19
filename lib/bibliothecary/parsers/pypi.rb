@@ -84,7 +84,7 @@ module Bibliothecary
       end
 
       def self.parse_poetry(file_contents, options: {})
-        manifest = Tomlrb.parse(file_contents)['tool']['poetry']
+        manifest = Tomlrb.parse(file_contents).fetch('tool', {}).fetch('poetry', {})
         map_dependencies(manifest['dependencies'], 'runtime') + map_dependencies(manifest['dev-dependencies'], 'develop')
       end
 

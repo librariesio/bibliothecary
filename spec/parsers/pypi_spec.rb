@@ -272,6 +272,21 @@ git://what@::/:/:/
     })
   end
 
+  it 'handles pyproject.toml with no deps' do
+    source = <<~FILE
+      [tool.black]
+      line-length = 100
+    FILE
+
+    expect(described_class.analyse_contents('pyproject.toml', source)).to eq({
+      :platform=>"pypi",
+      :path=>"pyproject.toml",
+      :dependencies=>[],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
   it 'parses dependencies from Poetry.lock' do
     expect(described_class.analyse_contents('poetry.lock', load_fixture('poetry.lock'))).to eq({
       :platform=>"pypi",
