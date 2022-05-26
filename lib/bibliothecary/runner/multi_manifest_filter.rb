@@ -21,7 +21,7 @@ module Bibliothecary
       def results
         partition_file_entries!
 
-        no_lockfile_results + single_file_results + multiple_file_results
+        (no_lockfile_results + single_file_results + multiple_file_results).uniq
       end
 
       def no_lockfile_results
