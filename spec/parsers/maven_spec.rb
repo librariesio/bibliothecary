@@ -434,6 +434,10 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(test_runtime_classpath.length).to eq 187
       expect(test_runtime_classpath.select {|item| item[:name] == "org.glassfish.jaxb:jaxb-runtime"}.length).to eq 1
 
+      # test rename resolution
+      expect(test_runtime_classpath.select {|item| item[:name] == "commons-io:commons-io"}.length).to eq 1
+      expect(test_runtime_classpath.select {|item| item[:name] == "apache:commons-io"}).to eq []
+
       test_compile_classpath = deps[:dependencies].select {|item| item[:type] == "testCompileClasspath"}
 
       expect(test_compile_classpath.length).to eq 189

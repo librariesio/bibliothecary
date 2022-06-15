@@ -159,9 +159,17 @@ module Bibliothecary
           # \--- org.springframework.security:spring-security-test (n)
           next unless dep.length >= 3
 
+          dep_name = if dep.count == 6
+                       # get name from renamed package resolution "org:name:version -> renamed_org:name:version"
+                       dep[-3..-2]
+                     else
+                       # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
+                       dep[0..1]
+                     end
+
           version = dep[-1]
           {
-            name: dep[0..1].join(":"),
+            name: dep_name.join(":"),
             requirement: version,
             type: type
           }
