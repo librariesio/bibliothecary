@@ -282,6 +282,7 @@ describe Bibliothecary::Parsers::Go do
         {:name=>"github.com/ajg/form", :requirement=>"v1.5.1", :type=>"runtime"},
         {:name=>"github.com/alecthomas/template", :requirement=>"v0.0.0-20160405071501-a0175ee3bccc", :type=>"runtime"},
         {:name=>"github.com/alecthomas/units", :requirement=>"v0.0.0-20151022065526-2efee857e7cf", :type=>"runtime"},
+        {:name=>"github.com/stretchr/testify", :requirement=>"v1.7.0", :type=>"test"},
       ],
       kind: 'lockfile',
       success: true
