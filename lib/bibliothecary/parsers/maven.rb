@@ -148,7 +148,6 @@ module Bibliothecary
 
           split = gradle_dep_match.captures[0]
 
-
           dep = line
             .split(split)[1].sub(/(\((c|n|\*)\))$/, "") # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
             .sub(/ FAILED$/, "") # dependency could not be resolved (but still may have a version)
@@ -159,21 +158,28 @@ module Bibliothecary
           # \--- org.springframework.security:spring-security-test (n)
           next unless dep.length >= 3
 
-          dep_name = if dep.count == 6
-                       # get name from renamed package resolution "org:name:version -> renamed_org:name:version"
-                       dep[-3..-2]
-                     else
-                       # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
-                       dep[0..1]
-                     end
-
-          version = dep[-1]
-          {
-            name: dep_name.join(":"),
-            requirement: version,
-            type: type
-          }
-        end.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
+          if dep.count == 6
+            # get name from renamed package resolution "org:name:version -> renamed_org:name:version"
+            {
+              original_name: dep[0,2].join(":"),
+              original_requirement: dep[2],
+              name: dep[-3..-2].join(":"),
+              requirement: dep[-1],
+              type: type
+            }
+          else
+            # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
+            {
+              name: dep[0..1].join(":"),
+              requirement: dep[-1],
+              type: type
+            }
+          end
+        end
+          .compact
+          # Prefer duplicate deps with the aliased ones first, so we don't lose the aliases in the next uniq step.
+          .sort_by { |dep| dep.key?(:original_name) || dep.key?(:original_requirement) ? 0 : 1 }
+          .uniq { |item| [item[:name], item[:requirement], item[:type]] }
       end
 
       def self.parse_maven_resolved(file_contents, options: {})

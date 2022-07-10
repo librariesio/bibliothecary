@@ -425,6 +425,16 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(runtime_classpath.length).to eq 156
       expect(runtime_classpath.select {|item| item[:name] == "com.google.guava:guava"}.length).to eq 1
 
+      # test rename resolution
+      renamed_dep = runtime_classpath.
+        select do |item| 
+          item[:name] == "commons-io:commons-io" && 
+          item[:original_name] == "apache:commons-io" &&
+          item[:requirement] == "2.6" &&
+          item[:original_requirement] == "1.4" 
+        end
+      expect(renamed_dep.length).to eq 1
+
       test_runtime_only = deps[:dependencies].select {|item| item[:type] == "testRuntimeOnly"}
 
       expect(test_runtime_only.length).to eq 0
@@ -434,9 +444,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(test_runtime_classpath.length).to eq 187
       expect(test_runtime_classpath.select {|item| item[:name] == "org.glassfish.jaxb:jaxb-runtime"}.length).to eq 1
 
-      # test rename resolution
-      expect(test_runtime_classpath.select {|item| item[:name] == "commons-io:commons-io"}.length).to eq 1
-      expect(test_runtime_classpath.select {|item| item[:name] == "apache:commons-io"}).to eq []
 
       test_compile_classpath = deps[:dependencies].select {|item| item[:type] == "testCompileClasspath"}
 
