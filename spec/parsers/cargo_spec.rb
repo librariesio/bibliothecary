@@ -11,7 +11,8 @@ describe Bibliothecary::Parsers::Cargo do
       path: "Cargo.toml",
       dependencies:[
         { name: "rustc-serialize", requirement: "*", type: "runtime" },
-        { name: "regex", requirement: "*", type: "runtime" }
+        { name: "regex", requirement: "*", type: "runtime" },
+        { name: "tempdir", requirement: "0.3", type: "development" }
       ],
       kind: "manifest",
       success: true
