@@ -53,8 +53,9 @@ module Bibliothecary
           body: {
             file: file_contents,
             # Unfortunately we do not get the filename in the mapping parsers, so hardcoding the file name depending on the kind
-            filename: kind == "manifest" ? "environment.yml" : "environment.yml.lock"
-          }
+            filename: kind == "manifest" ? "environment.yml" : "environment.yml.lock",
+          },
+          timeout: 60
         )
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{host}/parse", response.response_code) unless response.success?
 

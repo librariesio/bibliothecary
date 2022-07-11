@@ -35,7 +35,7 @@ module Bibliothecary
       end
 
       def self.map_dependencies(manifest, path)
-        response = Typhoeus.post("#{Bibliothecary.configuration.carthage_parser_host}/#{path}", params: { body: manifest })
+        response = Typhoeus.post("#{Bibliothecary.configuration.carthage_parser_host}/#{path}", params: { body: manifest }, timeout: 60)
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.carthage_parser_host}/#{path}", response.response_code) unless response.success?
         json = JSON.parse(response.body)
 

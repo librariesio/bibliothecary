@@ -23,7 +23,7 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
       def self.parse_mix(file_contents, options: {})
-        response = Typhoeus.post("#{Bibliothecary.configuration.mix_parser_host}/", body: file_contents)
+        response = Typhoeus.post("#{Bibliothecary.configuration.mix_parser_host}/", body: file_contents, timeout: 60)
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.mix_parser_host}/", response.response_code) unless response.success?
         json = JSON.parse response.body
 
@@ -37,7 +37,7 @@ module Bibliothecary
       end
 
       def self.parse_mix_lock(file_contents, options: {})
-        response = Typhoeus.post("#{Bibliothecary.configuration.mix_parser_host}/lock", body: file_contents)
+        response = Typhoeus.post("#{Bibliothecary.configuration.mix_parser_host}/lock", body: file_contents, timeout: 60)
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.mix_parser_host}/", response.response_code) unless response.success?
         json = JSON.parse response.body
 
