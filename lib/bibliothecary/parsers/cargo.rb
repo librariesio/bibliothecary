@@ -21,30 +21,20 @@ module Bibliothecary
 
       def self.parse_manifest(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
-        dependencies, dev_dependencies = manifest.fetch_values('dependencies', 'dev-dependencies')
 
         parsed_dependencies = []
 
-        parsed_dependencies << dependencies.map do |name, requirement|
-          if requirement.respond_to?(:fetch)
-            requirement = requirement['version'] or next
+        manifest.fetch_values('dependencies', 'dev-dependencies').each_with_index do |deps, index|
+          parsed_dependencies << deps.map do |name, requirement|
+            if requirement.respond_to?(:fetch)
+              requirement = requirement['version'] or next
+            end
+            {
+              name: name,
+              requirement: requirement,
+              type: index.zero? ? 'runtime' : 'development'
+            }
           end
-          {
-            name: name,
-            requirement: requirement,
-            type: 'runtime'
-          }
-        end
-
-        parsed_dependencies << dev_dependencies.map do |name, requirement|
-          if requirement.respond_to?(:fetch)
-            requirement = requirement['version'] or next
-          end
-          {
-            name: name,
-            requirement: requirement,
-            type: 'development'
-          }
         end
 
         parsed_dependencies.flatten.compact
