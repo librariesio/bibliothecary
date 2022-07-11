@@ -94,13 +94,13 @@ module Bibliothecary
       end
 
       def self.parse_glide_yaml(file_contents, options: {})
-        manifest = YAML.load file_contents
+        manifest = YAML.load file_contents, permitted_classes: [Time]
         map_dependencies(manifest, 'import', 'package', 'version', 'runtime') +
         map_dependencies(manifest, 'devImports', 'package', 'version', 'development')
       end
 
       def self.parse_glide_lockfile(file_contents, options: {})
-        manifest = YAML.load file_contents
+        manifest = YAML.load file_contents, permitted_classes: [Time]
         map_dependencies(manifest, 'imports', 'name', 'version', 'runtime')
       end
 
