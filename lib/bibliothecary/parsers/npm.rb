@@ -36,20 +36,14 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_shrinkwrap(file_contents, options: {})
-        manifest = JSON.parse(file_contents)
-        manifest.fetch('dependencies',[]).map do |name, requirement|
-          {
-            name: name,
-            requirement: requirement["version"],
-            type: 'runtime'
-          }
-        end
-      end
-
       def self.parse_package_lock(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         parse_package_lock_deps_recursively(manifest.fetch('dependencies', []))
+      end
+
+      class << self
+        # "package-lock.json" and "npm-shrinkwrap.json" have same format, so use same parsing logic
+        alias_method :parse_shrinkwrap, :parse_package_lock
       end
 
       def self.parse_package_lock_deps_recursively(dependencies, depth=1)
