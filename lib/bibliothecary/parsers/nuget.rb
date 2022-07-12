@@ -108,7 +108,7 @@ module Bibliothecary
             requirement = dependency.nodes.detect{ |n| n.value == "Version" }&.text
           end
 
-          type = if dependency.nodes.first && dependency.nodes.first.nodes.include?("all") && dependency.nodes.first.value.include?("PrivateAssets")
+          type = if dependency.nodes.first && dependency.nodes.first.nodes.include?("all") && dependency.nodes.first.value.include?("PrivateAssets") || dependency.attributes[:PrivateAssets] == "All"
                    "development"
                  else
                    "runtime"

@@ -871,7 +871,7 @@ describe Bibliothecary::Parsers::Nuget do
       path: "example.csproj",
       dependencies: [
         { name: "Microsoft.AspNetCore.App", requirement: "*", type: "runtime" },
-        { name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "runtime" }
+        { name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "development" }
       ],
       kind: 'manifest',
       success: true
