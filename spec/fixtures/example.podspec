@@ -7,8 +7,8 @@ Pod::Spec.new do |s|
   s.summary  = 'A fast & simple, yet powerful & flexible logging framework for Mac and iOS.'
   s.homepage = 'https://github.com/CocoaLumberjack/CocoaLumberjack'
   s.author   = { 'Robbie Hanson' => 'robbiehanson@deusty.com' }
-  s.source   = { :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack.git',
-                 :tag => "#{s.version}" }
+  s.source   = { git: 'https://github.com/CocoaLumberjack/CocoaLumberjack.git',
+                 tag: "#{s.version}" }
 
   s.description = 'It is similar in concept to other popular logging frameworks such as log4j, '   \
                   'yet is designed specifically for objective-c, and takes advantage of features ' \

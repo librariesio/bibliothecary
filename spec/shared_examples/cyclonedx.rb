@@ -24,7 +24,7 @@ RSpec.shared_examples 'CycloneDX' do
           platform: :maven,
           name: "org.hdrhistogram:HdrHistogram",
           version: "2.1.9"
-        },
+        }
       ]
     end
 

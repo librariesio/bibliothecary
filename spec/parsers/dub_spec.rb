@@ -7,13 +7,13 @@ describe Bibliothecary::Parsers::Dub do
 
   it 'parses dependencies from dub.json' do
     expect(described_class.analyse_contents('dub.json', load_fixture('dub.json'))).to eq({
-      :platform=>"dub",
-      :path=>"dub.json",
-      :dependencies=>[
-        {:name=>"vibe-d", :requirement=>"~>0.7.22", :type=>"runtime"},
-        {:name=>"libdparse",
-         :requirement=>{"optional"=>true, "version"=>"~>0.2.0"},
-         :type=>"runtime"}
+      platform: "dub",
+      path: "dub.json",
+      dependencies: [
+        { name: "vibe-d", requirement: "~>0.7.22", type: "runtime" },
+        { name: "libdparse",
+         requirement: { "optional"=>true, "version"=>"~>0.2.0" },
+         type: "runtime" }
       ],
       kind: 'manifest',
       success: true
@@ -22,10 +22,10 @@ describe Bibliothecary::Parsers::Dub do
 
   it 'parses dependencies from dub.sdl' do
     expect(described_class.analyse_contents('dub.sdl', load_fixture('dub.sdl'))).to eq({
-      :platform=>"dub",
-      :path=>"dub.sdl",
-      :dependencies=>[
-        {:name=>"vibe-d", :requirement=>"~>0.7.23", :type=>:runtime}
+      platform: "dub",
+      path: "dub.sdl",
+      dependencies: [
+        { name: "vibe-d", requirement: "~>0.7.23", type: :runtime }
       ],
       kind: 'manifest',
       success: true

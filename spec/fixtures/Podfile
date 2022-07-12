@@ -2,8 +2,8 @@ source 'https://github.com/CocoaPods/Specs.git'
 source 'https://github.com/artsy/Specs.git'
 
 plugin 'cocoapods-keys', {
-  :project => 'Eidolon',
-  :keys => [
+  project: 'Eidolon',
+  keys: [
     'ArtsyAPIClientSecret',
     'ArtsyAPIClientKey',
     'HockeyProductionSecret',
@@ -49,16 +49,16 @@ pod 'ARAnalytics/HockeyApp'
 pod 'CardFlight'
 pod 'Stripe'
 pod 'ECPhoneNumberFormatter'
-pod 'UIImageViewAligned', :git => 'https://github.com/ashfurrow/UIImageViewAligned.git'
-pod 'DZNWebViewController', :git => 'https://github.com/orta/DZNWebViewController.git'
-pod 'Reachability', :git => 'https://github.com/ashfurrow/Reachability.git', :branch => 'frameworks'
+pod 'UIImageViewAligned', git: 'https://github.com/ashfurrow/UIImageViewAligned.git'
+pod 'DZNWebViewController', git: 'https://github.com/orta/DZNWebViewController.git'
+pod 'Reachability', git: 'https://github.com/ashfurrow/Reachability.git', branch: 'frameworks'
 
 pod 'UIView+BooleanAnimations'
-pod 'ARTiledImageView', :git => 'https://github.com/ashfurrow/ARTiledImageView.git'
+pod 'ARTiledImageView', git: 'https://github.com/ashfurrow/ARTiledImageView.git'
 pod 'XNGMarkdownParser'
 
 # Swift pods
-pod 'SwiftyJSON', :git => 'https://github.com/SwiftyJSON/SwiftyJSON.git', :branch => 'xcode7'
+pod 'SwiftyJSON', git: 'https://github.com/SwiftyJSON/SwiftyJSON.git', branch: 'xcode7'
 pod 'ReactiveCocoa', '~> 4.0.1-alpha-2'
 pod 'Moya/ReactiveCocoa'
 pod 'Swift-RAC-Macros'

@@ -55,7 +55,7 @@ module Bibliothecary
             []
           else
             parse_package_lock_deps_recursively(requirement.fetch('dependencies', []), depth + 1)
-          end
+                               end
 
           [{
             name: name,

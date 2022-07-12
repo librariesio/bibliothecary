@@ -7,12 +7,12 @@ describe Bibliothecary::Parsers::SwiftPM do
 
   it 'parses dependencies from Package.swift', :vcr do
     expect(described_class.analyse_contents('Package.swift', load_fixture('Package.swift'))).to eq({
-      :platform=>"swiftpm",
-      :path=>"Package.swift",
-      :dependencies=>[
-        {:name=>"github.com/qutheory/vapor", :requirement=>"0.12.0 - 0.12.9223372036854775807", :type=>"runtime"},
-        {:name=>"github.com/czechboy0/Tasks", :requirement=>"0.2.0 - 0.2.9223372036854775807", :type=>"runtime"},
-        {:name=>"github.com/czechboy0/Environment", :requirement=>"0.4.0 - 0.4.9223372036854775807", :type=>"runtime"}
+      platform: "swiftpm",
+      path: "Package.swift",
+      dependencies: [
+        { name: "github.com/qutheory/vapor", requirement: "0.12.0 - 0.12.9223372036854775807", type: "runtime" },
+        { name: "github.com/czechboy0/Tasks", requirement: "0.2.0 - 0.2.9223372036854775807", type: "runtime" },
+        { name: "github.com/czechboy0/Environment", requirement: "0.4.0 - 0.4.9223372036854775807", type: "runtime" }
       ],
       kind: 'manifest',
       success: true

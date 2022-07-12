@@ -40,7 +40,7 @@ module Bibliothecary
           match_filename("project.assets.json") => {
             kind: 'lockfile',
             parser: :parse_project_assets_json
-          },
+          }
         }
       end
 
@@ -80,7 +80,7 @@ module Bibliothecary
           # do that yet so at least pick deterministically.
 
           # Note, frameworks can be empty, so remove empty ones and then return the last sorted item if any
-          frameworks = frameworks.delete_if { |k, v| v.empty? }
+          frameworks = frameworks.delete_if { |_k, v| v.empty? }
           return frameworks[frameworks.keys.sort.last] unless frameworks.empty?
         end
         []
@@ -152,8 +152,8 @@ module Bibliothecary
         frameworks = {}
         manifest.fetch("targets",[]).each do |framework, deps|
           frameworks[framework] = deps
-                                    .select { |name, details| details["type"] == "package" }
-                                    .map do |name, details|
+                                    .select { |_name, details| details["type"] == "package" }
+                                    .map do |name, _details|
             name_split = name.split("/")
             {
               name: name_split[0],
@@ -168,7 +168,7 @@ module Bibliothecary
           # do that yet so at least pick deterministically.
 
           # Note, frameworks can be empty, so remove empty ones and then return the last sorted item if any
-          frameworks = frameworks.delete_if { |k, v| v.empty? }
+          frameworks = frameworks.delete_if { |_k, v| v.empty? }
           return frameworks[frameworks.keys.sort.last] unless frameworks.empty?
         end
         []

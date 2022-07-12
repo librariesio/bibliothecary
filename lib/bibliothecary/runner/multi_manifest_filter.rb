@@ -56,7 +56,7 @@ module Bibliothecary
       end
 
       def partition_file_entries!
-        @single_file_entries, @multiple_file_entries = files_to_check.partition { |file, count| count == 1  }
+        @single_file_entries, @multiple_file_entries = files_to_check.partition { |_file, count| count == 1  }
 
         @single_file_entries = @single_file_entries.map(&:first)
         @multiple_file_entries = @multiple_file_entries.map(&:first)

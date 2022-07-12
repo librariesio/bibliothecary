@@ -41,8 +41,8 @@ module Bibliothecary
           "lockfile_requirement" => {
             match: [
               /^(lockfile |)requirement$/i,
-              /^version$/i,
-            ],
+              /^version$/i
+            ]
           },
           # Manifests have versions that can have operators.
           # However, since Bibliothecary only currently supports analyzing a
@@ -52,8 +52,8 @@ module Bibliothecary
           "requirement" => {
             match: [
               /^(lockfile |)requirement$/i,
-              /^version$/i,
-            ],
+              /^version$/i
+            ]
           },
           "type" => {
             default: "runtime",
