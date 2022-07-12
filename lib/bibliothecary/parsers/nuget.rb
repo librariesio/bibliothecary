@@ -108,10 +108,16 @@ module Bibliothecary
             requirement = dependency.nodes.detect{ |n| n.value == "Version" }&.text
           end
 
+          type = if dependency.nodes.first && dependency.nodes.first.nodes.include?("all") && dependency.nodes.first.value.include?("PrivateAssets")
+                   "development"
+                 else
+                   "runtime"
+                 end
+
           {
             name: dependency.Include,
             requirement: requirement,
-            type: 'runtime'
+            type: type
           }
         end
         packages.uniq {|package| package[:name] }

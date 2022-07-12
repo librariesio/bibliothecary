@@ -857,7 +857,8 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "Microsoft.Extensions.Logging.Debug", requirement: "1.1.1", type: "runtime" },
         { name: "Microsoft.Extensions.DependencyInjection", requirement: "1.1.1", type: "runtime" },
         { name: "Microsoft.VisualStudio.Web.BrowserLink", requirement: "1.1.0", type: "runtime" },
-        { name: "System.Resources.Extensions", requirement: "4.7.0", type: "runtime" }
+        { name: "System.Resources.Extensions", requirement: "4.7.0", type: "runtime" },
+        { name: "Contoso.Utility.UsefulStuff", requirement: "3.6.0", type: "development" }
       ],
       kind: 'manifest',
       success: true
