@@ -193,7 +193,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         {:name=>"this.thing:neat", :requirement=>"*", :type=>"compileOnly"},
         {:name=>"hello.there:im.a.dep", :requirement=>"$versionThing", :type=>"testCompile"},
         {:name=>"this.has:parens", :requirement=>"*", :type=>"compile"},
-        {:name=>"junit:junit", :requirement=>"4.13.2", :type=>"compile"},
+        {:name=>"junit:junit", :requirement=>"4.13.2", :type=>"compile"}
       ])
     end
 

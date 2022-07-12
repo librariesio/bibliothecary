@@ -41,7 +41,7 @@ describe Bibliothecary::Parsers::NPM do
         {lockfile_requirement: nil,    name: "debug", requirement: "2.6.9", type: "runtime"},
         {lockfile_requirement: "^6.26.0", name:"babel-polyfill", requirement: "6.26.0", type: "runtime"},
         {lockfile_requirement: "2.6.12", name:"core-js", requirement: "2.6.12", type: "runtime"},
-        {lockfile_requirement: "4.17.21", name:"lodash", requirement: "4.17.21", type: "runtime"},
+        {lockfile_requirement: "4.17.21", name:"lodash", requirement: "4.17.21", type: "runtime"}
       ],
       kind: "lockfile",
       success: true

@@ -28,11 +28,11 @@ module Bibliothecary
           },
           match_filename('requirements.frozen') => { # pattern exists to store frozen deps in requirements.frozen
             parser: :parse_requirements_txt,
-            kind: 'lockfile',
+            kind: 'lockfile'
           },
           match_filename('pip-resolved-dependencies.txt') => { # Inferred from pip
             kind: 'lockfile',
-            parser: :parse_requirements_txt,
+            parser: :parse_requirements_txt
           },
           match_filename("setup.py") => {
             kind: 'manifest',
@@ -58,20 +58,20 @@ module Bibliothecary
           # Pip dependencies can be embedded in conda environment files
           match_filename("environment.yml") => {
             parser: :parse_conda,
-            kind: "manifest",
+            kind: "manifest"
           },
           match_filename("environment.yaml") => {
             parser: :parse_conda,
-            kind: "manifest",
+            kind: "manifest"
           },
           match_filename("environment.yml.lock") => {
             parser: :parse_conda,
-            kind: "lockfile",
+            kind: "lockfile"
           },
           match_filename("environment.yaml.lock") => {
             parser: :parse_conda,
-            kind: "lockfile",
-          },
+            kind: "lockfile"
+          }
         }
       end
 

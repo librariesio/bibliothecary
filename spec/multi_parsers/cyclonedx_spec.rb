@@ -48,7 +48,7 @@ describe Bibliothecary::MultiParsers::CycloneDX do
 
       entries = described_class::ManifestEntries.new(parse_queue: queue)
 
-      entries.parse! do |item, parse_queue|
+      entries.parse! do |_item, _parse_queue|
         nil
       end
 

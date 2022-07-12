@@ -912,7 +912,7 @@ describe Bibliothecary::Parsers::Nuget do
       :path=>"project.assets.json",
       :dependencies=>[
         {:name=>"a", :requirement=>"1.0.0", :type=>"runtime"},
-        {:name=>"b", :requirement=>"1.0.0", :type=>"runtime"},
+        {:name=>"b", :requirement=>"1.0.0", :type=>"runtime"}
       ],
       kind: 'lockfile',
       success: true

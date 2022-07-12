@@ -13,7 +13,7 @@ RSpec.shared_examples 'dependencies.csv' do
           name: "com.example:something-dev",
           version: "1.0.4",
           type: 'development'
-        },
+        }
       ]
     end
 

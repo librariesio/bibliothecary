@@ -61,7 +61,7 @@ module Bibliothecary
           match_filename("go-resolved-dependencies.json") => {
             kind: 'lockfile',
             parser: :parse_go_resolved
-          },
+          }
         }
       end
 

@@ -68,7 +68,7 @@ describe Bibliothecary::Parsers::Pypi do
         :platform=>"pypi",
         :path=>"requirements-git.txt",
         :dependencies=>[
-          {:name=>"pygame", :requirement=>"2.1.2", :type=>"runtime"},
+          {:name=>"pygame", :requirement=>"2.1.2", :type=>"runtime"}
         ],
         kind: 'manifest',
         success: true
@@ -236,7 +236,7 @@ git://what@::/:/:/
         :path=>"conda_with_pip/environment.yml.lock",
         :dependencies=>[
           {:name=>"urllib3", :requirement=>"*", :type=>"runtime"},
-          {:name=>"Django", :requirement=>"==2.0.0", :type=>"runtime"},
+          {:name=>"Django", :requirement=>"==2.0.0", :type=>"runtime"}
         ],
         kind: "lockfile",
         success: true
@@ -265,7 +265,7 @@ git://what@::/:/:/
       :dependencies=>[
         {:name=>"python", :requirement=>"^3.7", :type=>"runtime"},
         {:name=>"django", :requirement=>"^3.0.7", :type=>"runtime"},
-        {:name=>"pytest", :requirement=>"^5.2", :type=>"develop"},
+        {:name=>"pytest", :requirement=>"^5.2", :type=>"develop"}
       ],
       kind: 'manifest',
       success: true
