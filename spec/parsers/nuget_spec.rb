@@ -838,7 +838,8 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "Mvc3Futures", requirement: "3.0.20105.0", type: "runtime" },
         { name: "Ninject", requirement: "3.0.1.10", type: "runtime" },
         { name: "Ninject.Web.Common", requirement: "3.0.0.7", type: "runtime" },
-        { name: "WebActivator", requirement: "1.5", type: "runtime" }
+        { name: "WebActivator", requirement: "1.5", type: "runtime" },
+        { name: "Microsoft.Net.Compilers", requirement: "1.0.0", type: "development" }
       ],
       kind: 'manifest',
       success: true

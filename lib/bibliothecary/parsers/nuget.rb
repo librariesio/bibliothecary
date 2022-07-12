@@ -92,7 +92,7 @@ module Bibliothecary
           {
             name: dependency.id,
             requirement: (dependency.version if dependency.respond_to? "version") || "*",
-            type: 'runtime'
+            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency ? 'development' : 'runtime'
           }
         end
       rescue
