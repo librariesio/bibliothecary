@@ -15,6 +15,7 @@
       <dependency id="FubuCore" version="3.2.0.3001" />
       <dependency id="HtmlTags"  version="[3.2.0.3001]" />
       <dependency id="DotNetZip" />
+      <dependency id="DevelopmentOnlyPackage" version="1.2.3" developmentDependency="true" />
     </dependencies>
   </metadata>
   <files>

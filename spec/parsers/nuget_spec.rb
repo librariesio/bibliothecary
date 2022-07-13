@@ -885,7 +885,8 @@ describe Bibliothecary::Parsers::Nuget do
       dependencies: [
         { name: "FubuCore", requirement: "3.2.0.3001", type: "runtime" },
         { name: "HtmlTags", requirement: "[3.2.0.3001]", type: "runtime" },
-        { name: "DotNetZip", requirement: "*", type: "runtime" }
+        { name: "DotNetZip", requirement: "*", type: "runtime" },
+        { name: "DevelopmentOnlyPackage", requirement: "1.2.3", type: "development" }
       ],
       kind: 'manifest',
       success: true

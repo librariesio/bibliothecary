@@ -131,7 +131,7 @@ module Bibliothecary
           {
             name: dependency.id,
             requirement: dependency.attributes[:version] || '*',
-            type: 'runtime'
+            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? 'development' : 'runtime'
           }
         end
       rescue
