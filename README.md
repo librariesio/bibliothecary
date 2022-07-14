@@ -7,6 +7,8 @@ Dependency manifest parsing library for https://libraries.io
 
 ## Installation
 
+Requires Ruby 2.7 or above.
+
 Add this line to your application's Gemfile:
 
 ```ruby
@@ -53,8 +55,6 @@ All available config options are in: https://github.com/librariesio/bibliothecar
 
 ## Supported package manager file formats
 
-- Hackage
-  - \*.cabal
 - npm
   - package.json
   - package-lock.json
@@ -64,6 +64,7 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - pom.xml
   - ivy.xml
   - build.gradle
+  - gradle-dependencies-q.txt
 - RubyGems
   - Gemfile
   - Gemfile.lock
@@ -81,6 +82,8 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - requirements/*.pip
   - Pipfile
   - Pipfile.lock
+  - pyproject.toml
+  - poetry.lock
 - Nuget
   - packages.config
   - Project.json
@@ -88,6 +91,12 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - *.nuspec
   - paket.lock
   - *.csproj
+  - project.assets.json
+- CycloneDX
+  - XML as cyclonedx.xml
+  - JSON as cyclonedx.json
+  - Note that CycloneDX manifests can contain information on multiple
+    package manager's packages!
 - Bower
   - bower.json
 - CPAN
@@ -140,6 +149,7 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - Gopkg.lock
   - go.mod
   - go.sum
+  - go-resolved-dependencies.json
 - Elm
   - elm-package.json
   - elm_dependencies.json
@@ -147,14 +157,14 @@ All available config options are in: https://github.com/librariesio/bibliothecar
 - Haxelib
   - haxelib.json
 - Hackage
-  - *.cabal
+  - \*.cabal
   - cabal.config
 
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, bump and commit the version number in `version.rb` in the `main` branch, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 

@@ -1,6 +1,8 @@
 require 'pathname'
 
 module Bibliothecary
+  # A representation of a file on the filesystem, with location information
+  # and package manager information if needed.
   class FileInfo
     attr_reader :folder_path
     attr_reader :relative_path
@@ -46,6 +48,10 @@ module Bibliothecary
       @contents = contents
 
       @package_manager = nil
+    end
+
+    def groupable?
+      @package_manager&.groupable?(self)
     end
   end
 end

@@ -12,6 +12,20 @@ module Bibliothecary
       # "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
+      # Builtin methods: https://docs.gradle.org/current/userguide/java_plugin.html#tab:configurations
+      # Deprecated methods: https://docs.gradle.org/current/userguide/upgrading_version_6.html#sec:configuration_removal
+      GRADLE_DEPENDENCY_METHODS = %w(api compile compileClasspath compileOnly compileOnlyApi implementation runtime runtimeClasspath runtimeOnly testCompile testCompileOnly testImplementation testRuntime testRuntimeOnly)
+
+      # Intentionally overly-simplified regexes to scrape deps from build.gradle (Groovy) and build.gradle.kts (Kotlin) files. 
+      # To be truly useful bibliothecary would need full Groovy / Kotlin parsers that speaks Gradle, 
+      # because the Groovy and Kotlin DSLs have many dynamic ways of declaring dependencies.
+      GRADLE_VERSION_REGEX = /[\w.-]+/ # e.g. '1.2.3'
+      GRADLE_VAR_INTERPOLATION_REGEX = /\$\w+/ # e.g. '$myVersion'
+      GRADLE_CODE_INTERPOLATION_REGEX = /\$\{.*\}/ # e.g. '${my-project-settings["version"]}'
+      GRADLE_GAV_REGEX = /([\w.-]+)\:([\w.-]+)(?:\:(#{GRADLE_VERSION_REGEX}|#{GRADLE_VAR_INTERPOLATION_REGEX}|#{GRADLE_CODE_INTERPOLATION_REGEX}))?/ # e.g. "group:artifactId:1.2.3"
+      GRADLE_GROOVY_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(?\s*['"]#{GRADLE_GAV_REGEX}['"]/m 
+      GRADLE_KOTLIN_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(\s*"#{GRADLE_GAV_REGEX}"/m 
+
       MAVEN_PROPERTY_REGEX = /\$\{(.+?)\}/
       MAX_DEPTH = 5
 
@@ -38,11 +52,15 @@ module Bibliothecary
           },
           match_filename("pom.xml", case_insensitive: true) => {
             kind: 'manifest',
-            parser: :parse_pom_manifest
+            parser: :parse_standalone_pom_manifest
           },
           match_filename("build.gradle", case_insensitive: true) => {
             kind: 'manifest',
             parser: :parse_gradle
+          },
+          match_filename("build.gradle.kts", case_insensitive: true) => {
+            kind: 'manifest',
+            parser: :parse_gradle_kts
           },
           match_extension(".xml", case_insensitive: true) => {
             content_matcher: :ivy_report?,
@@ -60,11 +78,18 @@ module Bibliothecary
           match_filename("sbt-update-full.txt", case_insensitive: true) => {
             kind: 'lockfile',
             parser: :parse_sbt_update_full
+          },
+          match_filename("maven-dependency-tree.txt", case_insensitive: true) => {
+            kind: 'lockfile',
+            parser: :parse_maven_tree
           }
         }
       end
 
-      def self.parse_ivy_manifest(file_contents)
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
+      def self.parse_ivy_manifest(file_contents, options: {})
         manifest = Ox.parse file_contents
         manifest.dependencies.locate('dependency').map do |dependency|
           attrs = dependency.attributes
@@ -87,7 +112,7 @@ module Bibliothecary
         false
       end
 
-      def self.parse_ivy_report(file_contents)
+      def self.parse_ivy_report(file_contents, options: {})
         doc = Ox.parse file_contents
         root = doc.locate("ivy-report").first
         raise "ivy-report document does not have ivy-report at the root" if root.nil?
@@ -112,7 +137,7 @@ module Bibliothecary
         end.compact
       end
 
-      def self.parse_gradle_resolved(file_contents)
+      def self.parse_gradle_resolved(file_contents, options: {})
         type = nil
         file_contents.split("\n").map do |line|
           type_match = GRADLE_TYPE_REGEX.match(line)
@@ -123,25 +148,71 @@ module Bibliothecary
 
           split = gradle_dep_match.captures[0]
 
-          # org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
-          # Lines can end with (n) or (*) to indicate that something was not resolved (n) or resolved previously (*).
-          dep = line.split(split)[1].sub(/\(n\)$/, "").sub(/\(\*\)$/,"").strip.split(":")
-          version = dep[-1]
-          version = version.split("->")[-1].strip if line.include?("->")
-          {
-            name: dep[0, dep.length - 1].join(":"),
-            requirement: version,
-            type: type
-          }
-        end.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
+          dep = line
+            .split(split)[1].sub(/(\((c|n|\*)\))$/, "") # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
+            .sub(/ FAILED$/, "") # dependency could not be resolved (but still may have a version)
+            .sub(" -> ", ":") # handle version arrow syntax
+            .strip.split(":")
+
+          # A testImplementation line can look like this so just skip those
+          # \--- org.springframework.security:spring-security-test (n)
+          next unless dep.length >= 3
+
+          if dep.count == 6
+            # get name from renamed package resolution "org:name:version -> renamed_org:name:version"
+            {
+              original_name: dep[0,2].join(":"),
+              original_requirement: dep[2],
+              name: dep[-3..-2].join(":"),
+              requirement: dep[-1],
+              type: type
+            }
+          else
+            # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
+            {
+              name: dep[0..1].join(":"),
+              requirement: dep[-1],
+              type: type
+            }
+          end
+        end
+          .compact
+          # Prefer duplicate deps with the aliased ones first, so we don't lose the aliases in the next uniq step.
+          .sort_by { |dep| dep.key?(:original_name) || dep.key?(:original_requirement) ? 0 : 1 }
+          .uniq { |item| [item[:name], item[:requirement], item[:type]] }
       end
 
-      def self.parse_maven_resolved(file_contents)
+      def self.parse_maven_resolved(file_contents, options: {})
         Strings::ANSI.sanitize(file_contents)
           .split("\n")
           .map(&method(:parse_resolved_dep_line))
           .compact
           .uniq
+      end
+
+      def self.parse_maven_tree(file_contents, options: {})
+        file_contents = file_contents.gsub(/\r\n?/, "\n")
+        captures = file_contents.scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/).flatten.uniq
+
+        deps = captures.map do |item|
+          parts = item.split(":")
+          case parts.count
+          when 4
+            version = parts[-1]
+            type = parts[-2]
+          when 5..6
+            version, type = parts[-2..]
+          end
+          {
+            name: parts[0..1].join(":"),
+            requirement: version,
+            type: type
+          }
+        end
+
+        # First dep line will be the package itself (unless we're only analyzing a single line)
+        package = deps[0]
+        deps.size < 2 ? deps : deps[1..-1].reject { |d| d[:name] == package[:name] && d[:requirement] == package[:requirement] }
       end
 
       def self.parse_resolved_dep_line(line)
@@ -155,7 +226,13 @@ module Bibliothecary
         }
       end
 
-      def self.parse_pom_manifest(file_contents, parent_properties = {})
+      def self.parse_standalone_pom_manifest(file_contents, options: {})
+        parse_pom_manifest(file_contents, {}, options: options)
+      end
+
+      # parent_properties is used by Libraries:
+      # https://github.com/librariesio/libraries.io/blob/e970925aade2596a03268b6e1be785eba8502c62/app/models/package_manager/maven.rb#L129
+      def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {})
         manifest = Ox.parse file_contents
         xml = manifest.respond_to?('project') ? manifest.project : manifest
         [].tap do |deps|
@@ -171,20 +248,44 @@ module Bibliothecary
         end
       end
 
-      def self.parse_gradle(manifest)
-        response = Typhoeus.post("#{Bibliothecary.configuration.gradle_parser_host}/parse", body: manifest)
-        raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.gradle_parser_host}/parse", response.response_code) unless response.success?
-        json = JSON.parse(response.body)
-        return [] unless json['dependencies']
-        json['dependencies'].map do |dependency|
-          name = [dependency["group"], dependency["name"]].join(':')
-          next unless name =~ (/[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+(\.[A-Za-z0-9_-])?\:[A-Za-z0-9_-]/)
+      def self.parse_gradle(file_contents, options: {})
+        file_contents
+        .scan(GRADLE_GROOVY_SIMPLE_REGEX)                                                # match 'implementation "group:artifactId:version"'
+        .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
+        .map { |(type, group, artifactId, version)|
           {
-            name: name,
-            requirement: dependency["version"],
-            type: dependency["type"]
+            name: [group, artifactId].join(":"),
+            requirement: version || "*",
+            type: type
           }
-        end.compact
+        }
+      end
+
+      def self.parse_gradle_kts(file_contents, options: {})
+        file_contents
+          .scan(GRADLE_KOTLIN_SIMPLE_REGEX)                                                # match 'implementation("group:artifactId:version")'
+          .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
+          .map { |(type, group, artifactId, version)|
+            {
+              name: [group, artifactId].join(":"),
+              requirement: version || "*",
+              type: type
+            }
+          }
+      end
+
+      def self.gradle_dependency_name(group, name)
+        if group.empty? && name.include?(":")
+          group, name = name.split(":", 2)
+        end
+
+        # Strip comments, and single/doublequotes
+        [group, name].map do |part|
+          part
+            .gsub(/\s*\/\/.*$/, "") # Comments
+            .gsub(/^["']/, "") # Beginning single/doublequotes
+            .gsub(/["']$/, "") # Ending single/doublequotes
+        end.join(":")
       end
 
       def self.extract_pom_info(xml, location, parent_properties = {})
@@ -196,7 +297,8 @@ module Bibliothecary
         return nil if field.nil?
 
         value = field.nodes.first
-        match = value.match(MAVEN_PROPERTY_REGEX)
+        value = value.value if value.is_a?(Ox::CData)
+        match = value&.match(MAVEN_PROPERTY_REGEX)
         if match
           return extract_property(xml, match[1], value, parent_properties)
         else
@@ -228,9 +330,9 @@ module Bibliothecary
         # the xml root is <project> so lookup the non property name in the xml
         # this converts ${project/group.id} -> ${group/id}
         non_prop_name = property_name.gsub(".", "/").gsub("project/", "")
-        return value if !xml.respond_to?("properties") && parent_properties.empty? && !xml.locate(non_prop_name)
+        return "${#{property_name}}" if !xml.respond_to?("properties") && parent_properties.empty? && xml.locate(non_prop_name).empty?
 
-        prop_field = xml.properties.locate(property_name).first
+        prop_field = xml.properties.locate(property_name).first if xml.respond_to?("properties")
         parent_prop = parent_properties[property_name]
         if prop_field
           prop_field.nodes.first
@@ -247,7 +349,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_sbt_update_full(file_contents)
+      def self.parse_sbt_update_full(file_contents, options: {})
         all_deps = []
         type = nil
         lines = file_contents.split("\n")

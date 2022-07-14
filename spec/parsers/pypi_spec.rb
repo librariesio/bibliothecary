@@ -7,34 +7,34 @@ describe Bibliothecary::Parsers::Pypi do
 
   it 'parses dependencies from setup.py' do
     expect(described_class.analyse_contents('setup.py', load_fixture('setup.py'))).to eq({
-      :platform=>"pypi",
-      :path=>"setup.py",
-      :dependencies=>[
-        {:name=>"Install", :requirement=>"*", :type=>"runtime"},
-        {:name=>"django-bootstrap3", :requirement=>">=6.2,<6.3", :type=>"runtime"},
-        {:name=>"lesscpy", :requirement=>"*", :type=>"runtime"},
-        {:name=>"unicodecsv", :requirement=>"==0.14.1", :type=>"runtime"},
-        {:name=>"django-coffeescript", :requirement=>">=0.7,<0.8", :type=>"runtime"},
-        {:name=>"django-compressor", :requirement=>">=1.6,<1.7", :type=>"runtime"},
-        {:name=>"django-datetime-widget",
-        :requirement=>">=0.9,<1.0",
-        :type=>"runtime"},
-        {:name=>"django-filter", :requirement=>">=0.11,<0.12", :type=>"runtime"},
-        {:name=>"django-representatives-votes",
-        :requirement=>">=0.0.13",
-        :type=>"runtime"},
-        {:name=>"django-representatives", :requirement=>">=0.0.14", :type=>"runtime"},
-        {:name=>"django-taggit", :requirement=>">=0.17,<0.18", :type=>"runtime"},
-        {:name=>"django", :requirement=>">=1.8,<1.9", :type=>"runtime"},
-        {:name=>"djangorestframework",
-        :requirement=>">=3.2.0,<3.3.0",
-        :type=>"runtime"},
-        {:name=>"hamlpy", :requirement=>">=0.82,<0.83", :type=>"runtime"},
-        {:name=>"ijson", :requirement=>">=2.2,<2.3", :type=>"runtime"},
-        {:name=>"python-dateutil", :requirement=>">=2.4,<2.5", :type=>"runtime"},
-        {:name=>"pytz", :requirement=>"==2015.7", :type=>"runtime"},
-        {:name=>"django-suit", :requirement=>"*", :type=>"runtime"},
-        {:name=>"dummy", :requirement=>"==2.0beta1", :type=>"runtime"}
+      platform: "pypi",
+      path: "setup.py",
+      dependencies: [
+        { name: "Install", requirement: "*", type: "runtime" },
+        { name: "django-bootstrap3", requirement: ">=6.2,<6.3", type: "runtime" },
+        { name: "lesscpy", requirement: "*", type: "runtime" },
+        { name: "unicodecsv", requirement: "==0.14.1", type: "runtime" },
+        { name: "django-coffeescript", requirement: ">=0.7,<0.8", type: "runtime" },
+        { name: "django-compressor", requirement: ">=1.6,<1.7", type: "runtime" },
+        { name: "django-datetime-widget",
+        requirement: ">=0.9,<1.0",
+        type: "runtime" },
+        { name: "django-filter", requirement: ">=0.11,<0.12", type: "runtime" },
+        { name: "django-representatives-votes",
+        requirement: ">=0.0.13",
+        type: "runtime" },
+        { name: "django-representatives", requirement: ">=0.0.14", type: "runtime" },
+        { name: "django-taggit", requirement: ">=0.17,<0.18", type: "runtime" },
+        { name: "django", requirement: ">=1.8,<1.9", type: "runtime" },
+        { name: "djangorestframework",
+        requirement: ">=3.2.0,<3.3.0",
+        type: "runtime" },
+        { name: "hamlpy", requirement: ">=0.82,<0.83", type: "runtime" },
+        { name: "ijson", requirement: ">=2.2,<2.3", type: "runtime" },
+        { name: "python-dateutil", requirement: ">=2.4,<2.5", type: "runtime" },
+        { name: "pytz", requirement: "==2015.7", type: "runtime" },
+        { name: "django-suit", requirement: "*", type: "runtime" },
+        { name: "dummy", requirement: "==2.0beta1", type: "runtime" }
       ],
       kind: 'manifest',
       success: true
@@ -43,33 +43,155 @@ describe Bibliothecary::Parsers::Pypi do
 
   it 'parses dependencies from requirements.txt' do
     expect(described_class.analyse_contents('requirements.txt', load_fixture('requirements.txt'))).to eq({
-      :platform=>"pypi",
-      :path=>"requirements.txt",
-      :dependencies=>[
-        {:name=>"Flask", :requirement=>"==0.8", :type=>"runtime"},
-        {:name=>"zope.component", :requirement=>"==4.2.2", :type=>"runtime"},
-        {:name=>"scikit-learn", :requirement=>"==0.16.1", :type=>"runtime"},
-        {:name=>"Beaker", :requirement=>">=1.6.5", :type=>"runtime"},
-        {:name=>"certifi", :requirement=>"==0.0.8", :type=>"runtime"},
-        {:name=>"chardet", :requirement=>"==1.0.1", :type=>"runtime"},
-        {:name=>"distribute", :requirement=>"==0.6.24", :type=>"runtime"},
-        {:name=>"gunicorn", :requirement=>"==0.14.2", :type=>"runtime"},
-        {:name=>"requests", :requirement=>"==0.11.1", :type=>"runtime"},
-        {:name=>"Django", :requirement=>"==2.0beta1", :type=>"runtime"}
+      platform: "pypi",
+      path: "requirements.txt",
+      dependencies: [
+        { name: "Flask", requirement: "==0.8", type: "runtime" },
+        { name: "zope.component", requirement: "==4.2.2", type: "runtime" },
+        { name: "scikit-learn", requirement: "==0.16.1", type: "runtime" },
+        { name: "Beaker", requirement: ">=1.6.5", type: "runtime" },
+        { name: "certifi", requirement: "==0.0.8", type: "runtime" },
+        { name: "chardet", requirement: "==1.0.1", type: "runtime" },
+        { name: "distribute", requirement: "==0.6.24", type: "runtime" },
+        { name: "gunicorn", requirement: "==0.14.2", type: "runtime" },
+        { name: "requests", requirement: "==0.11.1", type: "runtime" },
+        { name: "Django", requirement: "==2.0beta1", type: "runtime" }
       ],
       kind: 'manifest',
       success: true
     })
   end
 
+  context 'git urls' do
+    it 'parses dependencies from requirements-git.txt' do
+      expect(described_class.analyse_contents('requirements-git.txt', load_fixture('requirements-git.txt'))).to eq({
+        platform: "pypi",
+        path: "requirements-git.txt",
+        dependencies: [
+          { name: "pygame", requirement: "2.1.2", type: "runtime" }
+        ],
+        kind: 'manifest',
+        success: true
+      })
+    end
+
+    it 'skips poorly-formed lines' do
+      result = described_class.analyse_contents(
+        'requirements.git.txt', <<-REQ
+git://what@::/:/:/
+        REQ
+      )
+
+      expect(result[:dependencies].count).to eq(0)
+    end
+
+    it 'parses URLs with no version' do
+      result = described_class.parse_requirements_txt_url('git+http://github.com/libraries/test#egg=test')
+
+      expect(result).to eq(
+        name: "test",
+        requirement: "*"
+      )
+    end
+
+    it 'fails if there is no egg specified' do
+      expect {
+        described_class.parse_requirements_txt_url('git+http://github.com/libraries/test@2.1.3')
+      }.to raise_error(described_class::NoEggSpecified)
+    end
+  end
+
+  it 'parses dependencies from requirements.in' do
+    expect(described_class.analyse_contents('requirements.in', load_fixture('pip-compile/requirements.in'))).to eq({
+      platform: "pypi",
+      path: "requirements.in",
+      dependencies: [
+        { name: "invoke", requirement: "*", type: "runtime" },
+        { name: "black", requirement: "*", type: "runtime" },
+        { name: "google-cloud-storage", requirement: "*", type: "runtime" },
+        { name: "six", requirement: "*", type: "runtime" },
+        { name: "progress", requirement: "*", type: "runtime" },
+        { name: "questionary", requirement: "*", type: "runtime" },
+        { name: "pyyaml", requirement: "*", type: "runtime" },
+        { name: "semver", requirement: "*", type: "runtime" },
+        { name: "Jinja2", requirement: "*", type: "runtime" },
+        { name: "pip-tools", requirement: "*", type: "runtime" }
+      ],
+      kind: 'manifest',
+      success: true
+    })
+  end
+  it 'parses dependencies from requirements.txt as lockfile because of pip-compile' do
+    expect(described_class.analyse_contents('requirements.txt', load_fixture('pip-compile/requirements.txt'))).to eq({
+      platform: "pypi",
+      path: "requirements.txt",
+      dependencies: [
+        { name: "black", requirement: "==21.9b0", type: "runtime" },
+        { name: "cachetools", requirement: "==4.2.2", type: "runtime" },
+        { name: "certifi", requirement: "==2021.5.30", type: "runtime" },
+        { name: "charset-normalizer", requirement: "==2.0.6", type: "runtime" },
+        { name: "click", requirement: "==8.0.1", type: "runtime" },
+        { name: "google-api-core", requirement: "==2.0.1", type: "runtime" },
+        { name: "google-auth", requirement: "==2.1.0", type: "runtime" },
+        { name: "google-cloud-core", requirement: "==2.0.0", type: "runtime" },
+        { name: "google-cloud-storage", requirement: "==1.42.2", type: "runtime" },
+        { name: "google-crc32c", requirement: "==1.2.0", type: "runtime" },
+        { name: "google-resumable-media", requirement: "==2.0.3", type: "runtime" },
+        { name: "googleapis-common-protos", requirement: "==1.53.0", type: "runtime" },
+        { name: "idna", requirement: "==3.2", type: "runtime" },
+        { name: "invoke", requirement: "==1.6.0", type: "runtime" },
+        { name: "jinja2", requirement: "==3.0.1", type: "runtime" },
+        { name: "markupsafe", requirement: "==2.0.1", type: "runtime" },
+        { name: "mypy-extensions", requirement: "==0.4.3", type: "runtime" },
+        { name: "pathspec", requirement: "==0.9.0", type: "runtime" },
+        { name: "pep517", requirement: "==0.11.0", type: "runtime" },
+        { name: "pip-tools", requirement: "==6.2.0", type: "runtime" },
+        { name: "platformdirs", requirement: "==2.3.0", type: "runtime" },
+        { name: "progress", requirement: "==1.6", type: "runtime" },
+        { name: "prompt-toolkit", requirement: "==3.0.20", type: "runtime" },
+        { name: "protobuf", requirement: "==3.18.0", type: "runtime" },
+        { name: "pyasn1", requirement: "==0.4.8", type: "runtime" },
+        { name: "pyasn1-modules", requirement: "==0.2.8", type: "runtime" },
+        { name: "pyyaml", requirement: "==5.4.1", type: "runtime" },
+        { name: "questionary", requirement: "==1.10.0", type: "runtime" },
+        { name: "regex", requirement: "==2021.8.28", type: "runtime" },
+        { name: "requests", requirement: "==2.26.0", type: "runtime" },
+        { name: "rsa", requirement: "==4.7.2", type: "runtime" },
+        { name: "semver", requirement: "==2.13.0", type: "runtime" },
+        { name: "six", requirement: "==1.16.0", type: "runtime" },
+        { name: "tomli", requirement: "==1.2.1", type: "runtime" },
+        { name: "typing-extensions", requirement: "==3.10.0.2", type: "runtime" },
+        { name: "urllib3", requirement: "==1.26.6", type: "runtime" },
+        { name: "wcwidth", requirement: "==0.2.5", type: "runtime" },
+        { name: "wheel", requirement: "==0.37.0", type: "runtime" }
+      ],
+      kind: 'lockfile',
+      success: true
+    })
+  end
+
   it 'parses dependencies from pip-resolved-dependencies.txt' do
     expect(described_class.analyse_contents('pip-resolved-dependencies.txt', load_fixture('pip-resolved-dependencies.txt'))).to eq({
-      :platform=>"pypi",
-      :path=>"pip-resolved-dependencies.txt",
-      :dependencies=>[
-        {:name=>"asgiref", :requirement=>"==3.2.7", :type=>"runtime"},
-        {:name=>"Django", :requirement=>"==3.0.6", :type=>"runtime"},
-        {:name=>"sqlparse", :requirement=>"==0.3.1", :type=>"runtime"}
+      platform: "pypi",
+      path: "pip-resolved-dependencies.txt",
+      dependencies: [
+        { name: "asgiref", requirement: "==3.2.7", type: "runtime" },
+        { name: "Django", requirement: "==3.0.6", type: "runtime" },
+        { name: "sqlparse", requirement: "==0.3.1", type: "runtime" }
+      ],
+      kind: 'lockfile',
+      success: true
+    })
+  end
+
+  it 'parses dependencies from requirements.frozen' do
+    expect(described_class.analyse_contents('requirements.frozen', load_fixture('requirements.frozen'))).to eq({
+      platform: "pypi",
+      path: "requirements.frozen",
+      dependencies: [
+        { name: "asgiref", requirement: "==3.2.7", type: "runtime" },
+        { name: "Django", requirement: "==3.0.6", type: "runtime" },
+        { name: "sqlparse", requirement: "==0.3.1", type: "runtime" }
       ],
       kind: 'lockfile',
       success: true
@@ -78,13 +200,13 @@ describe Bibliothecary::Parsers::Pypi do
 
   it 'parses dependencies from Pipfile' do
     expect(described_class.analyse_contents('Pipfile', load_fixture('Pipfile'))).to eq({
-      :platform=>"pypi",
-      :path=>"Pipfile",
-      :dependencies=>[
-        {:name=>"requests", :requirement=>"*", :type=>"runtime"},
-        {:name=>"Django", :requirement=>">1.10", :type=>"runtime"},
-        {:name=>"pinax", :requirement=>"git://github.com/pinax/pinax.git#1.4", :type=>"runtime"},
-        {:name=>"nose", :requirement=>"*", :type=>"develop"}
+      platform: "pypi",
+      path: "Pipfile",
+      dependencies: [
+        { name: "requests", requirement: "*", type: "runtime" },
+        { name: "Django", requirement: ">1.10", type: "runtime" },
+        { name: "pinax", requirement: "git://github.com/pinax/pinax.git#1.4", type: "runtime" },
+        { name: "nose", requirement: "*", type: "develop" }
       ],
       kind: 'manifest',
       success: true
@@ -93,18 +215,33 @@ describe Bibliothecary::Parsers::Pypi do
 
   it 'parses dependencies from Pipfile.lock' do
     expect(described_class.analyse_contents('Pipfile.lock', load_fixture('Pipfile.lock'))).to eq({
-      :platform=>"pypi",
-      :path=>"Pipfile.lock",
-      :dependencies=>[
-        {:name=>"PySocks", :requirement=>"==1.6.5", :type=>"runtime"},
-        {:name=>"requests", :requirement=>"==2.13.0", :type=>"runtime"},
-        {:name=>"Django", :requirement=>"==1.10.5", :type=>"runtime"},
-        {:name=>"pinax", :requirement=>"git://github.com/pinax/pinax.git#1.4", :type=>"runtime"},
-        {:name=>"nose", :requirement=>"==1.3.7", :type=>"develop"}
+      platform: "pypi",
+      path: "Pipfile.lock",
+      dependencies: [
+        { name: "PySocks", requirement: "==1.6.5", type: "runtime" },
+        { name: "requests", requirement: "==2.13.0", type: "runtime" },
+        { name: "Django", requirement: "==1.10.5", type: "runtime" },
+        { name: "pinax", requirement: "git://github.com/pinax/pinax.git#1.4", type: "runtime" },
+        { name: "nose", requirement: "==1.3.7", type: "develop" }
       ],
       kind: 'lockfile',
       success: true
     })
+  end
+
+  it "parses dependencies from conda environment.yml.lock with pip" do
+    expect(described_class.analyse_contents("conda_with_pip/environment.yml.lock", load_fixture("conda_with_pip/environment.yml"))).to eq(
+      {
+        platform: "pypi",
+        path: "conda_with_pip/environment.yml.lock",
+        dependencies: [
+          { name: "urllib3", requirement: "*", type: "runtime" },
+          { name: "Django", requirement: "==2.0.0", type: "runtime" }
+        ],
+        kind: "lockfile",
+        success: true
+       }
+    )
   end
 
   it 'matches valid manifest filepaths' do
@@ -123,13 +260,28 @@ describe Bibliothecary::Parsers::Pypi do
 
   it 'parses dependencies from pyproject.toml' do
     expect(described_class.analyse_contents('pyproject.toml', load_fixture('pyproject.toml'))).to eq({
-      :platform=>"pypi",
-      :path=>"pyproject.toml",
-      :dependencies=>[
-        {:name=>"python", :requirement=>"^3.7", :type=>"runtime"},
-        {:name=>"django", :requirement=>"^3.0.7", :type=>"runtime"},
-        {:name=>"pytest", :requirement=>"^5.2", :type=>"develop"},
+      platform: "pypi",
+      path: "pyproject.toml",
+      dependencies: [
+        { name: "python", requirement: "^3.7", type: "runtime" },
+        { name: "django", requirement: "^3.0.7", type: "runtime" },
+        { name: "pytest", requirement: "^5.2", type: "develop" }
       ],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
+  it 'handles pyproject.toml with no deps' do
+    source = <<~FILE
+      [tool.black]
+      line-length = 100
+    FILE
+
+    expect(described_class.analyse_contents('pyproject.toml', source)).to eq({
+      platform: "pypi",
+      path: "pyproject.toml",
+      dependencies: [],
       kind: 'manifest',
       success: true
     })
@@ -137,26 +289,26 @@ describe Bibliothecary::Parsers::Pypi do
 
   it 'parses dependencies from Poetry.lock' do
     expect(described_class.analyse_contents('poetry.lock', load_fixture('poetry.lock'))).to eq({
-      :platform=>"pypi",
-      :path=>"poetry.lock",
-      :dependencies=>[
-        {:name=>"asgiref", :requirement=>"3.2.10", :type=>"runtime"},
-        {:name=>"atomicwrites", :requirement=>"1.4.0", :type=>"develop"},
-        {:name=>"attrs", :requirement=>"19.3.0", :type=>"develop"},
-        {:name=>"colorama", :requirement=>"0.4.3", :type=>"develop"},
-        {:name=>"django", :requirement=>"3.0.7", :type=>"runtime"},
-        {:name=>"importlib-metadata", :requirement=>"1.7.0", :type=>"develop"},
-        {:name=>"more-itertools", :requirement=>"8.4.0", :type=>"develop"},
-        {:name=>"packaging", :requirement=>"20.4", :type=>"develop"},
-        {:name=>"pluggy", :requirement=>"0.13.1", :type=>"develop"},
-        {:name=>"py", :requirement=>"1.9.0", :type=>"develop"},
-        {:name=>"pyparsing", :requirement=>"2.4.7", :type=>"develop"},
-        {:name=>"pytest", :requirement=>"5.4.3", :type=>"develop"},
-        {:name=>"pytz", :requirement=>"2020.1", :type=>"runtime"},
-        {:name=>"six", :requirement=>"1.15.0", :type=>"develop"},
-        {:name=>"sqlparse", :requirement=>"0.3.1", :type=>"runtime"},
-        {:name=>"wcwidth", :requirement=>"0.2.5", :type=>"develop"},
-        {:name=>"zipp", :requirement=>"3.1.0", :type=>"develop"}
+      platform: "pypi",
+      path: "poetry.lock",
+      dependencies: [
+        { name: "asgiref", requirement: "3.2.10", type: "runtime" },
+        { name: "atomicwrites", requirement: "1.4.0", type: "develop" },
+        { name: "attrs", requirement: "19.3.0", type: "develop" },
+        { name: "colorama", requirement: "0.4.3", type: "develop" },
+        { name: "django", requirement: "3.0.7", type: "runtime" },
+        { name: "importlib-metadata", requirement: "1.7.0", type: "develop" },
+        { name: "more-itertools", requirement: "8.4.0", type: "develop" },
+        { name: "packaging", requirement: "20.4", type: "develop" },
+        { name: "pluggy", requirement: "0.13.1", type: "develop" },
+        { name: "py", requirement: "1.9.0", type: "develop" },
+        { name: "pyparsing", requirement: "2.4.7", type: "develop" },
+        { name: "pytest", requirement: "5.4.3", type: "develop" },
+        { name: "pytz", requirement: "2020.1", type: "runtime" },
+        { name: "six", requirement: "1.15.0", type: "develop" },
+        { name: "sqlparse", requirement: "0.3.1", type: "runtime" },
+        { name: "wcwidth", requirement: "0.2.5", type: "develop" },
+        { name: "zipp", requirement: "3.1.0", type: "develop" }
       ],
       kind: 'lockfile',
       success: true

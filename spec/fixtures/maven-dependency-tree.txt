@@ -1,0 +1,2358 @@
+[INFO] Scanning for projects...
+[INFO] Inspecting build with total of 36 modules...
+[INFO] Installing Nexus Staging features:
+[INFO]   ... total of 36 executions of maven-deploy-plugin replaced with nexus-staging-maven-plugin
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] PMD                                                                [pom]
+[INFO] PMD Core                                                           [jar]
+[INFO] PMD Test Framework                                                 [jar]
+[INFO] PMD language module testing utilities                              [jar]
+[INFO] PMD C++                                                            [jar]
+[INFO] PMD C#                                                             [jar]
+[INFO] PMD Dart                                                           [jar]
+[INFO] PMD Fortran                                                        [jar]
+[INFO] PMD Go                                                             [jar]
+[INFO] PMD Groovy                                                         [jar]
+[INFO] PMD Lua                                                            [jar]
+[INFO] PMD Java                                                           [jar]
+[INFO] PMD JavaScript                                                     [jar]
+[INFO] PMD JSP                                                            [jar]
+[INFO] PMD Kotlin                                                         [jar]
+[INFO] PMD Matlab                                                         [jar]
+[INFO] PMD Modelica                                                       [jar]
+[INFO] PMD Perl                                                           [jar]
+[INFO] PMD Objective-C                                                    [jar]
+[INFO] PMD PHP                                                            [jar]
+[INFO] PMD PL/SQL                                                         [jar]
+[INFO] PMD Python                                                         [jar]
+[INFO] PMD Ruby                                                           [jar]
+[INFO] PMD Swift                                                          [jar]
+[INFO] PMD Velocity                                                       [jar]
+[INFO] PMD XML and XSL                                                    [jar]
+[INFO] PMD Apex Jorje Parser Library                                      [pom]
+[INFO] PMD Apex                                                           [jar]
+[INFO] PMD Scala Common Source and Settings                               [pom]
+[INFO] PMD Scala for Scala 2.13                                           [jar]
+[INFO] PMD Visualforce                                                    [jar]
+[INFO] PMD Distribution Packages                                          [jar]
+[INFO] PMD Java 8 Integration                                             [jar]
+[INFO] PMD Documentation Generator                                        [jar]
+[INFO] PMD Scala - Transitional package (deprecated)                      [pom]
+[INFO] PMD Scala for Scala 2.12                                           [jar]
+[INFO] 
+[INFO] ----------------------< net.sourceforge.pmd:pmd >-----------------------
+[INFO] Building PMD 6.32.0-SNAPSHOT                                      [1/36]
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd ---
+[INFO] net.sourceforge.pmd:pmd:pom:6.32.0-SNAPSHOT
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-core >--------------------
+[INFO] Building PMD Core 6.32.0-SNAPSHOT                                 [2/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-core ---
+[INFO] net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT
+[INFO] +- org.apache.ant:ant:jar:1.10.9:provided
+[INFO] |  +- net.sourceforge.pmd:pmd:pom:6.32.0-SNAPSHOT:provided
+[INFO] |  \- org.apache.ant:ant-launcher:jar:1.10.9:provided
+[INFO] +- net.java.dev.javacc:javacc:jar:5.0:provided
+[INFO] +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] +- com.beust:jcommander:jar:1.48:compile
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- jaxen:jaxen:jar:1.1.6:compile (optional) 
+[INFO] +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] +- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- com.github.tomakehurst:wiremock:jar:1.57:test
+[INFO] |  +- org.mortbay.jetty:jetty:jar:6.1.26:test
+[INFO] |  |  +- org.mortbay.jetty:jetty-util:jar:6.1.26:test
+[INFO] |  |  \- org.mortbay.jetty:servlet-api:jar:2.5-20081211:test
+[INFO] |  +- org.skyscreamer:jsonassert:jar:1.2.3:test
+[INFO] |  |  \- org.json:json:jar:20090211:test
+[INFO] |  +- org.slf4j:slf4j-api:jar:1.7.25:test
+[INFO] |  +- com.google.guava:guava:jar:29.0-android:test
+[INFO] |  |  +- com.google.guava:failureaccess:jar:1.0.1:test
+[INFO] |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:test
+[INFO] |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:test
+[INFO] |  |  +- org.checkerframework:checker-compat-qual:jar:2.5.5:test
+[INFO] |  |  +- com.google.errorprone:error_prone_annotations:jar:2.3.4:test
+[INFO] |  |  \- com.google.j2objc:j2objc-annotations:jar:1.3:test
+[INFO] |  +- net.sf.jopt-simple:jopt-simple:jar:4.9:test
+[INFO] |  +- com.fasterxml.jackson.core:jackson-core:jar:2.6.0:test
+[INFO] |  +- org.apache.httpcomponents:httpclient:jar:4.5:test
+[INFO] |  |  +- org.apache.httpcomponents:httpcore:jar:4.4.1:test
+[INFO] |  |  +- commons-logging:commons-logging:jar:1.2:test
+[INFO] |  |  \- commons-codec:commons-codec:jar:1.9:test
+[INFO] |  +- xmlunit:xmlunit:jar:1.6:test
+[INFO] |  +- com.jayway.jsonpath:json-path:jar:0.8.1:test
+[INFO] |  |  \- net.minidev:json-smart:jar:1.1.1:test
+[INFO] |  +- com.fasterxml.jackson.core:jackson-databind:jar:2.6.0:test
+[INFO] |  \- com.fasterxml.jackson.core:jackson-annotations:jar:2.6.0:test
+[INFO] +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- pl.pragmatists:JUnitParams:jar:1.1.1:test
+[INFO] +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] +- org.mockito:mockito-core:jar:2.28.2:test
+[INFO] |  +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO] |  +- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO] |  \- org.objenesis:objenesis:jar:2.6:test
+[INFO] \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-test >--------------------
+[INFO] Building PMD Test Framework 6.32.0-SNAPSHOT                       [3/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-test ---
+[INFO] net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT
+[INFO] +- org.hamcrest:hamcrest:jar:2.2:compile
+[INFO] +- junit:junit:jar:4.13.1:compile
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.apache.ant:ant:jar:1.10.9:compile
+[INFO] |  \- org.apache.ant:ant-launcher:jar:1.10.9:compile
+[INFO] +- org.apache.ant:ant-testutil:jar:1.10.9:compile
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- com.github.stefanbirkner:system-rules:jar:1.19.0:compile
+[INFO] \- org.mockito:mockito-core:jar:2.28.2:test
+[INFO]    +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    +- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    \- org.objenesis:objenesis:jar:2.6:test
+[INFO] 
+[INFO] -----------------< net.sourceforge.pmd:pmd-lang-test >------------------
+[INFO] Building PMD language module testing utilities 6.32.0-SNAPSHOT    [4/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-lang-test ---
+[INFO] net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:compile
+[INFO] |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:compile
+[INFO] |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:runtime
+[INFO] |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:compile
+[INFO] |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:runtime
+[INFO] |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:runtime
+[INFO] |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:compile
+[INFO] |  +- io.kotest:kotest-common-jvm:jar:4.3.1:compile
+[INFO] |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:compile
+[INFO] +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:compile
+[INFO] |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:compile
+[INFO] |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:compile
+[INFO] |  |  +- io.github.classgraph:classgraph:jar:4.8.90:compile
+[INFO] |  |  +- com.github.ajalt:mordant:jar:1.2.1:compile
+[INFO] |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:compile
+[INFO] |  |  \- org.opentest4j:opentest4j:jar:1.2.0:compile
+[INFO] |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:compile
+[INFO] |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:compile
+[INFO] |  |  \- io.mockk:mockk:jar:1.9.3:runtime
+[INFO] |  |     +- io.mockk:mockk-common:jar:1.9.3:runtime
+[INFO] |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:runtime
+[INFO] |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:runtime
+[INFO] |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:runtime
+[INFO] |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:runtime
+[INFO] |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:runtime
+[INFO] |  |        +- org.objenesis:objenesis:jar:3.0.1:runtime
+[INFO] |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:runtime
+[INFO] |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:runtime
+[INFO] |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:compile
+[INFO] |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:compile
+[INFO] |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:compile
+[INFO] |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:compile
+[INFO] |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:compile
+[INFO] |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:compile
+[INFO] +- org.jetbrains:annotations:jar:13.0:compile
+[INFO] +- org.hamcrest:hamcrest:jar:2.2:compile
+[INFO] +- junit:junit:jar:4.13.1:compile
+[INFO] +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:compile
+[INFO] +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:compile
+[INFO] +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:compile
+[INFO] |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:compile
+[INFO] +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:compile
+[INFO] |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:compile
+[INFO] |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:compile
+[INFO] |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:compile
+[INFO] +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:compile
+[INFO] \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:compile
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-cpp >---------------------
+[INFO] Building PMD C++ 6.32.0-SNAPSHOT                                  [5/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-cpp ---
+[INFO] net.sourceforge.pmd:pmd-cpp:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] ---------------------< net.sourceforge.pmd:pmd-cs >---------------------
+[INFO] Building PMD C# 6.32.0-SNAPSHOT                                   [6/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-cs ---
+[INFO] net.sourceforge.pmd:pmd-cs:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-dart >--------------------
+[INFO] Building PMD Dart 6.32.0-SNAPSHOT                                 [7/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-dart ---
+[INFO] net.sourceforge.pmd:pmd-dart:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] ------------------< net.sourceforge.pmd:pmd-fortran >-------------------
+[INFO] Building PMD Fortran 6.32.0-SNAPSHOT                              [8/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-fortran ---
+[INFO] net.sourceforge.pmd:pmd-fortran:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] ---------------------< net.sourceforge.pmd:pmd-go >---------------------
+[INFO] Building PMD Go 6.32.0-SNAPSHOT                                   [9/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-go ---
+[INFO] net.sourceforge.pmd:pmd-go:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] -------------------< net.sourceforge.pmd:pmd-groovy >-------------------
+[INFO] Building PMD Groovy 6.32.0-SNAPSHOT                              [10/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-groovy ---
+[INFO] net.sourceforge.pmd:pmd-groovy:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.codehaus.groovy:groovy:jar:2.4.21:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-lua >---------------------
+[INFO] Building PMD Lua 6.32.0-SNAPSHOT                                 [11/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-lua ---
+[INFO] net.sourceforge.pmd:pmd-lua:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-java >--------------------
+[INFO] Building PMD Java 6.32.0-SNAPSHOT                                [12/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-java ---
+[INFO] net.sourceforge.pmd:pmd-java:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] +- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO] |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO] |     \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  \- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |     \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO] +- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO] |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO] |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO] |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO] |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO] |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO] |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO] |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO] +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO] |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO] |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO] |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO] |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO] |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO] |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO] |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO] |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO] |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO] |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO] |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO] |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO] |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO] |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO] |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO] |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO] |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO] |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO] |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO] |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO] |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO] |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO] |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO] +- com.google.guava:guava:jar:29.0-android:test
+[INFO] |  +- com.google.guava:failureaccess:jar:1.0.1:test
+[INFO] |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:test
+[INFO] |  +- com.google.code.findbugs:jsr305:jar:3.0.2:test
+[INFO] |  +- org.checkerframework:checker-compat-qual:jar:2.5.5:test
+[INFO] |  +- com.google.errorprone:error_prone_annotations:jar:2.3.4:test
+[INFO] |  \- com.google.j2objc:j2objc-annotations:jar:1.3:test
+[INFO] +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO] +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO] |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO] |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO] +- org.jetbrains:annotations:jar:13.0:test
+[INFO] +- org.slf4j:slf4j-api:jar:1.7.25:test
+[INFO] +- org.apache.logging.log4j:log4j-api:jar:2.13.3:test
+[INFO] +- org.apache.logging.log4j:log4j-core:jar:2.13.3:test
+[INFO] \- org.assertj:assertj-core:jar:3.11.0:test
+[INFO] 
+[INFO] -----------------< net.sourceforge.pmd:pmd-javascript >-----------------
+[INFO] Building PMD JavaScript 6.32.0-SNAPSHOT                          [13/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-javascript ---
+[INFO] net.sourceforge.pmd:pmd-javascript:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.mozilla:rhino:jar:1.7.7.2:compile
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-jsp >---------------------
+[INFO] Building PMD JSP 6.32.0-SNAPSHOT                                 [14/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-jsp ---
+[INFO] net.sourceforge.pmd:pmd-jsp:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] -------------------< net.sourceforge.pmd:pmd-kotlin >-------------------
+[INFO] Building PMD Kotlin 6.32.0-SNAPSHOT                              [15/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-kotlin ---
+[INFO] net.sourceforge.pmd:pmd-kotlin:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] -------------------< net.sourceforge.pmd:pmd-matlab >-------------------
+[INFO] Building PMD Matlab 6.32.0-SNAPSHOT                              [16/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-matlab ---
+[INFO] net.sourceforge.pmd:pmd-matlab:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] ------------------< net.sourceforge.pmd:pmd-modelica >------------------
+[INFO] Building PMD Modelica 6.32.0-SNAPSHOT                            [17/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-modelica ---
+[INFO] net.sourceforge.pmd:pmd-modelica:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO] |  |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO] |  |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO] |  |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO] |  |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO] |  |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO] |  |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO] |  |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO] |  |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO] |  |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO] |  |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO] |  |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO] |  |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO] |  |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO] |  |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO] |  |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO] |  |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO] |  |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO] |  |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO] |  |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO] |  |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO] |  |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO] |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO] |     \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO] +- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO] |  \- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.10:test
+[INFO] +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO] |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO] |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO] +- org.jetbrains:annotations:jar:13.0:test
+[INFO] \- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-perl >--------------------
+[INFO] Building PMD Perl 6.32.0-SNAPSHOT                                [18/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-perl ---
+[INFO] net.sourceforge.pmd:pmd-perl:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] -----------------< net.sourceforge.pmd:pmd-objectivec >-----------------
+[INFO] Building PMD Objective-C 6.32.0-SNAPSHOT                         [19/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-objectivec ---
+[INFO] net.sourceforge.pmd:pmd-objectivec:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-php >---------------------
+[INFO] Building PMD PHP 6.32.0-SNAPSHOT                                 [20/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-php ---
+[INFO] net.sourceforge.pmd:pmd-php:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] -------------------< net.sourceforge.pmd:pmd-plsql >--------------------
+[INFO] Building PMD PL/SQL 6.32.0-SNAPSHOT                              [21/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-plsql ---
+[INFO] net.sourceforge.pmd:pmd-plsql:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] -------------------< net.sourceforge.pmd:pmd-python >-------------------
+[INFO] Building PMD Python 6.32.0-SNAPSHOT                              [22/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-python ---
+[INFO] net.sourceforge.pmd:pmd-python:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-ruby >--------------------
+[INFO] Building PMD Ruby 6.32.0-SNAPSHOT                                [23/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-ruby ---
+[INFO] net.sourceforge.pmd:pmd-ruby:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] -------------------< net.sourceforge.pmd:pmd-swift >--------------------
+[INFO] Building PMD Swift 6.32.0-SNAPSHOT                               [24/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-swift ---
+[INFO] net.sourceforge.pmd:pmd-swift:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] ---------------------< net.sourceforge.pmd:pmd-vm >---------------------
+[INFO] Building PMD Velocity 6.32.0-SNAPSHOT                            [25/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-vm ---
+[INFO] net.sourceforge.pmd:pmd-vm:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] \- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO]    +- org.apache.ant:ant:jar:1.10.9:test
+[INFO]    |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO]    +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO]    \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-xml >---------------------
+[INFO] Building PMD XML and XSL 6.32.0-SNAPSHOT                         [26/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-xml ---
+[INFO] net.sourceforge.pmd:pmd-xml:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] -----------------< net.sourceforge.pmd:pmd-apex-jorje >-----------------
+[INFO] Building PMD Apex Jorje Parser Library 6.32.0-SNAPSHOT           [27/36]
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-apex-jorje ---
+[INFO] net.sourceforge.pmd:pmd-apex-jorje:pom:6.32.0-SNAPSHOT
+[INFO] +- cglib:cglib:jar:3.2.0:compile
+[INFO] |  \- org.apache.ant:ant:jar:1.10.9:compile
+[INFO] |     \- org.apache.ant:ant-launcher:jar:1.10.9:compile
+[INFO] +- ch.qos.logback:logback-classic:jar:1.2.3:compile
+[INFO] +- ch.qos.logback:logback-core:jar:1.2.3:compile
+[INFO] +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] +- com.google.code.gson:gson:jar:2.7:compile
+[INFO] +- com.google.errorprone:error_prone_annotations:jar:2.1.3:compile
+[INFO] +- com.google.guava:guava:jar:29.0-android:test
+[INFO] |  +- com.google.guava:failureaccess:jar:1.0.1:test
+[INFO] |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:test
+[INFO] |  \- org.checkerframework:checker-compat-qual:jar:2.5.5:test
+[INFO] +- com.google.j2objc:j2objc-annotations:jar:1.1:compile
+[INFO] +- org.antlr:antlr-runtime:jar:3.5.2:compile
+[INFO] +- org.antlr:stringtemplate:jar:3.2.1:compile
+[INFO] |  \- antlr:antlr:jar:2.7.7:compile
+[INFO] +- org.apache.commons:commons-lang3:jar:3.0:compile
+[INFO] +- org.codehaus.mojo:animal-sniffer-annotations:jar:1.14:compile
+[INFO] +- org.openjdk.jol:jol-core:jar:0.4:compile
+[INFO] +- org.slf4j:slf4j-api:jar:1.7.20:compile
+[INFO] +- org.yaml:snakeyaml:jar:1.26:compile
+[INFO] +- aopalliance:aopalliance:jar:1.0:compile
+[INFO] +- javax.inject:javax.inject:jar:1:compile
+[INFO] \- org.ow2.asm:asm:jar:5.0.3:runtime
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-apex >--------------------
+[INFO] Building PMD Apex 6.32.0-SNAPSHOT                                [28/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-apex ---
+[INFO] net.sourceforge.pmd:pmd-apex:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- org.antlr:antlr-runtime:jar:3.5.2:compile
+[INFO] +- net.sourceforge.pmd:pmd-apex-jorje:jar:lib:6.32.0-SNAPSHOT:compile
+[INFO] |  +- cglib:cglib:jar:3.2.0:compile
+[INFO] |  +- ch.qos.logback:logback-classic:jar:1.2.3:compile
+[INFO] |  +- ch.qos.logback:logback-core:jar:1.2.3:compile
+[INFO] |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  +- com.google.errorprone:error_prone_annotations:jar:2.1.3:compile
+[INFO] |  +- com.google.j2objc:j2objc-annotations:jar:1.1:compile
+[INFO] |  +- org.antlr:stringtemplate:jar:3.2.1:compile
+[INFO] |  |  \- antlr:antlr:jar:2.7.7:compile
+[INFO] |  +- org.codehaus.mojo:animal-sniffer-annotations:jar:1.14:compile
+[INFO] |  +- org.openjdk.jol:jol-core:jar:0.4:compile
+[INFO] |  +- org.slf4j:slf4j-api:jar:1.7.25:compile
+[INFO] |  +- org.yaml:snakeyaml:jar:1.26:compile
+[INFO] |  +- aopalliance:aopalliance:jar:1.0:compile
+[INFO] |  \- javax.inject:javax.inject:jar:1:compile
+[INFO] +- net.sourceforge.pmd:pmd-apex-jorje:pom:6.32.0-SNAPSHOT:compile
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:compile
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:compile
+[INFO] |  \- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] ----------------< net.sourceforge.pmd:pmd-scala-common >----------------
+[INFO] Building PMD Scala Common Source and Settings 6.32.0-SNAPSHOT    [29/36]
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-scala-common ---
+[INFO] net.sourceforge.pmd:pmd-scala-common:pom:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] +- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO] |  |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO] |  |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO] |  |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO] |  |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO] |  |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO] |  |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO] |  |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO] |  |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO] |  |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO] |  |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO] |  |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO] |  |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO] |  |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO] |  |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO] |  |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO] |  |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO] |  |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO] |  |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO] |  |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO] |  |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO] |  |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO] |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO] |     \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO] +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO] +- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO] |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO] |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO] |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO] |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO] |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO] |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO] |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO] +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO] +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO] |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO] |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO] \- org.jetbrains:annotations:jar:13.0:test
+[INFO] 
+[INFO] -----------------< net.sourceforge.pmd:pmd-scala_2.13 >-----------------
+[INFO] Building PMD Scala for Scala 2.13 6.32.0-SNAPSHOT                [30/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-scala_2.13 ---
+[INFO] net.sourceforge.pmd:pmd-scala_2.13:jar:6.32.0-SNAPSHOT
+[INFO] +- org.scala-lang:scala-library:jar:2.13.3:compile
+[INFO] +- org.scalameta:parsers_2.13:jar:4.2.0:compile
+[INFO] +- org.scalameta:trees_2.13:jar:4.2.0:compile
+[INFO] |  +- org.scalameta:common_2.13:jar:4.2.0:compile
+[INFO] |  |  \- com.lihaoyi:sourcecode_2.13:jar:0.1.7:compile
+[INFO] |  +- com.thesamet.scalapb:scalapb-runtime_2.13:jar:0.9.0:compile
+[INFO] |  |  +- com.thesamet.scalapb:lenses_2.13:jar:0.9.0:compile
+[INFO] |  |  +- com.lihaoyi:fastparse_2.13:jar:2.1.3:compile
+[INFO] |  |  \- com.google.protobuf:protobuf-java:jar:3.7.1:compile
+[INFO] |  \- org.scalameta:fastparse_2.13:jar:1.0.1:compile
+[INFO] |     \- org.scalameta:fastparse-utils_2.13:jar:1.0.1:compile
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] +- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO] |  |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO] |  |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO] |  |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO] |  |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO] |  |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO] |  |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO] |  |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO] |  |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO] |  |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO] |  |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO] |  |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO] |  |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO] |  |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO] |  |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO] |  |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO] |  |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO] |  |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO] |  |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO] |  |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO] |  |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO] |  |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO] |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO] |     \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO] +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO] +- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO] |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO] |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO] |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO] |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO] |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO] |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO] |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO] +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO] +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO] |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO] |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO] \- org.jetbrains:annotations:jar:13.0:test
+[INFO] 
+[INFO] ----------------< net.sourceforge.pmd:pmd-visualforce >-----------------
+[INFO] Building PMD Visualforce 6.32.0-SNAPSHOT                         [31/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-visualforce ---
+[INFO] net.sourceforge.pmd:pmd-visualforce:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- net.sourceforge.pmd:pmd-apex:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr-runtime:jar:3.5.2:compile
+[INFO] |  +- net.sourceforge.pmd:pmd-apex-jorje:jar:lib:6.32.0-SNAPSHOT:compile
+[INFO] |  |  +- cglib:cglib:jar:3.2.0:compile
+[INFO] |  |  +- ch.qos.logback:logback-classic:jar:1.2.3:compile
+[INFO] |  |  +- ch.qos.logback:logback-core:jar:1.2.3:compile
+[INFO] |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  +- com.google.errorprone:error_prone_annotations:jar:2.1.3:compile
+[INFO] |  |  +- com.google.j2objc:j2objc-annotations:jar:1.1:compile
+[INFO] |  |  +- org.antlr:stringtemplate:jar:3.2.1:compile
+[INFO] |  |  |  \- antlr:antlr:jar:2.7.7:compile
+[INFO] |  |  +- org.codehaus.mojo:animal-sniffer-annotations:jar:1.14:compile
+[INFO] |  |  +- org.openjdk.jol:jol-core:jar:0.4:compile
+[INFO] |  |  +- org.slf4j:slf4j-api:jar:1.7.25:compile
+[INFO] |  |  +- org.yaml:snakeyaml:jar:1.26:compile
+[INFO] |  |  +- aopalliance:aopalliance:jar:1.0:compile
+[INFO] |  |  \- javax.inject:javax.inject:jar:1:compile
+[INFO] |  \- net.sourceforge.pmd:pmd-apex-jorje:pom:6.32.0-SNAPSHOT:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:compile
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:compile
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] \- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO]    +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO]    |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO]    |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO]    |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO]    |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO]    +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO]    |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO]    |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO]    |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO]    |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO]    |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO]    |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO]    |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO]    |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO]    |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO]    |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO]    |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO]    |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO]    |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO]    |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO]    |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO]    |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO]    |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO]    |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO]    |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO]    +- org.jetbrains:annotations:jar:13.0:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO]    +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO]    |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO]    |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO]    |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO]    +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO]    \- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-dist >--------------------
+[INFO] Building PMD Distribution Packages 6.32.0-SNAPSHOT               [32/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-dist ---
+[INFO] net.sourceforge.pmd:pmd-dist:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- net.sourceforge.pmd:pmd-cpp:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-cs:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-dart:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-fortran:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-go:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-groovy:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  \- org.codehaus.groovy:groovy:jar:2.4.21:compile
+[INFO] +- net.sourceforge.pmd:pmd-lua:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-java:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-javascript:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  \- org.mozilla:rhino:jar:1.7.7.2:compile
+[INFO] +- net.sourceforge.pmd:pmd-jsp:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-kotlin:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-matlab:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-modelica:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-perl:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-objectivec:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-php:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-plsql:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-python:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-ruby:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-swift:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-vm:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-xml:jar:6.32.0-SNAPSHOT:compile
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] +- org.apache.commons:commons-compress:jar:1.19:test
+[INFO] +- net.sourceforge.pmd:pmd-apex:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr-runtime:jar:3.5.2:compile
+[INFO] |  +- net.sourceforge.pmd:pmd-apex-jorje:jar:lib:6.32.0-SNAPSHOT:compile
+[INFO] |  |  +- cglib:cglib:jar:3.2.0:compile
+[INFO] |  |  |  \- org.apache.ant:ant:jar:1.10.9:compile
+[INFO] |  |  |     \- org.apache.ant:ant-launcher:jar:1.10.9:compile
+[INFO] |  |  +- ch.qos.logback:logback-classic:jar:1.2.3:compile
+[INFO] |  |  +- ch.qos.logback:logback-core:jar:1.2.3:compile
+[INFO] |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |  |  +- com.google.errorprone:error_prone_annotations:jar:2.1.3:compile
+[INFO] |  |  +- com.google.j2objc:j2objc-annotations:jar:1.1:compile
+[INFO] |  |  +- org.antlr:stringtemplate:jar:3.2.1:compile
+[INFO] |  |  |  \- antlr:antlr:jar:2.7.7:compile
+[INFO] |  |  +- org.codehaus.mojo:animal-sniffer-annotations:jar:1.14:compile
+[INFO] |  |  +- org.openjdk.jol:jol-core:jar:0.4:compile
+[INFO] |  |  +- org.slf4j:slf4j-api:jar:1.7.25:compile
+[INFO] |  |  +- org.yaml:snakeyaml:jar:1.26:compile
+[INFO] |  |  +- aopalliance:aopalliance:jar:1.0:compile
+[INFO] |  |  \- javax.inject:javax.inject:jar:1:compile
+[INFO] |  \- net.sourceforge.pmd:pmd-apex-jorje:pom:6.32.0-SNAPSHOT:compile
+[INFO] +- net.sourceforge.pmd:pmd-scala_2.13:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.scala-lang:scala-library:jar:2.13.3:compile
+[INFO] |  +- org.scalameta:parsers_2.13:jar:4.2.0:compile
+[INFO] |  \- org.scalameta:trees_2.13:jar:4.2.0:compile
+[INFO] |     +- org.scalameta:common_2.13:jar:4.2.0:compile
+[INFO] |     |  \- com.lihaoyi:sourcecode_2.13:jar:0.1.7:compile
+[INFO] |     +- com.thesamet.scalapb:scalapb-runtime_2.13:jar:0.9.0:compile
+[INFO] |     |  +- com.thesamet.scalapb:lenses_2.13:jar:0.9.0:compile
+[INFO] |     |  +- com.lihaoyi:fastparse_2.13:jar:2.1.3:compile
+[INFO] |     |  \- com.google.protobuf:protobuf-java:jar:3.7.1:compile
+[INFO] |     \- org.scalameta:fastparse_2.13:jar:1.0.1:compile
+[INFO] |        \- org.scalameta:fastparse-utils_2.13:jar:1.0.1:compile
+[INFO] +- net.sourceforge.pmd:pmd-ui:jar:6.27.0:compile
+[INFO] \- net.sourceforge.pmd:pmd-visualforce:jar:6.32.0-SNAPSHOT:compile
+[INFO] 
+[INFO] -------------------< net.sourceforge.pmd:pmd-java8 >--------------------
+[INFO] Building PMD Java 8 Integration 6.32.0-SNAPSHOT                  [33/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-java8 ---
+[INFO] net.sourceforge.pmd:pmd-java8:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-java:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- commons-io:commons-io:jar:2.6:compile
+[INFO] |  \- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] \- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] 
+[INFO] --------------------< net.sourceforge.pmd:pmd-doc >---------------------
+[INFO] Building PMD Documentation Generator 6.32.0-SNAPSHOT             [34/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-doc ---
+[INFO] net.sourceforge.pmd:pmd-doc:jar:6.32.0-SNAPSHOT
+[INFO] +- net.sourceforge.pmd:pmd-dist:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-cpp:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-cs:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-dart:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-fortran:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-go:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-groovy:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  |  \- org.codehaus.groovy:groovy:jar:2.4.21:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-lua:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-java:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-javascript:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  |  \- org.mozilla:rhino:jar:1.7.7.2:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-jsp:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-kotlin:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-matlab:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-modelica:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-perl:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-objectivec:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-php:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-plsql:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-python:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-ruby:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-swift:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-vm:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-xml:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-apex:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  |  +- org.antlr:antlr-runtime:jar:3.5.2:runtime
+[INFO] |  |  +- net.sourceforge.pmd:pmd-apex-jorje:jar:lib:6.32.0-SNAPSHOT:runtime
+[INFO] |  |  |  +- cglib:cglib:jar:3.2.0:runtime
+[INFO] |  |  |  |  \- org.apache.ant:ant:jar:1.10.9:runtime
+[INFO] |  |  |  |     \- org.apache.ant:ant-launcher:jar:1.10.9:runtime
+[INFO] |  |  |  +- ch.qos.logback:logback-classic:jar:1.2.3:runtime
+[INFO] |  |  |  +- ch.qos.logback:logback-core:jar:1.2.3:runtime
+[INFO] |  |  |  +- com.google.code.findbugs:jsr305:jar:3.0.2:runtime
+[INFO] |  |  |  +- com.google.errorprone:error_prone_annotations:jar:2.1.3:runtime
+[INFO] |  |  |  +- com.google.j2objc:j2objc-annotations:jar:1.1:runtime
+[INFO] |  |  |  +- org.antlr:stringtemplate:jar:3.2.1:runtime
+[INFO] |  |  |  |  \- antlr:antlr:jar:2.7.7:runtime
+[INFO] |  |  |  +- org.codehaus.mojo:animal-sniffer-annotations:jar:1.14:runtime
+[INFO] |  |  |  +- org.openjdk.jol:jol-core:jar:0.4:runtime
+[INFO] |  |  |  +- org.slf4j:slf4j-api:jar:1.7.25:runtime
+[INFO] |  |  |  +- aopalliance:aopalliance:jar:1.0:runtime
+[INFO] |  |  |  \- javax.inject:javax.inject:jar:1:runtime
+[INFO] |  |  \- net.sourceforge.pmd:pmd-apex-jorje:pom:6.32.0-SNAPSHOT:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-scala_2.13:jar:6.32.0-SNAPSHOT:runtime
+[INFO] |  |  +- org.scala-lang:scala-library:jar:2.13.3:runtime
+[INFO] |  |  +- org.scalameta:parsers_2.13:jar:4.2.0:runtime
+[INFO] |  |  \- org.scalameta:trees_2.13:jar:4.2.0:runtime
+[INFO] |  |     +- org.scalameta:common_2.13:jar:4.2.0:runtime
+[INFO] |  |     |  \- com.lihaoyi:sourcecode_2.13:jar:0.1.7:runtime
+[INFO] |  |     +- com.thesamet.scalapb:scalapb-runtime_2.13:jar:0.9.0:runtime
+[INFO] |  |     |  +- com.thesamet.scalapb:lenses_2.13:jar:0.9.0:runtime
+[INFO] |  |     |  +- com.lihaoyi:fastparse_2.13:jar:2.1.3:runtime
+[INFO] |  |     |  \- com.google.protobuf:protobuf-java:jar:3.7.1:runtime
+[INFO] |  |     \- org.scalameta:fastparse_2.13:jar:1.0.1:runtime
+[INFO] |  |        \- org.scalameta:fastparse-utils_2.13:jar:1.0.1:runtime
+[INFO] |  +- net.sourceforge.pmd:pmd-ui:jar:6.27.0:runtime
+[INFO] |  \- net.sourceforge.pmd:pmd-visualforce:jar:6.32.0-SNAPSHOT:runtime
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] +- org.apache.commons:commons-text:jar:1.3:compile
+[INFO] +- org.yaml:snakeyaml:jar:1.26:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] \- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] 
+[INFO] -------------------< net.sourceforge.pmd:pmd-scala >--------------------
+[INFO] Building PMD Scala - Transitional package (deprecated) 6.32.0-SNAPSHOT [35/36]
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-scala ---
+[INFO] net.sourceforge.pmd:pmd-scala:pom:6.32.0-SNAPSHOT
+[INFO] \- net.sourceforge.pmd:pmd-scala_2.13:jar:6.32.0-SNAPSHOT:compile
+[INFO]    +- org.scala-lang:scala-library:jar:2.13.3:compile
+[INFO]    +- org.scalameta:parsers_2.13:jar:4.2.0:compile
+[INFO]    +- org.scalameta:trees_2.13:jar:4.2.0:compile
+[INFO]    |  +- org.scalameta:common_2.13:jar:4.2.0:compile
+[INFO]    |  |  \- com.lihaoyi:sourcecode_2.13:jar:0.1.7:compile
+[INFO]    |  +- com.thesamet.scalapb:scalapb-runtime_2.13:jar:0.9.0:compile
+[INFO]    |  |  +- com.thesamet.scalapb:lenses_2.13:jar:0.9.0:compile
+[INFO]    |  |  +- com.lihaoyi:fastparse_2.13:jar:2.1.3:compile
+[INFO]    |  |  \- com.google.protobuf:protobuf-java:jar:3.7.1:compile
+[INFO]    |  \- org.scalameta:fastparse_2.13:jar:1.0.1:compile
+[INFO]    |     \- org.scalameta:fastparse-utils_2.13:jar:1.0.1:compile
+[INFO]    +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO]    |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO]    |  +- com.beust:jcommander:jar:1.48:compile
+[INFO]    |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO]    |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO]    |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO]    |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO]    +- commons-io:commons-io:jar:2.6:compile
+[INFO]    \- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] 
+[INFO] -----------------< net.sourceforge.pmd:pmd-scala_2.12 >-----------------
+[INFO] Building PMD Scala for Scala 2.12 6.32.0-SNAPSHOT                [36/36]
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- maven-dependency-plugin:3.1.2:tree (default-cli) @ pmd-scala_2.12 ---
+[INFO] net.sourceforge.pmd:pmd-scala_2.12:jar:6.32.0-SNAPSHOT
+[INFO] +- org.scala-lang:scala-library:jar:2.12.10:compile
+[INFO] +- org.scalameta:parsers_2.12:jar:4.2.0:compile
+[INFO] +- org.scalameta:trees_2.12:jar:4.2.0:compile
+[INFO] |  +- org.scalameta:common_2.12:jar:4.2.0:compile
+[INFO] |  |  \- com.lihaoyi:sourcecode_2.12:jar:0.1.7:compile
+[INFO] |  +- com.thesamet.scalapb:scalapb-runtime_2.12:jar:0.9.0:compile
+[INFO] |  |  +- com.thesamet.scalapb:lenses_2.12:jar:0.9.0:compile
+[INFO] |  |  +- com.lihaoyi:fastparse_2.12:jar:2.1.3:compile
+[INFO] |  |  \- com.google.protobuf:protobuf-java:jar:3.7.1:compile
+[INFO] |  \- org.scalameta:fastparse_2.12:jar:1.0.1:compile
+[INFO] |     \- org.scalameta:fastparse-utils_2.12:jar:1.0.1:compile
+[INFO] +- net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT:compile
+[INFO] |  +- org.antlr:antlr4-runtime:jar:4.7.2:compile
+[INFO] |  +- com.beust:jcommander:jar:1.48:compile
+[INFO] |  +- net.sourceforge.saxon:saxon:jar:9.1.0.8:compile
+[INFO] |  +- org.ow2.asm:asm:jar:9.1:compile
+[INFO] |  +- com.google.code.gson:gson:jar:2.8.5:compile
+[INFO] |  \- net.sourceforge.saxon:saxon:jar:dom:9.1.0.8:runtime
+[INFO] +- commons-io:commons-io:jar:2.6:compile
+[INFO] +- org.apache.commons:commons-lang3:jar:3.8.1:compile
+[INFO] +- junit:junit:jar:4.13.1:test
+[INFO] +- net.sourceforge.pmd:pmd-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.apache.ant:ant:jar:1.10.9:test
+[INFO] |  |  \- org.apache.ant:ant-launcher:jar:1.10.9:test
+[INFO] |  +- org.apache.ant:ant-testutil:jar:1.10.9:test
+[INFO] |  \- com.github.stefanbirkner:system-rules:jar:1.19.0:test
+[INFO] +- net.sourceforge.pmd:pmd-lang-test:jar:6.32.0-SNAPSHOT:test
+[INFO] |  +- io.kotest:kotest-runner-junit5-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.kotest:kotest-framework-api-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.kotest:kotest-framework-engine-jvm:jar:4.3.1:test
+[INFO] |  |  |  +- io.github.classgraph:classgraph:jar:4.8.90:test
+[INFO] |  |  |  +- com.github.ajalt:mordant:jar:1.2.1:test
+[INFO] |  |  |  |  \- com.github.ajalt:colormath:jar:1.2.0:test
+[INFO] |  |  |  \- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO] |  |  +- io.kotest:kotest-framework-discovery-jvm:jar:4.3.1:test
+[INFO] |  |  +- io.kotest:kotest-extensions-jvm:jar:4.3.1:test
+[INFO] |  |  |  \- io.mockk:mockk:jar:1.9.3:test
+[INFO] |  |  |     +- io.mockk:mockk-common:jar:1.9.3:test
+[INFO] |  |  |     |  \- io.mockk:mockk-dsl:jar:1.9.3:test
+[INFO] |  |  |     +- io.mockk:mockk-dsl-jvm:jar:1.9.3:test
+[INFO] |  |  |     \- io.mockk:mockk-agent-jvm:jar:1.9.3:test
+[INFO] |  |  |        +- io.mockk:mockk-agent-api:jar:1.9.3:test
+[INFO] |  |  |        +- io.mockk:mockk-agent-common:jar:1.9.3:test
+[INFO] |  |  |        +- org.objenesis:objenesis:jar:3.0.1:test
+[INFO] |  |  |        +- net.bytebuddy:byte-buddy:jar:1.9.10:test
+[INFO] |  |  |        \- net.bytebuddy:byte-buddy-agent:jar:1.9.10:test
+[INFO] |  |  +- org.junit.platform:junit-platform-engine:jar:1.6.2:test
+[INFO] |  |  |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO] |  |  |  \- org.junit.platform:junit-platform-commons:jar:1.6.2:test
+[INFO] |  |  +- org.junit.platform:junit-platform-suite-api:jar:1.6.2:test
+[INFO] |  |  +- org.junit.platform:junit-platform-launcher:jar:1.6.2:test
+[INFO] |  |  \- org.junit.jupiter:junit-jupiter-api:jar:5.6.2:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-reflect:jar:1.4.10:test
+[INFO] |  \- org.jetbrains.kotlin:kotlin-stdlib-jdk8:jar:1.4.10:test
+[INFO] |     \- org.jetbrains.kotlin:kotlin-stdlib-jdk7:jar:1.4.10:test
+[INFO] +- com.github.oowekyala.treeutils:tree-matchers:jar:2.1.0:test
+[INFO] +- com.github.oowekyala.treeutils:tree-printers:jar:2.1.0:test
+[INFO] +- io.kotest:kotest-assertions-core-jvm:jar:4.3.1:test
+[INFO] |  +- io.kotest:kotest-assertions-shared-jvm:jar:4.3.1:test
+[INFO] |  |  \- io.github.java-diff-utils:java-diff-utils:jar:4.5:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-stdlib-common:jar:1.4.0:test
+[INFO] |  +- org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:jar:1.3.9:test
+[INFO] |  |  \- org.jetbrains.kotlinx:kotlinx-coroutines-core:jar:1.3.9:test
+[INFO] |  +- org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:jar:1.3.9:test
+[INFO] |  +- io.kotest:kotest-common-jvm:jar:4.3.1:test
+[INFO] |  \- io.kotest:kotest-assertions-api-jvm:jar:4.3.1:test
+[INFO] +- org.jetbrains.kotlin:kotlin-stdlib:jar:1.4.10:test
+[INFO] +- org.jetbrains.kotlin:kotlin-test-junit:jar:1.4.10:test
+[INFO] |  +- org.jetbrains.kotlin:kotlin-test-annotations-common:jar:1.4.10:test
+[INFO] |  \- org.jetbrains.kotlin:kotlin-test:jar:1.4.10:test
+[INFO] |     \- org.jetbrains.kotlin:kotlin-test-common:jar:1.4.10:test
+[INFO] \- org.jetbrains:annotations:jar:13.0:test
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for PMD 6.32.0-SNAPSHOT:
+[INFO] 
+[INFO] PMD ................................................ SUCCESS [  0.587 s]
+[INFO] PMD Core ........................................... SUCCESS [  0.137 s]
+[INFO] PMD Test Framework ................................. SUCCESS [  0.017 s]
+[INFO] PMD language module testing utilities .............. SUCCESS [  0.127 s]
+[INFO] PMD C++ ............................................ SUCCESS [  0.059 s]
+[INFO] PMD C# ............................................. SUCCESS [  0.031 s]
+[INFO] PMD Dart ........................................... SUCCESS [  0.026 s]
+[INFO] PMD Fortran ........................................ SUCCESS [  0.020 s]
+[INFO] PMD Go ............................................. SUCCESS [  0.022 s]
+[INFO] PMD Groovy ......................................... SUCCESS [  0.020 s]
+[INFO] PMD Lua ............................................ SUCCESS [  0.019 s]
+[INFO] PMD Java ........................................... SUCCESS [  0.034 s]
+[INFO] PMD JavaScript ..................................... SUCCESS [  0.020 s]
+[INFO] PMD JSP ............................................ SUCCESS [  0.019 s]
+[INFO] PMD Kotlin ......................................... SUCCESS [  0.018 s]
+[INFO] PMD Matlab ......................................... SUCCESS [  0.022 s]
+[INFO] PMD Modelica ....................................... SUCCESS [  0.019 s]
+[INFO] PMD Perl ........................................... SUCCESS [  0.019 s]
+[INFO] PMD Objective-C .................................... SUCCESS [  0.020 s]
+[INFO] PMD PHP ............................................ SUCCESS [  0.018 s]
+[INFO] PMD PL/SQL ......................................... SUCCESS [  0.018 s]
+[INFO] PMD Python ......................................... SUCCESS [  0.017 s]
+[INFO] PMD Ruby ........................................... SUCCESS [  0.018 s]
+[INFO] PMD Swift .......................................... SUCCESS [  0.018 s]
+[INFO] PMD Velocity ....................................... SUCCESS [  0.008 s]
+[INFO] PMD XML and XSL .................................... SUCCESS [  0.017 s]
+[INFO] PMD Apex Jorje Parser Library ...................... SUCCESS [  0.025 s]
+[INFO] PMD Apex ........................................... SUCCESS [  0.020 s]
+[INFO] PMD Scala Common Source and Settings ............... SUCCESS [  0.017 s]
+[INFO] PMD Scala for Scala 2.13 ........................... SUCCESS [  0.027 s]
+[INFO] PMD Visualforce .................................... SUCCESS [  0.024 s]
+[INFO] PMD Distribution Packages .......................... SUCCESS [  0.057 s]
+[INFO] PMD Java 8 Integration ............................. SUCCESS [  0.004 s]
+[INFO] PMD Documentation Generator ........................ SUCCESS [  0.029 s]
+[INFO] PMD Scala - Transitional package (deprecated) ...... SUCCESS [  0.007 s]
+[INFO] PMD Scala for Scala 2.12 ........................... SUCCESS [  0.023 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.506 s
+[INFO] Finished at: 2021-03-08T13:30:43-05:00
+[INFO] ------------------------------------------------------------------------

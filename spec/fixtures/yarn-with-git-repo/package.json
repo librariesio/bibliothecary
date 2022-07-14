@@ -1,0 +1,14 @@
+{
+  "name": "fake-yarn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "vue": "https://github.com/vuejs/vue.git#v2.6.12"
+  }
+}

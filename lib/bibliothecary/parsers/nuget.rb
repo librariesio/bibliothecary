@@ -5,6 +5,7 @@ module Bibliothecary
   module Parsers
     class Nuget
       include Bibliothecary::Analyser
+      extend Bibliothecary::MultiParsers::JSONRuntime
 
       def self.mapping
         {
@@ -35,11 +36,18 @@ module Bibliothecary
           match_filename("paket.lock") => {
             kind: 'lockfile',
             parser: :parse_paket_lock
+          },
+          match_filename("project.assets.json") => {
+            kind: 'lockfile',
+            parser: :parse_project_assets_json
           }
         }
       end
 
-      def self.parse_project_lock_json(file_contents)
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
+      def self.parse_project_lock_json(file_contents, options: {})
         manifest = JSON.parse file_contents
         manifest.fetch('libraries',[]).map do |name, _requirement|
           dep = name.split('/')
@@ -51,7 +59,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_packages_lock_json(file_contents)
+      def self.parse_packages_lock_json(file_contents, options: {})
         manifest = JSON.parse file_contents
 
         frameworks = {}
@@ -70,32 +78,47 @@ module Bibliothecary
         if frameworks.size > 0
           # we should really return multiple manifests, but bibliothecary doesn't
           # do that yet so at least pick deterministically.
-          frameworks[frameworks.keys.sort.last]
-        else
-          []
+
+          # Note, frameworks can be empty, so remove empty ones and then return the last sorted item if any
+          frameworks = frameworks.delete_if { |_k, v| v.empty? }
+          return frameworks[frameworks.keys.sort.last] unless frameworks.empty?
         end
+        []
       end
 
-      def self.parse_packages_config(file_contents)
+      def self.parse_packages_config(file_contents, options: {})
         manifest = Ox.parse file_contents
         manifest.packages.locate('package').map do |dependency|
           {
             name: dependency.id,
             requirement: (dependency.version if dependency.respond_to? "version") || "*",
-            type: 'runtime'
+            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? 'development' : 'runtime'
           }
         end
       rescue
         []
       end
 
-      def self.parse_csproj(file_contents)
+      def self.parse_csproj(file_contents, options: {})
         manifest = Ox.parse file_contents
+
         packages = manifest.locate('ItemGroup/PackageReference').select{ |dep| dep.respond_to? "Include" }.map do |dependency|
+.map do |dependency|
+          requirement = (dependency.Version if dependency.respond_to? "Version") || "*"
+          if requirement.is_a?(Ox::Element)
+            requirement = dependency.nodes.detect{ |n| n.value == "Version" }&.text
+          end
+
+          type = if dependency.nodes.first && dependency.nodes.first.nodes.include?("all") && dependency.nodes.first.value.include?("PrivateAssets") || dependency.attributes[:PrivateAssets] == "All"
+                   "development"
+                 else
+                   "runtime"
+                 end
+
           {
             name: dependency.Include,
-            requirement: (dependency.Version if dependency.respond_to? "Version") || "*",
-            type: 'runtime'
+            requirement: requirement,
+            type: type
           }
         end
         packages.uniq {|package| package[:name] }
@@ -103,20 +126,20 @@ module Bibliothecary
         []
       end
 
-      def self.parse_nuspec(file_contents)
+      def self.parse_nuspec(file_contents, options: {})
         manifest = Ox.parse file_contents
         manifest.package.metadata.dependencies.locate('dependency').map do |dependency|
           {
             name: dependency.id,
             requirement: dependency.attributes[:version] || '*',
-            type: 'runtime'
+            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? 'development' : 'runtime'
           }
         end
       rescue
         []
       end
 
-      def self.parse_paket_lock(file_contents)
+      def self.parse_paket_lock(file_contents, options: {})
         lines = file_contents.split("\n")
         package_version_re = /\s+(?<name>\S+)\s\((?<version>\d+\.\d+[\.\d+[\.\d+]*]*)\)/
         packages = lines.select { |line| package_version_re.match(line) }.map { |line| package_version_re.match(line) }.map do |match|
@@ -128,6 +151,34 @@ module Bibliothecary
         end
         # we only have to enforce uniqueness by name because paket ensures that there is only the single version globally in the project
         packages.uniq {|package| package[:name] }
+      end
+
+      def self.parse_project_assets_json(file_contents, options: {})
+        manifest = JSON.parse file_contents
+
+        frameworks = {}
+        manifest.fetch("targets",[]).each do |framework, deps|
+          frameworks[framework] = deps
+                                    .select { |_name, details| details["type"] == "package" }
+                                    .map do |name, _details|
+            name_split = name.split("/")
+            {
+              name: name_split[0],
+              requirement: name_split[1],
+              type: "runtime"
+            }
+          end
+        end
+
+        if frameworks.size > 0
+          # we should really return multiple manifests, but bibliothecary doesn't
+          # do that yet so at least pick deterministically.
+
+          # Note, frameworks can be empty, so remove empty ones and then return the last sorted item if any
+          frameworks = frameworks.delete_if { |_k, v| v.empty? }
+          return frameworks[frameworks.keys.sort.last] unless frameworks.empty?
+        end
+        []
       end
     end
   end

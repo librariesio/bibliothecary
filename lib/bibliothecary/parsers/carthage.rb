@@ -20,20 +20,22 @@ module Bibliothecary
         }
       end
 
-      def self.parse_cartfile(manifest)
-        map_dependencies(manifest, 'cartfile')
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
+      def self.parse_cartfile(file_contents, options: {})
+        map_dependencies(file_contents, 'cartfile')
       end
 
-      def self.parse_cartfile_private(manifest)
-        map_dependencies(manifest, 'cartfile.private')
+      def self.parse_cartfile_private(file_contents, options: {})
+        map_dependencies(file_contents, 'cartfile.private')
       end
 
-      def self.parse_cartfile_resolved(manifest)
-        map_dependencies(manifest, 'cartfile.resolved')
+      def self.parse_cartfile_resolved(file_contents, options: {})
+        map_dependencies(file_contents, 'cartfile.resolved')
       end
 
       def self.map_dependencies(manifest, path)
-        response = Typhoeus.post("#{Bibliothecary.configuration.carthage_parser_host}/#{path}", params: {body: manifest})
+        response = Typhoeus.post("#{Bibliothecary.configuration.carthage_parser_host}/#{path}", params: { body: manifest })
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.carthage_parser_host}/#{path}", response.response_code) unless response.success?
         json = JSON.parse(response.body)
 

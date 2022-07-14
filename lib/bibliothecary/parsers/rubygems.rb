@@ -4,6 +4,7 @@ module Bibliothecary
   module Parsers
     class Rubygems
       include Bibliothecary::Analyser
+      extend Bibliothecary::MultiParsers::BundlerLikeManifest
 
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
@@ -28,8 +29,11 @@ module Bibliothecary
         }
       end
 
-      def self.parse_gemfile_lock(manifest)
-        manifest.lines(chomp: true).map do |line|
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
+      def self.parse_gemfile_lock(file_contents, options: {})
+        file_contents.lines(chomp: true).map do |line|
           match = line.match(NAME_VERSION_4)
           next unless match
           name = match[1]
@@ -42,12 +46,12 @@ module Bibliothecary
         end.compact
       end
 
-      def self.parse_gemfile(file_contents)
+      def self.parse_gemfile(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:gemfile, file_contents)
         parse_ruby_manifest(manifest)
       end
 
-      def self.parse_gemspec(file_contents)
+      def self.parse_gemspec(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:gemspec, file_contents)
         parse_ruby_manifest(manifest)
       end

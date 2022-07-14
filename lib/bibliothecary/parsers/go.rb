@@ -57,16 +57,23 @@ module Bibliothecary
           match_filename("Gopkg.lock") => {
             kind: 'lockfile',
             parser: :parse_dep_lockfile
+          },
+          match_filename("go-resolved-dependencies.json") => {
+            kind: 'lockfile',
+            parser: :parse_go_resolved
           }
         }
       end
 
-      def self.parse_godep_json(file_contents)
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
+      def self.parse_godep_json(file_contents, options: {})
         manifest = JSON.parse file_contents
         map_dependencies(manifest, 'Deps', 'ImportPath', 'Rev', 'runtime')
       end
 
-      def self.parse_gpm(file_contents)
+      def self.parse_gpm(file_contents, options: {})
         deps = []
         file_contents.split("\n").each do |line|
           match = line.gsub(/(\#(.*))/, '').match(GPM_REGEXP)
@@ -80,38 +87,38 @@ module Bibliothecary
         deps
       end
 
-      def self.parse_govendor(file_contents)
+      def self.parse_govendor(file_contents, options: {})
         manifest = JSON.load file_contents
         map_dependencies(manifest, 'package', 'path', 'revision', 'runtime')
       end
 
-      def self.parse_glide_yaml(file_contents)
+      def self.parse_glide_yaml(file_contents, options: {})
         manifest = YAML.load file_contents
         map_dependencies(manifest, 'import', 'package', 'version', 'runtime') +
         map_dependencies(manifest, 'devImports', 'package', 'version', 'development')
       end
 
-      def self.parse_glide_lockfile(file_contents)
+      def self.parse_glide_lockfile(file_contents, options: {})
         manifest = YAML.load file_contents
         map_dependencies(manifest, 'imports', 'name', 'version', 'runtime')
       end
 
-      def self.parse_gb_manifest(file_contents)
+      def self.parse_gb_manifest(file_contents, options: {})
         manifest = JSON.parse file_contents
         map_dependencies(manifest, 'dependencies', 'importpath', 'revision', 'runtime')
       end
 
-      def self.parse_dep_toml(file_contents)
-        manifest = TomlRB.parse file_contents
+      def self.parse_dep_toml(file_contents, options: {})
+        manifest = Tomlrb.parse file_contents
         map_dependencies(manifest, 'constraint', 'name', 'version', 'runtime')
       end
 
-      def self.parse_dep_lockfile(file_contents)
-        manifest = TomlRB.parse file_contents
+      def self.parse_dep_lockfile(file_contents, options: {})
+        manifest = Tomlrb.parse file_contents
         map_dependencies(manifest, 'projects', 'name', 'revision', 'runtime')
       end
 
-      def self.parse_go_mod(file_contents)
+      def self.parse_go_mod(file_contents, options: {})
         deps = []
         file_contents.lines.map(&:strip).each do |line|
           next if line.match(GOMOD_IGNORABLE_REGEX)
@@ -126,7 +133,7 @@ module Bibliothecary
         deps
       end
 
-      def self.parse_go_sum(file_contents)
+      def self.parse_go_sum(file_contents, options: {})
         deps = []
         file_contents.lines.map(&:strip).each do |line|
           if match = line.match(GOSUM_REGEX)
@@ -138,6 +145,12 @@ module Bibliothecary
           end
         end
         deps.uniq
+      end
+
+      def self.parse_go_resolved(file_contents, options: {})
+        JSON.parse(file_contents)
+          .select { |dep| dep["Main"] != "true" }
+          .map { |dep| { name: dep["Path"], requirement: dep["Version"], type: dep.fetch("Scope") { "runtime" } } }
       end
 
       def self.map_dependencies(manifest, attr_name, dep_attr_name, version_attr_name, type)

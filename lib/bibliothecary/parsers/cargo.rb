@@ -1,5 +1,3 @@
-require 'toml-rb'
-
 module Bibliothecary
   module Parsers
     class Cargo
@@ -18,23 +16,32 @@ module Bibliothecary
         }
       end
 
-      def self.parse_manifest(file_contents)
-        manifest = TomlRB.parse(file_contents)
-        manifest.fetch('dependencies', []).map do |name, requirement|
-          if requirement.respond_to?(:fetch)
-            requirement = requirement['version'] or next
+      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
+      def self.parse_manifest(file_contents, options: {})
+        manifest = Tomlrb.parse(file_contents)
+
+        parsed_dependencies = []
+
+        manifest.fetch_values('dependencies', 'dev-dependencies').each_with_index do |deps, index|
+          parsed_dependencies << deps.map do |name, requirement|
+            if requirement.respond_to?(:fetch)
+              requirement = requirement['version'] or next
+            end
+            {
+              name: name,
+              requirement: requirement,
+              type: index.zero? ? 'runtime' : 'development'
+            }
           end
-          {
-            name: name,
-            requirement: requirement,
-            type: 'runtime'
-          }
         end
-          .compact
+
+        parsed_dependencies.flatten.compact
       end
 
-      def self.parse_lockfile(file_contents)
-        manifest = TomlRB.parse(file_contents)
+      def self.parse_lockfile(file_contents, options: {})
+        manifest = Tomlrb.parse(file_contents)
         manifest.fetch('package',[]).map do |dependency|
           next if not dependency['source'] or not dependency['source'].start_with?('registry+')
           {

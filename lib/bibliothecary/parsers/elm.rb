@@ -4,6 +4,7 @@ module Bibliothecary
   module Parsers
     class Elm
       include Bibliothecary::Analyser
+      extend Bibliothecary::MultiParsers::JSONRuntime
 
       def self.mapping
         {
@@ -18,7 +19,9 @@ module Bibliothecary
         }
       end
 
-      def self.parse_json_lock(file_contents)
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
+      def self.parse_json_lock(file_contents, options: {})
         manifest = JSON.parse file_contents
         manifest.map do |name, requirement|
           {

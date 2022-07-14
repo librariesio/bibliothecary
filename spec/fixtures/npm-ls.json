@@ -1,0 +1,44 @@
+{
+  "name": "fake-npm-ls-json-output",
+  "version": "1.0.3",
+  "dependencies": {
+    "ansicolor": {
+      "version": "1.1.93",
+      "from": "ansicolor@1.1.93",
+      "resolved": "https://registry.npmjs.org/ansicolor/-/ansicolor-1.1.93.tgz"
+    },
+    "babel-cli": {
+      "version": "6.26.0",
+      "from": "babel-cli@^6.26.0",
+      "resolved": "https://registry.npmjs.org/babel-cli/-/babel-cli-6.26.0.tgz",
+      "dependencies": {
+        "debug": {
+          "version": "2.6.9",
+          "resolved": "https://registry.npmjs.org/debug/-/debug-2.6.9.tgz",
+          "integrity": "sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==",
+          "dev": true,
+          "requires": {
+            "ms": "2.0.0"
+          }
+        },
+        "babel-polyfill": {
+          "version": "6.26.0",
+          "from": "babel-polyfill@^6.26.0",
+          "resolved": "https://registry.npmjs.org/babel-polyfill/-/babel-polyfill-6.26.0.tgz",
+          "dependencies": {
+            "core-js": {
+              "version": "2.6.12",
+              "from": "core-js@2.6.12",
+              "resolved": "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz"
+            }
+          }
+        },
+        "lodash": {
+          "version": "4.17.21",
+          "from": "lodash@4.17.21",
+          "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
+        }
+      }
+    }
+  }
+}

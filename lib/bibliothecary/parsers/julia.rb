@@ -12,9 +12,11 @@ module Bibliothecary
         }
       end
 
-      def self.parse_require(manifest)
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
+      def self.parse_require(file_contents, options: {})
         deps = []
-        manifest.split("\n").each do |line|
+        file_contents.split("\n").each do |line|
           next if line.match(/^#/) || line.empty?
           split = line.split(/\s/)
           if line.match(/^@/)

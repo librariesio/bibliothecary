@@ -19,14 +19,16 @@ module Bibliothecary
         }
       end
 
-      def self.parse_json_manifest(file_contents)
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
+      def self.parse_json_manifest(file_contents, options: {})
         manifest = JSON.parse file_contents
         manifest['prereqs'].map do |_group, deps|
           map_dependencies(deps, 'requires', 'runtime')
         end.flatten
       end
 
-      def self.parse_yaml_manifest(file_contents)
+      def self.parse_yaml_manifest(file_contents, options: {})
         manifest = YAML.load file_contents
         map_dependencies(manifest, 'requires', 'runtime')
       end

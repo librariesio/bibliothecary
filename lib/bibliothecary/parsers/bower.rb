@@ -14,8 +14,10 @@ module Bibliothecary
         }
       end
 
-      def self.parse_manifest(manifest)
-        json = JSON.parse(manifest)
+      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+
+      def self.parse_manifest(file_contents, options: {})
+        json = JSON.parse(file_contents)
         map_dependencies(json, 'dependencies', 'runtime') +
         map_dependencies(json, 'devDependencies', 'development')
       end
