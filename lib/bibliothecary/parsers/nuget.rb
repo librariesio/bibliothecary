@@ -92,7 +92,7 @@ module Bibliothecary
           {
             name: dependency.id,
             requirement: (dependency.version if dependency.respond_to? "version") || "*",
-            type: 'runtime'
+            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? 'development' : 'runtime'
           }
         end
       rescue
@@ -108,10 +108,16 @@ module Bibliothecary
             requirement = dependency.nodes.detect{ |n| n.value == "Version" }&.text
           end
 
+          type = if dependency.nodes.first && dependency.nodes.first.nodes.include?("all") && dependency.nodes.first.value.include?("PrivateAssets") || dependency.attributes[:PrivateAssets] == "All"
+                   "development"
+                 else
+                   "runtime"
+                 end
+
           {
             name: dependency.Include,
             requirement: requirement,
-            type: 'runtime'
+            type: type
           }
         end
         packages.uniq {|package| package[:name] }
@@ -125,7 +131,7 @@ module Bibliothecary
           {
             name: dependency.id,
             requirement: dependency.attributes[:version] || '*',
-            type: 'runtime'
+            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? 'development' : 'runtime'
           }
         end
       rescue

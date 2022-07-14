@@ -838,7 +838,8 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "Mvc3Futures", requirement: "3.0.20105.0", type: "runtime" },
         { name: "Ninject", requirement: "3.0.1.10", type: "runtime" },
         { name: "Ninject.Web.Common", requirement: "3.0.0.7", type: "runtime" },
-        { name: "WebActivator", requirement: "1.5", type: "runtime" }
+        { name: "WebActivator", requirement: "1.5", type: "runtime" },
+        { name: "Microsoft.Net.Compilers", requirement: "1.0.0", type: "development" }
       ],
       kind: 'manifest',
       success: true
@@ -856,7 +857,8 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "Microsoft.Extensions.Logging.Debug", requirement: "1.1.1", type: "runtime" },
         { name: "Microsoft.Extensions.DependencyInjection", requirement: "1.1.1", type: "runtime" },
         { name: "Microsoft.VisualStudio.Web.BrowserLink", requirement: "1.1.0", type: "runtime" },
-        { name: "System.Resources.Extensions", requirement: "4.7.0", type: "runtime" }
+        { name: "System.Resources.Extensions", requirement: "4.7.0", type: "runtime" },
+        { name: "Contoso.Utility.UsefulStuff", requirement: "3.6.0", type: "development" }
       ],
       kind: 'manifest',
       success: true
@@ -869,7 +871,7 @@ describe Bibliothecary::Parsers::Nuget do
       path: "example.csproj",
       dependencies: [
         { name: "Microsoft.AspNetCore.App", requirement: "*", type: "runtime" },
-        { name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "runtime" }
+        { name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "development" }
       ],
       kind: 'manifest',
       success: true
@@ -883,7 +885,8 @@ describe Bibliothecary::Parsers::Nuget do
       dependencies: [
         { name: "FubuCore", requirement: "3.2.0.3001", type: "runtime" },
         { name: "HtmlTags", requirement: "[3.2.0.3001]", type: "runtime" },
-        { name: "DotNetZip", requirement: "*", type: "runtime" }
+        { name: "DotNetZip", requirement: "*", type: "runtime" },
+        { name: "DevelopmentOnlyPackage", requirement: "1.2.3", type: "development" }
       ],
       kind: 'manifest',
       success: true
