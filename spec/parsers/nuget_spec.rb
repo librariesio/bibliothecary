@@ -878,6 +878,19 @@ describe Bibliothecary::Parsers::Nuget do
     })
   end
 
+  it 'parses dependencies from example-update.csproj' do
+    expect(described_class.analyse_contents('example-update.csproj', load_fixture('example-update.csproj'))).to eq({
+      platform: "nuget",
+      path: "example-update.csproj",
+      dependencies: [
+        { name: "Microsoft.AspNetCore", requirement: "1.1.1", type: "runtime" },
+        { name: "Microsoft.AspNetCore.StaticFiles", requirement: "2.2.0", type: "runtime" }
+      ],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
   it 'parses dependencies from example.nuspec' do
     expect(described_class.analyse_contents('example.nuspec', load_fixture('example.nuspec'))).to eq({
       platform: "nuget",
