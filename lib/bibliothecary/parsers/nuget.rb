@@ -103,7 +103,6 @@ module Bibliothecary
         manifest = Ox.parse file_contents
 
         packages = manifest.locate('ItemGroup/PackageReference').select{ |dep| dep.respond_to? "Include" }.map do |dependency|
-.map do |dependency|
           requirement = (dependency.Version if dependency.respond_to? "Version") || "*"
           if requirement.is_a?(Ox::Element)
             requirement = dependency.nodes.detect{ |n| n.value == "Version" }&.text
