@@ -16,7 +16,9 @@ module Bibliothecary
 
       def self.mapping
         {
-          match_filenames('requirements-dev.txt', 'requirements/dev.txt') => {
+          match_filenames('requirements-dev.txt', 'requirements/dev.txt',
+                          'requirements-docs.txt', 'requirements/docs.txt',
+                          'requirements-tools.txt', 'requirements/tools.txt') => {
             kind: 'manifest',
             parser: :parse_requirements_txt
           },
