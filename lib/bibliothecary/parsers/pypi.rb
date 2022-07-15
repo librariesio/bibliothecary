@@ -18,6 +18,7 @@ module Bibliothecary
         {
           match_filenames('requirements-dev.txt', 'requirements/dev.txt',
                           'requirements-docs.txt', 'requirements/docs.txt',
+                          'requirements-test.txt', 'requirements/test.txt',
                           'requirements-tools.txt', 'requirements/tools.txt') => {
             kind: 'manifest',
             parser: :parse_requirements_txt
@@ -197,7 +198,15 @@ module Bibliothecary
       # Invalid lines in requirements.txt are skipped.
       def self.parse_requirements_txt(file_contents, options: {})
         deps = []
-        type = options[:filename]&.include?("dev") ? "development" : "runtime"
+        type = case options[:filename]
+               when /dev/ || /docs/ || /tools/
+                 'development'
+               when /test/
+                 'test'
+               else
+                 'runtime'
+               end
+
         file_contents.split("\n").each do |line|
           if line['://']
             begin

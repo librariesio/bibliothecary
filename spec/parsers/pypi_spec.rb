@@ -72,6 +72,16 @@ describe Bibliothecary::Parsers::Pypi do
     })
   end
 
+  it 'parses dependencies from requirements/test.txt' do
+    expect(described_class.analyse_contents('requirements/test.txt', load_fixture('requirements/test.txt'))).to eq({
+      platform: "pypi",
+      path: "requirements/test.txt",
+      dependencies: [{ name: "attrs", requirement: "==21.4.0", type: "test" }, { name: "exceptiongroup", requirement: "==1.0.0rc8", type: "test" }, { name: "execnet", requirement: "==1.9.0", type: "test" }, { name: "iniconfig", requirement: "==1.1.1", type: "test" }, { name: "packaging", requirement: "==21.3", type: "test" }, { name: "pexpect", requirement: "==4.8.0", type: "test" }, { name: "pluggy", requirement: "==1.0.0", type: "test" }, { name: "ptyprocess", requirement: "==0.7.0", type: "test" }, { name: "py", requirement: "==1.11.0", type: "test" }, { name: "pyparsing", requirement: "==3.0.9", type: "test" }, { name: "pytest", requirement: "==7.1.2", type: "test" }, { name: "pytest-forked", requirement: "==1.4.0", type: "test" }, { name: "pytest-xdist", requirement: "==2.5.0", type: "test" }, { name: "sortedcontainers", requirement: "==2.4.0", type: "test" }, { name: "tomli", requirement: "==2.0.1", type: "test" }],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
   context 'git urls' do
     it 'parses dependencies from requirements-git.txt' do
       expect(described_class.analyse_contents('requirements-git.txt', load_fixture('requirements-git.txt'))).to eq({
