@@ -16,6 +16,13 @@ module Bibliothecary
 
       def self.mapping
         {
+          match_filenames('requirements-dev.txt', 'requirements/dev.txt',
+                          'requirements-docs.txt', 'requirements/docs.txt',
+                          'requirements-test.txt', 'requirements/test.txt',
+                          'requirements-tools.txt', 'requirements/tools.txt') => {
+            kind: 'manifest',
+            parser: :parse_requirements_txt
+          },
           lambda { |p| PIP_COMPILE_REGEXP.match(p) } => {
             content_matcher: :pip_compile?,
             kind: 'lockfile',
@@ -191,6 +198,15 @@ module Bibliothecary
       # Invalid lines in requirements.txt are skipped.
       def self.parse_requirements_txt(file_contents, options: {})
         deps = []
+        type = case options[:filename]
+               when /dev/ || /docs/ || /tools/
+                 'development'
+               when /test/
+                 'test'
+               else
+                 'runtime'
+               end
+
         file_contents.split("\n").each do |line|
           if line['://']
             begin
@@ -200,7 +216,7 @@ module Bibliothecary
             end
 
             deps << result.merge(
-              type: 'runtime'
+              type: type
             )
           else
             match = line.delete(' ').match(REQUIREMENTS_REGEXP)
@@ -209,7 +225,7 @@ module Bibliothecary
             deps << {
               name: match[1],
               requirement: match[-1] || '*',
-              type: 'runtime'
+              type: type
             }
           end
         end
