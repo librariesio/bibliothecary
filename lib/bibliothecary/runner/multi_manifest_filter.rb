@@ -54,7 +54,7 @@ module Bibliothecary
 
         @multiple_file_results = []
 
-        each_file_entry_file do |analysis, rfis_for_file|
+        each_analysis_and_rfis do |analysis, rfis_for_file|
           rfis_for_file.each do |rfi|
             file_analysis = FileAnalysis.new(
               analysis.find { |a| a[:platform] == rfi.platform }
@@ -69,7 +69,7 @@ module Bibliothecary
         @multiple_file_results
       end
 
-      def each_file_entry_file
+      def each_analysis_and_rfis
         @multiple_file_entries.each do |file|
           analysis = @runner.analyse_file(file, File.read(File.join(@path, file)))
           rfis_for_file = @related_files_info_entries.find_all { |rfi| rfi.lockfiles.include?(file) }
