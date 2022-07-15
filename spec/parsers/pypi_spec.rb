@@ -62,6 +62,16 @@ describe Bibliothecary::Parsers::Pypi do
     })
   end
 
+  it 'parses dependencies from requirements-dev.txt' do
+    expect(described_class.analyse_contents('requirements-dev.txt', load_fixture('requirements-dev.txt'))).to eq({
+      platform: "pypi",
+      path: "requirements-dev.txt",
+      dependencies: [{ name: "astroid", requirement: "==2.9.0", type: "development" }, { name: "attrs", requirement: "==21.4.0", type: "development" }, { name: "boto3", requirement: "==1.20.26", type: "development" }, { name: "botocore", requirement: "==1.23.26", type: "development" }, { name: "certifi", requirement: "==2021.10.8", type: "development" }, { name: "charset-normalizer", requirement: "==2.0.9", type: "development" }, { name: "coverage", requirement: "==6.2", type: "development" }, { name: "doc8", requirement: "==0.10.1", type: "development" }, { name: "docutils", requirement: "==0.17.1", type: "development" }, { name: "flake8", requirement: "==4.0.1", type: "development" }, { name: "hypothesis", requirement: "==6.31.6", type: "development" }, { name: "idna", requirement: "==3.3", type: "development" }, { name: "importlib-metadata", requirement: "==4.2.0", type: "development" }, { name: "iniconfig", requirement: "==1.1.1", type: "development" }, { name: "isort", requirement: "==5.10.1", type: "development" }, { name: "jmespath", requirement: "==0.10.0", type: "development" }, { name: "lazy-object-proxy", requirement: "==1.7.1", type: "development" }, { name: "mccabe", requirement: "==0.6.1", type: "development" }, { name: "mock", requirement: "==4.0.3", type: "development" }, { name: "mypy", requirement: "==0.812", type: "development" }, { name: "mypy-extensions", requirement: "==0.4.3", type: "development" }, { name: "packaging", requirement: "==21.3", type: "development" }, { name: "pbr", requirement: "==5.8.0", type: "development" }, { name: "platformdirs", requirement: "==2.4.0", type: "development" }, { name: "pluggy", requirement: "==1.0.0", type: "development" }, { name: "py", requirement: "==1.11.0", type: "development" }, { name: "pycodestyle", requirement: "==2.8.0", type: "development" }, { name: "pydocstyle", requirement: "==6.1.1", type: "development" }, { name: "pyflakes", requirement: "==2.4.0", type: "development" }, { name: "pygments", requirement: "==2.11.0", type: "development" }, { name: "pylint", requirement: "==2.12.2", type: "development" }, { name: "pyparsing", requirement: "==3.0.6", type: "development" }, { name: "pytest", requirement: "==6.2.5", type: "development" }, { name: "pytest-cov", requirement: "==3.0.0", type: "development" }, { name: "python-dateutil", requirement: "==2.8.2", type: "development" }, { name: "requests", requirement: "==2.26.0", type: "development" }, { name: "restructuredtext-lint", requirement: "==1.3.2", type: "development" }, { name: "s3transfer", requirement: "==0.5.0", type: "development" }, { name: "six", requirement: "==1.16.0", type: "development" }, { name: "snowballstemmer", requirement: "==2.2.0", type: "development" }, { name: "sortedcontainers", requirement: "==2.4.0", type: "development" }, { name: "stevedore", requirement: "==3.5.0", type: "development" }, { name: "toml", requirement: "==0.10.2", type: "development" }, { name: "tomli", requirement: "==1.2.3", type: "development" }, { name: "typed-ast", requirement: "==1.4.3", type: "development" }, { name: "typing-extensions", requirement: "==4.0.1", type: "development" }, { name: "urllib3", requirement: "==1.26.7", type: "development" }, { name: "websocket-client", requirement: "==1.2.3", type: "development" }, { name: "wheel", requirement: "==0.37.1", type: "development" }, { name: "wrapt", requirement: "==1.13.3", type: "development" }, { name: "zipp", requirement: "==3.6.0", type: "development" }],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
   context 'git urls' do
     it 'parses dependencies from requirements-git.txt' do
       expect(described_class.analyse_contents('requirements-git.txt', load_fixture('requirements-git.txt'))).to eq({
@@ -246,6 +256,8 @@ git://what@::/:/:/
 
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('requirements.txt')).to be_truthy
+    expect(described_class.match?('requirements-dev.txt')).to be_truthy
+    expect(described_class.match?('requirements/dev.txt')).to be_truthy
     expect(described_class.match?('requirements.pip')).to be_truthy
     expect(described_class.match?('setup.py')).to be_truthy
     expect(described_class.match?('Pipfile')).to be_truthy
