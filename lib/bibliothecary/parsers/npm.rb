@@ -74,8 +74,12 @@ module Bibliothecary
       def self.parse_manifest(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         raise "appears to be a lockfile rather than manifest format" if manifest.key?('lockfileVersion')
-        map_dependencies(manifest, 'dependencies', 'runtime') +
-        map_dependencies(manifest, 'devDependencies', 'development')
+        
+        (
+          map_dependencies(manifest, 'dependencies', 'runtime') +
+          map_dependencies(manifest, 'devDependencies', 'development')
+        )
+          .reject { |dep| dep[:name] == "//" } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
       end
 
       def self.parse_yarn_lock(file_contents, options: {})
