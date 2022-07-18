@@ -1,6 +1,21 @@
 module Bibliothecary
   class Runner
     class MultiManifestFilter
+      # Wrap up a file analysis for easier validity testing
+      class FileAnalysis
+        def initialize(file_analysis)
+          @file_analysis = file_analysis
+        end
+
+        # Determine if we should skip this file analysis when processing
+        # @return [Boolean] True if we should skip processing
+        def skip?
+          !@file_analysis ||
+          !@file_analysis[:dependencies] ||
+          @file_analysis[:dependencies].empty?
+        end
+      end
+
       def initialize(path:, related_files_info_entries:, runner:)
         @path = path
         @related_files_info_entries = related_files_info_entries
@@ -38,21 +53,29 @@ module Bibliothecary
         return @multiple_file_results if @multiple_file_results
 
         @multiple_file_results = []
-        @multiple_file_entries.each do |file|
-          analysis = @runner.analyse_file(file, File.read(File.join(@path, file)))
 
-          rfis_for_file = @related_files_info_entries.find_all { |rfi| rfi.lockfiles.include?(file) }
+        each_analysis_and_rfis do |analysis, rfis_for_file|
           rfis_for_file.each do |rfi|
-            file_analysis = analysis.find { |a| a[:platform] == rfi.platform }
+            file_analysis = FileAnalysis.new(
+              analysis.find { |a| a[:platform] == rfi.platform }
+            )
 
-            next unless file_analysis
-            next if file_analysis[:dependencies].empty?
+            next if file_analysis.skip?
 
             @multiple_file_results << rfi
           end
         end
 
         @multiple_file_results
+      end
+
+      def each_analysis_and_rfis
+        @multiple_file_entries.each do |file|
+          analysis = @runner.analyse_file(file, File.read(File.join(@path, file)))
+          rfis_for_file = @related_files_info_entries.find_all { |rfi| rfi.lockfiles.include?(file) }
+
+          yield analysis, rfis_for_file
+        end
       end
 
       def partition_file_entries!
