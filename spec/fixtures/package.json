@@ -10,7 +10,7 @@
   "author": "Mauro Pompilio",
   "license": "MIT",
   "dependencies": {
-    "//": [
+    "// my comment": [
       "This is a valid",
       "comment in NPM."
     ],

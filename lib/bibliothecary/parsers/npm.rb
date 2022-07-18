@@ -79,7 +79,7 @@ module Bibliothecary
           map_dependencies(manifest, 'dependencies', 'runtime') +
           map_dependencies(manifest, 'devDependencies', 'development')
         )
-          .reject { |dep| dep[:name] == "//" } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
+          .reject { |dep| dep[:name].start_with?("//") } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
       end
 
       def self.parse_yarn_lock(file_contents, options: {})
