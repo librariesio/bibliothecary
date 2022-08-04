@@ -907,6 +907,7 @@ runtimeClasspath - Runtime classpath of source set 'main'.
 |    +--- apache:commons-io:1.4 -> commons-io:commons-io:2.6
 |    +--- com.github.axet:threads:0.0.14
 |    \--- org.jsoup:jsoup:1.10.1
++--- apache:axis -> axis:axis:1.4 (*)
 +--- org.quartz-scheduler:quartz:2.3.0
 |    \--- com.mchange:mchange-commons-java:0.2.11
 +--- org.hibernate:hibernate-core:5.3.6.Final
