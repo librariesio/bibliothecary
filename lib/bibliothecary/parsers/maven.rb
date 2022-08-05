@@ -167,6 +167,15 @@ module Bibliothecary
               requirement: dep[-1],
               type: type
             }
+          elsif dep.count == 5
+            # get name from renamed package resolution "org:name -> renamed_org:name:version"
+            {
+              original_name: dep[0,2].join(":"),
+              original_requirement: "*",
+              name: dep[-3..-2].join(":"),
+              requirement: dep[-1],
+              type: type
+            }
           else
             # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
             {
