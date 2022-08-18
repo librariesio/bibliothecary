@@ -155,7 +155,6 @@ module Bibliothecary
 
           # gradle can import on-disk projects and deps will be listed under them, e.g. `+--- project :pie2-testing`,
           # so we treat these projects as internal deps themselves (["internal:foo","0.0.0"])
-          # to avoid any crazy depth math, and so we know where their deps are coming from.
           if (project_match = line.match(GRADLE_PROJECT_REGEX))
             project_name = project_match[1]
             line = line.sub(GRADLE_PROJECT_REGEX, "__PROJECT_GROUP__:__PROJECT_NAME__:__PROJECT_REQUIREMENT__") # project names can have colons, which breaks our split(":") below, so sub it out until after we've parsed the line.
