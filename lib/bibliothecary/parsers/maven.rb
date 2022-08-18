@@ -12,6 +12,11 @@ module Bibliothecary
       # "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
+      # Dependencies that are on-disk projects, eg:
+      # \--- project :api:my-internal-project
+      # +--- my-group:my-alias:1.2.3 -> project :client (*)
+      GRADLE_PROJECT_REGEX = /project :(\S+)/
+
       # Builtin methods: https://docs.gradle.org/current/userguide/java_plugin.html#tab:configurations
       # Deprecated methods: https://docs.gradle.org/current/userguide/upgrading_version_6.html#sec:configuration_removal
       GRADLE_DEPENDENCY_METHODS = %w(api compile compileClasspath compileOnly compileOnlyApi implementation runtime runtimeClasspath runtimeOnly testCompile testCompileOnly testImplementation testRuntime testRuntimeOnly)
@@ -148,11 +153,27 @@ module Bibliothecary
 
           split = gradle_dep_match.captures[0]
 
+          # gradle can import on-disk projects and deps will be listed under them, e.g. `+--- project :pie2-testing`,
+          # so we treat these projects as internal deps themselves (["internal:foo","0.0.0"])
+          if (project_match = line.match(GRADLE_PROJECT_REGEX))
+            project_name = project_match[1]
+            line = line.sub(GRADLE_PROJECT_REGEX, "__PROJECT_GROUP__:__PROJECT_NAME__:__PROJECT_REQUIREMENT__") # project names can have colons, which breaks our split(":") below, so sub it out until after we've parsed the line.
+          else
+            project_name = ""
+          end
+
           dep = line
             .split(split)[1].sub(/(\((c|n|\*)\))$/, "") # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
             .sub(/ FAILED$/, "") # dependency could not be resolved (but still may have a version)
             .sub(" -> ", ":") # handle version arrow syntax
-            .strip.split(":")
+            .strip
+            .split(":")
+            .map do |part| 
+              part
+                .sub(/__PROJECT_GROUP__/, "internal")# give all projects a group namespace of "internal"
+                .sub(/__PROJECT_NAME__/, project_name)
+                .sub(/__PROJECT_REQUIREMENT__/, "1.0.0")  # give all projects a requirement of "1.0.0".
+            end # replace placeholders after we've parsed the line
 
           # A testImplementation line can look like this so just skip those
           # \--- org.springframework.security:spring-security-test (n)

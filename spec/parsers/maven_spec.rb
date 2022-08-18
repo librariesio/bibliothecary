@@ -443,7 +443,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
       test_runtime_classpath = deps[:dependencies].select {|item| item[:type] == "testRuntimeClasspath"}
 
-      expect(test_runtime_classpath.length).to eq 187
+      expect(test_runtime_classpath.length).to eq 188
       expect(test_runtime_classpath.select {|item| item[:name] == "org.glassfish.jaxb:jaxb-runtime"}.length).to eq 1
 
 
@@ -459,6 +459,24 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "excludes failed items with no version" do
       expect(described_class.parse_gradle_resolved("+--- org.projectlombok:lombok FAILED")).to eq []
+    end
+
+    it "includes local projects as deps with 'internal' group and '1.0.0' requirement" do
+      expect(described_class.parse_gradle_resolved("+--- project :api:my-internal-project")).to eq [{
+        name: "internal:api:my-internal-project",
+        requirement: "1.0.0",
+        type: nil
+      }]
+    end
+
+    it "includes aliases to local projects" do
+      expect(described_class.parse_gradle_resolved("|    +--- my-group:common-job-update-gateway-compress:5.0.2 -> project :client (*)")).to eq [{
+        name: "internal:client",
+        requirement: "1.0.0",
+        original_name: "my-group:common-job-update-gateway-compress",
+        original_requirement: "5.0.2",
+        type: nil
+      }]
     end
 
     it "includes failed items with a version" do

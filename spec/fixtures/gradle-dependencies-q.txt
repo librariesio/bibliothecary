@@ -1745,6 +1745,7 @@ testRuntimeClasspath - Runtime classpath of source set 'test'.
 +--- org.hsqldb:hsqldb:2.4.1
 +--- org.skyscreamer:jsonassert:1.5.0
 +--- org.springframework:spring-test:5.1.0.RC3
+|    +--- my-group:common-job-update-gateway-compress:5.0.2 -> project :client (*)
 |    \--- org.springframework:spring-core:5.1.0.RC3 (*)
 +--- org.json:json:20160810
 \--- project :api:cas-server-core-api-test-category
