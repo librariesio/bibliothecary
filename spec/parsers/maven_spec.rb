@@ -497,6 +497,40 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     end
 
+    it "properly interpolates self-referential project lines" do
+      gradle_dependencies_q = <<-GRADLE
+------------------------------------------------------------
+Project ':submodules:test'
+------------------------------------------------------------
+
+compileClasspath - Compile classpath for source set 'main'.
++--- project :
+|    \\--- io.qameta.allure:allure-test-filter:2.18.1 (*)
+\\--- org.slf4j:jcl-over-slf4j -> 1.7.36 (*)
+
+(c) - dependency constraint
+(*) - dependencies omitted (listed previously)
+
+A web-based, searchable dependency report is available by adding the --scan option.
+GRADLE
+
+      expect(described_class.parse_gradle_resolved(gradle_dependencies_q)).to eq [{
+        name: "internal:submodules:test",
+        requirement: "1.0.0",
+        type: "compileClasspath"
+      },
+      {
+        name: "io.qameta.allure:allure-test-filter",
+        requirement: "2.18.1",
+        type: "compileClasspath"
+      },
+      {
+        name: "org.slf4j:jcl-over-slf4j",
+        requirement: "1.7.36",
+        type: "compileClasspath"
+      }]
+    end
+
     it "properly handles no version to resolved version syntax" do
       no_version_to_version = "\\--- org.springframework.security:spring-security-test -> 5.2.2.RELEASE"
       expect(described_class
