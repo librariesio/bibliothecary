@@ -427,9 +427,9 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
       # test rename resolutions
       [
-        {name: "commons-io:commons-io", requirement: "2.6", original_name: "apache:commons-io", original_requirement: "1.4"},
-        {name: "axis:axis", requirement: "1.4", original_name: "apache:axis", original_requirement: "*"},
-        {name: "axis:axis", requirement: "1.4", original_name: "another-alias-group:axis", original_requirement: "*"}
+        { name: "commons-io:commons-io", requirement: "2.6", original_name: "apache:commons-io", original_requirement: "1.4" },
+        { name: "axis:axis", requirement: "1.4", original_name: "apache:axis", original_requirement: "*" },
+        { name: "axis:axis", requirement: "1.4", original_name: "another-alias-group:axis", original_requirement: "*" }
       ].each do |dep|
         renamed_dep = runtime_classpath.select do |d| 
           d.slice(:name, :requirement, :original_name, :original_requirement) == dep.slice(:name, :requirement, :original_name, :original_requirement)
