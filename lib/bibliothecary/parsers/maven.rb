@@ -9,13 +9,17 @@ module Bibliothecary
       # e.g. "annotationProcessor - Annotation processors and their dependencies for source set 'main'."
       GRADLE_TYPE_REGEX = /^(\w+)/
 
-      # "|    \\--- com.google.guava:guava:23.5-jre (*)"
+      # e.g. "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
+      # Project declaration lines so we know the current project name
+      # e.g. "Project ':submodules:test'" (this example is a project nested in submodules/test/ folder)
+      GRADLE_PROJECT_DECLARATION_REGEX = /Project '?:([^\s']+)'?/
+      
       # Dependencies that are on-disk projects, eg:
-      # \--- project :api:my-internal-project
-      # +--- my-group:my-alias:1.2.3 -> project :client (*)
-      GRADLE_PROJECT_REGEX = /project :(\S+)/
+      # e.g. "\--- project :api:my-internal-project"
+      # e.g. "+--- my-group:my-alias:1.2.3 -> project :client (*)"
+      GRADLE_PROJECT_REGEX = /project :(\S+)?/
 
       # Builtin methods: https://docs.gradle.org/current/userguide/java_plugin.html#tab:configurations
       # Deprecated methods: https://docs.gradle.org/current/userguide/upgrading_version_6.html#sec:configuration_removal
@@ -143,10 +147,15 @@ module Bibliothecary
       end
 
       def self.parse_gradle_resolved(file_contents, options: {})
-        type = nil
+        current_type = nil
+        current_project = nil
+
         file_contents.split("\n").map do |line|
-          type_match = GRADLE_TYPE_REGEX.match(line)
-          type = type_match.captures[0] if type_match
+          current_type_match = GRADLE_TYPE_REGEX.match(line)
+          current_type = current_type_match.captures[0] if current_type_match
+
+          current_project_match = GRADLE_PROJECT_DECLARATION_REGEX.match(line)
+          current_project = current_project_match.captures[0] if current_project_match
 
           gradle_dep_match = GRADLE_DEP_REGEX.match(line)
           next unless gradle_dep_match
@@ -156,7 +165,7 @@ module Bibliothecary
           # gradle can import on-disk projects and deps will be listed under them, e.g. `+--- project :pie2-testing`,
           # so we treat these projects as internal deps themselves (["internal:foo","0.0.0"])
           if (project_match = line.match(GRADLE_PROJECT_REGEX))
-            project_name = project_match[1]
+            project_name = project_match[1] || current_project
             line = line.sub(GRADLE_PROJECT_REGEX, "__PROJECT_GROUP__:__PROJECT_NAME__:__PROJECT_REQUIREMENT__") # project names can have colons, which breaks our split(":") below, so sub it out until after we've parsed the line.
           else
             project_name = ""
@@ -170,9 +179,9 @@ module Bibliothecary
             .split(":")
             .map do |part| 
               part
-                .sub(/__PROJECT_GROUP__/, "internal")# give all projects a group namespace of "internal"
+                .sub(/__PROJECT_GROUP__/, "internal") # give all projects a group namespace of "internal"
                 .sub(/__PROJECT_NAME__/, project_name)
-                .sub(/__PROJECT_REQUIREMENT__/, "1.0.0")  # give all projects a requirement of "1.0.0".
+                .sub(/__PROJECT_REQUIREMENT__/, "1.0.0") # give all projects a requirement of "1.0.0".
             end # replace placeholders after we've parsed the line
 
           # A testImplementation line can look like this so just skip those
@@ -186,7 +195,7 @@ module Bibliothecary
               original_requirement: dep[2],
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
-              type: type
+              type: current_type
             }
           elsif dep.count == 5
             # get name from renamed package resolution "org:name -> renamed_org:name:version"
@@ -195,14 +204,14 @@ module Bibliothecary
               original_requirement: "*",
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
-              type: type
+              type: current_type
             }
           else
             # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
             {
               name: dep[0..1].join(":"),
               requirement: dep[-1],
-              type: type
+              type: current_type
             }
           end
         end
