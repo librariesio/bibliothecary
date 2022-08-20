@@ -463,7 +463,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "includes local projects as deps with 'internal' group and '1.0.0' requirement" do
       expect(described_class.parse_gradle_resolved("+--- project :api:my-internal-project")).to eq [{
-        name: "internal:api:my-internal-project",
+        name: "internal:api-my-internal-project",
         requirement: "1.0.0",
         type: nil
       }]
@@ -514,7 +514,7 @@ A web-based, searchable dependency report is available by adding the --scan opti
 GRADLE
 
       expect(described_class.parse_gradle_resolved(gradle_dependencies_out)).to eq [{
-        name: "internal:submodules:test",
+        name: "internal:submodules-test",
         requirement: "1.0.0",
         type: "compileClasspath"
       },
