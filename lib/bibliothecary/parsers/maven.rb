@@ -162,11 +162,12 @@ module Bibliothecary
 
           split = gradle_dep_match.captures[0]
 
-          # gradle can import on-disk projects and deps will be listed under them, e.g. `+--- project :pie2-testing`,
-          # so we treat these projects as internal deps themselves (["internal:foo","0.0.0"])
+          # gradle can import on-disk projects and deps will be listed under them, e.g. `+--- project :test:integration`,
+          # so we treat these projects as "internal" deps with requirement of "1.0.0"
           if (project_match = line.match(GRADLE_PROJECT_REGEX))
-            project_name = project_match[1] || current_project
-            line = line.sub(GRADLE_PROJECT_REGEX, "__PROJECT_GROUP__:__PROJECT_NAME__:__PROJECT_REQUIREMENT__") # project names can have colons, which breaks our split(":") below, so sub it out until after we've parsed the line.
+            # project names can have colons (e.g. for gradle projects in subfolders), which breaks maven artifact naming assumptions, so just replace them with hyphens.
+            project_name = (project_match[1] || current_project).gsub(/:/, "-")
+            line = line.sub(GRADLE_PROJECT_REGEX, "internal:#{project_name}:1.0.0")
           else
             project_name = ""
           end
@@ -177,12 +178,6 @@ module Bibliothecary
             .sub(" -> ", ":") # handle version arrow syntax
             .strip
             .split(":")
-            .map do |part| 
-              part
-                .sub(/__PROJECT_GROUP__/, "internal") # give all projects a group namespace of "internal"
-                .sub(/__PROJECT_NAME__/, project_name)
-                .sub(/__PROJECT_REQUIREMENT__/, "1.0.0") # give all projects a requirement of "1.0.0".
-            end # replace placeholders after we've parsed the line
 
           # A testImplementation line can look like this so just skip those
           # \--- org.springframework.security:spring-security-test (n)
