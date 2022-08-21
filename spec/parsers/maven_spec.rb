@@ -504,7 +504,7 @@ Project ':submodules:test'
 ------------------------------------------------------------
 
 compileClasspath - Compile classpath for source set 'main'.
-+--- project :
++--- project : (*)
 |    \\--- io.qameta.allure:allure-test-filter:2.18.1 (*)
 
 (c) - dependency constraint

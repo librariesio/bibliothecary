@@ -25,6 +25,10 @@ module Bibliothecary
       # Deprecated methods: https://docs.gradle.org/current/userguide/upgrading_version_6.html#sec:configuration_removal
       GRADLE_DEPENDENCY_METHODS = %w(api compile compileClasspath compileOnly compileOnlyApi implementation runtime runtimeClasspath runtimeOnly testCompile testCompileOnly testImplementation testRuntime testRuntimeOnly)
 
+      # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
+      # e.g. the "(n)" in "+--- my-group:my-name:1.2.3 (n)"
+      GRADLE_LINE_ENDING = /(\((c|n|\*)\))$/
+
       # Intentionally overly-simplified regexes to scrape deps from build.gradle (Groovy) and build.gradle.kts (Kotlin) files. 
       # To be truly useful bibliothecary would need full Groovy / Kotlin parsers that speaks Gradle, 
       # because the Groovy and Kotlin DSLs have many dynamic ways of declaring dependencies.
@@ -173,7 +177,8 @@ module Bibliothecary
           end
 
           dep = line
-            .split(split)[1].sub(/(\((c|n|\*)\))$/, "") # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
+            .split(split)[1]
+            .sub(GRADLE_LINE_ENDING, "")
             .sub(/ FAILED$/, "") # dependency could not be resolved (but still may have a version)
             .sub(" -> ", ":") # handle version arrow syntax
             .strip
