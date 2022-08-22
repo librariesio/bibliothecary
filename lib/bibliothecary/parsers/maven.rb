@@ -12,14 +12,14 @@ module Bibliothecary
       # e.g. "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
-      # Project declaration lines so we know the current project name
-      # e.g. "Project ':submodules:test'" (this example is a project nested in submodules/test/ folder)
-      GRADLE_PROJECT_DECLARATION_REGEX = /Project '?:([^\s']+)'?/
-      
       # Dependencies that are on-disk projects, eg:
       # e.g. "\--- project :api:my-internal-project"
       # e.g. "+--- my-group:my-alias:1.2.3 -> project :client (*)"
       GRADLE_PROJECT_REGEX = /project :(\S+)?/
+
+      # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
+      # e.g. the "(n)" in "+--- my-group:my-name:1.2.3 (n)"
+      GRADLE_LINE_ENDING_REGEX = /(\((c|n|\*)\))$/
 
       # Builtin methods: https://docs.gradle.org/current/userguide/java_plugin.html#tab:configurations
       # Deprecated methods: https://docs.gradle.org/current/userguide/upgrading_version_6.html#sec:configuration_removal
@@ -148,14 +148,10 @@ module Bibliothecary
 
       def self.parse_gradle_resolved(file_contents, options: {})
         current_type = nil
-        current_project = nil
 
         file_contents.split("\n").map do |line|
           current_type_match = GRADLE_TYPE_REGEX.match(line)
           current_type = current_type_match.captures[0] if current_type_match
-
-          current_project_match = GRADLE_PROJECT_DECLARATION_REGEX.match(line)
-          current_project = current_project_match.captures[0] if current_project_match
 
           gradle_dep_match = GRADLE_DEP_REGEX.match(line)
           next unless gradle_dep_match
@@ -165,15 +161,17 @@ module Bibliothecary
           # gradle can import on-disk projects and deps will be listed under them, e.g. `+--- project :test:integration`,
           # so we treat these projects as "internal" deps with requirement of "1.0.0"
           if (project_match = line.match(GRADLE_PROJECT_REGEX))
+            # an empty project name is self-referential (i.e. a cycle), and we don't need to track the manifest's project itself, e.g. "+--- project :"
+            next if project_match[1].nil? 
+
             # project names can have colons (e.g. for gradle projects in subfolders), which breaks maven artifact naming assumptions, so just replace them with hyphens.
-            project_name = (project_match[1] || current_project).gsub(/:/, "-")
+            project_name = project_match[1].gsub(/:/, "-")
             line = line.sub(GRADLE_PROJECT_REGEX, "internal:#{project_name}:1.0.0")
-          else
-            project_name = ""
           end
 
           dep = line
-            .split(split)[1].sub(/(\((c|n|\*)\))$/, "") # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
+            .split(split)[1]
+            .sub(GRADLE_LINE_ENDING_REGEX, "")
             .sub(/ FAILED$/, "") # dependency could not be resolved (but still may have a version)
             .sub(" -> ", ":") # handle version arrow syntax
             .strip
