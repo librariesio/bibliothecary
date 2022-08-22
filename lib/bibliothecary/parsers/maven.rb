@@ -12,10 +12,6 @@ module Bibliothecary
       # e.g. "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEX = /(\+---|\\---){1}/
 
-      # Project declaration lines so we know the current project name
-      # e.g. "Project ':submodules:test'" (this example is a project nested in submodules/test/ folder)
-      GRADLE_PROJECT_DECLARATION_REGEX = /(?:Root project|Project) '?:?([^\s']+)'?/
-      
       # Dependencies that are on-disk projects, eg:
       # e.g. "\--- project :api:my-internal-project"
       # e.g. "+--- my-group:my-alias:1.2.3 -> project :client (*)"
@@ -152,14 +148,10 @@ module Bibliothecary
 
       def self.parse_gradle_resolved(file_contents, options: {})
         current_type = nil
-        current_project = nil
 
         file_contents.split("\n").map do |line|
           current_type_match = GRADLE_TYPE_REGEX.match(line)
           current_type = current_type_match.captures[0] if current_type_match
-
-          current_project_match = GRADLE_PROJECT_DECLARATION_REGEX.match(line)
-          current_project = current_project_match.captures[0] if current_project_match
 
           gradle_dep_match = GRADLE_DEP_REGEX.match(line)
           next unless gradle_dep_match
@@ -169,11 +161,12 @@ module Bibliothecary
           # gradle can import on-disk projects and deps will be listed under them, e.g. `+--- project :test:integration`,
           # so we treat these projects as "internal" deps with requirement of "1.0.0"
           if (project_match = line.match(GRADLE_PROJECT_REGEX))
+            # an empty project name is a self-referential project, and we don't need to track the manifest's project itself, e.g. "+--- project :"
+            next if project_match[1].nil? 
+
             # project names can have colons (e.g. for gradle projects in subfolders), which breaks maven artifact naming assumptions, so just replace them with hyphens.
-            project_name = (project_match[1] || current_project).gsub(/:/, "-")
+            project_name = project_match[1].gsub(/:/, "-")
             line = line.sub(GRADLE_PROJECT_REGEX, "internal:#{project_name}:1.0.0")
-          else
-            project_name = ""
           end
 
           dep = line

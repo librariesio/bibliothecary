@@ -497,7 +497,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     end
 
-    it "properly interpolates self-referential root project lines" do
+    it "skips self-referential project lines" do
       gradle_dependencies_out = <<-GRADLE
 ------------------------------------------------------------
 Root project 'myorg-common'
@@ -507,33 +507,7 @@ compileClasspath - Compile classpath for source set 'main'.
 +--- project : (*)
 GRADLE
 
-      expect(described_class.parse_gradle_resolved(gradle_dependencies_out)).to eq [{
-        name: "internal:myorg/common",
-        requirement: "1.0.0",
-        type: "compileClasspath"
-      },
-    end
-
-    it "properly interpolates self-referential project lines" do
-      gradle_dependencies_out = <<-GRADLE
-------------------------------------------------------------
-Project ':submodules:test'
-------------------------------------------------------------
-
-compileClasspath - Compile classpath for source set 'main'.
-+--- project : (*)
-GRADLE
-
-      expect(described_class.parse_gradle_resolved(gradle_dependencies_out)).to eq [{
-        name: "internal:submodules-test",
-        requirement: "1.0.0",
-        type: "compileClasspath"
-      },
-      {
-        name: "io.qameta.allure:allure-test-filter",
-        requirement: "2.18.1",
-        type: "compileClasspath"
-      }]
+      expect(described_class.parse_gradle_resolved(gradle_dependencies_out)).to eq []
     end
 
     it "properly handles no version to resolved version syntax" do
