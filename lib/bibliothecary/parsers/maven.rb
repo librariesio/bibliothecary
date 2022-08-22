@@ -161,7 +161,7 @@ module Bibliothecary
           # gradle can import on-disk projects and deps will be listed under them, e.g. `+--- project :test:integration`,
           # so we treat these projects as "internal" deps with requirement of "1.0.0"
           if (project_match = line.match(GRADLE_PROJECT_REGEX))
-            # an empty project name is a self-referential project, and we don't need to track the manifest's project itself, e.g. "+--- project :"
+            # an empty project name is self-referential (i.e. a cycle), and we don't need to track the manifest's project itself, e.g. "+--- project :"
             next if project_match[1].nil? 
 
             # project names can have colons (e.g. for gradle projects in subfolders), which breaks maven artifact naming assumptions, so just replace them with hyphens.
