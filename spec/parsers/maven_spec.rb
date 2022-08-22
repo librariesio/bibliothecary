@@ -500,7 +500,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     it "skips self-referential project lines" do
       gradle_dependencies_out = <<-GRADLE
 ------------------------------------------------------------
-Root project 'myorg-common'
+Project ':submodules:test'
 ------------------------------------------------------------            
 
 compileClasspath - Compile classpath for source set 'main'.
