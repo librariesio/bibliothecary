@@ -497,7 +497,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     end
 
-    it "captures root project lines" do
+    it "properly interpolates self-referential root project lines" do
       gradle_dependencies_out = <<-GRADLE
 ------------------------------------------------------------
 Root project 'myorg-common'
