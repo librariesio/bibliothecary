@@ -14,7 +14,7 @@ module Bibliothecary
 
       # Project declaration lines so we know the current project name
       # e.g. "Project ':submodules:test'" (this example is a project nested in submodules/test/ folder)
-      GRADLE_PROJECT_DECLARATION_REGEX = /(?:Root project|Project) '?:([^\s']+)'?/
+      GRADLE_PROJECT_DECLARATION_REGEX = /(?:Root project|Project) '?:?([^\s']+)'?/
       
       # Dependencies that are on-disk projects, eg:
       # e.g. "\--- project :api:my-internal-project"
