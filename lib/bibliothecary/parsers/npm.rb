@@ -8,6 +8,8 @@ module Bibliothecary
       # Max depth to recurse into the "dependencies" property of package-lock.json
       PACKAGE_LOCK_JSON_MAX_DEPTH = 10
 
+      NPM_PACKAGE_NAME_REGEX = /^(?:(@[^\/]+?)\/)?([^\/]+?)$/.freeze
+
       def self.mapping
         {
           match_filename("package.json") => {
@@ -58,7 +60,7 @@ module Bibliothecary
                                end
 
           [{
-            name: name,
+            name: validate_npm_name(name),
             requirement: version,
             type: type
           }] + child_dependencies
@@ -74,6 +76,7 @@ module Bibliothecary
           map_dependencies(manifest, 'devDependencies', 'development')
         )
           .reject { |dep| dep[:name].start_with?("//") } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
+          .each { |dep| validate_npm_name(dep[:name]) }
       end
 
       def self.parse_yarn_lock(file_contents, options: {})
@@ -84,7 +87,7 @@ module Bibliothecary
         json = JSON.parse(response.body, symbolize_names: true)
         json.uniq.map do |dep|
           {
-            name: dep[:name],
+            name: validate_npm_name(dep[:name]),
             requirement: dep[:version],
             lockfile_requirement: dep[:requirement],
             type: dep[:type]
@@ -121,6 +124,10 @@ module Bibliothecary
             }
           ] + transform_tree_to_array(metadata.fetch("dependencies", {}))
         end.flatten(1)
+      end
+
+      private_class_method def self.validate_npm_name(name) 
+        raise InvalidPackageName.new("#{name} is an invalid NPM package name") unless name =~ NPM_PACKAGE_NAME_REGEX
       end
     end
   end

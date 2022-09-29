@@ -15,4 +15,10 @@ module Bibliothecary
       super("#{msg}")
     end
   end
+
+  class InvalidPackageName < StandardError
+    def initialize(msg)
+      super(msg)
+    end
+  end
 end

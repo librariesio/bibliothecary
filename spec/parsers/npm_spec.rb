@@ -284,4 +284,32 @@ describe Bibliothecary::Parsers::NPM do
       ])).to eq([ package, package_lock ])
     end
   end
+
+  describe "invalid names" do
+    it "raise an error from package.json" do
+      contents = JSON.dump("dependencies": { "babel/preset-env": "^7.19.3" })
+      result = described_class.analyse_contents('package.json', contents)
+      expect(result[:success]).to eq(false)
+      expect(result[:error_message]).to eq("package.json: babel/preset-env is an invalid NPM package name")
+    end
+
+    it "raise an error from yarn.lock" do
+      contents = <<-YARNLOCK
+      babel/preset-env@7.19.3:
+        version "4.0.0"
+      YARNLOCK
+      result = VCR.use_cassette("invalid_npm_name_yarn_lock") do
+        described_class.analyse_contents('yarn.lock', contents)
+      end
+      expect(result[:success]).to eq(false)
+      expect(result[:error_message]).to eq("yarn.lock: babel/preset-env is an invalid NPM package name")
+    end
+
+    it "raise an error from package-lock.json" do
+      contents = JSON.dump("dependencies": { "babel/preset-env": { "version": "7.19.3" } })
+      result = described_class.analyse_contents('package-lock.json', contents)
+      expect(result[:success]).to eq(false)
+      expect(result[:error_message]).to eq("package-lock.json: babel/preset-env is an invalid NPM package name")
+    end
+  end
 end
