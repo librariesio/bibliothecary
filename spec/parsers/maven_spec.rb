@@ -172,6 +172,16 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     })
   end
 
+  describe "invalid names" do
+    it "raise an error from missing artifactId in pom.xml" do
+      contents = %Q!<project><dependencies><dependency><groupId>org.apache.ant</groupId><artifactId></artifactId><version>1.9.2</version></dependency></dependencies></project>!
+      result = described_class.analyse_contents('pom.xml', contents)
+      expect(result[:success]).to eq(false)
+      expect(result[:error_message]).to eq("pom.xml: org.apache.ant: is an invalid Maven package name")
+    end
+
+  end
+
   context 'gradle' do
     it 'parses various dependency syntax variations' do
       source = <<~FILE

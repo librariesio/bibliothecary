@@ -270,8 +270,11 @@ module Bibliothecary
         [].tap do |deps|
           ['dependencies/dependency', 'dependencyManagement/dependencies/dependency'].each do |deps_xpath|
             xml.locate(deps_xpath).each do |dep|
+              group_id = extract_pom_dep_info(xml, dep, 'groupId', parent_properties)
+              artifact_id = extract_pom_dep_info(xml, dep, 'artifactId', parent_properties)
+              validate_maven_name(group_id, artifact_id)
               deps.push({
-                name: "#{extract_pom_dep_info(xml, dep, 'groupId', parent_properties)}:#{extract_pom_dep_info(xml, dep, 'artifactId', parent_properties)}",
+                name: "#{group_id}:#{artifact_id}",
                 requirement: extract_pom_dep_info(xml, dep, 'version', parent_properties),
                 type: extract_pom_dep_info(xml, dep, 'scope', parent_properties) || 'runtime'
               })
@@ -476,6 +479,10 @@ module Bibliothecary
           # we post-process using some of these fields and then delete them again
           fields: fields
         }
+      end
+
+      private_class_method def self.validate_maven_name(group_id, artifact_id)
+        raise InvalidPackageName.new("#{group_id}:#{artifact_id} is an invalid Maven package name") if group_id.nil? || group_id.strip.size.zero? || artifact_id.nil? || artifact_id.strip.size.zero?
       end
     end
   end
