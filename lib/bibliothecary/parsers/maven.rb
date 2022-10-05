@@ -209,8 +209,6 @@ module Bibliothecary
           end
         end
           .compact
-          # Prefer duplicate deps with the aliased ones first, so we don't lose the aliases in the next uniq step.
-          .sort_by { |dep| dep.key?(:original_name) || dep.key?(:original_requirement) ? 0 : 1 }
           .uniq { |item| item.values_at(:name, :requirement, :type, :original_name, :original_requirement) }
       end
 
