@@ -116,6 +116,9 @@ module Bibliothecary
 
     # Read a manifest file and extract the list of dependencies from that file.
     def analyse_file(file_path, contents)
+      # Remove any Byte Order Marks so JSON, etc don't fail while reading them.
+      contents = contents.sub(/^\xEF\xBB\xBF/, '')
+
       package_managers.select { |pm| pm.match?(file_path, contents) }.map do |pm|
         pm.analyse_contents(file_path, contents, options: @options)
       end.flatten.uniq.compact
