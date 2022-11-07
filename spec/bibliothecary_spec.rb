@@ -72,6 +72,14 @@ describe Bibliothecary do
     }])
   end
 
+  it 'analyses contents of a file with a Byte Order Mark' do
+    file_with_byte_order_mark = [65279].pack("U*") + load_fixture('package.json')
+    result = described_class.analyse_file('package.json', file_with_byte_order_mark)
+
+    expect(result[0][:error_message]).to eq(nil)
+    expect(result[0][:dependencies].length).to eq(2)
+  end
+
   it "aliases analyse and analyse_file" do
     expect(Bibliothecary.method(:analyse)).to eq(Bibliothecary.method(:analyze))
     expect(Bibliothecary.method(:analyse_file)).to eq(Bibliothecary.method(:analyze_file))

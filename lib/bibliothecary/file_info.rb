@@ -17,7 +17,8 @@ module Bibliothecary
             # file that's actually on the filesystem
             nil
           else
-            File.open(@full_path).read
+            # Remove any Byte Order Marks so JSON, etc don't fail while parsing them.
+            File.open(@full_path).read.sub(/^\xEF\xBB\xBF/, '')
           end
         end
     end
