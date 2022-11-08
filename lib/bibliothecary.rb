@@ -75,6 +75,12 @@ module Bibliothecary
     configuration.ignored_files
   end
 
+  def self.utf8_string(string)
+    string
+      .force_encoding("UTF-8") # treat all strings as utf8
+      .sub(/^\xEF\xBB\xBF/, '') # remove any Byte Order Marks so JSON, etc don't fail while parsing them.
+  end
+
   class << self
     attr_writer :configuration
     alias analyze analyse
