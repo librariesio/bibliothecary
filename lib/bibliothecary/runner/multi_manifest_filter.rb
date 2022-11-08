@@ -71,8 +71,7 @@ module Bibliothecary
 
       def each_analysis_and_rfis
         @multiple_file_entries.each do |file|
-          # Remove any Byte Order Marks so JSON, etc don't fail while parsing them.
-          contents = File.read(File.join(@path, file)).sub(/^\xEF\xBB\xBF/, '')
+          contents = Bibliothecary.utf8_string(File.read(File.join(@path, file)))
           analysis = @runner.analyse_file(file, contents)
           rfis_for_file = @related_files_info_entries.find_all { |rfi| rfi.lockfiles.include?(file) }
 

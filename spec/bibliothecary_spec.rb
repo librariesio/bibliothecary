@@ -73,11 +73,19 @@ describe Bibliothecary do
   end
 
   it 'analyses contents of a file with a Byte Order Mark' do
-    file_with_byte_order_mark = [65279].pack("U*") + load_fixture('package.json')
+    file_with_byte_order_mark = "\xEF\xBB\xBF{}"
     result = described_class.analyse_file('package.json', file_with_byte_order_mark)
 
     expect(result[0][:error_message]).to eq(nil)
-    expect(result[0][:dependencies].length).to eq(2)
+    expect(result[0][:dependencies].length).to eq(0)
+  end
+
+  it 'analyses contents of a file with non-UTF8 encodings' do
+    ascii_8bit_encoded_file = "\xEF\xBB\xBF{}".force_encoding(Encoding::ASCII_8BIT)
+    result = described_class.analyse_file('package.json', ascii_8bit_encoded_file)
+
+    expect(result[0][:error_message]).to eq(nil)
+    expect(result[0][:dependencies].length).to eq(0)
   end
 
   it "aliases analyse and analyse_file" do
