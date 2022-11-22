@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "tomlrb", "~> 2.0"
+  spec.add_dependency "tomlrb"
   spec.add_dependency "librariesio-gem-parser"
   spec.add_dependency "ox", ">= 2.8.1"
   spec.add_dependency "typhoeus"

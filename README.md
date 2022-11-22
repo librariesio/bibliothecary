@@ -159,6 +159,9 @@ All available config options are in: https://github.com/librariesio/bibliothecar
 - Hackage
   - \*.cabal
   - cabal.config
+Actions
+  - action.yml
+  - action.yaml
 
 ## Development
 
