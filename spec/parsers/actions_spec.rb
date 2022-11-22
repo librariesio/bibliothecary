@@ -9,7 +9,7 @@ describe Bibliothecary::Parsers::Actions do
     expect(described_class.analyse_contents('action.yml', load_fixture('action.yml'))).to eq({
       platform: "actions",
       path: "action.yml",
-      dependencies: ["node16", "dist/index.js"],
+      dependencies: [{:name=>"dist/index.js", :requirement=>"node16", :type=>"javascript"}],
       kind: 'manifest',
       success: true
     })
@@ -19,7 +19,9 @@ describe Bibliothecary::Parsers::Actions do
     expect(described_class.analyse_contents('action.yml', load_fixture('docker-action.yml'))).to eq({
       platform: "actions",
       path: "action.yml",
-      dependencies: ["Dockerfile"],
+      dependencies: [
+        {:name=>"Dockerfile", :requirement=>"*", :type=>"docker"}
+      ],
       kind: 'manifest',
       success: true
     })
@@ -29,7 +31,10 @@ describe Bibliothecary::Parsers::Actions do
     expect(described_class.analyse_contents('action.yml', load_fixture('composite-action.yml'))).to eq({
       platform: "actions",
       path: "action.yml",
-      dependencies: ["aws-actions/configure-aws-credentials@v1", "actions/setup-node@v2"],
+      dependencies: [
+        {:name=>"aws-actions/configure-aws-credentials", :requirement=>"v1", :type=>"composite"},
+        {:name=>"actions/setup-node", :requirement=>"v2", :type=>"composite"}
+      ],
       kind: 'manifest',
       success: true
     })
