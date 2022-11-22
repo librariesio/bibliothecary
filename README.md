@@ -162,6 +162,9 @@ All available config options are in: https://github.com/librariesio/bibliothecar
 Actions
   - action.yml
   - action.yaml
+Docker
+  - Dockerfile
+  - docker-compose.yml
 
 ## Development
 
