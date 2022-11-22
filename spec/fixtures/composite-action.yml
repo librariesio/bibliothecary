@@ -1,0 +1,40 @@
+name: "Deploy Frontend to S3"
+description: "Builds and deploys the React frontend to AWS S3"
+inputs:
+   aws-access-key-id:
+     required: true
+     description: "The aws-access-key-id used to authenticate with AWS"
+   aws-secret-access-key:
+     required: true
+     description: "The aws-secret-access-key used to authenticate with AWS"
+   app-name:
+     required: false
+     description: "The app name used by the React app"
+     default: Demo
+   api-url:
+     required: true
+     description: "The URL of the Express app"
+runs:
+  using: "composite"
+  steps:
+    - uses: aws-actions/configure-aws-credentials@v1
+      with:
+        # Actions cannot access secrets so pass them in as inputs
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-region: eu-west-1
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 14
+    - name: Install dependencies
+      working-directory: ./frontend
+      run: npm ci
+    - name: Build app
+      working-directory: ./frontend
+      run: npm run build
+      env:
+        APP_NAME: ${{ inputs.app-name }}
+        API_URL: ${{ inputs.api-url }}
+    - name: Upload app to AWS S3
+      working-directory: ./frontend
+      run: aws s3 sync build s3://my-bucket --delete
