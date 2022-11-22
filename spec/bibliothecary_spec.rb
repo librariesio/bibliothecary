@@ -143,8 +143,21 @@ describe Bibliothecary do
     analysis.each do |a|
       a[:dependencies] = []
     end
+
     expect(analysis).to eq(
-      [{ platform: "maven",
+      [{ platform: "docker",
+        path: "Dockerfile",
+        dependencies: [],
+        kind: "manifest",
+        success: true,
+        related_paths: ["docker-compose.yml"] },
+       { platform: "docker",
+        path: "docker-compose.yml",
+        dependencies: [],
+        kind: "manifest",
+        success: true,
+        related_paths: ["Dockerfile"] },
+        { platform: "maven",
         path: "com.example-hello_2.12-compile.xml",
         dependencies: [],
         kind: "lockfile",
@@ -222,7 +235,19 @@ describe Bibliothecary do
     end
 
     expect(analysis).to eq(
-      [{ platform: "maven",
+      [{ platform: "docker", 
+        path:"Dockerfile",
+        dependencies: [],
+        kind: "manifest",
+        success: true,
+        related_paths: ["docker-compose.yml"] },
+       { platform: "docker",
+        path: "docker-compose.yml",
+        dependencies: [],
+        kind: "manifest",
+        success: true,
+        related_paths: ["Dockerfile"] },
+       { platform: "maven",
         path: "com.example-hello_2.12-compile.xml",
         dependencies: [],
         kind: "lockfile",
@@ -450,7 +475,7 @@ describe Bibliothecary do
 
   it 'identifies all detected manifests in a subdirectory' do
     related_file_infos = Bibliothecary.find_manifests("spec/fixtures/multimanifest_dir/")
-    expect(related_file_infos.length).to eq 5
+    expect(related_file_infos.length).to eq 6
 
     rubies = related_file_infos.select { |info| info.platform == "rubygems"}
     expect(rubies.length).to eq 2

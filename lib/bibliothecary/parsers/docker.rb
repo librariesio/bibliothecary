@@ -13,12 +13,12 @@ module Bibliothecary
           lambda { |p| DOCKER_COMPOSE_REGEXP.match(p) } => {
             kind: 'manifest',
             parser: :parse_docker_compose,
-            can_have_lockfile: false
+            related_to: [ 'manifest' ]
           },
           match_filename("Dockerfile") => {
             kind: 'manifest',
             parser: :parse_dockerfile,
-            can_have_lockfile: false
+            related_to: [ 'manifest' ]
           }
         }
       end
