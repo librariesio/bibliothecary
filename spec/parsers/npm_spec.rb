@@ -284,4 +284,39 @@ describe Bibliothecary::Parsers::NPM do
       ])).to eq([ package, package_lock ])
     end
   end
+
+  context "with different NPM lockfile versions" do
+    it 'parses version 1 package-lock.json' do
+      analysis = described_class.analyse_contents('npm-lockfile-version-1/package-lock.json', load_fixture('npm-lockfile-version-1/package-lock.json'))
+      expect(analysis).to eq({
+        platform: "npm",
+        path: "npm-lockfile-version-1/package-lock.json",
+        dependencies: [{:name=>"find-versions", :requirement=>"4.0.0", :type=>"runtime"}, {:name=>"semver-regex", :requirement=>"3.1.4", :type=>"runtime"}, {:name=>"semver-regex", :requirement=>"4.0.5", :type=>"runtime"}],
+        kind: 'lockfile',
+        success: true
+      })
+    end
+
+    it 'parses version 2 package-lock.json' do
+      analysis = described_class.analyse_contents('npm-lockfile-version-2/package-lock.json', load_fixture('npm-lockfile-version-2/package-lock.json'))
+      expect(analysis).to eq({
+        platform: "npm",
+        path: "npm-lockfile-version-2/package-lock.json",
+        dependencies: [{:name=>"find-versions", :requirement=>"4.0.0", :type=>"runtime"}, {:name=>"semver-regex", :requirement=>"3.1.4", :type=>"runtime"}, {:name=>"semver-regex", :requirement=>"4.0.5", :type=>"runtime"}],
+        kind: 'lockfile',
+        success: true
+      })
+    end
+
+    it 'parses version 3 package-lock.json' do
+      analysis = described_class.analyse_contents('npm-lockfile-version-3/package-lock.json', load_fixture('npm-lockfile-version-3/package-lock.json'))
+      expect(analysis).to eq({
+        platform: "npm",
+        path: "npm-lockfile-version-3/package-lock.json",
+        dependencies: [{:name=>"find-versions", :requirement=>"4.0.0", :type=>"runtime"}, {:name=>"semver-regex", :requirement=>"3.1.4", :type=>"runtime"}, {:name=>"semver-regex", :requirement=>"4.0.5", :type=>"runtime"}],
+        kind: 'lockfile',
+        success: true
+      })
+    end
+  end
 end

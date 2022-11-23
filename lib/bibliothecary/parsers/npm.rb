@@ -38,12 +38,32 @@ module Bibliothecary
 
       def self.parse_package_lock(file_contents, options: {})
         manifest = JSON.parse(file_contents)
-        parse_package_lock_deps_recursively(manifest.fetch('dependencies', []))
+        # https://docs.npmjs.com/cli/v9/configuring-npm/package-lock-json#lockfileversion
+        if manifest["lockfileVersion"].to_i == 3
+          # lockfileVersion 3 breaks compatibility with older lockfiles by removing "dependencies" object
+          parse_package_lock_from_packages(manifest.fetch("packages"))
+        else
+          # lockfileVersion 1 + 2 
+          parse_package_lock_deps_recursively(manifest.fetch('dependencies', []))
+        end
       end
 
       class << self
         # "package-lock.json" and "npm-shrinkwrap.json" have same format, so use same parsing logic
         alias_method :parse_shrinkwrap, :parse_package_lock
+      end
+
+      # "packages" is a flat object where each key is the installed location of the dep, e.g. node_modules/foo/node_modules/bar. 
+      def self.parse_package_lock_from_packages(dependencies)
+        dependencies
+          .reject { |name, dep| name == "" } # this is the lockfile's package itself
+          .map do |name, dep|
+            {
+              name: name.split("node_modules/").last,
+              requirement: dep["version"],
+              type: dep.fetch("dev", false) || dep.fetch("devOptional", false)  ? "development" : "runtime"
+            }  
+          end
       end
 
       def self.parse_package_lock_deps_recursively(dependencies, depth=1)
