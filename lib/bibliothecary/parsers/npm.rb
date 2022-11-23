@@ -39,12 +39,13 @@ module Bibliothecary
       def self.parse_package_lock(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         # https://docs.npmjs.com/cli/v9/configuring-npm/package-lock-json#lockfileversion
-        if manifest["lockfileVersion"].to_i == 3
-          # lockfileVersion 3 breaks compatibility with older lockfiles by removing "dependencies" object
-          parse_package_lock_from_packages(manifest.fetch("packages"))
+        if manifest["lockfileVersion"].to_i <= 1
+          # lockfileVersion 1 uses the "dependencies" object
+          parse_package_lock_v1(manifest)
         else
-          # lockfileVersion 1 + 2 
-          parse_package_lock_deps_recursively(manifest.fetch('dependencies', []))
+          # lockfileVersion 2 has backwards-compatability by including both "packages" and the legacy "dependencies" object
+          # lockfileVersion 3 has no backwards-compatibility and only includes the "packages" object
+          parse_package_lock_v2(manifest)
         end
       end
 
@@ -53,9 +54,14 @@ module Bibliothecary
         alias_method :parse_shrinkwrap, :parse_package_lock
       end
 
-      # "packages" is a flat object where each key is the installed location of the dep, e.g. node_modules/foo/node_modules/bar. 
-      def self.parse_package_lock_from_packages(dependencies)
-        dependencies
+      def self.parse_package_lock_v1(manifest)
+        parse_package_lock_deps_recursively(manifest.fetch('dependencies', []))
+      end
+      
+      def self.parse_package_lock_v2(manifest)
+        # "packages" is a flat object where each key is the installed location of the dep, e.g. node_modules/foo/node_modules/bar. 
+        manifest
+          .fetch("packages")
           .reject { |name, dep| name == "" } # this is the lockfile's package itself
           .map do |name, dep|
             {
@@ -75,7 +81,7 @@ module Bibliothecary
             []
           else
             parse_package_lock_deps_recursively(requirement.fetch('dependencies', []), depth + 1)
-                               end
+          end
 
           [{
             name: name,
