@@ -291,7 +291,7 @@ describe Bibliothecary::Parsers::NPM do
       expect(analysis).to eq({
         platform: "npm",
         path: "npm-lockfile-version-1/package-lock.json",
-        dependencies: [{:name=>"find-versions", :requirement=>"4.0.0", :type=>"runtime"}, {:name=>"semver-regex", :requirement=>"3.1.4", :type=>"runtime"}, {:name=>"semver-regex", :requirement=>"4.0.5", :type=>"runtime"}],
+        dependencies: [{ name: "find-versions", requirement: "4.0.0", type: "runtime" }, { name: "semver-regex", requirement: "3.1.4", type: "runtime" }, { name: "semver-regex", requirement: "4.0.5", type: "runtime" }],
         kind: 'lockfile',
         success: true
       })
@@ -302,7 +302,7 @@ describe Bibliothecary::Parsers::NPM do
       expect(analysis).to eq({
         platform: "npm",
         path: "npm-lockfile-version-2/package-lock.json",
-        dependencies: [{:name=>"find-versions", :requirement=>"4.0.0", :type=>"runtime"}, {:name=>"semver-regex", :requirement=>"3.1.4", :type=>"runtime"}, {:name=>"semver-regex", :requirement=>"4.0.5", :type=>"runtime"}],
+        dependencies: [{ name: "find-versions", requirement: "4.0.0", type: "runtime" }, { name: "semver-regex", requirement: "3.1.4", type: "runtime" }, { name: "semver-regex", requirement: "4.0.5", type: "runtime" }],
         kind: 'lockfile',
         success: true
       })
@@ -313,7 +313,7 @@ describe Bibliothecary::Parsers::NPM do
       expect(analysis).to eq({
         platform: "npm",
         path: "npm-lockfile-version-3/package-lock.json",
-        dependencies: [{:name=>"find-versions", :requirement=>"4.0.0", :type=>"runtime"}, {:name=>"semver-regex", :requirement=>"3.1.4", :type=>"runtime"}, {:name=>"semver-regex", :requirement=>"4.0.5", :type=>"runtime"}],
+        dependencies: [{ name: "find-versions", requirement: "4.0.0", type: "runtime" }, { name: "semver-regex", requirement: "3.1.4", type: "runtime" }, { name: "semver-regex", requirement: "4.0.5", type: "runtime" }],
         kind: 'lockfile',
         success: true
       })
