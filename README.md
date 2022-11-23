@@ -162,6 +162,8 @@ All available config options are in: https://github.com/librariesio/bibliothecar
 Actions
   - action.yml
   - action.yaml
+  - .github/workflows/*.yml
+  - .github/workflows/*.yaml
 Docker
   - Dockerfile
   - docker-compose.yml
