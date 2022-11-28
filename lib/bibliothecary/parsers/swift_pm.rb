@@ -39,15 +39,28 @@ module Bibliothecary
 
       def self.parse_package_resolved(file_contents, options: {})
         json = JSON.parse(file_contents)
-        json["object"]["pins"].map do |dependency|
-          name = dependency['package']
-          version = dependency['state']['version']
-          {
-            name: name,
-            requirement: version,
-            type: 'runtime'
-          }
+        if json["version"] == 1
+          json["object"]["pins"].map do |dependency|
+            name = dependency['repositoryURL'].gsub(/^https?:\/\//, '').gsub(/\.git$/,'')
+            version = dependency['state']['version']
+            {
+              name: name,
+              requirement: version,
+              type: 'runtime'
+            }
+          end
+        else # version 2
+          json["pins"].map do |dependency|
+            name = dependency['location'].gsub(/^https?:\/\//, '').gsub(/\.git$/,'')
+            version = dependency['state']['version']
+            {
+              name: name,
+              requirement: version,
+              type: 'runtime'
+            }
+          end
         end
+        
       end
     end
   end

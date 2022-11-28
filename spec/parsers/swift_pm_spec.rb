@@ -24,7 +24,20 @@ describe Bibliothecary::Parsers::SwiftPM do
       platform: "swiftpm",
       path: "Package.resolved",
       dependencies: [
-        { name: "Yams", requirement: "5.0.1", type: "runtime" },
+        { name: "github.com/jpsim/Yams", requirement: "5.0.1", type: "runtime" },
+      ],
+      kind: 'lockfile',
+      success: true
+    })
+  end
+
+  it 'parses dependencies from Package.resolved in version 2 format' do
+    expect(described_class.analyse_contents('Package.resolved', load_fixture('Package.resolved.2'))).to eq({
+      platform: "swiftpm",
+      path: "Package.resolved",
+      dependencies: [
+        {:name=>"github.com/krzyzanowskim/CryptoSwift", :requirement=>"1.6.0", :type=>"runtime"},
+        {:name=>"github.com/apple/swift-docc-plugin", :requirement=>"1.0.0", :type=>"runtime"}
       ],
       kind: 'lockfile',
       success: true
