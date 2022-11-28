@@ -19,7 +19,20 @@ describe Bibliothecary::Parsers::SwiftPM do
     })
   end
 
+  it 'parses dependencies from Package.resolved' do
+    expect(described_class.analyse_contents('Package.resolved', load_fixture('Package.resolved'))).to eq({
+      platform: "swiftpm",
+      path: "Package.resolved",
+      dependencies: [
+        { name: "Yams", requirement: "5.0.1", type: "runtime" },
+      ],
+      kind: 'lockfile',
+      success: true
+    })
+  end
+
   it 'matches valid manifest filepaths' do
     expect(described_class.match?('Package.swift')).to be_truthy
+    expect(described_class.match?('Package.resolved')).to be_truthy
   end
 end

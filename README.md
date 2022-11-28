@@ -123,6 +123,7 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - mix.lock
 - Swift
   - Package.swift
+  - Package.resolved
 - Pub
   - pubspec.yaml
   - pubspec.lock

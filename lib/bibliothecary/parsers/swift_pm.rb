@@ -7,7 +7,13 @@ module Bibliothecary
         {
           match_filename("Package.swift", case_insensitive: true) => {
             kind: 'manifest',
-            parser: :parse_package_swift
+            parser: :parse_package_swift,
+            related_to: ['lockfile']
+          },
+          match_filename("Package.resolved", case_insensitive: true) => {
+            kind: 'lockfile',
+            parser: :parse_package_resolved,
+            related_to: ['manifest']
           }
         }
       end
@@ -23,6 +29,19 @@ module Bibliothecary
         json["dependencies"].map do |dependency|
           name = dependency['url'].gsub(/^https?:\/\//, '').gsub(/\.git$/,'')
           version = "#{dependency['version']['lowerBound']} - #{dependency['version']['upperBound']}"
+          {
+            name: name,
+            requirement: version,
+            type: 'runtime'
+          }
+        end
+      end
+
+      def self.parse_package_resolved(file_contents, options: {})
+        json = JSON.parse(file_contents)
+        json["object"]["pins"].map do |dependency|
+          name = dependency['package']
+          version = dependency['state']['version']
           {
             name: name,
             requirement: version,
