@@ -170,6 +170,9 @@ Docker
   - docker-compose.yml
 Vcpkg
   - vcpkg.json
+Homebrew
+  - Brewfile
+  - Brewfile.lock.json
 
 ## Development
 

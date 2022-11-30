@@ -23,6 +23,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Hackage,
           Bibliothecary::Parsers::Haxelib,
           Bibliothecary::Parsers::Hex,
+          Bibliothecary::Parsers::Homebrew,
           Bibliothecary::Parsers::Julia,
           Bibliothecary::Parsers::Maven,
           Bibliothecary::Parsers::Meteor,
