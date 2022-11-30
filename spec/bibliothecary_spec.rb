@@ -33,7 +33,8 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Pypi,
           Bibliothecary::Parsers::Rubygems,
           Bibliothecary::Parsers::Shard,
-          Bibliothecary::Parsers::SwiftPM
+          Bibliothecary::Parsers::SwiftPM,
+          Bibliothecary::Parsers::Vcpkg
         ])
   end
 

@@ -168,6 +168,8 @@ Actions
 Docker
   - Dockerfile
   - docker-compose.yml
+Vcpkg
+  - vcpkg.json
 
 ## Development
 
