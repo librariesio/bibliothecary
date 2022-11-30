@@ -160,17 +160,17 @@ All available config options are in: https://github.com/librariesio/bibliothecar
 - Hackage
   - \*.cabal
   - cabal.config
-Actions
+- Actions
   - action.yml
   - action.yaml
   - .github/workflows/*.yml
   - .github/workflows/*.yaml
-Docker
+- Docker
   - Dockerfile
   - docker-compose.yml
-Vcpkg
+- Vcpkg
   - vcpkg.json
-Homebrew
+- Homebrew
   - Brewfile
   - Brewfile.lock.json
 
