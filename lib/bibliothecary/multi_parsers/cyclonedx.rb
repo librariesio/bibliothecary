@@ -17,6 +17,38 @@ module Bibliothecary
       NoComponents = Class.new(StandardError)
 
       class ManifestEntries
+        # If a purl type (key) exists, it will be used in a manifest for
+        # the key's value. If not, it's ignored.
+        #
+        # https://github.com/package-url/purl-spec/blob/master/PURL-TYPES.rst
+        PURL_TYPE_MAPPING = {
+          "brew" => :homebrew,
+          "cargo" => :cargo,
+          "carthage" => :carthage, 
+          "clojars" => :clojars,
+          "cocoapods" => :cocoapods,
+          "composer" => :packagist,
+          "conda" => :conda,
+          "cpan" => :cpan,
+          "cran" => :cran,
+          "docker" => :docker,
+          "dub" => :dub,
+          "elm" => :elm,
+          "gem" => :rubygems,
+          "golang" => :go,
+          "hackage" => :hackage,
+          "haxe" => :haxelib,
+          "hex" => :hex,
+          "julia" => :julia,
+          "maven" => :maven,
+          "meteor" => :meteor,
+          "npm" => :npm,
+          "nuget" => :nuget,
+          "pub" => :pub,
+          "pypi" => :pypi,
+          "swift" => :swift_pm,          
+        }
+
         attr_reader :manifests
 
         def initialize(parse_queue:)
