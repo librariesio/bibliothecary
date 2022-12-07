@@ -60,6 +60,7 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - package-lock.json
   - npm-shrinkwrap.json
   - yarn.lock
+  - pnpm-lock.yaml
 - Maven
   - pom.xml
   - ivy.xml

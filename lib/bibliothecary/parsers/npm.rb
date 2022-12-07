@@ -29,7 +29,11 @@ module Bibliothecary
           match_filename("npm-ls.json") => {
             kind: 'lockfile',
             parser: :parse_ls
-          }
+          },
+          match_filename("pnpm-lock.yaml") => {
+            kind: 'lockfile',
+            parser: :parse_pnpm_lock
+          },
         }
       end
 
@@ -123,6 +127,26 @@ module Bibliothecary
         manifest = JSON.parse(file_contents)
 
         transform_tree_to_array(manifest.fetch('dependencies', {}))
+      end
+
+      def self.parse_pnpm_lock(file_contents, options: {})
+        manifest = YAML.safe_load(file_contents)
+        manifest.fetch('packages', []).map do |identifier, metadata|
+          parts = identifier.split('/')
+          if parts[0].start_with?('@')
+            name = parts[1..2].join('/')
+            version = parts[3]
+          else
+            name = parts[1]
+            version = parts[2]
+          end
+
+          {
+            name: name,
+            requirement: version,
+            type: metadata.fetch("dev", false) ? "development" : "runtime"
+          }
+        end
       end
 
       def self.lockfile_preference_order(file_infos)

@@ -48,6 +48,26 @@ describe Bibliothecary::Parsers::NPM do
     })
   end
 
+  it 'parses dependencies from pnpm-lock.yaml' do
+    expect(described_class.analyse_contents('pnpm-lock.yaml', load_fixture('pnpm-lock.yaml'))).to eq({
+      platform: "npm",
+      path: "pnpm-lock.yaml",
+      dependencies: [
+        {:name=>"ansi-regex", :requirement=>"2.1.1", :type=>"runtime"},
+        {:name=>"ansi-styles", :requirement=>"2.2.1", :type=>"development"},
+        {:name=>"ansi-styles", :requirement=>"2.2.0", :type=>"runtime"},
+        {:name=>"chalk", :requirement=>"1.1.3", :type=>"runtime"},
+        {:name=>"escape-string-regexp", :requirement=>"1.0.5", :type=>"runtime"},
+        {:name=>"has-ansi", :requirement=>"2.0.0", :type=>"runtime"},
+        {:name=>"strip-ansi", :requirement=>"3.0.1", :type=>"runtime"},
+        {:name=>"supports-color", :requirement=>"2.0.0", :type=>"runtime"},
+        {:name=>"@typescript-eslint", :requirement=>"types", :type=>"runtime"}
+      ],
+      kind: "lockfile",
+      success: true
+    })
+  end
+
   it 'parses dependencies from package.json' do
     expect(described_class.analyse_contents('package.json', load_fixture('package.json'))).to eq({
       platform: "npm",
@@ -230,6 +250,7 @@ describe Bibliothecary::Parsers::NPM do
     expect(described_class.match?('website/npm-shrinkwrap.json')).to be_truthy
     expect(described_class.match?('package-lock.json')).to be_truthy
     expect(described_class.match?('website/package-lock.json')).to be_truthy
+    expect(described_class.match?('pnpm-lock.yaml')).to be_truthy
   end
 
   it "doesn't match invalid manifest filepaths" do
