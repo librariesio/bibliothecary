@@ -5,8 +5,3 @@ gem "strings-ansi", ref: "35d0c9430cf0a8022dc12bdab005bce296cb9f00", git: "git@g
 
 # Specify your gem's dependencies in bibliothecary.gemspec
 gemspec
-
-group :test do
-  gem "simplecov"
-  gem "codeclimate-test-reporter", "~> 1.0.0"
-end
