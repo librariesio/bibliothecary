@@ -322,6 +322,9 @@ module Bibliothecary
         extract_pom_dep_info(xml, xml, location, parent_properties)
       end
 
+      # TODO: it might be worth renaming parent_properties to parent_elements
+      # so that more can be inherited from the parent pom than just <properties>
+      # here (see https://maven.apache.org/pom.html#inheritance)
       def self.extract_pom_dep_info(xml, dependency, name, parent_properties = {})
         field = dependency.locate(name).first
         return nil if field.nil?
@@ -363,7 +366,10 @@ module Bibliothecary
         return "${#{property_name}}" if !xml.respond_to?("properties") && parent_properties.empty? && xml.locate(non_prop_name).empty?
 
         prop_field = xml.properties.locate(property_name).first if xml.respond_to?("properties")
-        parent_prop = parent_properties[property_name]
+        parent_prop = parent_properties[property_name] ||                 # e.g. "${foo}"
+          parent_properties[property_name.sub(/^project\./, '')] ||       # e.g. "${project.foo}"
+          parent_properties[property_name.sub(/^project\.parent\./, '')]  # e.g. "${project.parent.foo}"
+
         if prop_field
           prop_field.nodes.first
         elsif parent_prop
