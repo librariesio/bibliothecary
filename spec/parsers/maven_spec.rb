@@ -323,7 +323,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
   end
 
   describe 'parent properties' do
-    it 'totally ignores parent propes' do
+    it 'totally ignores parent props' do
       parent_props = {}
       deps = described_class.parse_pom_manifest(load_fixture('pom.xml'), parent_props)
 
@@ -351,6 +351,21 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
       bibliothecary_dep = deps.find { |dep| dep[:name] == "io.libraries:bibliothecary" }
       expect(bibliothecary_dep[:requirement]).to eq("9.9.9")
+    end
+
+    it "can extract parent properties specified with a lookup prefix during resolve" do
+      parent_props = { "scm.url"=>"scm:git:git@github.com:accidia/echo.git" }
+      
+      # Esnure that all of these lookup variations resolve to the parent's relevant property.
+      ["project.parent.scm.url", "project.scm.url", "scm.url"].each do |lookup_var|
+        xml = Ox.parse(%Q!
+        <?xml version="1.0" encoding="UTF-8"?>
+        <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+          <scm><url>${#{lookup_var}}</url></scm>
+        </project>!)
+        scm_url = described_class.extract_pom_info(xml, "project/scm/url", parent_props)
+        expect(scm_url).to eq("scm:git:git@github.com:accidia/echo.git")
+      end
     end
   end
 

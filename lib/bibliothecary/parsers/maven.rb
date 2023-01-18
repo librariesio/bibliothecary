@@ -363,7 +363,10 @@ module Bibliothecary
         return "${#{property_name}}" if !xml.respond_to?("properties") && parent_properties.empty? && xml.locate(non_prop_name).empty?
 
         prop_field = xml.properties.locate(property_name).first if xml.respond_to?("properties")
-        parent_prop = parent_properties[property_name]
+        parent_prop = parent_properties[property_name] ||                 # e.g. "${foo}"
+          parent_properties[property_name.sub(/^project\./, '')] ||       # e.g. "${project.foo}"
+          parent_properties[property_name.sub(/^project\.parent\./, '')]  # e.g. "${project.parent.foo}"
+
         if prop_field
           prop_field.nodes.first
         elsif parent_prop
