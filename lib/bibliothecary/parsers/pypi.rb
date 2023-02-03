@@ -56,7 +56,7 @@ module Bibliothecary
           },
           match_filename("pyproject.toml") => {
             kind: 'manifest',
-            parser: :parse_poetry
+            parser: :parse_pyproject
           },
           match_filename("poetry.lock") => {
             kind: 'lockfile',
@@ -90,9 +90,27 @@ module Bibliothecary
         map_dependencies(manifest['packages'], 'runtime') + map_dependencies(manifest['dev-packages'], 'develop')
       end
 
+      def self.parse_pyproject(file_contents, options: {})
+        deps = []  
+
+        file_contents = Tomlrb.parse(file_contents)
+        
+        # Parse poetry [tool.poetry] deps
+        poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {})
+        deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
+        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
+
+        # Parse PEP621 [project] deps
+        pep621_manifest = file_contents.fetch('project', {})
+        deps += map_dependencies(pep621_manifest['dependencies'], 'runtime')
+
+        deps
+      end
+
+      # TODO: this was deprecated in 8.5.2. Remove this in any major version bump >= 9.*
       def self.parse_poetry(file_contents, options: {})
-        manifest = Tomlrb.parse(file_contents).fetch('tool', {}).fetch('poetry', {})
-        map_dependencies(manifest['dependencies'], 'runtime') + map_dependencies(manifest['dev-dependencies'], 'develop')
+        puts "Warning: parse_poetry() is deprecated, use parse_pyproject() instead."
+        parse_pyproject(file_contents, options)
       end
 
       def self.parse_conda(file_contents, options: {})
