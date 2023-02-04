@@ -315,7 +315,6 @@ git://what@::/:/:/
 [project]
 name = "a_pep621_project"
 version = "0.1.0"
-requires-python = ">=3.10"
 dependencies = [
     "black",
     "isort",
