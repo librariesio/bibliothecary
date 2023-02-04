@@ -319,10 +319,11 @@ requires-python = ">=3.10"
 dependencies = [
     "black",
     "isort",
-    "click == 8.1.3",
     "pytest == 7.2.1",
     "python-gitlab == 3.12.0",
-]    
+    "Click~=8.1.0",
+    "marshmallow-dataclass[union]~=8.5.6",
+]
     FILE
 
     expect(described_class.analyse_contents('pyproject.toml', source)).to eq({
@@ -331,9 +332,10 @@ dependencies = [
       dependencies: [
         {name: "black", requirement: "*", type: "runtime"}, 
         {name: "isort", requirement: "*", type: "runtime"}, 
-        {name: "click", requirement: "== 8.1.3", type: "runtime"}, 
         {name: "pytest", requirement: "== 7.2.1", type: "runtime"}, 
-        {name: "python-gitlab", requirement: "== 3.12.0", type: "runtime"}
+        {name: "python-gitlab", requirement: "== 3.12.0", type: "runtime"},
+        {name: "Click", requirement: "~=8.1.0", type: "runtime"},
+        {name: "marshmallow-dataclass", requirement: "[union]~=8.5.6", type: "runtime"}
       ],
       kind: 'manifest',
       success: true
