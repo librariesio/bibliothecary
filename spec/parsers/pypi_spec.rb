@@ -331,9 +331,9 @@ dependencies = [
       dependencies: [
         {name: "black", requirement: "*", type: "runtime"}, 
         {name: "isort", requirement: "*", type: "runtime"}, 
-        {name: "click == 8.1.3", requirement: "*", type: "runtime"}, 
-        {name: "pytest == 7.2.1", requirement: "*", type: "runtime"}, 
-        {name: "python-gitlab == 3.12.0", requirement: "*", type: "runtime"}
+        {name: "click", requirement: "== 8.1.3", type: "runtime"}, 
+        {name: "pytest", requirement: "== 7.2.1", type: "runtime"}, 
+        {name: "python-gitlab", requirement: "== 3.12.0", type: "runtime"}
       ],
       kind: 'manifest',
       success: true

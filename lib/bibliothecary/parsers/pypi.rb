@@ -14,6 +14,9 @@ module Bibliothecary
       MANIFEST_REGEXP = /.*require[^\/]*(\/)?[^\/]*\.(txt|pip|in)$/
       PIP_COMPILE_REGEXP = /.*require.*$/
 
+      # Adapted from https://peps.python.org/pep-0508/#names
+      PEP_508_NAME_REGEX = /^([A-Z0-9][A-Z0-9._-]*[A-Z0-9]|[A-Z0-9])/i
+
       def self.mapping
         {
           match_filenames('requirements-dev.txt', 'requirements/dev.txt',
@@ -102,7 +105,8 @@ module Bibliothecary
 
         # Parse PEP621 [project] deps
         pep621_manifest = file_contents.fetch('project', {})
-        deps += map_dependencies(pep621_manifest['dependencies'], 'runtime')
+        pep621_deps = pep621_manifest.fetch('dependencies', []).map { |d| parse_pep_508_dep_spec(d) }
+        deps += map_dependencies(pep621_deps, 'runtime')
 
         deps
       end
@@ -269,6 +273,15 @@ module Bibliothecary
         # We don't want to throw errors during the matching phase, only during
         # parsing after we match.
         false
+      end
+
+      # Simply parses out the name of a PEP 508 Dependency specification: https://peps.python.org/pep-0508/
+      # Leaves the rest as-is with any leading semicolons or spaces stripped
+      def self.parse_pep_508_dep_spec(dep)
+        name, requirement = dep.split(PEP_508_NAME_REGEX, 2).last(2).map(&:strip)
+        requirement = requirement.sub(/^[\s;]*/, "")
+        requirement = "*" if requirement == ""
+        return name, requirement
       end
     end
   end
