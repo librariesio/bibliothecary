@@ -108,6 +108,8 @@ module Bibliothecary
         pep621_deps = pep621_manifest.fetch('dependencies', []).map { |d| parse_pep_508_dep_spec(d) }
         deps += map_dependencies(pep621_deps, 'runtime')
 
+        # We're combining both poetry+PEP621 deps instead of making them mutually exclusive, until we
+        # find a reason not to ingest them both.
         deps
       end
 
