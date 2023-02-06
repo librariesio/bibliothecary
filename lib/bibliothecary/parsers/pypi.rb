@@ -111,7 +111,7 @@ module Bibliothecary
         deps
       end
 
-      # TODO: this was deprecated in 8.5.2. Remove this in any major version bump >= 9.*
+      # TODO: this was deprecated in 8.6.0. Remove this in any major version bump >= 9.*
       def self.parse_poetry(file_contents, options: {})
         puts "Warning: parse_poetry() is deprecated, use parse_pyproject() instead."
         parse_pyproject(file_contents, options)
