@@ -14,6 +14,9 @@ module Bibliothecary
       MANIFEST_REGEXP = /.*require[^\/]*(\/)?[^\/]*\.(txt|pip|in)$/
       PIP_COMPILE_REGEXP = /.*require.*$/
 
+      # Adapted from https://peps.python.org/pep-0508/#names
+      PEP_508_NAME_REGEX = /^([A-Z0-9][A-Z0-9._-]*[A-Z0-9]|[A-Z0-9])/i
+
       def self.mapping
         {
           match_filenames('requirements-dev.txt', 'requirements/dev.txt',
@@ -56,7 +59,7 @@ module Bibliothecary
           },
           match_filename("pyproject.toml") => {
             kind: 'manifest',
-            parser: :parse_poetry
+            parser: :parse_pyproject
           },
           match_filename("poetry.lock") => {
             kind: 'lockfile',
@@ -90,9 +93,30 @@ module Bibliothecary
         map_dependencies(manifest['packages'], 'runtime') + map_dependencies(manifest['dev-packages'], 'develop')
       end
 
+      def self.parse_pyproject(file_contents, options: {})
+        deps = []  
+
+        file_contents = Tomlrb.parse(file_contents)
+        
+        # Parse poetry [tool.poetry] deps
+        poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {})
+        deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
+        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
+
+        # Parse PEP621 [project] deps
+        pep621_manifest = file_contents.fetch('project', {})
+        pep621_deps = pep621_manifest.fetch('dependencies', []).map { |d| parse_pep_508_dep_spec(d) }
+        deps += map_dependencies(pep621_deps, 'runtime')
+
+        # We're combining both poetry+PEP621 deps instead of making them mutually exclusive, until we
+        # find a reason not to ingest them both.
+        deps.uniq
+      end
+
+      # TODO: this was deprecated in 8.6.0. Remove this in any major version bump >= 9.*
       def self.parse_poetry(file_contents, options: {})
-        manifest = Tomlrb.parse(file_contents).fetch('tool', {}).fetch('poetry', {})
-        map_dependencies(manifest['dependencies'], 'runtime') + map_dependencies(manifest['dev-dependencies'], 'develop')
+        puts "Warning: parse_poetry() is deprecated, use parse_pyproject() instead."
+        parse_pyproject(file_contents, options)
       end
 
       def self.parse_conda(file_contents, options: {})
@@ -251,6 +275,15 @@ module Bibliothecary
         # We don't want to throw errors during the matching phase, only during
         # parsing after we match.
         false
+      end
+
+      # Simply parses out the name of a PEP 508 Dependency specification: https://peps.python.org/pep-0508/
+      # Leaves the rest as-is with any leading semicolons or spaces stripped
+      def self.parse_pep_508_dep_spec(dep)
+        name, requirement = dep.split(PEP_508_NAME_REGEX, 2).last(2).map(&:strip)
+        requirement = requirement.sub(/^[\s;]*/, "")
+        requirement = "*" if requirement == ""
+        return name, requirement
       end
     end
   end

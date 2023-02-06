@@ -309,6 +309,38 @@ git://what@::/:/:/
     })
   end
 
+  # https://packaging.python.org/en/latest/specifications/declaring-project-metadata/#declaring-project-metadata
+  it 'handles pyproject.toml with pep621-style deps' do
+    source = <<~FILE
+[project]
+name = "a_pep621_project"
+version = "0.1.0"
+dependencies = [
+    "black",
+    "isort",
+    "pytest == 7.2.1",
+    "python-gitlab == 3.12.0",
+    "Click~=8.1.0",
+    "marshmallow-dataclass[union]~=8.5.6",
+]
+    FILE
+
+    expect(described_class.analyse_contents('pyproject.toml', source)).to eq({
+      platform: "pypi",
+      path: "pyproject.toml",
+      dependencies: [
+        {name: "black", requirement: "*", type: "runtime"}, 
+        {name: "isort", requirement: "*", type: "runtime"}, 
+        {name: "pytest", requirement: "== 7.2.1", type: "runtime"}, 
+        {name: "python-gitlab", requirement: "== 3.12.0", type: "runtime"},
+        {name: "Click", requirement: "~=8.1.0", type: "runtime"},
+        {name: "marshmallow-dataclass", requirement: "[union]~=8.5.6", type: "runtime"}
+      ],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
   it 'parses dependencies from Poetry.lock' do
     expect(described_class.analyse_contents('poetry.lock', load_fixture('poetry.lock'))).to eq({
       platform: "pypi",
