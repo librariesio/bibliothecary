@@ -110,7 +110,7 @@ module Bibliothecary
 
         # We're combining both poetry+PEP621 deps instead of making them mutually exclusive, until we
         # find a reason not to ingest them both.
-        deps
+        deps.uniq
       end
 
       # TODO: this was deprecated in 8.6.0. Remove this in any major version bump >= 9.*
