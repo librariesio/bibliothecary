@@ -8,7 +8,7 @@ module Bibliothecary
 
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
-      BUNDLED_WITH = /BUNDLED WITH/.freeze
+      BUNDLED_WITH = /BUNDLED WITH/
 
       def self.mapping
         {
