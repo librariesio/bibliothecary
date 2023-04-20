@@ -84,7 +84,7 @@ describe Bibliothecary::Parsers::Rubygems do
        success: true
      )
 
-    expect(result[:dependencies]).to include({ name: "bundler", requirement: "2.3.19", type: "development" })
+    expect(result[:dependencies]).to include({ name: "bundler", requirement: "2.3.19", type: "runtime" })
   end
 
   it 'parses dependencies from Gemfile.lock with windows line endings' do
