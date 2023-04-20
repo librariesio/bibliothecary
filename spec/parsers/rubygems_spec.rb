@@ -75,6 +75,18 @@ describe Bibliothecary::Parsers::Rubygems do
     })
   end
 
+  it 'parses bundler version from Gemfile.lock' do
+    result = described_class.analyse_contents('Gemfile.lock', load_fixture('GemfileWithBundler.lock'))
+    expect(result).to include(
+       platform: "rubygems",
+       path: "Gemfile.lock",
+       kind: 'lockfile',
+       success: true
+     )
+
+    expect(result[:dependencies]).to include({ name: "bundler", requirement: "2.3.19", type: "development" })
+  end
+
   it 'parses dependencies from Gemfile.lock with windows line endings' do
     fixture = load_fixture("GemfileLineEndings.lock")
     # If this fails, the line endings changed, on this file.
