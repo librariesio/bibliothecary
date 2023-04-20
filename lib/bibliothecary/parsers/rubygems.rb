@@ -72,7 +72,7 @@ module Bibliothecary
         {
           name: 'bundler',
           requirement: version,
-          type: 'development'
+          type: 'runtime'
         }
       end
     end
