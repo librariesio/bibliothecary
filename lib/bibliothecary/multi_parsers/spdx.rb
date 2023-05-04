@@ -7,11 +7,12 @@ Warning[:experimental] = true
 
 module Bibliothecary
   module MultiParsers
-    module CycloneDX
+    module Spdx
       include Bibliothecary::Analyser
       include Bibliothecary::Analyser::TryCache
 
-      NoComponents = Class.new(StandardError)
+      NoPurls = Class.new(StandardError)
+      MalformedFile = Class.new(StandardError)
 
       class ManifestEntries
         # If a purl type (key) exists, it will be used in a manifest for
@@ -53,7 +54,8 @@ module Bibliothecary
           @manifests[mapping] << {
             name: self.class.full_name_for_purl(purl),
             requirement: purl.version,
-            type: 'lockfile'
+            # not sure if this should be 'lockfile' or 'manifest'
+            type: 'manifest'
           }
         end
 
@@ -65,6 +67,18 @@ module Bibliothecary
             purl = PackageURL.parse(purl_text)
 
             self << purl
+          end
+        end
+
+        # @return [String] The properly namespaced package name
+        def self.full_name_for_purl(purl)
+          parts = [purl.namespace, purl.name].compact
+
+          case purl.type
+          when "maven"
+            parts.join(':')
+          else
+            parts.join('/')
           end
         end
 
@@ -84,22 +98,31 @@ module Bibliothecary
       end
 
       def parse_spdx(file_contents, options: {})
-        purl_text = try_cache(options, options[:filename]) do
+        purls = try_cache(options, options[:filename]) do
           parse_file_contents(file_contents)
         end
 
-        entries = ManifestEntries.new(parse_queue: purl_text)
-        raise NoComponents if entries.empty?
+        entries = ManifestEntries.new(parse_queue: purls)
+        raise NoPurls if purls.empty?
 
         entries.parse!
+
+        entries[platform_name.to_sym]
       end
 
       def parse_file_contents(file_contents)
         purls = []
 
-        file_contents.split('\n').each do |line|
-          purl = line.split('ExternalRef: PACKAGE-MANAGER ')[1]
-          purls.push(purl)
+        file_contents.split("\n").each do |line|
+          next if line.chomp == ""
+
+          raise MalformedFile unless line.match(/^[a-zA-Z]+: \S+/)
+
+          unless line.index("ExternalRef: PACKAGE-MANAGER purl ").nil?
+            purl_text = line.split("ExternalRef: PACKAGE-MANAGER purl ")[1]
+
+            purls.push(purl_text)
+          end
         end
 
         purls
