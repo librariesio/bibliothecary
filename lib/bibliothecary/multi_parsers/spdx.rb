@@ -11,30 +11,10 @@ module Bibliothecary
       include Bibliothecary::Analyser
       include Bibliothecary::Analyser::TryCache
 
-      NoPurls = Class.new(StandardError)
+      NoEntries = Class.new(StandardError)
       MalformedFile = Class.new(StandardError)
 
       class ManifestEntries
-        # If a purl type (key) exists, it will be used in a manifest for
-        # the key's value. If not, it's ignored.
-        #
-        # https://github.com/package-url/purl-spec/blob/master/PURL-TYPES.rst
-        PURL_TYPE_MAPPING = {
-          "golang" => :go,
-          "maven" => :maven,
-          "npm" => :npm,
-          "cargo" => :cargo,
-          "composer" => :packagist,
-          "conda" => :conda,
-          "cran" => :cran,
-          "gem" => :rubygems,
-          "hackage" => :hackage,
-          "hex" => :hex,
-          "nuget" => :nuget,
-          "pypi" => :pypi,
-          "swift" => :swift_pm
-        }
-
         attr_reader :manifests
 
         def initialize(parse_queue:)
@@ -55,7 +35,7 @@ module Bibliothecary
             name: self.class.full_name_for_purl(purl),
             requirement: purl.version,
             # not sure if this should be 'lockfile' or 'manifest'
-            type: 'manifest'
+            type: 'lockfile'
           }
         end
 
@@ -87,6 +67,26 @@ module Bibliothecary
         end
       end
 
+      # If a purl type (key) exists, it will be used in a manifest for
+      # the key's value. If not, it's ignored.
+      #
+      # https://github.com/package-url/purl-spec/blob/master/PURL-TYPES.rst
+      PURL_TYPE_MAPPING = {
+        "golang" => :go,
+        "maven" => :maven,
+        "npm" => :npm,
+        "cargo" => :cargo,
+        "composer" => :packagist,
+        "conda" => :conda,
+        "cran" => :cran,
+        "gem" => :rubygems,
+        "hackage" => :hackage,
+        "hex" => :hex,
+        "nuget" => :nuget,
+        "pypi" => :pypi,
+        "swift" => :swift_pm
+      }
+
       def self.mapping
         {
           match_extension('.spdx') => {
@@ -98,34 +98,59 @@ module Bibliothecary
       end
 
       def parse_spdx(file_contents, options: {})
-        purls = try_cache(options, options[:filename]) do
+        entries = try_cache(options, options[:filename]) do
           parse_file_contents(file_contents)
         end
 
-        entries = ManifestEntries.new(parse_queue: purls)
-        raise NoPurls if purls.empty?
-
-        entries.parse!
+        raise NoEntries if entries.empty?
 
         entries[platform_name.to_sym]
       end
 
+      def get_platform(spdx_id)
+        PURL_TYPE_MAPPING.values.find { |mapping| !spdx_id.index(mapping.to_s).nil?}
+      end
+
       def parse_file_contents(file_contents)
-        purls = []
+        entries = {}
+
+        package_name = nil
+        package_version = nil
+        platform = nil
 
         file_contents.split("\n").each do |line|
-          next if line.chomp == ""
+          next if line.strip == ""
 
           raise MalformedFile unless line.match(/^[a-zA-Z]+: \S+/)
 
-          unless line.index("ExternalRef: PACKAGE-MANAGER purl ").nil?
-            purl_text = line.split("ExternalRef: PACKAGE-MANAGER purl ")[1]
+          # unless line.index("ExternalRef: PACKAGE-MANAGER purl ").nil?
+          #   purl_text = line.split("ExternalRef: PACKAGE-MANAGER purl ")[1]
 
-            purls.push(purl_text)
+          #   purls.push(purl_text)
+          # end
+          if !line.index("PackageName:").nil?
+            package_name = line.split("PackageName: ")[1]
+
+          elsif !line.index("PackageVersion:").nil?
+            package_version = line.split("PackageVersion: ")[1]
+          elsif !line.index("SPDXID:").nil?
+            platform = get_platform(line.split("SPDXID: ")[1])
+          end
+
+          unless package_name.nil? || package_version.nil? || platform.nil?
+            entries[platform_name.to_sym] ||= []
+            entries[platform_name.to_sym] << {
+              name: package_name,
+              requirement: package_version,
+              # not sure if this should be 'lockfile' or 'manifest'
+              type: 'lockfile'
+            }
+
+            package_name = package_version = platform = nil
           end
         end
 
-        purls
+        entries
       end
     end
   end

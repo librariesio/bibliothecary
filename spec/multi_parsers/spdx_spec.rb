@@ -14,10 +14,12 @@ describe Bibliothecary::MultiParsers::Spdx do
 
   it "handles malformed SPDX" do
     expect { parser.parse_spdx("SPDXVersion: SPDX-2.0\nSPDXID: SPDXRef-DOCUMENT\nDataLicense: \n") }.to raise_error(described_class::MalformedFile)
+    expect { parser.parse_spdx("SPDXVersion:  ") }.to raise_error(described_class::MalformedFile)
+    expect { parser.parse_spdx("MALFORMED ") }.to raise_error(described_class::MalformedFile)
   end
 
   it "handles an empty file" do
-    expect{ parser.parse_spdx("") }.to raise_error(described_class::NoPurls)
+    expect{ parser.parse_spdx("") }.to raise_error(described_class::NoEntries)
   end
 
   describe "properly formed file" do
@@ -46,7 +48,7 @@ describe Bibliothecary::MultiParsers::Spdx do
       "\n" +
 
       "PackageName: package1\n" +
-      "SPDXID: SPDXRef-pkg-package1-1.0.0\n" +
+      "SPDXID: SPDXRef-pkg-npm-package1-1.0.0\n" +
       "PackageVersion: 1.0.0\n" +
       "PackageSupplier: Person: someuser\n" +
       "PackageDownloadLocation: https://registry.npmjs.org/package1/-/package1-1.0.0.tgz\n" +
@@ -69,38 +71,27 @@ describe Bibliothecary::MultiParsers::Spdx do
 
     it "handles a properly formed file" do
       expect(parser.parse_spdx(file)).to eq([
-        {:name=>"package1", :requirement=>"1.0.0", :type=>"manifest"},
-        {:name=>"package2", :requirement=>"1.0.1", :type=>"manifest"}
+        {:name=>"package1", :requirement=>"1.0.0", :type=>"lockfile"},
+        {:name=>"package2", :requirement=>"1.0.1", :type=>"lockfile"}
       ])
     end
   end
 
-  describe "SPDX#parse!" do
-    it 'should not mutate the manifest sent in' do
-      queue = ["pkg:npm/ansi-escapes@4.3.1", "pkg:npm/ansi-regex@4.1.0", "pkg:npm/ansi-regex@3.0.0"]
 
-      entries = described_class::ManifestEntries.new(parse_queue: queue)
-
-      entries.parse!
-
-      expect(queue.count).to eq(3)
-    end
-  end
-
-  describe 'ManifestEntries.full_name_for_purl' do
+  describe 'Spdx::get_platform' do
     it 'should handle formats correctly' do
-      maven = PackageURL.parse("pkg:maven/cat/dog@1.2.3")
+      maven = "SPDXRef-pkg-maven-ch.qos.some-package-1.1.5"
 
-      expect(described_class::ManifestEntries.full_name_for_purl(maven)).to eq("cat:dog")
+      expect(parser.get_platform(maven)).to eq(:maven)
 
-      npm = PackageURL.parse("pkg:npm/cat/dog@1.2.3")
+      npm = "SPDXRef-pkg-npm-some-package2-1.0.2"
 
-      expect(described_class::ManifestEntries.full_name_for_purl(npm)).to eq("cat/dog")
+      expect(parser.get_platform(npm)).to eq(:npm)
     end
   end
 
   context 'correct parsers implement it' do
-    Bibliothecary::MultiParsers::Spdx::ManifestEntries::PURL_TYPE_MAPPING.each_value do |parser|
+    Bibliothecary::MultiParsers::Spdx::PURL_TYPE_MAPPING.each_value do |parser|
       constant_symbol = Bibliothecary::Parsers.constants.find { |c| c.to_s.downcase.gsub(/[^a-z]/, '') == parser.to_s.downcase.gsub(/[^a-z]/, '') }
       constant = Bibliothecary::Parsers.const_get(constant_symbol)
 
