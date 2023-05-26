@@ -287,6 +287,18 @@
             <artifactId>recursive</artifactId>
             <version>${recursive.test}</version>
         </dependency>
+        <dependency>
+            <groupId>io.libraries</groupId>
+            <artifactId>optional</artifactId>
+            <version>${optional.test}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>io.libraries</groupId>
+            <artifactId>not-optional</artifactId>
+            <version>${not-optional.test}</version>
+            <optional>false</optional>
+        </dependency>
     </dependencies>
 
     <build>

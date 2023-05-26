@@ -268,11 +268,15 @@ module Bibliothecary
         [].tap do |deps|
           ['dependencies/dependency', 'dependencyManagement/dependencies/dependency'].each do |deps_xpath|
             xml.locate(deps_xpath).each do |dep|
-              deps.push({
+              dep_hash = {
                 name: "#{extract_pom_dep_info(xml, dep, 'groupId', parent_properties)}:#{extract_pom_dep_info(xml, dep, 'artifactId', parent_properties)}",
                 requirement: extract_pom_dep_info(xml, dep, 'version', parent_properties),
-                type: extract_pom_dep_info(xml, dep, 'scope', parent_properties) || 'runtime'
-              })
+                type: extract_pom_dep_info(xml, dep, 'scope', parent_properties) || 'runtime',
+              }
+              # optional field is, itself, optional, and will be either "true" or "false"
+              optional = extract_pom_dep_info(xml, dep, 'optional', parent_properties)
+              dep_hash[:optional] = optional == "true" unless optional.nil?
+              deps.push(dep_hash)
             end
           end
         end
