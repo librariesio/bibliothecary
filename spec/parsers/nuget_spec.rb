@@ -895,7 +895,6 @@ describe Bibliothecary::Parsers::Nuget do
   end
 
   it 'parses target framework from example-dotnet-core.csproj' do
-    puts described_class.analyse_contents('example-dotnet-core.csproj', load_fixture('example-dotnet-core.csproj'))
     expect(described_class.analyse_contents('example-dotnet-core.csproj', load_fixture('example-dotnet-core.csproj'))).to eq({
       platform: "nuget",
       path: "example-dotnet-core.csproj",
@@ -909,14 +908,25 @@ describe Bibliothecary::Parsers::Nuget do
   end
 
   it 'parses target framework from example-dotnet-framework.csproj' do
-    puts described_class.analyse_contents('example-dotnet-framework.csproj', load_fixture('example-dotnet-framework.csproj'))
     expect(described_class.analyse_contents('example-dotnet-framework.csproj', load_fixture('example-dotnet-framework.csproj'))).to eq({
       platform: "nuget",
       path: "example-dotnet-framework.csproj",
       dependencies: [
         {:name=>"Microsoft.AspNet.Mvc", :requirement=>"5.2.7", :type=>"runtime"},
         {:name=>"Microsoft.AspNet.Razor", :requirement=>"3.2.7", :type=>"runtime"},
-        {:name=>".NET Framework", :requirement=>nil, :type=>"runtime"}
+        {:name=>".NET", :requirement=>nil, :type=>"runtime"}
+      ],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
+  it 'parses target framework from example-dotnet-old.csproj' do
+    expect(described_class.analyse_contents('example-dotnet-old.csproj', load_fixture('example-dotnet-old.csproj'))).to eq({
+      platform: "nuget",
+      path: "example-dotnet-old.csproj",
+      dependencies: [
+        {:name=>".NET", :requirement=>nil, :type=>"runtime"}
       ],
       kind: 'manifest',
       success: true

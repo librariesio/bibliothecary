@@ -3,7 +3,7 @@ module Bibliothecary
     module TargetFramework
       def identify_target_framework(tfm)
         target_frameworks = {
-            '.NET Framework' => ['net11', 'net20', 'net35', 'net40', 'net403', 'net45', 'net451', 'net452', 'net46', 'net461', 'net462', 'net47', 'net471', 'net472', 'net48'],
+            '.NET' => ['net11', 'net20', 'net35', 'net40', 'net403', 'net45', 'net451', 'net452', 'net46', 'net461', 'net462', 'net47', 'net471', 'net472', 'net48'],
             '.NET Core' => ['netcoreapp1.0', 'netcoreapp1.1', 'netcoreapp2.0', 'netcoreapp2.1', 'netcoreapp2.2', 'netcoreapp3.0', 'netcoreapp3.1', 'net5.0*', 'net6.0*', 'net7.0*']
           }
 
