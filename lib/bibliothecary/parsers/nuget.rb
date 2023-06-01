@@ -6,6 +6,7 @@ module Bibliothecary
     class Nuget
       include Bibliothecary::Analyser
       extend Bibliothecary::MultiParsers::JSONRuntime
+      extend Bibliothecary::MultiParsers::TargetFramework
 
       def self.mapping
         {
@@ -120,6 +121,10 @@ module Bibliothecary
             type: type
           }
         end
+        
+        tfm = manifest.locate('PropertyGroup/TargetFramework')&.first&.text
+        packages << identify_target_framework(tfm) if tfm
+
         packages.uniq {|package| package[:name] }
       rescue
         []

@@ -858,7 +858,8 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "Microsoft.Extensions.DependencyInjection", requirement: "1.1.1", type: "runtime" },
         { name: "Microsoft.VisualStudio.Web.BrowserLink", requirement: "1.1.0", type: "runtime" },
         { name: "System.Resources.Extensions", requirement: "4.7.0", type: "runtime" },
-        { name: "Contoso.Utility.UsefulStuff", requirement: "3.6.0", type: "development" }
+        { name: "Contoso.Utility.UsefulStuff", requirement: "3.6.0", type: "development" },
+        {:name=>".NET Core", :requirement=>nil, :type=>"runtime"}
       ],
       kind: 'manifest',
       success: true
@@ -871,7 +872,8 @@ describe Bibliothecary::Parsers::Nuget do
       path: "example.csproj",
       dependencies: [
         { name: "Microsoft.AspNetCore.App", requirement: "*", type: "runtime" },
-        { name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "development" }
+        { name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "development" },
+        {:name=>".NET Core", :requirement=>nil, :type=>"runtime"}
       ],
       kind: 'manifest',
       success: true
@@ -884,7 +886,37 @@ describe Bibliothecary::Parsers::Nuget do
       path: "example-update.csproj",
       dependencies: [
         { name: "Microsoft.AspNetCore", requirement: "1.1.1", type: "runtime" },
-        { name: "Microsoft.AspNetCore.StaticFiles", requirement: "2.2.0", type: "runtime" }
+        { name: "Microsoft.AspNetCore.StaticFiles", requirement: "2.2.0", type: "runtime" },
+        {:name=>".NET Core", :requirement=>nil, :type=>"runtime"}
+      ],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
+  it 'parses target framework from example-dotnet-core.csproj' do
+    puts described_class.analyse_contents('example-dotnet-core.csproj', load_fixture('example-dotnet-core.csproj'))
+    expect(described_class.analyse_contents('example-dotnet-core.csproj', load_fixture('example-dotnet-core.csproj'))).to eq({
+      platform: "nuget",
+      path: "example-dotnet-core.csproj",
+      dependencies: [
+        {:name=>"Microsoft.AspNetCore.App", :requirement=>"*", :type=>"runtime"},
+        {:name=>".NET Core", :requirement=>nil, :type=>"runtime"}
+      ],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
+  it 'parses target framework from example-dotnet-framework.csproj' do
+    puts described_class.analyse_contents('example-dotnet-framework.csproj', load_fixture('example-dotnet-framework.csproj'))
+    expect(described_class.analyse_contents('example-dotnet-framework.csproj', load_fixture('example-dotnet-framework.csproj'))).to eq({
+      platform: "nuget",
+      path: "example-dotnet-framework.csproj",
+      dependencies: [
+        {:name=>"Microsoft.AspNet.Mvc", :requirement=>"5.2.7", :type=>"runtime"},
+        {:name=>"Microsoft.AspNet.Razor", :requirement=>"3.2.7", :type=>"runtime"},
+        {:name=>".NET Framework", :requirement=>nil, :type=>"runtime"}
       ],
       kind: 'manifest',
       success: true

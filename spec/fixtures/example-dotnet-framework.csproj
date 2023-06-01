@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <RootNamespace>MyMvcProject</RootNamespace>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNet.Razor" Version="3.2.7" />
+    <!-- Other package references omitted for brevity -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\HomeController.cs" />
+    <!-- Other source code files omitted for brevity -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Shared\" />
+    <!-- Other folders/files omitted for brevity -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Views\**\*.cshtml" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Other content files omitted for brevity -->
+  </ItemGroup>
+
+</Project>
