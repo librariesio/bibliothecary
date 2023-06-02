@@ -20,6 +20,12 @@ module Bibliothecary
         {}
       end
 
+      def dotnet_framework_version(tfm)
+        tfm.scan(/\d/).join('.')
+      rescue
+        nil
+      end
+
       private
 
       def find_matching_framework(tfm)

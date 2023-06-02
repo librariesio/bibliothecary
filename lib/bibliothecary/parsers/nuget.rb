@@ -130,13 +130,13 @@ module Bibliothecary
         #Followed Target Framework to TFM mapping
         #according to https://learn.microsoft.com/en-us/dotnet/standard/frameworks#supported-target-frameworks
         tfm = manifest.locate('PropertyGroup/TargetFramework')&.first&.text
-        old_tfm = manifest.locate('PropertyGroup/TargetFrameworkVersion')
+        old_tfm = manifest.locate('PropertyGroup/TargetFrameworkVersion')&.first&.text
 
         if tfm
           target_framework = identify_target_framework(tfm)
           packages << identify_target_framework(tfm) if target_framework.any?
         end
-        packages << { name: ".NET", requirement: nil, type: 'runtime' } if old_tfm.any?
+        packages << { name: ".NET", requirement: dotnet_framework_version(old_tfm), type: 'runtime' } if old_tfm
 
         packages.uniq {|package| package[:name] }
       rescue

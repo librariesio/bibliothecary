@@ -926,7 +926,7 @@ describe Bibliothecary::Parsers::Nuget do
       platform: "nuget",
       path: "example-dotnet-old.csproj",
       dependencies: [
-        { name: ".NET", requirement: nil, type: "runtime" }
+        { name: ".NET", requirement: "4.7.2", type: "runtime" }
       ],
       kind: 'manifest',
       success: true
