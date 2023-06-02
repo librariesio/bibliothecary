@@ -7,6 +7,7 @@ module Bibliothecary
       include Bibliothecary::Analyser
       extend Bibliothecary::MultiParsers::JSONRuntime
       extend Bibliothecary::MultiParsers::TargetFramework
+      extend Bibliothecary::MultiParsers::MsSqlServer
 
       def self.mapping
         {
@@ -33,6 +34,10 @@ module Bibliothecary
           match_extension(".csproj") => {
             kind: 'manifest',
             parser: :parse_csproj
+          },
+          match_extension(".sqlproj") => {
+            kind: 'manifest',
+            parser: :parse_sqlproj
           },
           match_filename("paket.lock") => {
             kind: 'lockfile',
@@ -127,12 +132,30 @@ module Bibliothecary
         tfm = manifest.locate('PropertyGroup/TargetFramework')&.first&.text
         old_tfm = manifest.locate('PropertyGroup/TargetFrameworkVersion')
 
-        packages << identify_target_framework(tfm) if tfm
-        packages << { name: ".NET", requirement: nil, type: 'runtime'} if old_tfm.any?
+        if tfm
+          target_framework = identify_target_framework(tfm)
+          packages << identify_target_framework(tfm) if target_framework.any?
+        end
+        packages << { name: ".NET", requirement: nil, type: 'runtime' } if old_tfm.any?
 
         packages.uniq {|package| package[:name] }
       rescue
         []
+      end
+
+      def self.parse_sqlproj(file_contents, options: {})
+        manifest = Ox.parse file_contents
+        dsp = manifest.locate('Project/PropertyGroup/DSP')&.first&.text
+        if dsp
+          version = identify_ms_sql_server_version(dsp)
+        else
+          version = nil
+        end 
+        [{
+          name: "Microsoft SQL Server",
+          requirement: version,
+          type: "development"
+        }]
       end
 
       def self.parse_nuspec(file_contents, options: {})

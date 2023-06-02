@@ -859,7 +859,7 @@ describe Bibliothecary::Parsers::Nuget do
        { name: "Microsoft.VisualStudio.Web.BrowserLink", requirement: "1.1.0", type: "runtime" },
        { name: "System.Resources.Extensions", requirement: "4.7.0", type: "runtime" },
        { name: "Contoso.Utility.UsefulStuff", requirement: "3.6.0", type: "development" },
-       { name: ".NET Core", requirement: "1.1", type: "runtime"}
+       { name: ".NET Core", requirement: "1.1", type: "runtime" }
       ],
       kind: 'manifest',
       success: true
@@ -873,7 +873,7 @@ describe Bibliothecary::Parsers::Nuget do
       dependencies: [
         { name: "Microsoft.AspNetCore.App", requirement: "*", type: "runtime" },
         { name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "development" },
-        { name: ".NET Core", requirement: "2.2", type: "runtime"}
+        { name: ".NET Core", requirement: "2.2", type: "runtime" }
       ],
       kind: 'manifest',
       success: true
@@ -887,7 +887,7 @@ describe Bibliothecary::Parsers::Nuget do
       dependencies: [
         { name: "Microsoft.AspNetCore", requirement: "1.1.1", type: "runtime" },
         { name: "Microsoft.AspNetCore.StaticFiles", requirement: "2.2.0", type: "runtime" }, 
-        { name: ".NET Core", requirement: "1.1", type: "runtime"}
+        { name: ".NET Core", requirement: "1.1", type: "runtime" }
       ],
       kind: 'manifest',
       success: true
@@ -899,8 +899,8 @@ describe Bibliothecary::Parsers::Nuget do
       platform: "nuget",
       path: "example-dotnet-core.csproj",
       dependencies: [
-        {name: "Microsoft.AspNetCore.App", requirement: "*", type: "runtime"}, 
-        {name: ".NET Core", requirement: "2.1", type: "runtime"}
+        { name: "Microsoft.AspNetCore.App", requirement: "*", type: "runtime" }, 
+        { name: ".NET Core", requirement: "2.1", type: "runtime" }
       ],
       kind: 'manifest',
       success: true
@@ -912,9 +912,9 @@ describe Bibliothecary::Parsers::Nuget do
       platform: "nuget",
       path: "example-dotnet-framework.csproj",
       dependencies: [
-        {name: "Microsoft.AspNet.Mvc", requirement: "5.2.7", type: "runtime"}, 
-        {name: "Microsoft.AspNet.Razor", requirement: "3.2.7", type: "runtime"}, 
-        {name: ".NET", requirement: "4.7.2", type: "runtime"}
+        { name: "Microsoft.AspNet.Mvc", requirement: "5.2.7", type: "runtime" }, 
+        { name: "Microsoft.AspNet.Razor", requirement: "3.2.7", type: "runtime" }, 
+        { name: ".NET", requirement: "4.7.2", type: "runtime" }
       ],
       kind: 'manifest',
       success: true
@@ -926,13 +926,24 @@ describe Bibliothecary::Parsers::Nuget do
       platform: "nuget",
       path: "example-dotnet-old.csproj",
       dependencies: [
-        {:name=>".NET", :requirement=>nil, :type=>"runtime"}
+        { name: ".NET", requirement: nil, type: "runtime" }
       ],
       kind: 'manifest',
       success: true
     })
   end
 
+  it 'parses dependencies from example.sqlproj' do
+    expect(described_class.analyse_contents('example.sqlproj', load_fixture('example.sqlproj'))).to eq({
+      platform: "nuget",
+      path: "example.sqlproj",
+      dependencies: [
+        { name: "Microsoft SQL Server", requirement: "13.0", type: "development" }
+      ],
+      kind: 'manifest',
+      success: true
+    })
+  end
   it 'parses dependencies from example.nuspec' do
     expect(described_class.analyse_contents('example.nuspec', load_fixture('example.nuspec'))).to eq({
       platform: "nuget",

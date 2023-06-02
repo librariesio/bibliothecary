@@ -16,8 +16,8 @@ module Bibliothecary
           requirement: version,
           type: 'runtime'
         }
-      rescue => e
-        e.message
+      rescue
+        {}
       end
 
       private
