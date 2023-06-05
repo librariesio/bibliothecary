@@ -129,8 +129,8 @@ module Bibliothecary
 
         #Followed Target Framework to TFM mapping
         #according to https://learn.microsoft.com/en-us/dotnet/standard/frameworks#supported-target-frameworks
-        tfm = manifest.locate('PropertyGroup/TargetFramework')&.first&.text
-        old_tfm = manifest.locate('PropertyGroup/TargetFrameworkVersion')&.first&.text
+        tfm = manifest.locate('Project/PropertyGroup/TargetFramework')&.first&.text || manifest.locate('PropertyGroup/TargetFramework')&.first&.text
+        old_tfm = manifest.locate('Project/PropertyGroup/TargetFrameworkVersion')&.first&.text || manifest.locate('PropertyGroup/TargetFrameworkVersion')&.first&.text
 
         if tfm
           target_framework = identify_target_framework(tfm)
