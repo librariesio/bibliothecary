@@ -145,12 +145,8 @@ module Bibliothecary
 
       def self.parse_sqlproj(file_contents, options: {})
         manifest = Ox.parse file_contents
-        dsp = manifest.locate('Project/PropertyGroup/DSP')&.first&.text
-        if dsp
-          version = identify_ms_sql_server_version(dsp)
-        else
-          version = nil
-        end 
+        dsp = manifest.locate('Project/PropertyGroup/DSP')&.first&.text || manifest.locate('PropertyGroup/DSP')&.first&.text
+        version = identify_ms_sql_server_version(dsp) if dsp
         [{
           name: "Microsoft SQL Server",
           requirement: version,
