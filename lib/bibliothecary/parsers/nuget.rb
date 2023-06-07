@@ -6,6 +6,8 @@ module Bibliothecary
     class Nuget
       include Bibliothecary::Analyser
       extend Bibliothecary::MultiParsers::JSONRuntime
+      extend Bibliothecary::MultiParsers::TargetFramework
+      extend Bibliothecary::MultiParsers::MsSqlServer
 
       def self.mapping
         {
@@ -32,6 +34,10 @@ module Bibliothecary
           match_extension(".csproj") => {
             kind: 'manifest',
             parser: :parse_csproj
+          },
+          match_extension(".sqlproj") => {
+            kind: 'manifest',
+            parser: :parse_sqlproj
           },
           match_filename("paket.lock") => {
             kind: 'lockfile',
@@ -120,9 +126,32 @@ module Bibliothecary
             type: type
           }
         end
+
+        #Followed Target Framework to TFM mapping
+        #according to https://learn.microsoft.com/en-us/dotnet/standard/frameworks#supported-target-frameworks
+        tfm = manifest.locate('Project/PropertyGroup/TargetFramework')&.first&.text || manifest.locate('PropertyGroup/TargetFramework')&.first&.text
+        old_tfm = manifest.locate('Project/PropertyGroup/TargetFrameworkVersion')&.first&.text || manifest.locate('PropertyGroup/TargetFrameworkVersion')&.first&.text
+
+        if tfm
+          target_framework = identify_target_framework(tfm)
+          packages << identify_target_framework(tfm) if target_framework.any?
+        end
+        packages << { name: ".NET", requirement: dotnet_framework_version(old_tfm), type: 'runtime' } if old_tfm
+
         packages.uniq {|package| package[:name] }
       rescue
         []
+      end
+
+      def self.parse_sqlproj(file_contents, options: {})
+        manifest = Ox.parse file_contents
+        dsp = manifest.locate('Project/PropertyGroup/DSP')&.first&.text || manifest.locate('PropertyGroup/DSP')&.first&.text
+        version = identify_ms_sql_server_version(dsp) if dsp
+        [{
+          name: "Microsoft SQL Server",
+          requirement: version,
+          type: "development"
+        }]
       end
 
       def self.parse_nuspec(file_contents, options: {})
