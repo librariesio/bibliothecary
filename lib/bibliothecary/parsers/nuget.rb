@@ -6,7 +6,7 @@ module Bibliothecary
     class Nuget
       include Bibliothecary::Analyser
       extend Bibliothecary::MultiParsers::JSONRuntime
-      extend Bibliothecary::MultiParsers::TargetFramework
+      extend Bibliothecary::MultiParsers::DotnetFramework
       extend Bibliothecary::MultiParsers::MsSqlServer
 
       def self.mapping
@@ -137,7 +137,8 @@ module Bibliothecary
           packages << identify_target_framework(tfm) if target_framework.any?
         end
         packages << { name: ".NET", requirement: dotnet_framework_version(old_tfm), type: 'runtime' } if old_tfm
-
+        web_frameworks_identified = identify_web_framework(packages)
+        packages.concat(web_frameworks_identified) if web_frameworks_identified.any?
         packages.uniq {|package| package[:name] }
       rescue
         []
