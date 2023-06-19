@@ -148,8 +148,11 @@ module Bibliothecary
         manifest = Ox.parse file_contents
         dsp = manifest.locate('Project/PropertyGroup/DSP')&.first&.text || manifest.locate('PropertyGroup/DSP')&.first&.text
         return [] unless dsp
+
         database = identify_database_name(dsp) 
         version = identify_database_version(dsp)
+        return [] if database.nil?
+        
         [{
           name: database,
           requirement: version,
