@@ -1,7 +1,7 @@
 module Bibliothecary
   module MultiParsers
     module MsSqlServer
-      def identify_ms_sql_server_version(dsp)
+      def identify_database_version(dsp)
         version_number = dsp.match(/\d+/)&.[](0)
         return nil unless version_number
 
@@ -14,6 +14,16 @@ module Bibliothecary
 
         version_number += '.0' unless version_number.end_with?('.0')
         version_number
+      rescue
+        nil
+      end
+
+      def identify_database_name(dsp)
+        if dsp.downcase.include?('azure')
+          return 'Azure SQL Database'
+        else
+          return 'Microsoft SQL Server'
+        end
       rescue
         nil
       end

@@ -147,12 +147,16 @@ module Bibliothecary
       def self.parse_sqlproj(file_contents, options: {})
         manifest = Ox.parse file_contents
         dsp = manifest.locate('Project/PropertyGroup/DSP')&.first&.text || manifest.locate('PropertyGroup/DSP')&.first&.text
-        version = identify_ms_sql_server_version(dsp) if dsp
+        return [] unless dsp
+        database = identify_database_name(dsp) 
+        version = identify_database_version(dsp)
         [{
-          name: "Microsoft SQL Server",
+          name: database,
           requirement: version,
           type: "development"
         }]
+      rescue
+        []
       end
 
       def self.parse_nuspec(file_contents, options: {})
