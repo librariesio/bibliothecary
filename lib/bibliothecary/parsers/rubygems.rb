@@ -8,6 +8,7 @@ module Bibliothecary
 
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
+      BUNDLED_WITH = /BUNDLED WITH/
 
       def self.mapping
         {
@@ -35,14 +36,20 @@ module Bibliothecary
       def self.parse_gemfile_lock(file_contents, options: {})
         file_contents.lines(chomp: true).map do |line|
           match = line.match(NAME_VERSION_4)
-          next unless match
-          name = match[1]
-          version = match[2].gsub(/\(|\)/,'')
-          {
-            name: name,
-            requirement: version,
-            type: 'runtime'
-          }
+          bundler_match = line.match(BUNDLED_WITH)
+          next unless match || bundler_match
+
+          if match
+            name = match[1]
+            version = match[2].gsub(/\(|\)/,'')
+            {
+              name: name,
+              requirement: version,
+              type: 'runtime'
+            }
+          else
+            parse_bundler(file_contents)
+          end
         end.compact
       end
 
@@ -54,6 +61,19 @@ module Bibliothecary
       def self.parse_gemspec(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:gemspec, file_contents)
         parse_ruby_manifest(manifest)
+      end
+
+      def self.parse_bundler(file_contents)
+        bundled_with_index = file_contents.lines(chomp: true).find_index { |line| line.match(BUNDLED_WITH) }
+        version = file_contents.lines(chomp: true).fetch(bundled_with_index + 1)&.strip
+
+        return nil unless version
+
+        {
+          name: 'bundler',
+          requirement: version,
+          type: 'runtime'
+        }
       end
     end
   end

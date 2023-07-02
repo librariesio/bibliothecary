@@ -77,6 +77,7 @@ module Bibliothecary
 
   def self.utf8_string(string)
     string
+      .dup # ensure we don't have a frozen string
       .force_encoding("UTF-8") # treat all strings as utf8
       .sub(/^\xEF\xBB\xBF/, '') # remove any Byte Order Marks so JSON, etc don't fail while parsing them.
   end

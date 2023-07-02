@@ -19,7 +19,7 @@ module Bibliothecary
           options.default path: './'
           output = Bibliothecary.analyse(options.path)
           output.each do |file_contents|
-            puts "#{file_contents[:path]} (#{manifest[:platform]})"
+            puts "#{file_contents[:path]} (#{file_contents[:platform]})"
             file_contents[:dependencies].group_by{|d| d[:type] }.each do |type, deps|
               puts "  #{type}"
               deps.each do |dep|

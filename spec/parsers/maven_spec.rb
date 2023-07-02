@@ -91,6 +91,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         { name: "org.mockito:mockito-all", requirement: "1.8.4", type: "test" },
         { name: "io.libraries:bibliothecary", requirement: "${bibliothecary.version}", type: "test" },
         { name: "io.libraries:recursive", requirement: "${recursive.test}", type: "runtime" },
+        { name: "io.libraries:optional", requirement: "${optional.test}", type: "runtime", optional: true },
+        { name: "io.libraries:not-optional", requirement: "${not-optional.test}", type: "runtime", optional: false },
         # From dependencyManagement section
         { name: "org.apache.ant:ant", requirement: "1.9.2", type: "runtime" },
         { name: "commons-lang:commons-lang",requirement: "2.6", type: "runtime" }
