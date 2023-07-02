@@ -221,8 +221,11 @@ module Bibliothecary
       end
 
       def self.parse_maven_tree(file_contents, options: {})
-        file_contents = file_contents.gsub(/\r\n?/, "\n")
-        captures = file_contents.scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/).flatten.uniq
+        captures = Strings::ANSI.sanitize(file_contents)
+          .gsub(/\r\n?/, "\n")
+          .scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/)
+          .flatten
+          .uniq
 
         deps = captures.map do |item|
           parts = item.split(":")

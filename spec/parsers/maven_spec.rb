@@ -559,6 +559,20 @@ GRADLE
       expect(output).to eq [{ name: "net.sourceforge.pmd:pmd-scala_2.12", requirement: "${someVariable}", type: "jar" }]
     end
 
+    it "parses dependencies with ansi color codes by stripping the codes" do
+      output = described_class.parse_maven_tree(%Q!
+[\e[1;34mINFO\e[m] net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT
+[\e[1;34mINFO\e[m] +- org.apache.ant:ant:jar:1.10.9:provided
+[\e[1;34mINFO\e[m] |  +- net.sourceforge.pmd:pmd:pom:6.32.0-SNAPSHOT:provided
+[\e[1;34mINFO\e[m] +- net.java.dev.javacc:javacc:jar:5.0:provided!)
+
+      expect(output).to eq [
+        { name: "org.apache.ant:ant", requirement: "1.10.9", type: "provided" },
+        { name: "net.sourceforge.pmd:pmd", requirement: "6.32.0-SNAPSHOT", type: "provided" },
+        { name: "net.java.dev.javacc:javacc", requirement: "5.0", type: "provided" },
+      ]
+    end
+
     it 'parses dependencies from gradle-dependencies-q.txt, generated from build.gradle.kts' do
       # This output should be the same format as from build.gradle, but including it just to have a fixture from build.gradle.kts documented.
       deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle_with_kotlin/gradle-dependencies-q.txt'))
