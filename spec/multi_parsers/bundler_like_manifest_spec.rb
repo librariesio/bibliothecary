@@ -5,9 +5,9 @@ describe Bibliothecary::MultiParsers::BundlerLikeManifest do
     let(:gemfile_content) do
       <<-GEMFILE
         gem 'oj'
-		    gem 'rails', '4.2.0'
-		    gem 'redis', require: %w[redis redis/connection/hiredis]
-		    gem 'leveldb-ruby','0.15', require: 'leveldb'
+		  gem 'rails', '4.2.0'
+		  gem 'redis', require: %w[redis redis/connection/hiredis]
+		  gem 'leveldb-ruby','0.15', require: 'leveldb'
       GEMFILE
     end
 

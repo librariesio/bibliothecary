@@ -57,7 +57,7 @@ module Bibliothecary
         manifest = Gemnasium::Parser.send(:gemfile, file_contents)
 
         dependencies_found = parse_ruby_manifest(manifest)
-        # patten:gem 'redis', require: %w[redis redis/connection/hiredis]
+        # patten: gem 'redis', require: %w[redis redis/connection/hiredis]
         dependencies_found_with_new_pattern = extract_gems_by_pattern(
           /gem\s+['"]([^'"]+)['"],\s*require:\s*%w\[([^\]]+)\]/,
           file_contents
