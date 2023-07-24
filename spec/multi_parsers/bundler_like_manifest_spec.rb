@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Bibliothecary::MultiParsers::BundlerLikeManifest do
-	describe '#extract_gems_by_pattern' do
+  describe '#extract_gems_by_pattern' do
     let(:gemfile_content) do
       <<-GEMFILE
         gem 'oj'
