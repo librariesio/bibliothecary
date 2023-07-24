@@ -64,11 +64,6 @@ module Bibliothecary
 
         return dependencies_found if dependencies_found_with_new_pattern.empty?
         
-        puts "Gems identified by Bibliothecary"
-        puts dependencies_found.concat(dependencies_found_with_new_pattern)
-                          .group_by { |item| item[:name] }
-                          .values.map(&:first)
-        puts "=================================="
         dependencies_found.concat(dependencies_found_with_new_pattern)
                           .group_by { |item| item[:name] }
                           .values.map(&:first)
