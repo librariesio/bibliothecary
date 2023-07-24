@@ -17,7 +17,8 @@ describe Bibliothecary::Parsers::Rubygems do
         { name: "thin", requirement: ">= 0", type: :development },
         { name: "puma", requirement: ">= 0", type: :runtime },
         { name: "rails_12factor", requirement: ">= 0", type: :runtime },
-        { name: "bugsnag", requirement: ">= 0", type: :runtime }
+        { name: "bugsnag", requirement: ">= 0", type: :runtime },
+        { name: "redis", type: :runtime }
       ],
       kind: 'manifest',
       success: true
