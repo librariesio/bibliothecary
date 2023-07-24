@@ -5,11 +5,14 @@ describe Bibliothecary::MultiParsers::BundlerLikeManifest do
     let(:gemfile_content) do
       <<-GEMFILE
         gem 'oj'
-		  gem 'rails', '4.2.0'
-		  gem 'redis', require: %w[redis redis/connection/hiredis]
-		  gem 'leveldb-ruby','0.15', require: 'leveldb'
+
+        gem 'rails', '4.2.0'
+        gem 'redis', require: %w[redis redis/connection/hiredis]
+
+        gem 'leveldb-ruby','0.15', require: 'leveldb'
       GEMFILE
     end
+
 
     context 'when the pattern matches gems with require option' do
       it 'extracts gems with the specified pattern' do
