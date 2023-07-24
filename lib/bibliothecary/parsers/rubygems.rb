@@ -55,7 +55,23 @@ module Bibliothecary
 
       def self.parse_gemfile(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:gemfile, file_contents)
-        parse_ruby_manifest(manifest)
+
+        dependencies_found = parse_ruby_manifest(manifest)
+        dependencies_found_with_new_pattern = extract_gems_by_pattern(
+          /gem\s+['"]([^'"]+)['"],\s*require:\s*%w\[([^\]]+)\]/,
+          file_contents
+        )
+
+        return dependencies_found if dependencies_found_with_new_pattern.empty?
+        
+        puts "Gems identified by Bibliothecary"
+        puts dependencies_found.concat(dependencies_found_with_new_pattern)
+                          .group_by { |item| item[:name] }
+                          .values.map(&:first)
+        puts "=================================="
+        dependencies_found.concat(dependencies_found_with_new_pattern)
+                          .group_by { |item| item[:name] }
+                          .values.map(&:first)
       end
 
       def self.parse_gemspec(file_contents, options: {})
