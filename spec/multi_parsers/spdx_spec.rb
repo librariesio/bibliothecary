@@ -24,69 +24,62 @@ describe Bibliothecary::MultiParsers::Spdx do
 
   describe "properly formed file" do
     let(:file) do
-      "SPDXVersion: SPDX-2.0\n" +
-      "SPDXID: SPDXRef-DOCUMENT\n" +
-      "DataLicense: CC0-1.0\n" +
-      "DocumentName: some-project\n" +
-      "DocumentNamespace: https://test.com\n" +
-      "DocumentComment: <text>some comment</text>\n" +
+      <<~SPDX
+      SPDXVersion: SPDX-2.0
+      SPDXID: SPDXRef-DOCUMENT
+      DataLicense: CC0-1.0
+      DocumentName: some-project
+      DocumentNamespace: https://test.com
+      DocumentComment: <text>some comment</text>
 
-      "\n" +
-      "\n" +
 
-      "Creator: Tool: Test tool\n" +
-      "Creator: Organization: Test tool\n" +
-      "Created: #{Time.now}\n" +
+      Creator: Tool: Test tool
+      Creator: Organization: Test tool
+      Created: #{Time.now}
 
-      "\n" +
-      "\n" +
 
-      "Relationship: SPDXRef-DOCUMENT CONTAINS SPDXRef-Package\n" +
-      "Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-Package\n" +
+      Relationship: SPDXRef-DOCUMENT CONTAINS SPDXRef-Package
+      Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-Package
 
-      "\n" +
-      "\n" +
 
-      "PackageName: package1\n" +
-      "SPDXID: SPDXRef-pkg-npm-package1-1.0.0\n" +
-      "PackageVersion: 1.0.0\n" +
-      "PackageSupplier: Person: someuser\n" +
-      "PackageDownloadLocation: https://registry.npmjs.org/package1/-/package1-1.0.0.tgz\n" +
-      "PackageLicenseConcluded: MIT\n" +
-      "PackageLicenseDeclared: MIT\n" +
-      "ExternalRef: PACKAGE-MANAGER purl pkg:npm/package1@1.0.0\n" +
+      PackageName: package1
+      SPDXID: SPDXRef-pkg-npm-package1-1.0.0
+      PackageVersion: 1.0.0
+      PackageSupplier: Person: someuser
+      PackageDownloadLocation: https://registry.npmjs.org/package1/-/package1-1.0.0.tgz
+      PackageLicenseConcluded: MIT
+      PackageLicenseDeclared: MIT
+      ExternalRef: PACKAGE-MANAGER purl pkg:npm/package1@1.0.0
 
-      "\n" +
-      "\n" +
 
-      "PackageName: package2\n" +
-      "SPDXID: SPDXRef-pkg-npm-package2-1.0.1\n" +
-      "PackageVersion: 1.0.1\n" +
-      "PackageSupplier: Person: someuser1\n" +
-      "PackageDownloadLocation: https://registry.npmjs.org/package2/-/package2-1.0.1.tgz\n" +
-      "PackageLicenseConcluded: MIT\n" +
-      "PackageLicenseDeclared: MIT\n" +
-      "ExternalRef: PACKAGE-MANAGER purl pkg:npm/package2@1.0.1"
+      PackageName: package2
+      SPDXID: SPDXRef-pkg-npm-package2-1.0.1
+      PackageVersion: 1.0.1
+      PackageSupplier: Person: someuser1
+      PackageDownloadLocation: https://registry.npmjs.org/package2/-/package2-1.0.1.tgz
+      PackageLicenseConcluded: MIT
+      PackageLicenseDeclared: MIT
+      ExternalRef: PACKAGE-MANAGER purl pkg:npm/package2@1.0.1
+      SPDX
     end
 
     it "handles a properly formed file" do
       expect(parser.parse_spdx(file)).to eq([
-        {:name=>"package1", :requirement=>"1.0.0", :type=>"lockfile"},
-        {:name=>"package2", :requirement=>"1.0.1", :type=>"lockfile"}
+        { name: "package1", requirement: "1.0.0", type: "lockfile" },
+        { name: "package2", requirement: "1.0.1", type: "lockfile" }
       ])
     end
   end
 
-
   describe 'Spdx::get_platform' do
     it 'should handle formats correctly' do
-      maven = "SPDXRef-pkg-maven-ch.qos.some-package-1.1.5"
+      go = "ExternalRef: PACKAGE-MANAGER purl pkg:golang/github.com/path/to/package"
+
+      expect(parser.get_platform(go)).to eq(:go)
+
+      maven = "ExternalRef: PACKAGE_MANAGER purl pkg:maven/path/to/package@1.12.122"
 
       expect(parser.get_platform(maven)).to eq(:maven)
-
-      npm = "SPDXRef-pkg-npm-some-package2-1.0.2"
-
-      expect(parser.get_platform(npm)).to eq(:npm)
     end
   end
 

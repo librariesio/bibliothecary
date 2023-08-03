@@ -40,7 +40,7 @@ module Bibliothecary
             kind: 'manifest',
             parser: :parse_spdx,
             ungroupable: true
-          },
+          }
         }
       end
 
@@ -54,8 +54,8 @@ module Bibliothecary
         entries[platform_name.to_sym]
       end
 
-      def get_platform(spdx_id)
-        PURL_TYPE_MAPPING.values.find { |mapping| !spdx_id.index(mapping.to_s).nil?}
+      def get_platform(external_ref)
+        PURL_TYPE_MAPPING.values.find { |mapping| !external_ref.index(mapping.to_s).nil? }
       end
 
       def parse_file_contents(file_contents)
@@ -71,12 +71,11 @@ module Bibliothecary
           raise MalformedFile unless line.match(/^[a-zA-Z]+: \S+/)
 
           if !line.index("PackageName:").nil?
-            package_name = line.split("PackageName: ")[1]
-
+            package_name = process_line(line, "PackageName:")
           elsif !line.index("PackageVersion:").nil?
-            package_version = line.split("PackageVersion: ")[1]
-          elsif !line.index("SPDXID:").nil?
-            platform = get_platform(line.split("SPDXID: ")[1])
+            package_version = process_line(line, "PackageVersion:")
+          elsif !line.index("ExternalRef:").nil?
+            platform = get_platform(process_line(line, "ExternalRef:"))
           end
 
           unless package_name.nil? || package_version.nil? || platform.nil?
@@ -92,6 +91,10 @@ module Bibliothecary
         end
 
         entries
+      end
+
+      def process_line(line, to_split)
+        line.split(to_split)[1].strip!
       end
     end
   end
