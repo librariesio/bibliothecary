@@ -71,15 +71,60 @@ describe Bibliothecary::MultiParsers::Spdx do
     end
   end
 
+  describe "stuff" do
+    let(:file) do
+      <<~SPDX
+      SPDXVersion: SPDX-2.0
+      SPDXID: SPDXRef-DOCUMENT
+      DataLicense: CC0-1.0
+      DocumentName: some-project
+      DocumentNamespace: https://test.com
+      DocumentComment: <text>some comment</text>
+
+
+      Creator: Tool: Test tool
+      Creator: Organization: Test tool
+      Created: #{Time.now}
+
+
+      Relationship: SPDXRef-DOCUMENT CONTAINS SPDXRef-Package
+      Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-Package
+
+
+      PackageName: package1
+      SPDXID: SPDXRef-pkg-npm-package1-1.0.0
+      PackageVersion: 1.0.0
+      PackageSupplier: Person: someuser
+      PackageDownloadLocation: https://registry.npmjs.org/package1/-/package1-1.0.0.tgz
+      PackageLicenseConcluded: MIT
+      PackageLicenseDeclared: MIT
+
+
+      PackageName: package2
+      SPDXID: SPDXRef-pkg-npm-package2-1.0.1
+      PackageVersion: 1.0.1
+      PackageSupplier: Person: someuser1
+      PackageDownloadLocation: https://registry.npmjs.org/package2/-/package2-1.0.1.tgz
+      PackageLicenseConcluded: MIT
+      PackageLicenseDeclared: MIT
+      SPDX
+    end
+
+    it do
+      parser.parse_spdx(file)
+    end
+  end
+
+  # TODO: Fix these external ref lines
   describe 'Spdx::get_platform' do
     it 'should handle formats correctly' do
-      golang_purl = "pkg:golang/github.com/path/to/package"
+      go = "ExternalRef: PACKAGE-MANAGER purl pkg:golang/github.com/path/to/package"
 
-      expect(parser.get_platform(golang_purl)).to eq(:go)
+      expect(parser.get_platform(go)).to eq(:go)
 
-      maven_purl = "pkg:maven/path/to/package@1.12.122"
+      maven = "ExternalRef: PACKAGE_MANAGER purl pkg:maven/path/to/package@1.12.122"
 
-      expect(parser.get_platform(maven_purl)).to eq(:maven)
+      expect(parser.get_platform(maven)).to eq(:maven)
     end
   end
 

@@ -54,8 +54,10 @@ module Bibliothecary
         entries[platform_name.to_sym]
       end
 
-      def get_platform(external_ref)
-        PURL_TYPE_MAPPING.values.find { |mapping| !external_ref.index(mapping.to_s).nil? }
+      def get_platform(purl_string)
+        platform = PackageURL.parse(purl_string).type
+
+        PURL_TYPE_MAPPING[platform]
       end
 
       def parse_file_contents(file_contents)
@@ -70,12 +72,12 @@ module Bibliothecary
 
           raise MalformedFile unless line.match(/^[a-zA-Z]+: \S+/)
 
-          if !line.index("PackageName:").nil?
+          if line.include?("PackageName:")
             package_name = process_line(line, "PackageName:")
-          elsif !line.index("PackageVersion:").nil?
+          elsif line.include?("PackageVersion:")
             package_version = process_line(line, "PackageVersion:")
-          elsif !line.index("ExternalRef:").nil?
-            platform = get_platform(process_line(line, "ExternalRef:"))
+          elsif line.include?("ExternalRef: PACKAGE-MANAGER purl")
+            platform ||= get_platform(process_line(line, "ExternalRef: PACKAGE-MANAGER purl"))
           end
 
           unless package_name.nil? || package_version.nil? || platform.nil?
