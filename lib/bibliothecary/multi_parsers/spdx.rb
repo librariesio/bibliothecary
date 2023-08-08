@@ -14,26 +14,6 @@ module Bibliothecary
       NoEntries = Class.new(StandardError)
       MalformedFile = Class.new(StandardError)
 
-      # If a purl type (key) exists, it will be used in a manifest for
-      # the key's value. If not, it's ignored.
-      #
-      # https://github.com/package-url/purl-spec/blob/master/PURL-TYPES.rst
-      PURL_TYPE_MAPPING = {
-        "golang" => :go,
-        "maven" => :maven,
-        "npm" => :npm,
-        "cargo" => :cargo,
-        "composer" => :packagist,
-        "conda" => :conda,
-        "cran" => :cran,
-        "gem" => :rubygems,
-        "hackage" => :hackage,
-        "hex" => :hex,
-        "nuget" => :nuget,
-        "pypi" => :pypi,
-        "swift" => :swift_pm
-      }
-
       def self.mapping
         {
           match_extension('.spdx') => {
@@ -57,7 +37,7 @@ module Bibliothecary
       def get_platform(purl_string)
         platform = PackageURL.parse(purl_string).type
 
-        PURL_TYPE_MAPPING[platform]
+        Bibliothecary::PURL_TYPE_MAPPING[platform]
       end
 
       def parse_spdx_tag_value_file_contents(file_contents)
