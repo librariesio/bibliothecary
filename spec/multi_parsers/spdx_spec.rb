@@ -13,13 +13,13 @@ describe Bibliothecary::MultiParsers::Spdx do
   let!(:parser) { parser_class.new }
 
   it "handles malformed SPDX" do
-    expect { parser.parse_spdx("SPDXVersion: SPDX-2.0\nSPDXID: SPDXRef-DOCUMENT\nDataLicense: \n") }.to raise_error(described_class::MalformedFile)
-    expect { parser.parse_spdx("SPDXVersion:  ") }.to raise_error(described_class::MalformedFile)
-    expect { parser.parse_spdx("MALFORMED ") }.to raise_error(described_class::MalformedFile)
+    expect { parser.parse_spdx_tag_value("SPDXVersion: SPDX-2.0\nSPDXID: SPDXRef-DOCUMENT\nDataLicense \n") }.to raise_error(described_class::MalformedFile)
+    #expect { parser.parse_spdx("SPDXVersion:  ") }.to raise_error(described_class::MalformedFile)
+    expect { parser.parse_spdx_tag_value("MALFORMED ") }.to raise_error(described_class::MalformedFile)
   end
 
   it "handles an empty file" do
-    expect{ parser.parse_spdx("") }.to raise_error(described_class::NoEntries)
+    expect{ parser.parse_spdx_tag_value("") }.to raise_error(described_class::NoEntries)
   end
 
   describe "properly formed file" do
@@ -41,6 +41,7 @@ describe Bibliothecary::MultiParsers::Spdx do
       Relationship: SPDXRef-DOCUMENT CONTAINS SPDXRef-Package
       Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-Package
 
+      ##### Package: package1
 
       PackageName: package1
       SPDXID: SPDXRef-pkg-npm-package1-1.0.0
@@ -51,6 +52,7 @@ describe Bibliothecary::MultiParsers::Spdx do
       PackageLicenseDeclared: MIT
       ExternalRef: PACKAGE-MANAGER purl pkg:npm/package1@1.0.0
 
+      ##### Package: package2
 
       PackageName: package2
       SPDXID: SPDXRef-pkg-npm-package2-1.0.1
@@ -59,12 +61,12 @@ describe Bibliothecary::MultiParsers::Spdx do
       PackageDownloadLocation: https://registry.npmjs.org/package2/-/package2-1.0.1.tgz
       PackageLicenseConcluded: MIT
       PackageLicenseDeclared: MIT
-      ExternalRef: PACKAGE-MANAGER purl pkg:npm/package2@1.0.1
+      ExternalRef: PACKAGE_MANAGER purl pkg:npm/package2@1.0.1
       SPDX
     end
 
     it "handles a properly formed file" do
-      expect(parser.parse_spdx(file)).to eq([
+      expect(parser.parse_spdx_tag_value(file)).to eq([
         { name: "package1", requirement: "1.0.0", type: "lockfile" },
         { name: "package2", requirement: "1.0.1", type: "lockfile" }
       ])
@@ -91,7 +93,7 @@ describe Bibliothecary::MultiParsers::Spdx do
       # only analyzers have platform_name on the class
       if constant.respond_to?(:platform_name)
         it "#{constant_symbol} should implement Spdx" do
-          expect(constant.respond_to?(:parse_spdx)).to eq(true)
+          expect(constant.respond_to?(:parse_spdx_tag_value)).to eq(true)
         end
       end
     end

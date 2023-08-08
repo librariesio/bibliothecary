@@ -37,16 +37,16 @@ module Bibliothecary
       def self.mapping
         {
           match_extension('.spdx') => {
-            kind: 'manifest',
-            parser: :parse_spdx,
+            kind: 'lockfile',
+            parser: :parse_spdx_tag_value,
             ungroupable: true
           }
         }
       end
 
-      def parse_spdx(file_contents, options: {})
+      def parse_spdx_tag_value(file_contents, options: {})
         entries = try_cache(options, options[:filename]) do
-          parse_file_contents(file_contents)
+          parse_spdx_tag_value_file_contents(file_contents)
         end
 
         raise NoEntries if entries.empty?
@@ -60,7 +60,7 @@ module Bibliothecary
         PURL_TYPE_MAPPING[platform]
       end
 
-      def parse_file_contents(file_contents)
+      def parse_spdx_tag_value_file_contents(file_contents)
         entries = {}
 
         package_name = nil
@@ -68,21 +68,24 @@ module Bibliothecary
         platform = nil
 
         file_contents.split("\n").each do |line|
-          next if line.strip == ""
+          next if skip_line?(line)
 
-          raise MalformedFile unless line.match(/^[a-zA-Z]+: \S+/)
+          raise MalformedFile unless line.match(/^[a-zA-Z]+:/)
 
-          if line.include?("PackageName:")
+          stripped_line = line.strip
+          if stripped_line.start_with?("PackageName:")
             package_name = process_line(line, "PackageName:")
-          elsif line.include?("PackageVersion:")
+          elsif stripped_line.start_with?("PackageVersion:")
             package_version = process_line(line, "PackageVersion:")
-          elsif line.include?("ExternalRef: PACKAGE-MANAGER purl")
+          elsif stripped_line.start_with?("ExternalRef: PACKAGE-MANAGER purl")
             platform ||= get_platform(process_line(line, "ExternalRef: PACKAGE-MANAGER purl"))
+          elsif stripped_line.start_with?("ExternalRef: PACKAGE_MANAGER purl")
+            platform ||= get_platform(process_line(line, "ExternalRef: PACKAGE_MANAGER purl"))
           end
 
           unless package_name.nil? || package_version.nil? || platform.nil?
-            entries[platform_name.to_sym] ||= []
-            entries[platform_name.to_sym] << {
+            entries[platform.to_sym] ||= []
+            entries[platform.to_sym] << {
               name: package_name,
               requirement: package_version,
               type: 'lockfile'
@@ -96,7 +99,12 @@ module Bibliothecary
       end
 
       def process_line(line, to_split)
-        line.split(to_split)[1].strip!
+        line.split(to_split)[1].strip
+      end
+
+      def skip_line?(line)
+        # Ignore blank lines and comments
+        line.strip == "" || line[0] == "#"
       end
     end
   end
