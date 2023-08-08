@@ -73,14 +73,14 @@ module Bibliothecary
           raise MalformedFile unless line.match(/^[a-zA-Z]+:/)
 
           stripped_line = line.strip
+          purl_ref = /^(ExternalRef: ?PACKAGE(-|_)MANAGER purl)/.match(stripped_line)
+
           if stripped_line.start_with?("PackageName:")
             package_name = process_line(line, "PackageName:")
           elsif stripped_line.start_with?("PackageVersion:")
             package_version = process_line(line, "PackageVersion:")
-          elsif stripped_line.start_with?("ExternalRef: PACKAGE-MANAGER purl")
-            platform ||= get_platform(process_line(line, "ExternalRef: PACKAGE-MANAGER purl"))
-          elsif stripped_line.start_with?("ExternalRef: PACKAGE_MANAGER purl")
-            platform ||= get_platform(process_line(line, "ExternalRef: PACKAGE_MANAGER purl"))
+          elsif purl_ref
+            platform ||= get_platform(process_line(line, purl_ref[1]))
           end
 
           unless package_name.nil? || package_version.nil? || platform.nil?
