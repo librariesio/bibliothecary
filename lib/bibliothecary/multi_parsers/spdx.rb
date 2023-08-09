@@ -89,10 +89,6 @@ module Bibliothecary
         entries
       end
 
-      def process_line(stripped_line, to_split)
-        stripped_line.split(to_split)[1].strip
-      end
-
       def skip_line?(stripped_line)
         # Ignore blank lines and comments
         stripped_line == "" || stripped_line[0] == "#"
