@@ -11,6 +11,10 @@ module Bibliothecary
       include Bibliothecary::Analyser
       include Bibliothecary::Analyser::TryCache
 
+      PACKAGE_NAME_REGEX = /^\s*PackageName:\s*(.*)/
+      PACKAGE_VERSION_REGEX =/^\s*PackageVersion:\s*(.*)/
+      PURL_REGEX = /^\s*ExternalRef:\s*PACKAGE[-|_]MANAGER\s*purl\s*(.*)/
+
       NoEntries = Class.new(StandardError)
       MalformedFile = Class.new(StandardError)
 
@@ -48,19 +52,18 @@ module Bibliothecary
         platform = nil
 
         file_contents.split("\n").each do |line|
-          next if skip_line?(line)
-
-          raise MalformedFile unless line.match(/^[a-zA-Z]+:/)
-
           stripped_line = line.strip
-          purl_ref = /^(ExternalRef: ?PACKAGE(-|_)MANAGER purl)/.match(stripped_line)
 
-          if stripped_line.start_with?("PackageName:")
-            package_name = process_line(line, "PackageName:")
-          elsif stripped_line.start_with?("PackageVersion:")
-            package_version = process_line(line, "PackageVersion:")
-          elsif purl_ref
-            platform ||= get_platform(process_line(line, purl_ref[1]))
+          next if skip_line?(stripped_line)
+
+          raise MalformedFile unless stripped_line.match(/^\s*[a-zA-Z]+:/)
+
+          if (match = stripped_line.match(PACKAGE_NAME_REGEX))
+            package_name = match[1]
+          elsif (match = stripped_line.match(PACKAGE_VERSION_REGEX))
+            package_version = match[1]
+          elsif (match = stripped_line.match(PURL_REGEX))
+            platform ||= get_platform(match[1])
           end
 
           unless package_name.nil? || package_version.nil? || platform.nil?
@@ -78,13 +81,13 @@ module Bibliothecary
         entries
       end
 
-      def process_line(line, to_split)
-        line.split(to_split)[1].strip
+      def process_line(stripped_line, to_split)
+        stripped_line.split(to_split)[1].strip
       end
 
-      def skip_line?(line)
+      def skip_line?(stripped_line)
         # Ignore blank lines and comments
-        line.strip == "" || line[0] == "#"
+        stripped_line.strip == "" || stripped_line[0] == "#"
       end
     end
   end

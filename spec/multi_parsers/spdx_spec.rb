@@ -14,7 +14,6 @@ describe Bibliothecary::MultiParsers::Spdx do
 
   it "handles malformed SPDX" do
     expect { parser.parse_spdx_tag_value("SPDXVersion: SPDX-2.0\nSPDXID: SPDXRef-DOCUMENT\nDataLicense \n") }.to raise_error(described_class::MalformedFile)
-    #expect { parser.parse_spdx("SPDXVersion:  ") }.to raise_error(described_class::MalformedFile)
     expect { parser.parse_spdx_tag_value("MALFORMED ") }.to raise_error(described_class::MalformedFile)
   end
 
@@ -22,7 +21,28 @@ describe Bibliothecary::MultiParsers::Spdx do
     expect{ parser.parse_spdx_tag_value("") }.to raise_error(described_class::NoEntries)
   end
 
-  describe "properly formed file" do
+  context "with a file containing excessive whitespace" do
+    let(:file) do
+      <<~SPDX
+      PackageName:     package1   
+      SPDXID:    SPDXRef-pkg-npm-package1-1.0.0    
+      PackageVersion:         1.0.0  
+      PackageSupplier:    Person: someuser  
+      PackageDownloadLocation:             https://registry.npmjs.org/package1/-/package1-1.0.0.tgz
+      PackageLicenseConcluded:      MIT  
+      PackageLicenseDeclared:    MIT  
+      ExternalRef:      PACKAGE-MANAGER purl pkg:npm/package1@1.0.0
+      SPDX
+    end
+
+    it "parses the file" do
+      expect(parser.parse_spdx_tag_value(file)).to eq([
+        { name: "package1", requirement: "1.0.0", type: "lockfile" }
+      ])
+    end
+  end
+
+  context "with a properly formed file" do
     let(:file) do
       <<~SPDX
       SPDXVersion: SPDX-2.0
@@ -65,7 +85,7 @@ describe Bibliothecary::MultiParsers::Spdx do
       SPDX
     end
 
-    it "handles a properly formed file" do
+    it "parses the file" do
       expect(parser.parse_spdx_tag_value(file)).to eq([
         { name: "package1", requirement: "1.0.0", type: "lockfile" },
         { name: "package2", requirement: "1.0.1", type: "lockfile" }
