@@ -87,6 +87,7 @@ module Bibliothecary
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
+      add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
       def self.parse_pipfile(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
@@ -94,10 +95,10 @@ module Bibliothecary
       end
 
       def self.parse_pyproject(file_contents, options: {})
-        deps = []  
+        deps = []
 
         file_contents = Tomlrb.parse(file_contents)
-        
+
         # Parse poetry [tool.poetry] deps
         poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {})
         deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
