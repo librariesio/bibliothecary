@@ -276,7 +276,8 @@ module Bibliothecary
         [].tap do |deps|
           # <dependencyManagement> is a namespace to specify artifact configuration (e.g. version), but it doesn't
           # actually add dependencies to your project. Grab these and keep them for reference while parsing <dependencies>
-          # See: https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#transitive-dependencies
+          # Ref: https://maven.apache.org/pom.html#Dependency_Management
+          # Ref: https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#transitive-dependencies
           dependencyManagement = xml.locate("dependencyManagement/dependencies/dependency").map do |dep|
             {
               groupId: extract_pom_dep_info(xml, dep, "groupId", parent_properties),
