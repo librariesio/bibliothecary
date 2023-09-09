@@ -270,18 +270,39 @@ module Bibliothecary
         manifest = Ox.parse file_contents
         xml = manifest.respond_to?('project') ? manifest.project : manifest
         [].tap do |deps|
-          ['dependencies/dependency', 'dependencyManagement/dependencies/dependency'].each do |deps_xpath|
-            xml.locate(deps_xpath).each do |dep|
-              dep_hash = {
-                name: "#{extract_pom_dep_info(xml, dep, 'groupId', parent_properties)}:#{extract_pom_dep_info(xml, dep, 'artifactId', parent_properties)}",
-                requirement: extract_pom_dep_info(xml, dep, 'version', parent_properties),
-                type: extract_pom_dep_info(xml, dep, 'scope', parent_properties) || 'runtime',
-              }
-              # optional field is, itself, optional, and will be either "true" or "false"
-              optional = extract_pom_dep_info(xml, dep, 'optional', parent_properties)
-              dep_hash[:optional] = optional == "true" unless optional.nil?
-              deps.push(dep_hash)
+          # <dependencyManagement> is a namespace to specify artifact configuration (e.g. version), but it doesn't
+          # actually add dependencies to your project. Grab these and keep them for reference while parsing <dependencies>
+          # See: https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#transitive-dependencies
+          dependencyManagement = xml.locate("dependencyManagement/dependencies/dependency").map do |dep|
+            {
+              groupId: extract_pom_dep_info(xml, dep, "groupId", parent_properties),
+              artifactId: extract_pom_dep_info(xml, dep, "artifactId", parent_properties),
+              version: extract_pom_dep_info(xml, dep, "version", parent_properties),
+              scope: extract_pom_dep_info(xml, dep, "scope", parent_properties),
+            }
+          end
+          # <dependencies> is the namespace that will add dependencies to your project.
+          xml.locate("dependencies/dependency").each do |dep|
+            groupId = extract_pom_dep_info(xml, dep, 'groupId', parent_properties)
+            artifactId = extract_pom_dep_info(xml, dep, 'artifactId', parent_properties)
+            version = extract_pom_dep_info(xml, dep, 'version', parent_properties)
+            scope = extract_pom_dep_info(xml, dep, 'scope', parent_properties)
+
+            # Use any dep configurations from <dependencyManagement> as fallbacks
+            if (depConfig = dependencyManagement.find { |d| d[:groupId] == groupId && d[:artifactId] == artifactId })
+              version ||= depConfig[:version]
+              scope ||= depConfig[:scope]
             end
+
+            dep_hash = {
+              name: "#{groupId}:#{artifactId}",
+              requirement: version,
+              type: scope || 'runtime',
+            }
+            # optional field is, itself, optional, and will be either "true" or "false"
+            optional = extract_pom_dep_info(xml, dep, 'optional', parent_properties)
+            dep_hash[:optional] = optional == "true" unless optional.nil?
+            deps.push(dep_hash)
           end
         end
       end

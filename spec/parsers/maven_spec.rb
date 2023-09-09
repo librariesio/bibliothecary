@@ -46,6 +46,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         { name: "org.glassfish.jersey.media:jersey-media-moxy",
         requirement: "2.16",
         type: "runtime" },
+        # version string from <dependencyManagement>, and interpolated from <properties>
         { name: "com.google.guava:guava", requirement: "18.0", type: "runtime" },
         { name: "com.googlecode.protobuf-java-format:protobuf-java-format",
         requirement: "1.2",
@@ -93,9 +94,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         { name: "io.libraries:recursive", requirement: "${recursive.test}", type: "runtime" },
         { name: "io.libraries:optional", requirement: "${optional.test}", type: "runtime", optional: true },
         { name: "io.libraries:not-optional", requirement: "${not-optional.test}", type: "runtime", optional: false },
-        # From dependencyManagement section
-        { name: "org.apache.ant:ant", requirement: "1.9.2", type: "runtime" },
-        { name: "commons-lang:commons-lang",requirement: "2.6", type: "runtime" }
       ],
       kind: 'manifest',
       success: true
