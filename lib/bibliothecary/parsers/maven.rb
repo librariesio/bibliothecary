@@ -1,6 +1,10 @@
 require 'ox'
 require 'strings-ansi'
 
+# Known shortcomings and unimplemented Maven features:
+#   pom.xml
+#     <exclusions> cannot be taken into account (because it requires knowledge of transitive deps)
+#     <properties> are the only thing inherited from parent poms currenly
 module Bibliothecary
   module Parsers
     class Maven
