@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "deb_control"
   spec.add_dependency "sdl4r"
   spec.add_dependency "commander"
-  spec.add_dependency "strings-ansi"
+  spec.add_dependency "strings-ansi" # NB this is also pegged to a git sha in Gemfile temporarily.  
   spec.add_dependency "strings"
   spec.add_dependency "packageurl-ruby"
 

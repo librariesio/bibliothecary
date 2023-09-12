@@ -34,6 +34,7 @@ module Bibliothecary
       end
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+      add_multi_parser(Bibliothecary::MultiParsers::Spdx)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
       def self.parse_package_lock(file_contents, options: {})
@@ -57,9 +58,9 @@ module Bibliothecary
       def self.parse_package_lock_v1(manifest)
         parse_package_lock_deps_recursively(manifest.fetch('dependencies', []))
       end
-      
+
       def self.parse_package_lock_v2(manifest)
-        # "packages" is a flat object where each key is the installed location of the dep, e.g. node_modules/foo/node_modules/bar. 
+        # "packages" is a flat object where each key is the installed location of the dep, e.g. node_modules/foo/node_modules/bar.
         manifest
           .fetch("packages")
           .reject { |name, dep| name == "" } # this is the lockfile's package itself
@@ -68,7 +69,7 @@ module Bibliothecary
               name: name.split("node_modules/").last,
               requirement: dep["version"],
               type: dep.fetch("dev", false) || dep.fetch("devOptional", false)  ? "development" : "runtime"
-            }  
+            }
           end
       end
 
@@ -94,7 +95,7 @@ module Bibliothecary
       def self.parse_manifest(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         raise "appears to be a lockfile rather than manifest format" if manifest.key?('lockfileVersion')
-        
+
         (
           map_dependencies(manifest, 'dependencies', 'runtime') +
           map_dependencies(manifest, 'devDependencies', 'development')

@@ -1,6 +1,10 @@
 require 'ox'
 require 'strings-ansi'
 
+# Known shortcomings and unimplemented Maven features:
+#   pom.xml
+#     <exclusions> cannot be taken into account (because it requires knowledge of transitive deps)
+#     <properties> are the only thing inherited from parent poms currenly
 module Bibliothecary
   module Parsers
     class Maven
@@ -25,15 +29,15 @@ module Bibliothecary
       # Deprecated methods: https://docs.gradle.org/current/userguide/upgrading_version_6.html#sec:configuration_removal
       GRADLE_DEPENDENCY_METHODS = %w(api compile compileClasspath compileOnly compileOnlyApi implementation runtime runtimeClasspath runtimeOnly testCompile testCompileOnly testImplementation testRuntime testRuntimeOnly)
 
-      # Intentionally overly-simplified regexes to scrape deps from build.gradle (Groovy) and build.gradle.kts (Kotlin) files. 
-      # To be truly useful bibliothecary would need full Groovy / Kotlin parsers that speaks Gradle, 
+      # Intentionally overly-simplified regexes to scrape deps from build.gradle (Groovy) and build.gradle.kts (Kotlin) files.
+      # To be truly useful bibliothecary would need full Groovy / Kotlin parsers that speaks Gradle,
       # because the Groovy and Kotlin DSLs have many dynamic ways of declaring dependencies.
       GRADLE_VERSION_REGEX = /[\w.-]+/ # e.g. '1.2.3'
       GRADLE_VAR_INTERPOLATION_REGEX = /\$\w+/ # e.g. '$myVersion'
       GRADLE_CODE_INTERPOLATION_REGEX = /\$\{.*\}/ # e.g. '${my-project-settings["version"]}'
       GRADLE_GAV_REGEX = /([\w.-]+)\:([\w.-]+)(?:\:(#{GRADLE_VERSION_REGEX}|#{GRADLE_VAR_INTERPOLATION_REGEX}|#{GRADLE_CODE_INTERPOLATION_REGEX}))?/ # e.g. "group:artifactId:1.2.3"
-      GRADLE_GROOVY_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(?\s*['"]#{GRADLE_GAV_REGEX}['"]/m 
-      GRADLE_KOTLIN_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(\s*"#{GRADLE_GAV_REGEX}"/m 
+      GRADLE_GROOVY_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(?\s*['"]#{GRADLE_GAV_REGEX}['"]/m
+      GRADLE_KOTLIN_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(\s*"#{GRADLE_GAV_REGEX}"/m
 
       MAVEN_PROPERTY_REGEX = /\$\{(.+?)\}/
       MAX_DEPTH = 5
@@ -96,6 +100,7 @@ module Bibliothecary
       end
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
+      add_multi_parser(Bibliothecary::MultiParsers::Spdx)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
       def self.parse_ivy_manifest(file_contents, options: {})
@@ -162,7 +167,7 @@ module Bibliothecary
           # so we treat these projects as "internal" deps with requirement of "1.0.0"
           if (project_match = line.match(GRADLE_PROJECT_REGEX))
             # an empty project name is self-referential (i.e. a cycle), and we don't need to track the manifest's project itself, e.g. "+--- project :"
-            next if project_match[1].nil? 
+            next if project_match[1].nil?
 
             # project names can have colons (e.g. for gradle projects in subfolders), which breaks maven artifact naming assumptions, so just replace them with hyphens.
             project_name = project_match[1].gsub(/:/, "-")
@@ -221,8 +226,11 @@ module Bibliothecary
       end
 
       def self.parse_maven_tree(file_contents, options: {})
-        file_contents = file_contents.gsub(/\r\n?/, "\n")
-        captures = file_contents.scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/).flatten.uniq
+        captures = Strings::ANSI.sanitize(file_contents)
+          .gsub(/\r\n?/, "\n")
+          .scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/)
+          .flatten
+          .uniq
 
         deps = captures.map do |item|
           parts = item.split(":")
@@ -266,18 +274,40 @@ module Bibliothecary
         manifest = Ox.parse file_contents
         xml = manifest.respond_to?('project') ? manifest.project : manifest
         [].tap do |deps|
-          ['dependencies/dependency', 'dependencyManagement/dependencies/dependency'].each do |deps_xpath|
-            xml.locate(deps_xpath).each do |dep|
-              dep_hash = {
-                name: "#{extract_pom_dep_info(xml, dep, 'groupId', parent_properties)}:#{extract_pom_dep_info(xml, dep, 'artifactId', parent_properties)}",
-                requirement: extract_pom_dep_info(xml, dep, 'version', parent_properties),
-                type: extract_pom_dep_info(xml, dep, 'scope', parent_properties) || 'runtime',
-              }
-              # optional field is, itself, optional, and will be either "true" or "false"
-              optional = extract_pom_dep_info(xml, dep, 'optional', parent_properties)
-              dep_hash[:optional] = optional == "true" unless optional.nil?
-              deps.push(dep_hash)
+          # <dependencyManagement> is a namespace to specify artifact configuration (e.g. version), but it doesn't
+          # actually add dependencies to your project. Grab these and keep them for reference while parsing <dependencies>
+          # Ref: https://maven.apache.org/pom.html#Dependency_Management
+          # Ref: https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#transitive-dependencies
+          dependencyManagement = xml.locate("dependencyManagement/dependencies/dependency").map do |dep|
+            {
+              groupId: extract_pom_dep_info(xml, dep, "groupId", parent_properties),
+              artifactId: extract_pom_dep_info(xml, dep, "artifactId", parent_properties),
+              version: extract_pom_dep_info(xml, dep, "version", parent_properties),
+              scope: extract_pom_dep_info(xml, dep, "scope", parent_properties),
+            }
+          end
+          # <dependencies> is the namespace that will add dependencies to your project.
+          xml.locate("dependencies/dependency").each do |dep|
+            groupId = extract_pom_dep_info(xml, dep, 'groupId', parent_properties)
+            artifactId = extract_pom_dep_info(xml, dep, 'artifactId', parent_properties)
+            version = extract_pom_dep_info(xml, dep, 'version', parent_properties)
+            scope = extract_pom_dep_info(xml, dep, 'scope', parent_properties)
+
+            # Use any dep configurations from <dependencyManagement> as fallbacks
+            if (depConfig = dependencyManagement.find { |d| d[:groupId] == groupId && d[:artifactId] == artifactId })
+              version ||= depConfig[:version]
+              scope ||= depConfig[:scope]
             end
+
+            dep_hash = {
+              name: "#{groupId}:#{artifactId}",
+              requirement: version,
+              type: scope || 'runtime',
+            }
+            # optional field is, itself, optional, and will be either "true" or "false"
+            optional = extract_pom_dep_info(xml, dep, 'optional', parent_properties)
+            dep_hash[:optional] = optional == "true" unless optional.nil?
+            deps.push(dep_hash)
           end
         end
       end

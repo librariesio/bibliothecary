@@ -46,6 +46,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         { name: "org.glassfish.jersey.media:jersey-media-moxy",
         requirement: "2.16",
         type: "runtime" },
+        # version string from <dependencyManagement>, and interpolated from <properties>
         { name: "com.google.guava:guava", requirement: "18.0", type: "runtime" },
         { name: "com.googlecode.protobuf-java-format:protobuf-java-format",
         requirement: "1.2",
@@ -93,9 +94,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         { name: "io.libraries:recursive", requirement: "${recursive.test}", type: "runtime" },
         { name: "io.libraries:optional", requirement: "${optional.test}", type: "runtime", optional: true },
         { name: "io.libraries:not-optional", requirement: "${not-optional.test}", type: "runtime", optional: false },
-        # From dependencyManagement section
-        { name: "org.apache.ant:ant", requirement: "1.9.2", type: "runtime" },
-        { name: "commons-lang:commons-lang",requirement: "2.6", type: "runtime" }
       ],
       kind: 'manifest',
       success: true
@@ -557,6 +555,20 @@ GRADLE
     it "parses dependencies with variables in version position" do
       output = described_class.parse_maven_tree("[INFO] net.sourceforge.pmd:pmd-scala_2.12:jar:${someVariable}\n")
       expect(output).to eq [{ name: "net.sourceforge.pmd:pmd-scala_2.12", requirement: "${someVariable}", type: "jar" }]
+    end
+
+    it "parses dependencies with ansi color codes by stripping the codes" do
+      output = described_class.parse_maven_tree(%Q!
+[\e[1;34mINFO\e[m] net.sourceforge.pmd:pmd-core:jar:6.32.0-SNAPSHOT
+[\e[1;34mINFO\e[m] +- org.apache.ant:ant:jar:1.10.9:provided
+[\e[1;34mINFO\e[m] |  +- net.sourceforge.pmd:pmd:pom:6.32.0-SNAPSHOT:provided
+[\e[1;34mINFO\e[m] +- net.java.dev.javacc:javacc:jar:5.0:provided!)
+
+      expect(output).to eq [
+        { name: "org.apache.ant:ant", requirement: "1.10.9", type: "provided" },
+        { name: "net.sourceforge.pmd:pmd", requirement: "6.32.0-SNAPSHOT", type: "provided" },
+        { name: "net.java.dev.javacc:javacc", requirement: "5.0", type: "provided" },
+      ]
     end
 
     it 'parses dependencies from gradle-dependencies-q.txt, generated from build.gradle.kts' do
