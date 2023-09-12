@@ -15,7 +15,15 @@ module Bibliothecary
             kind: 'manifest',
             parser: :parse_json_runtime_manifest
           },
+          match_filename("project.json") => {
+            kind: 'manifest',
+            parser: :parse_json_runtime_manifest
+          },
           match_filename("Project.lock.json") => {
+            kind: 'lockfile',
+            parser: :parse_project_lock_json
+          },
+          match_filename("project.lock.json") => {
             kind: 'lockfile',
             parser: :parse_project_lock_json
           },
