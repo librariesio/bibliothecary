@@ -1872,6 +1872,12 @@
           "System.Security.Principal.Windows": "4.5.0"
         }
       },
+      "Bibliothecary.Project": {
+        "type": "Project",
+        "dependencies": {
+          "FluentMigrator": "[1.6.2.1, )"
+        }
+      },
       "NETStandard.Library": {
         "type": "Transitive",
         "resolved": "2.0.3",

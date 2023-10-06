@@ -1,3 +1,3 @@
 module Bibliothecary
-  VERSION = "8.7.0"
+  VERSION = "8.7.1"
 end
