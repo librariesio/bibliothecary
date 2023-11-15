@@ -254,6 +254,10 @@ module Bibliothecary
       end
 
       def self.parse_resolved_dep_line(line)
+        # filter out anything that doesn't look like a
+        # resolved dep line
+        return unless line[/  .*:[^-]+-- /]
+
         dep_parts = line.strip.split(":")
         return unless dep_parts.length == 5
         # org.springframework.boot:spring-boot-starter-web:jar:2.0.3.RELEASE:compile[36m -- module spring.boot.starter.web[0;1m [auto][m
@@ -365,6 +369,8 @@ module Bibliothecary
 
         value = field.nodes.first
         value = value.value if value.is_a?(Ox::CData)
+        # whitespace in dependency tags should be ignored
+        value = value&.strip
         match = value&.match(MAVEN_PROPERTY_REGEX)
         if match
           return extract_property(xml, match[1], value, parent_properties)
