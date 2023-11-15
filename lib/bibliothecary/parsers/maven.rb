@@ -254,7 +254,7 @@ module Bibliothecary
       end
 
       def self.parse_resolved_dep_line(line)
-        # filter out anythinmg that doesn't look like a
+        # filter out anything that doesn't look like a
         # resolved dep line
         return unless line[/  .*:[^-]+-- /]
 
