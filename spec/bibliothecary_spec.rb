@@ -113,7 +113,13 @@ describe Bibliothecary do
       a[:dependencies] = []
     end
     expect(analysis).to eq(
-      [{ platform: "rubygems",
+      [{ platform: "actions",
+        path: ".github/workflows/ci.yml",
+        dependencies: [],
+        related_paths: [],
+        success: true,
+        kind: "manifest" },
+        { platform: "rubygems",
         path: "Gemfile",
         dependencies: [],
         kind: 'manifest',
@@ -130,7 +136,8 @@ describe Bibliothecary do
         dependencies: [],
         kind: 'manifest',
         success: true,
-        related_paths: ["Gemfile", "Gemfile.lock"] }])
+        related_paths: ["Gemfile", "Gemfile.lock"] }
+      ])
   end
 
   it 'handles a complicated folder with many manifests', :vcr do
