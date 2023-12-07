@@ -104,6 +104,36 @@ module Bibliothecary
         deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
         deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
 
+        # Parse poetry [tool.poetry.group.docs] deps
+        poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {}).fetch('group', {}).fetch('docs', {})
+        deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
+        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
+
+        # Parse poetry [tool.poetry.group.lint] deps
+        poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {}).fetch('group', {}).fetch('lint', {})
+        deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
+        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
+
+        # Parse poetry [tool.poetry.group.codespell] deps
+        poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {}).fetch('group', {}).fetch('codespell', {})
+        deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
+        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
+
+        # [tool.poetry.group.dev.dependencies]
+        poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {}).fetch('group', {}).fetch('dev', {})
+        deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
+        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
+
+        # [tool.poetry.group.test.dependencies]
+        poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {}).fetch('group', {}).fetch('test', {})
+        deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
+        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
+
+        # [tool.poetry.group.typing.dependencies]
+        poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {}).fetch('group', {}).fetch('typing', {})
+        deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
+        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
+
         # Parse PEP621 [project] deps
         pep621_manifest = file_contents.fetch('project', {})
         pep621_deps = pep621_manifest.fetch('dependencies', []).map { |d| parse_pep_508_dep_spec(d) }
