@@ -79,15 +79,17 @@ module Bibliothecary
 
         frameworks = {}
         manifest.fetch('dependencies',[]).each do |framework, deps|
-          frameworks[framework] = deps.map do |name, details|
-            {
-              name: name,
-              # 'resolved' has been set in all examples so far
-              # so fallback to requested is pure paranoia
-              requirement: details.fetch('resolved', details.fetch('requested', '*')),
-              type: 'runtime'
-            }
-          end
+          frameworks[framework] = deps
+            .reject { |_name, details| details["type"] == "Project" } # Projects do not have versions
+            .map do |name, details|
+              {
+                name: name,
+                # 'resolved' has been set in all examples so far
+                # so fallback to requested is pure paranoia
+                requirement: details.fetch('resolved', details.fetch('requested', '*')),
+                type: 'runtime'
+              }
+            end
         end
 
         if frameworks.size > 0

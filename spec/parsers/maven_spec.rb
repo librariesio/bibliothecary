@@ -139,6 +139,39 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     })
   end
 
+  it 'parses dependencies from pom-spaces-in-artifact-and-group.xml' do
+    expect(described_class.analyse_contents('pom.xml', load_fixture('pom-spaces-in-artifact-and-group.xml'))).to eq({
+      platform: "maven",
+      path: "pom.xml",
+      dependencies: [
+        { name: "org.apache.maven:maven-plugin-api",
+          requirement: "3.3.9",
+          type: "runtime" },
+         { name: "org.apache.maven:maven-core",
+          requirement: "3.3.9",
+          type: "runtime" },
+         { name: "org.apache.maven.plugin-tools:maven-plugin-annotations",
+          requirement: "3.4",
+          type: "provided" },
+         { name: "org.codehaus.jackson:jackson-core-lgpl",
+          requirement: "1.9.13",
+          type: "runtime" },
+         { name: "org.codehaus.jackson:jackson-mapper-lgpl",
+          requirement: "1.9.13",
+          type: "runtime" },
+         { name: "org.apache.httpcomponents:httpclient",
+          requirement: "4.5.2",
+          type: "runtime" },
+         { name: "org.apache.httpcomponents:httpmime",
+          requirement: "4.5.2",
+          type: "runtime" },
+         { name: "org.testng:testng", requirement: "6.9.12", type: "test" }
+      ],
+      kind: 'manifest',
+      success: true
+    })
+  end
+
   it 'parses dependencies from ivy.xml' do
     expect(described_class.analyse_contents('ivy.xml', load_fixture('ivy.xml'))).to eq({
       platform: "maven",
@@ -376,13 +409,19 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(testng_dep[:requirement]).to eq("${missing_property}")
   end
 
-  it 'parses dependencies from maven-dependencies-q.txt' do
+  it 'parses dependencies from maven-resolved-dependencies.txt' do
     deps = described_class.analyse_contents('maven-resolved-dependencies.txt', load_fixture('maven-resolved-dependencies.txt'))
     expect(deps[:kind]).to eq 'lockfile'
     spring_boot = deps[:dependencies].select {|item| item[:name] == "org.springframework.boot:spring-boot-starter-web" }
     expect(spring_boot.length).to eq 1
     expect(spring_boot.first[:requirement]).to eq '2.0.3.RELEASE'
     expect(spring_boot.first[:type]).to eq 'compile'
+  end
+
+  it 'correctly ignores dependencies if a maven-resolved-dependencies file contains the content of a maven-dependency-tree file' do
+    deps = described_class.analyse_contents('maven-resolved-dependencies.txt', load_fixture('maven-dependency-tree.txt'))
+    expect(deps[:kind]).to eq 'lockfile'
+    expect(deps[:dependencies]).to eq([])
   end
 
   it 'parses dependencies from sbt-update-full.txt' do
