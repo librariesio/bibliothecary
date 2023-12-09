@@ -2,11 +2,15 @@ version: 2.1
 orbs:
   ruby: circleci/ruby@0.1.2
 
-jobs:
-  test:
+executors:
+  bibliothecary:
     docker:
       - image: cimg/ruby:2.7.1
-    executor: ruby/default
+    working_directory: ~/bibliothecary
+
+jobs:
+  test:
+    executor: bibliothecary
     steps:
     - checkout
     - run:
@@ -20,9 +24,22 @@ jobs:
         name: CodeClimate
         command: bundle exec codeclimate-test-reporter
 
+  lint:
+    executor: bibliothecary
+    steps:
+    - checkout
+    - run:
+        name: Which bundler?
+        command: bundle -v
+    - ruby/bundle-install
+    - run:
+        name: Run specs
+        command: bundle exec rake lint
+
 workflows:
   version: 2.1
-  test:
+  circleci_build:
     jobs:
       - test
       - lint
+
