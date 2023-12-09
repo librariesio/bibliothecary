@@ -30,11 +30,11 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
-      def self.parse_conda(file_contents, options: {})
+      def self.parse_conda(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         parse_conda_with_kind(file_contents, "manifest")
       end
 
-      def self.parse_conda_lockfile(file_contents, options: {})
+      def self.parse_conda_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         parse_conda_with_kind(file_contents, "lockfile")
       end
 

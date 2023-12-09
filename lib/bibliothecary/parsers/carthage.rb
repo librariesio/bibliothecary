@@ -22,15 +22,15 @@ module Bibliothecary
 
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_cartfile(file_contents, options: {})
+      def self.parse_cartfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         map_dependencies(file_contents, "cartfile")
       end
 
-      def self.parse_cartfile_private(file_contents, options: {})
+      def self.parse_cartfile_private(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         map_dependencies(file_contents, "cartfile.private")
       end
 
-      def self.parse_cartfile_resolved(file_contents, options: {})
+      def self.parse_cartfile_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         map_dependencies(file_contents, "cartfile.resolved")
       end
 

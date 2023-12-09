@@ -20,7 +20,7 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_manifest(file_contents, options: {})
+      def self.parse_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Tomlrb.parse(file_contents)
 
         parsed_dependencies = []
@@ -41,7 +41,7 @@ module Bibliothecary
         parsed_dependencies.flatten.compact
       end
 
-      def self.parse_lockfile(file_contents, options: {})
+      def self.parse_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Tomlrb.parse(file_contents)
         manifest.fetch("package",[]).map do |dependency|
           next if not dependency["source"] or not dependency["source"].start_with?("registry+")

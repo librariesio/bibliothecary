@@ -103,7 +103,7 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_ivy_manifest(file_contents, options: {})
+      def self.parse_ivy_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Ox.parse file_contents
         manifest.dependencies.locate("dependency").map do |dependency|
           attrs = dependency.attributes
@@ -126,7 +126,7 @@ module Bibliothecary
         false
       end
 
-      def self.parse_ivy_report(file_contents, options: {})
+      def self.parse_ivy_report(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         doc = Ox.parse file_contents
         root = doc.locate("ivy-report").first
         raise "ivy-report document does not have ivy-report at the root" if root.nil?
@@ -151,7 +151,7 @@ module Bibliothecary
         end.compact
       end
 
-      def self.parse_gradle_resolved(file_contents, options: {})
+      def self.parse_gradle_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         current_type = nil
 
         file_contents.split("\n").map do |line|
@@ -217,7 +217,7 @@ module Bibliothecary
           .uniq { |item| item.values_at(:name, :requirement, :type, :original_name, :original_requirement) }
       end
 
-      def self.parse_maven_resolved(file_contents, options: {})
+      def self.parse_maven_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         Strings::ANSI.sanitize(file_contents)
           .split("\n")
           .map(&method(:parse_resolved_dep_line))
@@ -225,7 +225,7 @@ module Bibliothecary
           .uniq
       end
 
-      def self.parse_maven_tree(file_contents, options: {})
+      def self.parse_maven_tree(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         captures = Strings::ANSI.sanitize(file_contents)
           .gsub(/\r\n?/, "\n")
           .scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/)
@@ -274,7 +274,7 @@ module Bibliothecary
 
       # parent_properties is used by Libraries:
       # https://github.com/librariesio/libraries.io/blob/e970925aade2596a03268b6e1be785eba8502c62/app/models/package_manager/maven.rb#L129
-      def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {})
+      def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Ox.parse file_contents
         xml = manifest.respond_to?("project") ? manifest.project : manifest
         [].tap do |deps|
@@ -316,7 +316,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_gradle(file_contents, options: {})
+      def self.parse_gradle(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         file_contents
           .scan(GRADLE_GROOVY_SIMPLE_REGEX)                                                # match 'implementation "group:artifactId:version"'
           .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
@@ -329,7 +329,7 @@ module Bibliothecary
           }
       end
 
-      def self.parse_gradle_kts(file_contents, options: {})
+      def self.parse_gradle_kts(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         file_contents
           .scan(GRADLE_KOTLIN_SIMPLE_REGEX)                                                # match 'implementation("group:artifactId:version")'
           .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
@@ -425,7 +425,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_sbt_update_full(file_contents, options: {})
+      def self.parse_sbt_update_full(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         all_deps = []
         lines = file_contents.split("\n")
         while lines.any?

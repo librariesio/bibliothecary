@@ -37,7 +37,7 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_package_lock(file_contents, options: {})
+      def self.parse_package_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse(file_contents)
         # https://docs.npmjs.com/cli/v9/configuring-npm/package-lock-json#lockfileversion
         if manifest["lockfileVersion"].to_i <= 1
@@ -92,7 +92,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_manifest(file_contents, options: {})
+      def self.parse_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse(file_contents)
         raise "appears to be a lockfile rather than manifest format" if manifest.key?("lockfileVersion")
 
@@ -103,7 +103,7 @@ module Bibliothecary
           .reject { |dep| dep[:name].start_with?("//") } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
       end
 
-      def self.parse_yarn_lock(file_contents, options: {})
+      def self.parse_yarn_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         response = Typhoeus.post("#{Bibliothecary.configuration.yarn_parser_host}/parse", body: file_contents)
 
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.yarn_parser_host}/parse", response.response_code) unless response.success?
@@ -119,7 +119,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_ls(file_contents, options: {})
+      def self.parse_ls(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse(file_contents)
 
         transform_tree_to_array(manifest.fetch("dependencies", {}))

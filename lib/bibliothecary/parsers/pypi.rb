@@ -89,12 +89,12 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
-      def self.parse_pipfile(file_contents, options: {})
+      def self.parse_pipfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Tomlrb.parse(file_contents)
         map_dependencies(manifest["packages"], "runtime") + map_dependencies(manifest["dev-packages"], "develop")
       end
 
-      def self.parse_pyproject(file_contents, options: {})
+      def self.parse_pyproject(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         deps = []
 
         file_contents = Tomlrb.parse(file_contents)
@@ -120,7 +120,7 @@ module Bibliothecary
         parse_pyproject(file_contents, options)
       end
 
-      def self.parse_conda(file_contents, options: {})
+      def self.parse_conda(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         contents = YAML.safe_load(file_contents)
         return [] unless contents
 
@@ -156,7 +156,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_pipfile_lock(file_contents, options: {})
+      def self.parse_pipfile_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse(file_contents)
         deps = []
         manifest.each do |group, dependencies|
@@ -173,7 +173,7 @@ module Bibliothecary
         deps
       end
 
-      def self.parse_poetry_lock(file_contents, options: {})
+      def self.parse_poetry_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Tomlrb.parse(file_contents)
         deps = []
         manifest["package"].each do |package|
@@ -194,7 +194,7 @@ module Bibliothecary
         deps
       end
 
-      def self.parse_setup_py(file_contents, options: {})
+      def self.parse_setup_py(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         match = file_contents.match(INSTALL_REGEXP)
         return [] unless match
         deps = []
@@ -221,7 +221,7 @@ module Bibliothecary
       # https://pip.pypa.io/en/stable/cli/pip_install/#requirement-specifiers
       # and https://pip.pypa.io/en/stable/topics/vcs-support/#git.
       # Invalid lines in requirements.txt are skipped.
-      def self.parse_requirements_txt(file_contents, options: {})
+      def self.parse_requirements_txt(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         deps = []
         type = case options[:filename]
                when /dev/ || /docs/ || /tools/

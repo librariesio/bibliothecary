@@ -22,7 +22,7 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
-      def self.parse_lockfile(file_contents, options: {})
+      def self.parse_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse file_contents
         manifest.fetch("packages",[]).map do |dependency|
           {
@@ -45,7 +45,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_manifest(file_contents, options: {})
+      def self.parse_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse file_contents
         map_dependencies(manifest, "require", "runtime") +
         map_dependencies(manifest, "require-dev", "development")

@@ -20,13 +20,13 @@ module Bibliothecary
 
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_yaml_manifest(file_contents, options: {})
+      def self.parse_yaml_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = YAML.load file_contents
         map_dependencies(manifest, "dependencies", "runtime") +
         map_dependencies(manifest, "dev_dependencies", "development")
       end
 
-      def self.parse_yaml_lockfile(file_contents, options: {})
+      def self.parse_yaml_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = YAML.load file_contents
         manifest.fetch("packages", []).map do |name, dep|
           {

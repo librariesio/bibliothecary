@@ -69,12 +69,12 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_godep_json(file_contents, options: {})
+      def self.parse_godep_json(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse file_contents
         map_dependencies(manifest, "Deps", "ImportPath", "Rev", "runtime")
       end
 
-      def self.parse_gpm(file_contents, options: {})
+      def self.parse_gpm(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         deps = []
         file_contents.split("\n").each do |line|
           match = line.gsub(/(\#(.*))/, "").match(GPM_REGEXP)
@@ -88,38 +88,38 @@ module Bibliothecary
         deps
       end
 
-      def self.parse_govendor(file_contents, options: {})
+      def self.parse_govendor(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.load file_contents
         map_dependencies(manifest, "package", "path", "revision", "runtime")
       end
 
-      def self.parse_glide_yaml(file_contents, options: {})
+      def self.parse_glide_yaml(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = YAML.load file_contents
         map_dependencies(manifest, "import", "package", "version", "runtime") +
         map_dependencies(manifest, "devImports", "package", "version", "development")
       end
 
-      def self.parse_glide_lockfile(file_contents, options: {})
+      def self.parse_glide_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = YAML.load file_contents
         map_dependencies(manifest, "imports", "name", "version", "runtime")
       end
 
-      def self.parse_gb_manifest(file_contents, options: {})
+      def self.parse_gb_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse file_contents
         map_dependencies(manifest, "dependencies", "importpath", "revision", "runtime")
       end
 
-      def self.parse_dep_toml(file_contents, options: {})
+      def self.parse_dep_toml(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Tomlrb.parse file_contents
         map_dependencies(manifest, "constraint", "name", "version", "runtime")
       end
 
-      def self.parse_dep_lockfile(file_contents, options: {})
+      def self.parse_dep_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Tomlrb.parse file_contents
         map_dependencies(manifest, "projects", "name", "revision", "runtime")
       end
 
-      def self.parse_go_mod(file_contents, options: {})
+      def self.parse_go_mod(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         deps = []
         file_contents.lines.map(&:strip).each do |line|
           next if line.match(GOMOD_IGNORABLE_REGEX)
@@ -134,7 +134,7 @@ module Bibliothecary
         deps
       end
 
-      def self.parse_go_sum(file_contents, options: {})
+      def self.parse_go_sum(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         deps = []
         file_contents.lines.map(&:strip).each do |line|
           if (match = line.match(GOSUM_REGEX))
@@ -148,7 +148,7 @@ module Bibliothecary
         deps.uniq
       end
 
-      def self.parse_go_resolved(file_contents, options: {})
+      def self.parse_go_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         JSON.parse(file_contents)
           .select { |dep| dep["Main"] != "true" }
           .map { |dep| { name: dep["Path"], requirement: dep["Version"], type: dep.fetch("Scope") { "runtime" } } }

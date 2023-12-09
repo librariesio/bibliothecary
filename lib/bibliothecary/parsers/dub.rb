@@ -22,7 +22,7 @@ module Bibliothecary
 
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_sdl_manifest(file_contents, options: {})
+      def self.parse_sdl_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         SdlParser.new(:runtime, file_contents).dependencies
       end
     end

@@ -34,7 +34,7 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
-      def self.parse_gemfile_lock(file_contents, options: {})
+      def self.parse_gemfile_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         file_contents.lines(chomp: true).map do |line|
           match = line.match(NAME_VERSION_4)
           bundler_match = line.match(BUNDLED_WITH)
@@ -54,12 +54,12 @@ module Bibliothecary
         end.compact
       end
 
-      def self.parse_gemfile(file_contents, options: {})
+      def self.parse_gemfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Gemnasium::Parser.send(:gemfile, file_contents)
         parse_ruby_manifest(manifest)
       end
 
-      def self.parse_gemspec(file_contents, options: {})
+      def self.parse_gemspec(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Gemnasium::Parser.send(:gemspec, file_contents)
         parse_ruby_manifest(manifest)
       end
