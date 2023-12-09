@@ -1,14 +1,14 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Bibliothecary::Parsers::Go do
-  it 'has a platform name' do
-    expect(described_class.platform_name).to eq('go')
+  it "has a platform name" do
+    expect(described_class.platform_name).to eq("go")
   end
 
-  it_behaves_like 'CycloneDX'
+  it_behaves_like "CycloneDX"
 
-  it 'parses depenencies from go.mod' do
-    expect(described_class.analyse_contents('go.mod', load_fixture('go.mod'))).to eq({
+  it "parses depenencies from go.mod" do
+    expect(described_class.analyse_contents("go.mod", load_fixture("go.mod"))).to eq({
       platform: "go",
       path: "go.mod",
       dependencies: [
@@ -28,13 +28,13 @@ describe Bibliothecary::Parsers::Go do
          requirement: "v1.0.0-20140924161607-9f9df34309c0",
          type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses depenencies from go.mod with a single require' do
-    expect(described_class.analyse_contents('go.mod', load_fixture('go.single-require.mod'))).to eq({
+  it "parses depenencies from go.mod with a single require" do
+    expect(described_class.analyse_contents("go.mod", load_fixture("go.single-require.mod"))).to eq({
       platform: "go",
       path: "go.mod",
       dependencies: [
@@ -42,13 +42,13 @@ describe Bibliothecary::Parsers::Go do
          requirement: "v0.0.0-20180628173108-788fd7840127",
          type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses depenencies from go.sum' do
-    expect(described_class.analyse_contents('go.sum', load_fixture('go.sum'))).to eq({
+  it "parses depenencies from go.sum" do
+    expect(described_class.analyse_contents("go.sum", load_fixture("go.sum"))).to eq({
       platform: "go",
       path: "go.sum",
       dependencies: [
@@ -74,13 +74,13 @@ describe Bibliothecary::Parsers::Go do
          requirement: "v1.0.0-20140924161607-9f9df34309c0",
          type: "runtime" }
         ],
-      kind: 'lockfile',
+      kind: "lockfile",
       success: true
     })
   end
 
-  it 'parses dependencies from glide.yaml' do
-    expect(described_class.analyse_contents('glide.yaml', load_fixture('glide.yaml'))).to eq({
+  it "parses dependencies from glide.yaml" do
+    expect(described_class.analyse_contents("glide.yaml", load_fixture("glide.yaml"))).to eq({
       platform: "go",
       path: "glide.yaml",
       dependencies: [
@@ -93,13 +93,13 @@ describe Bibliothecary::Parsers::Go do
          requirement: "^1.0.0",
          type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from glide.lock' do
-    expect(described_class.analyse_contents('glide.lock', load_fixture('glide.lock'))).to eq({
+  it "parses dependencies from glide.lock" do
+    expect(described_class.analyse_contents("glide.lock", load_fixture("glide.lock"))).to eq({
       platform: "go",
       path: "glide.lock",
       dependencies: [
@@ -116,13 +116,13 @@ describe Bibliothecary::Parsers::Go do
          requirement: "f7716cbe52baa25d2e9b0d0da546fcf909fc16b4",
          type: "runtime" }
       ],
-      kind: 'lockfile',
+      kind: "lockfile",
       success: true
     })
   end
 
-  it 'parses dependencies from Godeps.json' do
-    expect(described_class.analyse_contents('Godeps/Godeps.json', load_fixture('Godeps.json'))).to eq({
+  it "parses dependencies from Godeps.json" do
+    expect(described_class.analyse_contents("Godeps/Godeps.json", load_fixture("Godeps.json"))).to eq({
       platform: "go",
       path: "Godeps/Godeps.json",
       dependencies: [
@@ -169,13 +169,13 @@ describe Bibliothecary::Parsers::Go do
          requirement: "9f9df34309c04878acc86042b16630b0f696e1de",
          type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from gb_manifest' do
-    expect(described_class.analyse_contents('vendor/manifest', load_fixture('gb_manifest'))).to eq({
+  it "parses dependencies from gb_manifest" do
+    expect(described_class.analyse_contents("vendor/manifest", load_fixture("gb_manifest"))).to eq({
       platform: "go",
       path: "vendor/manifest",
       dependencies: [
@@ -183,13 +183,13 @@ describe Bibliothecary::Parsers::Go do
          requirement: "9fa818a44c2bf1396a17f9d5a3c0f6dd39d2ff8e",
          type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from gpm Godep file' do
-    expect(described_class.analyse_contents('Godeps', load_fixture('Godeps'))).to eq({
+  it "parses dependencies from gpm Godep file" do
+    expect(described_class.analyse_contents("Godeps", load_fixture("Godeps"))).to eq({
       platform: "go",
       path: "Godeps",
       dependencies: [
@@ -199,13 +199,13 @@ describe Bibliothecary::Parsers::Go do
         { name: "launchpad.net/gocheck", requirement: "r2013.03.03", type: "runtime" },
         { name: "code.google.com/p/go.example/hello/...", requirement: "ae081cd1d6cc", type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from govendor vendor.json file' do
-    expect(described_class.analyse_contents('vendor/vendor.json', load_fixture('vendor.json'))).to eq({
+  it "parses dependencies from govendor vendor.json file" do
+    expect(described_class.analyse_contents("vendor/vendor.json", load_fixture("vendor.json"))).to eq({
       platform: "go",
       path: "vendor/vendor.json",
       dependencies: [
@@ -215,13 +215,13 @@ describe Bibliothecary::Parsers::Go do
         { name: "github.com/pkg/errors", requirement: "a2d6902c6d2a2f194eb3fb474981ab7867c81505", type: "runtime" },
         { name: "golang.org/x/tools/go/vcs", requirement: "1727758746e7a08feaaceb9366d1468498ac2ac2", type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from dep Gopkg.toml file' do
-    expect(described_class.analyse_contents('Gopkg.toml', load_fixture('Gopkg.toml'))).to eq({
+  it "parses dependencies from dep Gopkg.toml file" do
+    expect(described_class.analyse_contents("Gopkg.toml", load_fixture("Gopkg.toml"))).to eq({
       platform: "go",
       path: "Gopkg.toml",
       dependencies: [
@@ -234,13 +234,13 @@ describe Bibliothecary::Parsers::Go do
         { name: "github.com/jmank88/nuts", requirement: "0.2.0", type: "runtime" },
         { name: "github.com/golang/protobuf", requirement: "*", type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from dep Gopkg.lock file' do
-    expect(described_class.analyse_contents('Gopkg.lock', load_fixture('Gopkg.lock'))).to eq({
+  it "parses dependencies from dep Gopkg.lock file" do
+    expect(described_class.analyse_contents("Gopkg.lock", load_fixture("Gopkg.lock"))).to eq({
       platform: "go",
       path: "Gopkg.lock",
       dependencies: [
@@ -259,13 +259,13 @@ describe Bibliothecary::Parsers::Go do
         { name: "golang.org/x/sync", requirement: "f52d1811a62927559de87708c8913c1650ce4f26", type: "runtime" },
         { name: "golang.org/x/sys", requirement: "bb24a47a89eac6c1227fbcb2ae37a8b9ed323366", type: "runtime" }
       ],
-      kind: 'lockfile',
+      kind: "lockfile",
       success: true
     })
   end
 
-  it 'parses dependencies from go-resolved-dependencies.json file' do
-    expect(described_class.analyse_contents('go-resolved-dependencies.json', load_fixture('go-resolved-dependencies.json'))).to eq({
+  it "parses dependencies from go-resolved-dependencies.json file" do
+    expect(described_class.analyse_contents("go-resolved-dependencies.json", load_fixture("go-resolved-dependencies.json"))).to eq({
       platform: "go",
       path: "go-resolved-dependencies.json",
       dependencies: [
@@ -284,22 +284,22 @@ describe Bibliothecary::Parsers::Go do
         { name: "github.com/alecthomas/units", requirement: "v0.0.0-20151022065526-2efee857e7cf", type: "runtime" },
         { name: "github.com/stretchr/testify", requirement: "v1.7.0", type: "test" }
       ],
-      kind: 'lockfile',
+      kind: "lockfile",
       success: true
     })
   end
 
-  it 'matches valid manifest filepaths' do
-    expect(described_class.match?('go.mod')).to be_truthy
-    expect(described_class.match?('go.sum')).to be_truthy
-    expect(described_class.match?('Godeps/Godeps.json')).to be_truthy
-    expect(described_class.match?('vendor/manifest')).to be_truthy
-    expect(described_class.match?('glide.yaml')).to be_truthy
-    expect(described_class.match?('glide.lock')).to be_truthy
-    expect(described_class.match?('Godeps')).to be_truthy
-    expect(described_class.match?('vendor/vendor.json')).to be_truthy
-    expect(described_class.match?('Gopkg.toml')).to be_truthy
-    expect(described_class.match?('Gopkg.lock')).to be_truthy
-    expect(described_class.match?('go-resolved-dependencies.json')).to be_truthy
+  it "matches valid manifest filepaths" do
+    expect(described_class.match?("go.mod")).to be_truthy
+    expect(described_class.match?("go.sum")).to be_truthy
+    expect(described_class.match?("Godeps/Godeps.json")).to be_truthy
+    expect(described_class.match?("vendor/manifest")).to be_truthy
+    expect(described_class.match?("glide.yaml")).to be_truthy
+    expect(described_class.match?("glide.lock")).to be_truthy
+    expect(described_class.match?("Godeps")).to be_truthy
+    expect(described_class.match?("vendor/vendor.json")).to be_truthy
+    expect(described_class.match?("Gopkg.toml")).to be_truthy
+    expect(described_class.match?("Gopkg.lock")).to be_truthy
+    expect(described_class.match?("go-resolved-dependencies.json")).to be_truthy
   end
 end

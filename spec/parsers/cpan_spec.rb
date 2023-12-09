@@ -1,12 +1,12 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Bibliothecary::Parsers::CPAN do
-  it 'has a platform name' do
-    expect(described_class.platform_name).to eq('cpan')
+  it "has a platform name" do
+    expect(described_class.platform_name).to eq("cpan")
   end
 
-  it 'parses dependencies from META.yml' do
-    expect(described_class.analyse_contents('META.yml', load_fixture('META.yml'))).to eq({
+  it "parses dependencies from META.yml" do
+    expect(described_class.analyse_contents("META.yml", load_fixture("META.yml"))).to eq({
       platform: "cpan",
       path: "META.yml",
       dependencies: [
@@ -16,13 +16,13 @@ describe Bibliothecary::Parsers::CPAN do
         { name: "XML::Simple", requirement: 0, type: "runtime" },
         { name: "perl", requirement: "5.6.0", type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from META.json' do
-    expect(described_class.analyse_contents('META.json', load_fixture('META.json'))).to eq({
+  it "parses dependencies from META.json" do
+    expect(described_class.analyse_contents("META.json", load_fixture("META.json"))).to eq({
       platform: "cpan",
       path: "META.json",
       dependencies: [
@@ -32,13 +32,13 @@ describe Bibliothecary::Parsers::CPAN do
         { name: "Getopt::Long", requirement: "2.32", type: "runtime" },
         { name: "List::Util", requirement: "1.07_00", type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'matches valid manifest filepaths' do
-    expect(described_class.match?('META.yml')).to be_truthy
-    expect(described_class.match?('META.json')).to be_truthy
+  it "matches valid manifest filepaths" do
+    expect(described_class.match?("META.yml")).to be_truthy
+    expect(described_class.match?("META.json")).to be_truthy
   end
 end

@@ -1,4 +1,4 @@
-require 'yaml'
+require "yaml"
 
 module Bibliothecary
   module Parsers
@@ -8,11 +8,11 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("shard.yml", case_insensitive: true) => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_yaml_manifest
           },
           match_filename("shard.lock", case_insensitive: true) => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_yaml_lockfile
           }
         }
@@ -22,20 +22,20 @@ module Bibliothecary
 
       def self.parse_yaml_lockfile(file_contents, options: {})
         manifest = YAML.load file_contents
-        map_dependencies(manifest, 'shards', 'runtime')
+        map_dependencies(manifest, "shards", "runtime")
       end
 
       def self.parse_yaml_manifest(file_contents, options: {})
         manifest = YAML.load file_contents
-        map_dependencies(manifest, 'dependencies', 'runtime') +
-        map_dependencies(manifest, 'development_dependencies', 'runtime')
+        map_dependencies(manifest, "dependencies", "runtime") +
+        map_dependencies(manifest, "development_dependencies", "runtime")
       end
 
       def self.map_dependencies(hash, key, type)
         hash.fetch(key,[]).map do |name, requirement|
           {
             name: name,
-            requirement: requirement['version'] || '*',
+            requirement: requirement["version"] || "*",
             type: type
           }
         end

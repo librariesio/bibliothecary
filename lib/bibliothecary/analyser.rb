@@ -1,6 +1,6 @@
-require_relative './analyser/matchers.rb'
-require_relative './analyser/determinations.rb'
-require_relative './analyser/analysis.rb'
+require_relative "./analyser/matchers.rb"
+require_relative "./analyser/determinations.rb"
+require_relative "./analyser/analysis.rb"
 
 module Bibliothecary
   module Analyser
@@ -52,7 +52,7 @@ module Bibliothecary
       end
 
       def platform_name
-        self.name.to_s.split('::').last.downcase
+        self.name.to_s.split("::").last.downcase
       end
 
       def map_dependencies(hash, key, type)

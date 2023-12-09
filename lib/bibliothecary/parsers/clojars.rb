@@ -1,5 +1,5 @@
-require 'json'
-require 'typhoeus'
+require "json"
+require "typhoeus"
 
 module Bibliothecary
   module Parsers
@@ -9,7 +9,7 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("project.clj") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_manifest
           }
         }

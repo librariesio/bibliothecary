@@ -1,12 +1,12 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Bibliothecary::Parsers::Nuget do
-  it 'has a platform name' do
-    expect(described_class.platform_name).to eq('nuget')
+  it "has a platform name" do
+    expect(described_class.platform_name).to eq("nuget")
   end
 
-  it 'parses dependencies from Project.json' do
-    expect(described_class.analyse_contents('Project.json', load_fixture('Project.json'))).to eq({
+  it "parses dependencies from Project.json" do
+    expect(described_class.analyse_contents("Project.json", load_fixture("Project.json"))).to eq({
       platform: "nuget",
       path: "Project.json",
       dependencies: [
@@ -48,13 +48,13 @@ describe Bibliothecary::Parsers::Nuget do
          type: "runtime" },
         { name: "AutoMapper", requirement: "4.0.0-alpha1", type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from Project.lock.json' do
-    expect(described_class.analyse_contents('Project.lock.json', load_fixture('Project.lock.json'))).to eq({
+  it "parses dependencies from Project.lock.json" do
+    expect(described_class.analyse_contents("Project.lock.json", load_fixture("Project.lock.json"))).to eq({
       platform: "nuget",
       path: "Project.lock.json",
       dependencies: [
@@ -527,13 +527,13 @@ describe Bibliothecary::Parsers::Nuget do
          requirement: "4.0.11-beta-23225",
          type: "runtime" }
       ],
-      kind: 'lockfile',
+      kind: "lockfile",
       success: true
     })
   end
 
-  it 'parses dependencies from packages.lock.json' do
-    expect(described_class.analyse_contents('packages.lock.json', load_fixture('packages.lock.json'))).to eq({
+  it "parses dependencies from packages.lock.json" do
+    expect(described_class.analyse_contents("packages.lock.json", load_fixture("packages.lock.json"))).to eq({
       platform: "nuget",
       path: "packages.lock.json",
       dependencies: [
@@ -821,13 +821,13 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "System.Xml.XPath", requirement: "4.3.0", type: "runtime" },
         { name: "System.Xml.XPath.XDocument", requirement: "4.3.0", type: "runtime" }
       ],
-      kind: 'lockfile',
+      kind: "lockfile",
       success: true
     })
   end
 
-  it 'parses dependencies from packages.config' do
-    expect(described_class.analyse_contents('packages.config', load_fixture('packages.config'))).to eq({
+  it "parses dependencies from packages.config" do
+    expect(described_class.analyse_contents("packages.config", load_fixture("packages.config"))).to eq({
       platform: "nuget",
       path: "packages.config",
       dependencies: [
@@ -841,13 +841,13 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "WebActivator", requirement: "1.5", type: "runtime" },
         { name: "Microsoft.Net.Compilers", requirement: "1.0.0", type: "development" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from example.csproj' do
-    expect(described_class.analyse_contents('example.csproj', load_fixture('example.csproj'))).to eq({
+  it "parses dependencies from example.csproj" do
+    expect(described_class.analyse_contents("example.csproj", load_fixture("example.csproj"))).to eq({
       platform: "nuget",
       path: "example.csproj",
       dependencies: [
@@ -860,39 +860,39 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "System.Resources.Extensions", requirement: "4.7.0", type: "runtime" },
         { name: "Contoso.Utility.UsefulStuff", requirement: "3.6.0", type: "development" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from example-no-version.csproj' do
-    expect(described_class.analyse_contents('example.csproj', load_fixture('example-no-version.csproj'))).to eq({
+  it "parses dependencies from example-no-version.csproj" do
+    expect(described_class.analyse_contents("example.csproj", load_fixture("example-no-version.csproj"))).to eq({
       platform: "nuget",
       path: "example.csproj",
       dependencies: [
         { name: "Microsoft.AspNetCore.App", requirement: "*", type: "runtime" },
         { name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "development" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from example-update.csproj' do
-    expect(described_class.analyse_contents('example-update.csproj', load_fixture('example-update.csproj'))).to eq({
+  it "parses dependencies from example-update.csproj" do
+    expect(described_class.analyse_contents("example-update.csproj", load_fixture("example-update.csproj"))).to eq({
       platform: "nuget",
       path: "example-update.csproj",
       dependencies: [
         { name: "Microsoft.AspNetCore", requirement: "1.1.1", type: "runtime" },
         { name: "Microsoft.AspNetCore.StaticFiles", requirement: "2.2.0", type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from example.nuspec' do
-    expect(described_class.analyse_contents('example.nuspec', load_fixture('example.nuspec'))).to eq({
+  it "parses dependencies from example.nuspec" do
+    expect(described_class.analyse_contents("example.nuspec", load_fixture("example.nuspec"))).to eq({
       platform: "nuget",
       path: "example.nuspec",
       dependencies: [
@@ -901,13 +901,13 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "DotNetZip", requirement: "*", type: "runtime" },
         { name: "DevelopmentOnlyPackage", requirement: "1.2.3", type: "development" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from paket.lock' do
-    expect(described_class.analyse_contents('paket.lock', load_fixture('paket.lock'))).to eq({
+  it "parses dependencies from paket.lock" do
+    expect(described_class.analyse_contents("paket.lock", load_fixture("paket.lock"))).to eq({
       platform: "nuget",
       path: "paket.lock",
       dependencies: [
@@ -917,12 +917,12 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "FSharp.Core", requirement: "4.0.0.1", type: "runtime" },
         { name: "Newtonsoft.Json", requirement: "9.0.1", type: "runtime" }
       ],
-      kind: 'lockfile',
+      kind: "lockfile",
       success: true
     })
   end
 
-  it 'parses dependencies from project.assets.json' do
+  it "parses dependencies from project.assets.json" do
     expected = {
       platform: "nuget",
       path: "project.assets.json",
@@ -930,22 +930,22 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "a", requirement: "1.0.0", type: "runtime" },
         { name: "b", requirement: "1.0.0", type: "runtime" }
       ],
-      kind: 'lockfile',
+      kind: "lockfile",
       success: true
     }
 
-    result = described_class.analyse_contents('project.assets.json', load_fixture('nuget_project.assets.json'))
+    result = described_class.analyse_contents("project.assets.json", load_fixture("nuget_project.assets.json"))
 
     expect(result).to eq(expected)
   end
 
-  it 'matches valid manifest filepaths' do
-    expect(described_class.match?('Project.json')).to be_truthy
-    expect(described_class.match?('Project.lock.json')).to be_truthy
-    expect(described_class.match?('packages.config')).to be_truthy
-    expect(described_class.match?('paket.lock')).to be_truthy
-    expect(described_class.match?('example.nuspec')).to be_truthy
-    expect(described_class.match?('example.csproj')).to be_truthy
-    expect(described_class.match?('project.assets.json')).to be_truthy
+  it "matches valid manifest filepaths" do
+    expect(described_class.match?("Project.json")).to be_truthy
+    expect(described_class.match?("Project.lock.json")).to be_truthy
+    expect(described_class.match?("packages.config")).to be_truthy
+    expect(described_class.match?("paket.lock")).to be_truthy
+    expect(described_class.match?("example.nuspec")).to be_truthy
+    expect(described_class.match?("example.csproj")).to be_truthy
+    expect(described_class.match?("project.assets.json")).to be_truthy
   end
 end

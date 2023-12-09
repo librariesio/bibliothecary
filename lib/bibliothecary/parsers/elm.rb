@@ -1,4 +1,4 @@
-require 'json'
+require "json"
 
 module Bibliothecary
   module Parsers
@@ -9,11 +9,11 @@ module Bibliothecary
       def self.mapping
         {
           match_filenames("elm-package.json", "elm_dependencies.json") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_json_runtime_manifest
           },
           match_filename("elm-stuff/exact-dependencies.json") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_json_lock
           }
         }
@@ -27,7 +27,7 @@ module Bibliothecary
           {
             name: name,
             requirement: requirement,
-            type: 'runtime'
+            type: "runtime"
           }
         end
       end

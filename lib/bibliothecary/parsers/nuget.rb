@@ -1,5 +1,5 @@
-require 'ox'
-require 'json'
+require "ox"
+require "json"
 
 module Bibliothecary
   module Parsers
@@ -10,35 +10,35 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("Project.json") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_json_runtime_manifest
           },
           match_filename("Project.lock.json") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_project_lock_json
           },
           match_filename("packages.lock.json") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_packages_lock_json
           },
           match_filename("packages.config") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_packages_config
           },
           match_extension(".nuspec") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_nuspec
           },
           match_extension(".csproj") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_csproj
           },
           match_filename("paket.lock") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_paket_lock
           },
           match_filename("project.assets.json") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_project_assets_json
           }
         }
@@ -50,12 +50,12 @@ module Bibliothecary
 
       def self.parse_project_lock_json(file_contents, options: {})
         manifest = JSON.parse file_contents
-        manifest.fetch('libraries',[]).map do |name, _requirement|
-          dep = name.split('/')
+        manifest.fetch("libraries",[]).map do |name, _requirement|
+          dep = name.split("/")
           {
             name: dep[0],
             requirement: dep[1],
-            type: 'runtime'
+            type: "runtime"
           }
         end
       end
@@ -64,7 +64,7 @@ module Bibliothecary
         manifest = JSON.parse file_contents
 
         frameworks = {}
-        manifest.fetch('dependencies',[]).each do |framework, deps|
+        manifest.fetch("dependencies",[]).each do |framework, deps|
           frameworks[framework] = deps
             .reject { |_name, details| details["type"] == "Project" } # Projects do not have versions
             .map do |name, details|
@@ -72,8 +72,8 @@ module Bibliothecary
                 name: name,
                 # 'resolved' has been set in all examples so far
                 # so fallback to requested is pure paranoia
-                requirement: details.fetch('resolved', details.fetch('requested', '*')),
-                type: 'runtime'
+                requirement: details.fetch("resolved", details.fetch("requested", "*")),
+                type: "runtime"
               }
             end
         end
@@ -91,11 +91,11 @@ module Bibliothecary
 
       def self.parse_packages_config(file_contents, options: {})
         manifest = Ox.parse file_contents
-        manifest.packages.locate('package').map do |dependency|
+        manifest.packages.locate("package").map do |dependency|
           {
             name: dependency.id,
             requirement: (dependency.version if dependency.respond_to? "version") || "*",
-            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? 'development' : 'runtime'
+            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime"
           }
         end
       rescue
@@ -105,7 +105,7 @@ module Bibliothecary
       def self.parse_csproj(file_contents, options: {})
         manifest = Ox.parse file_contents
 
-        packages = manifest.locate('ItemGroup/PackageReference').select{ |dep| dep.respond_to? "Include" }.map do |dependency|
+        packages = manifest.locate("ItemGroup/PackageReference").select{ |dep| dep.respond_to? "Include" }.map do |dependency|
           requirement = (dependency.Version if dependency.respond_to? "Version") || "*"
           if requirement.is_a?(Ox::Element)
             requirement = dependency.nodes.detect{ |n| n.value == "Version" }&.text
@@ -130,11 +130,11 @@ module Bibliothecary
 
       def self.parse_nuspec(file_contents, options: {})
         manifest = Ox.parse file_contents
-        manifest.package.metadata.dependencies.locate('dependency').map do |dependency|
+        manifest.package.metadata.dependencies.locate("dependency").map do |dependency|
           {
             name: dependency.id,
-            requirement: dependency.attributes[:version] || '*',
-            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? 'development' : 'runtime'
+            requirement: dependency.attributes[:version] || "*",
+            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime"
           }
         end
       rescue
@@ -148,7 +148,7 @@ module Bibliothecary
           {
             name: match[:name].strip,
             requirement: match[:version],
-            type: 'runtime'
+            type: "runtime"
           }
         end
         # we only have to enforce uniqueness by name because paket ensures that there is only the single version globally in the project
@@ -161,8 +161,8 @@ module Bibliothecary
         frameworks = {}
         manifest.fetch("targets",[]).each do |framework, deps|
           frameworks[framework] = deps
-                                    .select { |_name, details| details["type"] == "package" }
-                                    .map do |name, _details|
+            .select { |_name, details| details["type"] == "package" }
+            .map do |name, _details|
             name_split = name.split("/")
             {
               name: name_split[0],

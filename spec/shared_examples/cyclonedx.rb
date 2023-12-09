@@ -1,5 +1,5 @@
-RSpec.shared_examples 'CycloneDX' do
-  describe 'CycloneDX' do
+RSpec.shared_examples "CycloneDX" do
+  describe "CycloneDX" do
     # the sample cyclonedx files were created using the syft tool:
     #
     # https://github.com/anchore/syft
@@ -32,68 +32,68 @@ RSpec.shared_examples 'CycloneDX' do
       artifactory_dependencies.find_all { |d| d[:platform] == described_class.platform_name.to_sym }.tap { |o| raise "This platform is not configured for testing with CycloneDX!" unless o.length > 0 }
     end
 
-    it 'parses dependencies from cyclonedx.json' do
-      result = described_class.analyse_contents('cyclonedx.json', load_fixture('cyclonedx.json'))
+    it "parses dependencies from cyclonedx.json" do
+      result = described_class.analyse_contents("cyclonedx.json", load_fixture("cyclonedx.json"))
 
       dependencies_for_platform.each do |dependency|
         expect(result[:dependencies].find { |d| d[:name] == dependency[:name] }).to eq({
           name: dependency[:name],
           requirement: dependency[:version],
-          type: 'lockfile'
+          type: "lockfile"
         })
       end
     end
 
-    it 'parses deeply nested dependencies from cyclonedx.json' do
-      result = described_class.analyse_contents('cyclonedx.json', load_fixture('cyclonedx-nested.json'))
+    it "parses deeply nested dependencies from cyclonedx.json" do
+      result = described_class.analyse_contents("cyclonedx.json", load_fixture("cyclonedx-nested.json"))
 
       dependencies_for_platform.each do |dependency|
         expect(result[:dependencies].find { |d| d[:name] == dependency[:name] }).to eq({
           name: dependency[:name],
           requirement: dependency[:version],
-          type: 'lockfile'
+          type: "lockfile"
         })
       end
     end
 
-    it 'parses dependencies from cyclonedx.xml' do
-      result = described_class.analyse_contents('cyclonedx.xml', load_fixture('cyclonedx.xml'))
+    it "parses dependencies from cyclonedx.xml" do
+      result = described_class.analyse_contents("cyclonedx.xml", load_fixture("cyclonedx.xml"))
 
       dependencies_for_platform.each do |dependency|
         expect(result[:dependencies].find { |d| d[:name] == dependency[:name] }).to eq({
           name: dependency[:name],
           requirement: dependency[:version],
-          type: 'lockfile'
+          type: "lockfile"
         })
       end
     end
 
-    it 'parses deeply nested dependencies from cyclonedx.xml' do
-      result = described_class.analyse_contents('cyclonedx.xml', load_fixture('cyclonedx-nested.xml'))
+    it "parses deeply nested dependencies from cyclonedx.xml" do
+      result = described_class.analyse_contents("cyclonedx.xml", load_fixture("cyclonedx-nested.xml"))
 
       dependencies_for_platform.each do |dependency|
         expect(result[:dependencies].find { |d| d[:name] == dependency[:name] }).to eq({
           name: dependency[:name],
           requirement: dependency[:version],
-          type: 'lockfile'
+          type: "lockfile"
         })
       end
     end
 
 
-    context 'with cache' do
+    context "with cache" do
       let(:options) { { cache: {} } }
 
-      it 'uses the cache for json' do
-        described_class.analyse_contents('cyclonedx.json', load_fixture('cyclonedx.json'), options: options)
+      it "uses the cache for json" do
+        described_class.analyse_contents("cyclonedx.json", load_fixture("cyclonedx.json"), options: options)
 
-        expect(options[:cache]['cyclonedx.json']).not_to eq(nil)
+        expect(options[:cache]["cyclonedx.json"]).not_to eq(nil)
       end
 
-      it 'uses the cache for xml' do
-        described_class.analyse_contents('cyclonedx.xml', load_fixture('cyclonedx.xml'), options: options)
+      it "uses the cache for xml" do
+        described_class.analyse_contents("cyclonedx.xml", load_fixture("cyclonedx.xml"), options: options)
 
-        expect(options[:cache]['cyclonedx.xml']).not_to eq(nil)
+        expect(options[:cache]["cyclonedx.xml"]).not_to eq(nil)
       end
     end
   end

@@ -1,5 +1,5 @@
-require 'ox'
-require 'strings-ansi'
+require "ox"
+require "strings-ansi"
 
 # Known shortcomings and unimplemented Maven features:
 #   pom.xml
@@ -60,40 +60,40 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("ivy.xml", case_insensitive: true) => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_ivy_manifest
           },
           match_filename("pom.xml", case_insensitive: true) => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_standalone_pom_manifest
           },
           match_filename("build.gradle", case_insensitive: true) => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_gradle
           },
           match_filename("build.gradle.kts", case_insensitive: true) => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_gradle_kts
           },
           match_extension(".xml", case_insensitive: true) => {
             content_matcher: :ivy_report?,
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_ivy_report
           },
           match_filename("gradle-dependencies-q.txt", case_insensitive: true) => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_gradle_resolved
           },
           match_filename("maven-resolved-dependencies.txt", case_insensitive: true) => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_maven_resolved
           },
           match_filename("sbt-update-full.txt", case_insensitive: true) => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_sbt_update_full
           },
           match_filename("maven-dependency-tree.txt", case_insensitive: true) => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_maven_tree
           }
         }
@@ -105,12 +105,12 @@ module Bibliothecary
 
       def self.parse_ivy_manifest(file_contents, options: {})
         manifest = Ox.parse file_contents
-        manifest.dependencies.locate('dependency').map do |dependency|
+        manifest.dependencies.locate("dependency").map do |dependency|
           attrs = dependency.attributes
           {
             name: "#{attrs[:org]}:#{attrs[:name]}",
             requirement: attrs[:rev],
-            type: 'runtime'
+            type: "runtime"
           }
         end
       end
@@ -139,7 +139,7 @@ module Bibliothecary
           attrs = mod.attributes
           org = attrs[:organisation]
           name = attrs[:name]
-          version = mod.locate('revision').first&.attributes[:name]
+          version = mod.locate("revision").first&.attributes[:name]
 
           next nil if org.nil? or name.nil? or version.nil?
 
@@ -276,7 +276,7 @@ module Bibliothecary
       # https://github.com/librariesio/libraries.io/blob/e970925aade2596a03268b6e1be785eba8502c62/app/models/package_manager/maven.rb#L129
       def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {})
         manifest = Ox.parse file_contents
-        xml = manifest.respond_to?('project') ? manifest.project : manifest
+        xml = manifest.respond_to?("project") ? manifest.project : manifest
         [].tap do |deps|
           # <dependencyManagement> is a namespace to specify artifact configuration (e.g. version), but it doesn't
           # actually add dependencies to your project. Grab these and keep them for reference while parsing <dependencies>
@@ -292,10 +292,10 @@ module Bibliothecary
           end
           # <dependencies> is the namespace that will add dependencies to your project.
           xml.locate("dependencies/dependency").each do |dep|
-            groupId = extract_pom_dep_info(xml, dep, 'groupId', parent_properties)
-            artifactId = extract_pom_dep_info(xml, dep, 'artifactId', parent_properties)
-            version = extract_pom_dep_info(xml, dep, 'version', parent_properties)
-            scope = extract_pom_dep_info(xml, dep, 'scope', parent_properties)
+            groupId = extract_pom_dep_info(xml, dep, "groupId", parent_properties)
+            artifactId = extract_pom_dep_info(xml, dep, "artifactId", parent_properties)
+            version = extract_pom_dep_info(xml, dep, "version", parent_properties)
+            scope = extract_pom_dep_info(xml, dep, "scope", parent_properties)
 
             # Use any dep configurations from <dependencyManagement> as fallbacks
             if (depConfig = dependencyManagement.find { |d| d[:groupId] == groupId && d[:artifactId] == artifactId })
@@ -306,10 +306,10 @@ module Bibliothecary
             dep_hash = {
               name: "#{groupId}:#{artifactId}",
               requirement: version,
-              type: scope || 'runtime',
+              type: scope || "runtime"
             }
             # optional field is, itself, optional, and will be either "true" or "false"
-            optional = extract_pom_dep_info(xml, dep, 'optional', parent_properties)
+            optional = extract_pom_dep_info(xml, dep, "optional", parent_properties)
             dep_hash[:optional] = optional == "true" unless optional.nil?
             deps.push(dep_hash)
           end
@@ -318,9 +318,9 @@ module Bibliothecary
 
       def self.parse_gradle(file_contents, options: {})
         file_contents
-        .scan(GRADLE_GROOVY_SIMPLE_REGEX)                                                # match 'implementation "group:artifactId:version"'
-        .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
-        .map { |(type, group, artifactId, version)|
+          .scan(GRADLE_GROOVY_SIMPLE_REGEX)                                                # match 'implementation "group:artifactId:version"'
+          .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
+          .map { |(type, group, artifactId, version)|
           {
             name: [group, artifactId].join(":"),
             requirement: version || "*",
@@ -407,8 +407,8 @@ module Bibliothecary
 
         prop_field = xml.properties.locate(property_name).first if xml.respond_to?("properties")
         parent_prop = parent_properties[property_name] ||                 # e.g. "${foo}"
-          parent_properties[property_name.sub(/^project\./, '')] ||       # e.g. "${project.foo}"
-          parent_properties[property_name.sub(/^project\.parent\./, '')]  # e.g. "${project.parent.foo}"
+          parent_properties[property_name.sub(/^project\./, "")] ||       # e.g. "${project.foo}"
+          parent_properties[property_name.sub(/^project\.parent\./, "")]  # e.g. "${project.parent.foo}"
 
         if prop_field
           prop_field.nodes.first

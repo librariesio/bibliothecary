@@ -1,12 +1,12 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Bibliothecary::Parsers::Cargo do
-  it 'has a platform name' do
-    expect(described_class.platform_name).to eq('cargo')
+  it "has a platform name" do
+    expect(described_class.platform_name).to eq("cargo")
   end
 
-  it 'parses dependencies from Cargo.toml' do
-    expect(described_class.analyse_contents('Cargo.toml', load_fixture('Cargo.toml'))).to eq({
+  it "parses dependencies from Cargo.toml" do
+    expect(described_class.analyse_contents("Cargo.toml", load_fixture("Cargo.toml"))).to eq({
       platform: "cargo",
       path: "Cargo.toml",
       dependencies:[
@@ -19,8 +19,8 @@ describe Bibliothecary::Parsers::Cargo do
     })
   end
 
-  it 'parses dependencies from Cargo.lock' do
-    expect(described_class.analyse_contents('Cargo.lock', load_fixture('Cargo.lock'))).to eq({
+  it "parses dependencies from Cargo.lock" do
+    expect(described_class.analyse_contents("Cargo.lock", load_fixture("Cargo.lock"))).to eq({
       platform: "cargo",
       path: "Cargo.lock",
       dependencies:[
@@ -46,8 +46,8 @@ describe Bibliothecary::Parsers::Cargo do
     })
   end
 
-  it 'matches valid manifest filepaths' do
-    expect(described_class.match?('Cargo.toml')).to be_truthy
-    expect(described_class.match?('Cargo.lock')).to be_truthy
+  it "matches valid manifest filepaths" do
+    expect(described_class.match?("Cargo.toml")).to be_truthy
+    expect(described_class.match?("Cargo.lock")).to be_truthy
   end
 end

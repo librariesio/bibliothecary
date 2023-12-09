@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Bibliothecary::MultiParsers::DependenciesCSV, :focus do
   let!(:parser_class) do
@@ -15,7 +15,7 @@ describe Bibliothecary::MultiParsers::DependenciesCSV, :focus do
     { cache: {}, filename: "dependencies.csv" }
   end
 
-  context 'with missing headers' do
+  context "with missing headers" do
     let!(:csv) do
       <<-CSV
 cat,dog,version
@@ -23,12 +23,12 @@ meow,woof,2.2.0
       CSV
     end
 
-    it 'raises an error' do
+    it "raises an error" do
       expect { parser.parse_dependencies_csv(csv, options: options) }.to raise_error(/Missing required headers platform, name/)
     end
   end
 
-  context 'missing field' do
+  context "missing field" do
     let!(:csv) do
       <<-CSV
 platform,name,version
@@ -37,12 +37,12 @@ meow,wow,2.2.0
       CSV
     end
 
-    it 'raises an error' do
+    it "raises an error" do
       expect { parser.parse_dependencies_csv(csv, options: options) }.to raise_error(/Missing required field 'platform' on line 3/)
     end
   end
 
-  context 'two columns that can match' do
+  context "two columns that can match" do
     let!(:csv) do
       <<-CSV
 platform,name,version,lockfile requirement
@@ -51,7 +51,7 @@ raow,wow,2.2.0,6.0.0
       CSV
     end
 
-    it 'raises selects the highest priority match' do
+    it "raises selects the highest priority match" do
       allow(parser).to receive(:platform_name).and_return("raow")
 
       result = parser.parse_dependencies_csv(csv, options: options)
@@ -61,8 +61,8 @@ raow,wow,2.2.0,6.0.0
     end
   end
 
-  context 'all data ok' do
-    context 'original field names' do
+  context "all data ok" do
+    context "original field names" do
       let!(:csv) do
         <<-CSV
 platform,name,version,type
@@ -72,7 +72,7 @@ hiss,raow,2.2.1,bird
         CSV
       end
 
-      it 'parses, filters, and caches' do
+      it "parses, filters, and caches" do
         allow(parser).to receive(:platform_name).and_return("hiss")
 
         result = parser.parse_dependencies_csv(csv, options: options)
@@ -87,8 +87,8 @@ hiss,raow,2.2.1,bird
       end
     end
 
-    context 'Tidelift export field names' do
-      context 'without fallback' do
+    context "Tidelift export field names" do
+      context "without fallback" do
         let!(:csv) do
           <<-CSV
 Platform,Name,Lockfile Requirement,Lockfile Type,Manifest Requirement
@@ -98,7 +98,7 @@ hiss,raow,2.2.1,bird,
           CSV
         end
 
-        it 'parses, filters, and caches' do
+        it "parses, filters, and caches" do
           allow(parser).to receive(:platform_name).and_return("hiss")
 
           result = parser.parse_dependencies_csv(csv, options: options)
@@ -113,7 +113,7 @@ hiss,raow,2.2.1,bird,
         end
       end
 
-      context 'with fallback' do
+      context "with fallback" do
         let!(:csv) do
           <<-CSV
 Platform,Name,Lockfile Requirement,Lockfile Type,Version
@@ -123,7 +123,7 @@ hiss,raow,2.2.0,bird,2.2.1
           CSV
         end
 
-        it 'parses, filters, and caches' do
+        it "parses, filters, and caches" do
           allow(parser).to receive(:platform_name).and_return("hiss")
 
           result = parser.parse_dependencies_csv(csv, options: options)

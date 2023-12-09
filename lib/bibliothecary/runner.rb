@@ -24,8 +24,8 @@ module Bibliothecary
       analyses = analyses.flatten.compact
 
       info_list.select { |info| info.package_manager.nil? }.each do |info|
-        analyses.push(Bibliothecary::Analyser::create_error_analysis('unknown', info.relative_path, 'unknown',
-                                                                     'No parser for this file type'))
+        analyses.push(Bibliothecary::Analyser::create_error_analysis("unknown", info.relative_path, "unknown",
+                                                                     "No parser for this file type"))
       end
 
       analyses
@@ -178,4 +178,4 @@ module Bibliothecary
   end
 end
 
-require_relative './runner/multi_manifest_filter.rb'
+require_relative "./runner/multi_manifest_filter.rb"

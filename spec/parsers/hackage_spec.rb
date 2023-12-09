@@ -27,8 +27,8 @@ describe Bibliothecary::Parsers::Hackage do
     expect(described_class.match?("test")).to be_falsey
   end
 
-  it 'parses dependencies from *.cabal files', :vcr do
-    expect(described_class.analyse_contents('example.cabal', load_fixture('example.cabal'))).to eq({
+  it "parses dependencies from *.cabal files", :vcr do
+    expect(described_class.analyse_contents("example.cabal", load_fixture("example.cabal"))).to eq({
       platform: "hackage",
       path: "example.cabal",
       dependencies: [
@@ -50,13 +50,13 @@ describe Bibliothecary::Parsers::Hackage do
         { requirement: "==1.1.*", name: "pretty", type: "test" },
         { requirement: "==1.2.*", name: "text", type: "test" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from cabal.config files' do
-    expect(described_class.analyse_contents('cabal.config', load_fixture('cabal.config'))).to eq({
+  it "parses dependencies from cabal.config files" do
+    expect(described_class.analyse_contents("cabal.config", load_fixture("cabal.config"))).to eq({
       platform: "hackage",
       path: "cabal.config",
       dependencies: [
@@ -169,7 +169,7 @@ describe Bibliothecary::Parsers::Hackage do
         { name: "word8", requirement: "0.1.3", type: "runtime" },
         { name: "zlib", requirement: "0.6.1.2", type: "runtime" }
       ],
-      kind: 'lockfile',
+      kind: "lockfile",
       success: true
     })
   end

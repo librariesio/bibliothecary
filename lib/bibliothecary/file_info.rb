@@ -1,4 +1,4 @@
-require 'pathname'
+require "pathname"
 
 module Bibliothecary
   # A representation of a file on the filesystem, with location information

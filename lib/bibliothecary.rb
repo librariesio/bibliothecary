@@ -9,10 +9,10 @@ require "bibliothecary/purl_util"
 require "find"
 require "tomlrb"
 
-Dir[File.expand_path('../bibliothecary/multi_parsers/*.rb', __FILE__)].each do |file|
+Dir[File.expand_path("../bibliothecary/multi_parsers/*.rb", __FILE__)].each do |file|
   require file
 end
-Dir[File.expand_path('../bibliothecary/parsers/*.rb', __FILE__)].each do |file|
+Dir[File.expand_path("../bibliothecary/parsers/*.rb", __FILE__)].each do |file|
   require file
 end
 
@@ -80,7 +80,7 @@ module Bibliothecary
     string
       .dup # ensure we don't have a frozen string
       .force_encoding("UTF-8") # treat all strings as utf8
-      .sub(/^\xEF\xBB\xBF/, '') # remove any Byte Order Marks so JSON, etc don't fail while parsing them.
+      .sub(/^\xEF\xBB\xBF/, "") # remove any Byte Order Marks so JSON, etc don't fail while parsing them.
   end
 
   class << self

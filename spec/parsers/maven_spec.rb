@@ -1,18 +1,18 @@
-require 'spec_helper'
+require "spec_helper"
 
 RSpec.describe Bibliothecary::Parsers::Maven do
-  it 'parses specific info from pom.xml' do
-    xml = Ox.parse load_fixture('pom.xml')
+  it "parses specific info from pom.xml" do
+    xml = Ox.parse load_fixture("pom.xml")
 
     cdata = Bibliothecary::Parsers::Maven.extract_pom_info(xml, "project/foo", {})
     expect(cdata).to match("this is some CDATA")
   end
 
-  it_behaves_like 'CycloneDX'
-  it_behaves_like 'dependencies.csv'
+  it_behaves_like "CycloneDX"
+  it_behaves_like "dependencies.csv"
 
-  it 'parses dependencies from pom.xml' do
-    expect(described_class.analyse_contents('pom.xml', load_fixture('pom.xml'))).to eq({
+  it "parses dependencies from pom.xml" do
+    expect(described_class.analyse_contents("pom.xml", load_fixture("pom.xml"))).to eq({
       platform: "maven",
       path: "pom.xml",
       dependencies: [
@@ -93,21 +93,21 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         { name: "io.libraries:bibliothecary", requirement: "${bibliothecary.version}", type: "test" },
         { name: "io.libraries:recursive", requirement: "${recursive.test}", type: "runtime" },
         { name: "io.libraries:optional", requirement: "${optional.test}", type: "runtime", optional: true },
-        { name: "io.libraries:not-optional", requirement: "${not-optional.test}", type: "runtime", optional: false },
+        { name: "io.libraries:not-optional", requirement: "${not-optional.test}", type: "runtime", optional: false }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'raises FileParsingError on a broken pom.xml' do
+  it "raises FileParsingError on a broken pom.xml" do
     expect {
-      described_class.parse_file('pom.xml', load_fixture('broken/pom.xml'))
+      described_class.parse_file("pom.xml", load_fixture("broken/pom.xml"))
     }.to raise_error(Bibliothecary::FileParsingError)
   end
 
-  it 'parses dependencies from pom2.xml' do
-    expect(described_class.analyse_contents('pom.xml', load_fixture('pom2.xml'))).to eq({
+  it "parses dependencies from pom2.xml" do
+    expect(described_class.analyse_contents("pom.xml", load_fixture("pom2.xml"))).to eq({
       platform: "maven",
       path: "pom.xml",
       dependencies: [
@@ -134,13 +134,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
           type: "runtime" },
          { name: "org.testng:testng", requirement: "6.9.12", type: "test" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from pom-spaces-in-artifact-and-group.xml' do
-    expect(described_class.analyse_contents('pom.xml', load_fixture('pom-spaces-in-artifact-and-group.xml'))).to eq({
+  it "parses dependencies from pom-spaces-in-artifact-and-group.xml" do
+    expect(described_class.analyse_contents("pom.xml", load_fixture("pom-spaces-in-artifact-and-group.xml"))).to eq({
       platform: "maven",
       path: "pom.xml",
       dependencies: [
@@ -167,13 +167,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
           type: "runtime" },
          { name: "org.testng:testng", requirement: "6.9.12", type: "test" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  it 'parses dependencies from ivy.xml' do
-    expect(described_class.analyse_contents('ivy.xml', load_fixture('ivy.xml'))).to eq({
+  it "parses dependencies from ivy.xml" do
+    expect(described_class.analyse_contents("ivy.xml", load_fixture("ivy.xml"))).to eq({
       platform: "maven",
       path: "ivy.xml",
       dependencies: [
@@ -200,13 +200,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         type: "runtime" },
         { name: "org.mozilla:rhino", requirement: "1.7.7", type: "runtime" }
       ],
-      kind: 'manifest',
+      kind: "manifest",
       success: true
     })
   end
 
-  context 'gradle' do
-    it 'parses various dependency syntax variations' do
+  context "gradle" do
+    it "parses various dependency syntax variations" do
       source = <<~FILE
         dependencies {
           compile 'com.whatever:liblib:1.2.3'
@@ -219,7 +219,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         }
       FILE
 
-      expect(described_class.analyse_contents('build.gradle', source)[:dependencies]).to match_array([
+      expect(described_class.analyse_contents("build.gradle", source)[:dependencies]).to match_array([
         { name: "com.whatever:liblib", requirement: "1.2.3", type: "compile" },
         { name: "this.is.a.group:greatlib", requirement: "*", type: "compile" },
         { name: "com.fasterxml.jackson.core:jackson-databind", requirement: "*", type: "compile" },
@@ -230,8 +230,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       ])
     end
 
-    it 'parses dependencies from build.gradle' do
-      expect(described_class.analyse_contents('build.gradle', load_fixture('build.gradle'))).to eq({
+    it "parses dependencies from build.gradle" do
+      expect(described_class.analyse_contents("build.gradle", load_fixture("build.gradle"))).to eq({
         platform: "maven",
         path: "build.gradle",
         dependencies: [
@@ -246,13 +246,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
           { name: "com.android.support:customtabs", requirement: "23.1.1", type: "compile" },
           { name: "com.google.guava:guava", requirement: "${guavaVersions['latest']}", type: "implementation" }
         ],
-        kind: 'manifest',
+        kind: "manifest",
         success: true
       })
     end
 
-    it 'parses dependencies from build.gradle.kts' do
-      expect(described_class.analyse_contents('build.gradle.kts', load_fixture('build.gradle.kts'))).to eq({
+    it "parses dependencies from build.gradle.kts" do
+      expect(described_class.analyse_contents("build.gradle.kts", load_fixture("build.gradle.kts"))).to eq({
         platform: "maven",
         path: "build.gradle.kts",
         dependencies: [
@@ -262,26 +262,26 @@ RSpec.describe Bibliothecary::Parsers::Maven do
           { name: "org.jetbrains.kotlin:kotlin-test-junit", requirement: "1.0.0", type: "testImplementation" },
           { name: "androidx.annotation:annotation", requirement: "${rootProject.extra[\"androidx_annotation_version\"]}", type: "implementation" }
         ],
-        kind: 'manifest',
+        kind: "manifest",
         success: true
       })
     end
   end
 
-  it 'parses dependencies from an ivy report for a root project / type compile' do
-    expect(described_class.analyse_contents('com.example-hello_2.12-compile.xml', load_fixture('ivy_reports/com.example-hello_2.12-compile.xml'))).to eq({
+  it "parses dependencies from an ivy report for a root project / type compile" do
+    expect(described_class.analyse_contents("com.example-hello_2.12-compile.xml", load_fixture("ivy_reports/com.example-hello_2.12-compile.xml"))).to eq({
       platform: "maven",
       path: "com.example-hello_2.12-compile.xml",
       dependencies: [
         { name: "org.scala-lang:scala-library", requirement: "2.12.5", type: "compile" }
       ],
-      kind: 'lockfile',
+      kind: "lockfile",
       success: true
     })
   end
 
-  it 'parses dependencies from an ivy report for a subproject / type test' do
-    expect(described_class.analyse_contents('com.example-subproject_2.12-test.xml', load_fixture('ivy_reports/com.example-subproject_2.12-test.xml'))).to eq({
+  it "parses dependencies from an ivy report for a subproject / type test" do
+    expect(described_class.analyse_contents("com.example-subproject_2.12-test.xml", load_fixture("ivy_reports/com.example-subproject_2.12-test.xml"))).to eq({
       platform: "maven",
       path: "com.example-subproject_2.12-test.xml",
       dependencies: [
@@ -294,71 +294,71 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         { name: "com.typesafe:config", requirement: "1.3.1", type: "test" },
         { name: "org.scala-lang:scala-library", requirement: "2.12.5", type: "test" }
       ],
-      kind: 'lockfile',
+      kind: "lockfile",
       success: true
     })
   end
 
-  it 'reports success: false on a broken ivy report' do
-    expect(described_class.analyse_contents('missing_info.xml', load_fixture('ivy_reports/missing_info.xml'))).to eq({
+  it "reports success: false on a broken ivy report" do
+    expect(described_class.analyse_contents("missing_info.xml", load_fixture("ivy_reports/missing_info.xml"))).to eq({
       platform: "maven",
       path: "missing_info.xml",
       dependencies: nil,
-      kind: 'lockfile',
+      kind: "lockfile",
       success: false,
       error_message: "missing_info.xml: ivy-report document lacks <info> element"
     })
   end
 
-  it 'raises FileParsingError on a broken ivy report' do
+  it "raises FileParsingError on a broken ivy report" do
     expect {
-      described_class.parse_file('missing_info.xml', load_fixture('ivy_reports/missing_info.xml'))
+      described_class.parse_file("missing_info.xml", load_fixture("ivy_reports/missing_info.xml"))
     }.to raise_error(Bibliothecary::FileParsingError, "missing_info.xml: ivy-report document lacks <info> element")
   end
 
-  it 'raises FileParsingError on an xml file with no ivy_report' do
+  it "raises FileParsingError on an xml file with no ivy_report" do
     expect {
-      described_class.parse_file('non_ivy_report.xml', load_fixture('ivy_reports/non_ivy_report.xml'))
+      described_class.parse_file("non_ivy_report.xml", load_fixture("ivy_reports/non_ivy_report.xml"))
     }.to raise_error(Bibliothecary::FileParsingError, "non_ivy_report.xml: No parser for this file type")
   end
 
-  it 'returns [] on an .xml file with bad syntax' do
+  it "returns [] on an .xml file with bad syntax" do
     expect {
-      described_class.parse_file('invalid_syntax.xml', load_fixture('ivy_reports/invalid_syntax.xml'))
+      described_class.parse_file("invalid_syntax.xml", load_fixture("ivy_reports/invalid_syntax.xml"))
     }.to raise_error(Bibliothecary::FileParsingError, "invalid_syntax.xml: No parser for this file type")
   end
 
-  it 'cannot determine kind on an ivy report with no contents specified' do
-    expect(described_class.determine_kind(fixture_path('ivy_reports/com.example-hello_2.12-compile.xml'))).to be(nil)
+  it "cannot determine kind on an ivy report with no contents specified" do
+    expect(described_class.determine_kind(fixture_path("ivy_reports/com.example-hello_2.12-compile.xml"))).to be(nil)
   end
 
-  it 'cannot determine kind on an ivy report with no contents available' do
+  it "cannot determine kind on an ivy report with no contents available" do
     # this file doesn't really exist so we can't know it's an ivy report
-    expect(described_class.determine_kind(fixture_path('whatever.xml'))).to be(nil)
+    expect(described_class.determine_kind(fixture_path("whatever.xml"))).to be(nil)
   end
 
-  it 'matches valid manifest filepaths' do
-    expect(described_class.match?('pom.xml')).to be_truthy
-    expect(described_class.match?('ivy.xml')).to be_truthy
-    expect(described_class.match?('build.gradle')).to be_truthy
-    expect(described_class.match?('build.gradle.kts')).to be_truthy
+  it "matches valid manifest filepaths" do
+    expect(described_class.match?("pom.xml")).to be_truthy
+    expect(described_class.match?("ivy.xml")).to be_truthy
+    expect(described_class.match?("build.gradle")).to be_truthy
+    expect(described_class.match?("build.gradle.kts")).to be_truthy
     # since the file doesn't really exist, we can't say it's a manifest file
-    expect(described_class.match?('whatever.xml')).to be_falsey
+    expect(described_class.match?("whatever.xml")).to be_falsey
     # but if it's a real file with contents we should be able to identify it has <ivy-report> in it
-    expect(described_class.match?(fixture_path('ivy_reports/com.example-hello_2.12-compile.xml'),
-                                  load_fixture('ivy_reports/com.example-hello_2.12-compile.xml'))).to be_truthy
+    expect(described_class.match?(fixture_path("ivy_reports/com.example-hello_2.12-compile.xml"),
+                                  load_fixture("ivy_reports/com.example-hello_2.12-compile.xml"))).to be_truthy
     # but if it's a real file without contents we should not be able to identify it has <ivy-report> in it
-    expect(described_class.match?(fixture_path('ivy_reports/com.example-hello_2.12-compile.xml'))).to be_falsey
+    expect(described_class.match?(fixture_path("ivy_reports/com.example-hello_2.12-compile.xml"))).to be_falsey
     # not an ivy-report but ends in xml
-    expect(described_class.match?(fixture_path('ivy_reports/non_ivy_report.xml'))).to be_falsey
+    expect(described_class.match?(fixture_path("ivy_reports/non_ivy_report.xml"))).to be_falsey
     # not an ivy-report because bad xml
-    expect(described_class.match?(fixture_path('ivy_reports/invalid_syntax.xml'))).to be_falsey
+    expect(described_class.match?(fixture_path("ivy_reports/invalid_syntax.xml"))).to be_falsey
   end
 
-  describe 'parent properties' do
-    it 'totally ignores parent props' do
+  describe "parent properties" do
+    it "totally ignores parent props" do
       parent_props = {}
-      deps = described_class.parse_pom_manifest(load_fixture('pom.xml'), parent_props)
+      deps = described_class.parse_pom_manifest(load_fixture("pom.xml"), parent_props)
 
       jersey_dep = deps.find { |dep| dep[:name] == "io.libraries:bibliothecary" }
       expect(jersey_dep[:requirement]).to eq("${bibliothecary.version}")
@@ -367,9 +367,9 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(echo_parent_dep[:requirement]).to eq("0.1.23")
     end
 
-    it 'uses parent properties during resolve' do
+    it "uses parent properties during resolve" do
       parent_props = { "bibliothecary.version"=>"9.9.9" }
-      deps = described_class.parse_pom_manifest(load_fixture('pom.xml'), parent_props)
+      deps = described_class.parse_pom_manifest(load_fixture("pom.xml"), parent_props)
 
       jersey_dep = deps.find { |dep| dep[:name] == "io.libraries:bibliothecary" }
       expect(jersey_dep[:requirement]).to eq("9.9.9")
@@ -378,9 +378,9 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(echo_parent_dep[:requirement]).to eq("0.1.23")
     end
 
-    it 'uses parent properties during resolve when there are no properties in the pom file' do
+    it "uses parent properties during resolve when there are no properties in the pom file" do
       parent_props = { "bibliothecary.version"=>"9.9.9" }
-      deps = described_class.parse_pom_manifest(load_fixture('pom_no_props.xml'), parent_props)
+      deps = described_class.parse_pom_manifest(load_fixture("pom_no_props.xml"), parent_props)
 
       bibliothecary_dep = deps.find { |dep| dep[:name] == "io.libraries:bibliothecary" }
       expect(bibliothecary_dep[:requirement]).to eq("9.9.9")
@@ -402,30 +402,30 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     end
   end
 
-  it 'returns property name for missing property values' do
-    deps = described_class.parse_pom_manifest(load_fixture('pom_missing_props.xml'))
+  it "returns property name for missing property values" do
+    deps = described_class.parse_pom_manifest(load_fixture("pom_missing_props.xml"))
 
     testng_dep = deps.find { |dep| dep[:name] == "org.testng:testng" }
     expect(testng_dep[:requirement]).to eq("${missing_property}")
   end
 
-  it 'parses dependencies from maven-resolved-dependencies.txt' do
-    deps = described_class.analyse_contents('maven-resolved-dependencies.txt', load_fixture('maven-resolved-dependencies.txt'))
-    expect(deps[:kind]).to eq 'lockfile'
+  it "parses dependencies from maven-resolved-dependencies.txt" do
+    deps = described_class.analyse_contents("maven-resolved-dependencies.txt", load_fixture("maven-resolved-dependencies.txt"))
+    expect(deps[:kind]).to eq "lockfile"
     spring_boot = deps[:dependencies].select {|item| item[:name] == "org.springframework.boot:spring-boot-starter-web" }
     expect(spring_boot.length).to eq 1
-    expect(spring_boot.first[:requirement]).to eq '2.0.3.RELEASE'
-    expect(spring_boot.first[:type]).to eq 'compile'
+    expect(spring_boot.first[:requirement]).to eq "2.0.3.RELEASE"
+    expect(spring_boot.first[:type]).to eq "compile"
   end
 
-  it 'correctly ignores dependencies if a maven-resolved-dependencies file contains the content of a maven-dependency-tree file' do
-    deps = described_class.analyse_contents('maven-resolved-dependencies.txt', load_fixture('maven-dependency-tree.txt'))
-    expect(deps[:kind]).to eq 'lockfile'
+  it "correctly ignores dependencies if a maven-resolved-dependencies file contains the content of a maven-dependency-tree file" do
+    deps = described_class.analyse_contents("maven-resolved-dependencies.txt", load_fixture("maven-dependency-tree.txt"))
+    expect(deps[:kind]).to eq "lockfile"
     expect(deps[:dependencies]).to eq([])
   end
 
-  it 'parses dependencies from sbt-update-full.txt' do
-    analysis = described_class.analyse_contents('sbt-update-full.txt', load_fixture('sbt-update-full.txt'))
+  it "parses dependencies from sbt-update-full.txt" do
+    analysis = described_class.analyse_contents("sbt-update-full.txt", load_fixture("sbt-update-full.txt"))
     expect(analysis[:platform]).to eq("maven")
     expect(analysis[:path]).to eq("sbt-update-full.txt")
     expect(analysis[:kind]).to eq("lockfile")
@@ -434,13 +434,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     # spot check we found a dep we expected
     algebra = deps.select {|item| item[:name] == "org.typelevel:algebra_2.12" }
-    expect(algebra.map { |d| d[:requirement] }).to eq ['2.0.0-M2', '2.0.0-M2', '2.0.0-M2', '2.0.0-M2', '2.0.0-M2', '2.0.0-M2']
-    expect(algebra.map { |d| d[:type] }.sort).to eq ['compile', 'compile-internal', 'runtime', 'runtime-internal', 'test', 'test-internal']
+    expect(algebra.map { |d| d[:requirement] }).to eq ["2.0.0-M2", "2.0.0-M2", "2.0.0-M2", "2.0.0-M2", "2.0.0-M2", "2.0.0-M2"]
+    expect(algebra.map { |d| d[:type] }.sort).to eq ["compile", "compile-internal", "runtime", "runtime-internal", "test", "test-internal"]
 
 
     # There's a 3.5 and a 3.2, where 3.2 gets evicted; we want to check that we evict 3.2
     commons_maths = deps.select {|item| item[:name] == "org.apache.commons:commons-math3" }
-    expect(commons_maths.map { |d| d[:requirement] }).to eq ['3.5', '3.5', '3.5', '3.5', '3.5', '3.5']
+    expect(commons_maths.map { |d| d[:requirement] }).to eq ["3.5", "3.5", "3.5", "3.5", "3.5", "3.5"]
 
     # these are some types that are in the file but shouldn't be used
     expect(deps.select {|item| item[:type] == "plugin" }).to eq []
@@ -459,16 +459,16 @@ RSpec.describe Bibliothecary::Parsers::Maven do
   end
 
   context "gradle" do
-    it 'parses dependencies from gradle-dependencies-q.txt' do
-      deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle-dependencies-q.txt'))
-      expect(deps[:kind]).to eq 'lockfile'
+    it "parses dependencies from gradle-dependencies-q.txt" do
+      deps = described_class.analyse_contents("gradle-dependencies-q.txt", load_fixture("gradle-dependencies-q.txt"))
+      expect(deps[:kind]).to eq "lockfile"
       guavas = deps[:dependencies].select {|item| item[:name] == "com.google.guava:guava" && item[:type] == "api"}
       expect(guavas.length).to eq 1
-      expect(guavas[0][:requirement]).to eq '25.1-jre'
+      expect(guavas[0][:requirement]).to eq "25.1-jre"
     end
 
-    it 'has the correct sections and dependencies from gradle-dependencies-q.txt' do
-      deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle-dependencies-q.txt'))
+    it "has the correct sections and dependencies from gradle-dependencies-q.txt" do
+      deps = described_class.analyse_contents("gradle-dependencies-q.txt", load_fixture("gradle-dependencies-q.txt"))
 
       compile_classpath = deps[:dependencies].select {|item| item[:type] == "compileClasspath"}
       expect(compile_classpath.length).to eq 158
@@ -568,7 +568,7 @@ GRADLE
       no_version_to_version = "\\--- org.springframework.security:spring-security-test -> 5.2.2.RELEASE"
       expect(described_class
                .parse_gradle_resolved(no_version_to_version))
-               .to eq [{
+        .to eq [{
                          name: "org.springframework.security:spring-security-test",
                          requirement: "5.2.2.RELEASE",
                          type: nil
@@ -606,17 +606,17 @@ GRADLE
       expect(output).to eq [
         { name: "org.apache.ant:ant", requirement: "1.10.9", type: "provided" },
         { name: "net.sourceforge.pmd:pmd", requirement: "6.32.0-SNAPSHOT", type: "provided" },
-        { name: "net.java.dev.javacc:javacc", requirement: "5.0", type: "provided" },
+        { name: "net.java.dev.javacc:javacc", requirement: "5.0", type: "provided" }
       ]
     end
 
-    it 'parses dependencies from gradle-dependencies-q.txt, generated from build.gradle.kts' do
+    it "parses dependencies from gradle-dependencies-q.txt, generated from build.gradle.kts" do
       # This output should be the same format as from build.gradle, but including it just to have a fixture from build.gradle.kts documented.
-      deps = described_class.analyse_contents('gradle-dependencies-q.txt', load_fixture('gradle_with_kotlin/gradle-dependencies-q.txt'))
-      expect(deps[:kind]).to eq 'lockfile'
+      deps = described_class.analyse_contents("gradle-dependencies-q.txt", load_fixture("gradle_with_kotlin/gradle-dependencies-q.txt"))
+      expect(deps[:kind]).to eq "lockfile"
       guavas = deps[:dependencies].select {|item| item[:name] == "com.google.guava:guava" && item[:type] == "testCompileClasspath"}
       expect(guavas.length).to eq 1
-      expect(guavas[0][:requirement]).to eq '30.1.1-jre'
+      expect(guavas[0][:requirement]).to eq "30.1.1-jre"
     end
   end
 end

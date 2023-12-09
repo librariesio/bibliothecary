@@ -1,4 +1,4 @@
-require 'json'
+require "json"
 
 module Bibliothecary
   module Parsers
@@ -11,23 +11,23 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("package.json") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_manifest
           },
           match_filename("npm-shrinkwrap.json") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_shrinkwrap
           },
           match_filename("yarn.lock") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_yarn_lock
           },
           match_filename("package-lock.json") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_package_lock
           },
           match_filename("npm-ls.json") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_ls
           }
         }
@@ -56,14 +56,14 @@ module Bibliothecary
       end
 
       def self.parse_package_lock_v1(manifest)
-        parse_package_lock_deps_recursively(manifest.fetch('dependencies', []))
+        parse_package_lock_deps_recursively(manifest.fetch("dependencies", []))
       end
 
       def self.parse_package_lock_v2(manifest)
         # "packages" is a flat object where each key is the installed location of the dep, e.g. node_modules/foo/node_modules/bar.
         manifest
           .fetch("packages")
-          .reject { |name, dep| name == "" } # this is the lockfile's package itself
+          .reject { |name, _dep| name == "" } # this is the lockfile's package itself
           .map do |name, dep|
             {
               name: name.split("node_modules/").last,
@@ -75,14 +75,14 @@ module Bibliothecary
 
       def self.parse_package_lock_deps_recursively(dependencies, depth=1)
         dependencies.flat_map do |name, requirement|
-          type = requirement.fetch("dev", false) ? 'development' : 'runtime'
+          type = requirement.fetch("dev", false) ? "development" : "runtime"
           version = requirement.key?("from") ? requirement["from"][/#(?:semver:)?v?(.*)/, 1] : nil
           version ||= requirement["version"].split("#").last
           child_dependencies = if depth >= PACKAGE_LOCK_JSON_MAX_DEPTH
             []
           else
-            parse_package_lock_deps_recursively(requirement.fetch('dependencies', []), depth + 1)
-          end
+            parse_package_lock_deps_recursively(requirement.fetch("dependencies", []), depth + 1)
+                               end
 
           [{
             name: name,
@@ -94,11 +94,11 @@ module Bibliothecary
 
       def self.parse_manifest(file_contents, options: {})
         manifest = JSON.parse(file_contents)
-        raise "appears to be a lockfile rather than manifest format" if manifest.key?('lockfileVersion')
+        raise "appears to be a lockfile rather than manifest format" if manifest.key?("lockfileVersion")
 
         (
-          map_dependencies(manifest, 'dependencies', 'runtime') +
-          map_dependencies(manifest, 'devDependencies', 'development')
+          map_dependencies(manifest, "dependencies", "runtime") +
+          map_dependencies(manifest, "devDependencies", "development")
         )
           .reject { |dep| dep[:name].start_with?("//") } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
       end
@@ -122,7 +122,7 @@ module Bibliothecary
       def self.parse_ls(file_contents, options: {})
         manifest = JSON.parse(file_contents)
 
-        transform_tree_to_array(manifest.fetch('dependencies', {}))
+        transform_tree_to_array(manifest.fetch("dependencies", {}))
       end
 
       def self.lockfile_preference_order(file_infos)
@@ -143,7 +143,7 @@ module Bibliothecary
             {
               name: name,
               requirement: metadata["version"],
-              lockfile_requirement: metadata.fetch("from", "").split('@').last,
+              lockfile_requirement: metadata.fetch("from", "").split("@").last,
               type: "runtime"
             }
           ] + transform_tree_to_array(metadata.fetch("dependencies", {}))

@@ -19,50 +19,50 @@ module Bibliothecary
 
       def self.mapping
         {
-          match_filenames('requirements-dev.txt', 'requirements/dev.txt',
-                          'requirements-docs.txt', 'requirements/docs.txt',
-                          'requirements-test.txt', 'requirements/test.txt',
-                          'requirements-tools.txt', 'requirements/tools.txt') => {
-            kind: 'manifest',
+          match_filenames("requirements-dev.txt", "requirements/dev.txt",
+                          "requirements-docs.txt", "requirements/docs.txt",
+                          "requirements-test.txt", "requirements/test.txt",
+                          "requirements-tools.txt", "requirements/tools.txt") => {
+            kind: "manifest",
             parser: :parse_requirements_txt
           },
           lambda { |p| PIP_COMPILE_REGEXP.match(p) } => {
             content_matcher: :pip_compile?,
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_requirements_txt
           },
           lambda { |p| MANIFEST_REGEXP.match(p) } => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_requirements_txt,
             can_have_lockfile: false
           },
-          match_filename('requirements.frozen') => { # pattern exists to store frozen deps in requirements.frozen
+          match_filename("requirements.frozen") => { # pattern exists to store frozen deps in requirements.frozen
             parser: :parse_requirements_txt,
-            kind: 'lockfile'
+            kind: "lockfile"
           },
-          match_filename('pip-resolved-dependencies.txt') => { # Inferred from pip
-            kind: 'lockfile',
+          match_filename("pip-resolved-dependencies.txt") => { # Inferred from pip
+            kind: "lockfile",
             parser: :parse_requirements_txt
           },
           match_filename("setup.py") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_setup_py,
             can_have_lockfile: false
           },
           match_filename("Pipfile") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_pipfile
           },
           match_filename("Pipfile.lock") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_pipfile_lock
           },
           match_filename("pyproject.toml") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_pyproject
           },
           match_filename("poetry.lock") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_poetry_lock
           },
           # Pip dependencies can be embedded in conda environment files
@@ -91,7 +91,7 @@ module Bibliothecary
 
       def self.parse_pipfile(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
-        map_dependencies(manifest['packages'], 'runtime') + map_dependencies(manifest['dev-packages'], 'develop')
+        map_dependencies(manifest["packages"], "runtime") + map_dependencies(manifest["dev-packages"], "develop")
       end
 
       def self.parse_pyproject(file_contents, options: {})
@@ -100,14 +100,14 @@ module Bibliothecary
         file_contents = Tomlrb.parse(file_contents)
 
         # Parse poetry [tool.poetry] deps
-        poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {})
-        deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
-        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
+        poetry_manifest = file_contents.fetch("tool", {}).fetch("poetry", {})
+        deps += map_dependencies(poetry_manifest["dependencies"], "runtime")
+        deps += map_dependencies(poetry_manifest["dev-dependencies"], "develop")
 
         # Parse PEP621 [project] deps
-        pep621_manifest = file_contents.fetch('project', {})
-        pep621_deps = pep621_manifest.fetch('dependencies', []).map { |d| parse_pep_508_dep_spec(d) }
-        deps += map_dependencies(pep621_deps, 'runtime')
+        pep621_manifest = file_contents.fetch("project", {})
+        pep621_deps = pep621_manifest.fetch("dependencies", []).map { |d| parse_pep_508_dep_spec(d) }
+        deps += map_dependencies(pep621_deps, "runtime")
 
         # We're combining both poetry+PEP621 deps instead of making them mutually exclusive, until we
         # find a reason not to ingest them both.
@@ -144,15 +144,15 @@ module Bibliothecary
 
       def self.map_requirements(info)
         if info.is_a?(Hash)
-          if info['version']
-            info['version']
-          elsif info['git']
-            info['git'] + '#' + info['ref']
+          if info["version"]
+            info["version"]
+          elsif info["git"]
+            info["git"] + "#" + info["ref"]
           else
-            '*'
+            "*"
           end
         else
-          info || '*'
+          info || "*"
         end
       end
 
@@ -161,7 +161,7 @@ module Bibliothecary
         deps = []
         manifest.each do |group, dependencies|
           next if group == "_meta"
-          group = 'runtime' if group == 'default'
+          group = "runtime" if group == "default"
           dependencies.each do |name, info|
             deps << {
               name: name,
@@ -178,15 +178,15 @@ module Bibliothecary
         deps = []
         manifest["package"].each do |package|
           # next if group == "_meta"
-          group = case package['category']
-                  when 'main'
-                    'runtime'
-                  when 'dev'
-                    'develop'
+          group = case package["category"]
+                  when "main"
+                    "runtime"
+                  when "dev"
+                    "develop"
                   end
 
           deps << {
-            name: package['name'],
+            name: package["name"],
             requirement: map_requirements(package),
             type: group
           }
@@ -204,8 +204,8 @@ module Bibliothecary
           next unless match
           deps << {
             name: match[1],
-            requirement: match[-1] || '*',
-            type: 'runtime'
+            requirement: match[-1] || "*",
+            type: "runtime"
           }
         end
         deps
@@ -225,15 +225,15 @@ module Bibliothecary
         deps = []
         type = case options[:filename]
                when /dev/ || /docs/ || /tools/
-                 'development'
+                 "development"
                when /test/
-                 'test'
+                 "test"
                else
-                 'runtime'
+                 "runtime"
                end
 
         file_contents.split("\n").each do |line|
-          if line['://']
+          if line["://"]
             begin
               result = parse_requirements_txt_url(line)
             rescue URI::Error, NoEggSpecified => e
@@ -244,12 +244,12 @@ module Bibliothecary
               type: type
             )
           else
-            match = line.delete(' ').match(REQUIREMENTS_REGEXP)
+            match = line.delete(" ").match(REQUIREMENTS_REGEXP)
             next unless match
 
             deps << {
               name: match[1],
-              requirement: match[-1] || '*',
+              requirement: match[-1] || "*",
               type: type
             }
           end

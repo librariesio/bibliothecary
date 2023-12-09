@@ -1,5 +1,5 @@
 require "json"
-require 'deb_control'
+require "deb_control"
 
 module Bibliothecary
   module Parsers
@@ -9,11 +9,11 @@ module Bibliothecary
       def self.mapping
         {
           match_extension(".cabal") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_cabal
           },
           match_extension("cabal.config") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_cabal_config
           }
         }
@@ -25,7 +25,7 @@ module Bibliothecary
 
       def self.parse_cabal(file_contents, options: {})
         headers = {
-          'Content-Type' => "text/plain;charset=utf-8"
+          "Content-Type" => "text/plain;charset=utf-8"
         }
 
         response = Typhoeus.post("#{Bibliothecary.configuration.cabal_parser_host}/parse", headers: headers, body: file_contents)
@@ -36,13 +36,13 @@ module Bibliothecary
 
       def self.parse_cabal_config(file_contents, options: {})
         manifest = DebControl::ControlFileBase.parse(file_contents)
-        deps = manifest.first['constraints'].delete("\n").split(',').map(&:strip)
+        deps = manifest.first["constraints"].delete("\n").split(",").map(&:strip)
         deps.map do |dependency|
-          dep = dependency.delete("==").split(' ')
+          dep = dependency.delete("==").split(" ")
           {
             name: dep[0],
-            requirement: dep[1] || '*',
-            type: 'runtime'
+            requirement: dep[1] || "*",
+            type: "runtime"
           }
         end
       end

@@ -1,4 +1,4 @@
-require 'gemnasium/parser'
+require "gemnasium/parser"
 
 module Bibliothecary
   module Parsers
@@ -13,19 +13,19 @@ module Bibliothecary
       def self.mapping
         {
           match_filenames("Gemfile", "gems.rb") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_gemfile,
-            related_to: [ 'manifest', 'lockfile' ]
+            related_to: [ "manifest", "lockfile" ]
           },
           match_extension(".gemspec") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_gemspec,
-            related_to: [ 'manifest', 'lockfile' ]
+            related_to: [ "manifest", "lockfile" ]
           },
           match_filenames("Gemfile.lock", "gems.locked") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_gemfile_lock,
-            related_to: [ 'manifest', 'lockfile' ]
+            related_to: [ "manifest", "lockfile" ]
           }
         }
       end
@@ -42,11 +42,11 @@ module Bibliothecary
 
           if match
             name = match[1]
-            version = match[2].gsub(/\(|\)/,'')
+            version = match[2].gsub(/\(|\)/,"")
             {
               name: name,
               requirement: version,
-              type: 'runtime'
+              type: "runtime"
             }
           else
             parse_bundler(file_contents)
@@ -71,9 +71,9 @@ module Bibliothecary
         return nil unless version
 
         {
-          name: 'bundler',
+          name: "bundler",
           requirement: version,
-          type: 'runtime'
+          type: "runtime"
         }
       end
     end

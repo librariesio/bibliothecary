@@ -6,15 +6,15 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("Cartfile") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_cartfile
           },
           match_filename("Cartfile.private") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_cartfile_private
           },
           match_filename("Cartfile.resolved") => {
-            kind: 'lockfile',
+            kind: "lockfile",
             parser: :parse_cartfile_resolved
           }
         }
@@ -23,15 +23,15 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
       def self.parse_cartfile(file_contents, options: {})
-        map_dependencies(file_contents, 'cartfile')
+        map_dependencies(file_contents, "cartfile")
       end
 
       def self.parse_cartfile_private(file_contents, options: {})
-        map_dependencies(file_contents, 'cartfile.private')
+        map_dependencies(file_contents, "cartfile.private")
       end
 
       def self.parse_cartfile_resolved(file_contents, options: {})
-        map_dependencies(file_contents, 'cartfile.resolved')
+        map_dependencies(file_contents, "cartfile.resolved")
       end
 
       def self.map_dependencies(manifest, path)
@@ -41,8 +41,8 @@ module Bibliothecary
 
         json.map do |dependency|
           {
-            name: dependency['name'],
-            requirement: dependency['version'],
+            name: dependency["name"],
+            requirement: dependency["version"],
             type: dependency["type"]
           }
         end

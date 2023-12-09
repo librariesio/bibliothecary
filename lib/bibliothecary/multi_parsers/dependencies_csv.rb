@@ -1,4 +1,4 @@
-require 'csv'
+require "csv"
 
 module Bibliothecary
   module MultiParsers
@@ -8,8 +8,8 @@ module Bibliothecary
 
       def self.mapping
         {
-          match_filename('dependencies.csv') => {
-            kind: 'lockfile',
+          match_filename("dependencies.csv") => {
+            kind: "lockfile",
             ungroupable: true,
             parser: :parse_dependencies_csv
           }
