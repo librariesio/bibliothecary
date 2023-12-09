@@ -101,14 +101,14 @@ module Bibliothecary
 
         # Parse poetry [tool.poetry] deps
         poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {})
-        # Poetry 1.0.0-1.2.0 way of defining dev deps
         deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
-        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'development')
+        # Poetry 1.0.0-1.2.0 way of defining dev deps
+        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
         # Poetry's 1.2.0+ of defining dev deps
         poetry_manifest
           .fetch("group", {})
           .each_pair do |group_name, obj|
-            group_name = "development" if group_name == "dev"
+            group_name = "develop" if group_name == "dev"
             deps += map_dependencies(obj.fetch("dependencies", {}), group_name)
           end
 
@@ -187,10 +187,10 @@ module Bibliothecary
         manifest["package"].each do |package|
           # next if group == "_meta"
           group = case package['category']
-                  when 'main'
-                    'runtime'
                   when 'dev'
                     'develop'
+                  else
+                    'runtime'
                   end
 
           deps << {

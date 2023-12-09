@@ -8,11 +8,11 @@ authors = ["Tyrel Souza <tyrel@tidelift.com>"]
 python = "^3.7"
 django = "^3.0.7"
 
-# Old way to defining dev deps (<1.2.0)
+# Old way to define dev deps (<1.2.0)
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 
-# New way to defining dev deps (>=1.2.0)
+# New way to define dev deps (>=1.2.0)
 [tool.poetry.group.dev.dependencies]
 wcwidth = "*"
 
