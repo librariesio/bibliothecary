@@ -2,6 +2,7 @@
 
 AllCops:
   DisabledByDefault: true
+  TargetRubyVersion: 2.7
 
 Layout/AccessModifierIndentation:
   Description: Check indentation of private/protected visibility modifiers.
