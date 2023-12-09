@@ -287,7 +287,8 @@ git://what@::/:/:/
       dependencies: [
         { name: "python", requirement: "^3.7", type: "runtime" },
         { name: "django", requirement: "^3.0.7", type: "runtime" },
-        { name: "pytest", requirement: "^5.2", type: "develop" }
+        { name: "pytest", requirement: "^5.2", type: "development" },
+        { name: "wcwidth", requirement: "*", type: "development" },
       ],
       kind: 'manifest',
       success: true
