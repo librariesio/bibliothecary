@@ -24,64 +24,64 @@ module Bibliothecary
                           "requirements-test.txt", "requirements/test.txt",
                           "requirements-tools.txt", "requirements/tools.txt") => {
             kind: "manifest",
-            parser: :parse_requirements_txt
+            parser: :parse_requirements_txt,
           },
           lambda { |p| PIP_COMPILE_REGEXP.match(p) } => {
             content_matcher: :pip_compile?,
             kind: "lockfile",
-            parser: :parse_requirements_txt
+            parser: :parse_requirements_txt,
           },
           lambda { |p| MANIFEST_REGEXP.match(p) } => {
             kind: "manifest",
             parser: :parse_requirements_txt,
-            can_have_lockfile: false
+            can_have_lockfile: false,
           },
           match_filename("requirements.frozen") => { # pattern exists to store frozen deps in requirements.frozen
             parser: :parse_requirements_txt,
-            kind: "lockfile"
+            kind: "lockfile",
           },
           match_filename("pip-resolved-dependencies.txt") => { # Inferred from pip
             kind: "lockfile",
-            parser: :parse_requirements_txt
+            parser: :parse_requirements_txt,
           },
           match_filename("setup.py") => {
             kind: "manifest",
             parser: :parse_setup_py,
-            can_have_lockfile: false
+            can_have_lockfile: false,
           },
           match_filename("Pipfile") => {
             kind: "manifest",
-            parser: :parse_pipfile
+            parser: :parse_pipfile,
           },
           match_filename("Pipfile.lock") => {
             kind: "lockfile",
-            parser: :parse_pipfile_lock
+            parser: :parse_pipfile_lock,
           },
           match_filename("pyproject.toml") => {
             kind: "manifest",
-            parser: :parse_pyproject
+            parser: :parse_pyproject,
           },
           match_filename("poetry.lock") => {
             kind: "lockfile",
-            parser: :parse_poetry_lock
+            parser: :parse_poetry_lock,
           },
           # Pip dependencies can be embedded in conda environment files
           match_filename("environment.yml") => {
             parser: :parse_conda,
-            kind: "manifest"
+            kind: "manifest",
           },
           match_filename("environment.yaml") => {
             parser: :parse_conda,
-            kind: "manifest"
+            kind: "manifest",
           },
           match_filename("environment.yml.lock") => {
             parser: :parse_conda,
-            kind: "lockfile"
+            kind: "lockfile",
           },
           match_filename("environment.yaml.lock") => {
             parser: :parse_conda,
-            kind: "lockfile"
-          }
+            kind: "lockfile",
+          },
         }
       end
 
@@ -137,7 +137,7 @@ module Bibliothecary
           {
             name: name,
             requirement: map_requirements(info),
-            type: type
+            type: type,
           }
         end
       end
@@ -166,7 +166,7 @@ module Bibliothecary
             deps << {
               name: name,
               requirement: map_requirements(info),
-              type: group
+              type: group,
             }
           end
         end
@@ -188,7 +188,7 @@ module Bibliothecary
           deps << {
             name: package["name"],
             requirement: map_requirements(package),
-            type: group
+            type: group,
           }
         end
         deps
@@ -205,7 +205,7 @@ module Bibliothecary
           deps << {
             name: match[1],
             requirement: match[-1] || "*",
-            type: "runtime"
+            type: "runtime",
           }
         end
         deps
@@ -236,7 +236,7 @@ module Bibliothecary
           if line["://"]
             begin
               result = parse_requirements_txt_url(line)
-            rescue URI::Error, NoEggSpecified => e
+            rescue URI::Error, NoEggSpecified
               next
             end
 
@@ -250,7 +250,7 @@ module Bibliothecary
             deps << {
               name: match[1],
               requirement: match[-1] || "*",
-              type: type
+              type: type,
             }
           end
         end

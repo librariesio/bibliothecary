@@ -14,10 +14,10 @@ describe Bibliothecary::Parsers::Shard do
         { name: "shards", requirement: "*", type: "runtime" },
         { name: "common_mark", requirement: "*", type: "runtime" },
         { name: "minitest", requirement: ">= 0.2.0", type: "runtime" },
-        { name: "selenium-webdriver", requirement: "*", type: "runtime" }
+        { name: "selenium-webdriver", requirement: "*", type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -32,10 +32,10 @@ describe Bibliothecary::Parsers::Shard do
         { name: "pg", requirement: "0.5.0", type: "runtime" },
         { name: "pool", requirement: "0.2.1", type: "runtime" },
         { name: "selenium-webdriver", requirement: "0.1.0", type: "runtime" },
-        { name: "shards", requirement: "0.6.0", type: "runtime" }
+        { name: "shards", requirement: "0.6.0", type: "runtime" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 

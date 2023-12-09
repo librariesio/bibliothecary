@@ -13,18 +13,18 @@ RSpec.shared_examples "CycloneDX" do
         {
           platform: :npm,
           name: "1to2",
-          version: "1.0.0"
+          version: "1.0.0",
         },
         {
           platform: :go,
           name: "cloud.google.com/go",
-          version: "v0.38.0"
+          version: "v0.38.0",
         },
         {
           platform: :maven,
           name: "org.hdrhistogram:HdrHistogram",
-          version: "2.1.9"
-        }
+          version: "2.1.9",
+        },
       ]
     end
 
@@ -39,7 +39,7 @@ RSpec.shared_examples "CycloneDX" do
         expect(result[:dependencies].find { |d| d[:name] == dependency[:name] }).to eq({
           name: dependency[:name],
           requirement: dependency[:version],
-          type: "lockfile"
+          type: "lockfile",
         })
       end
     end
@@ -51,7 +51,7 @@ RSpec.shared_examples "CycloneDX" do
         expect(result[:dependencies].find { |d| d[:name] == dependency[:name] }).to eq({
           name: dependency[:name],
           requirement: dependency[:version],
-          type: "lockfile"
+          type: "lockfile",
         })
       end
     end
@@ -63,7 +63,7 @@ RSpec.shared_examples "CycloneDX" do
         expect(result[:dependencies].find { |d| d[:name] == dependency[:name] }).to eq({
           name: dependency[:name],
           requirement: dependency[:version],
-          type: "lockfile"
+          type: "lockfile",
         })
       end
     end
@@ -75,7 +75,7 @@ RSpec.shared_examples "CycloneDX" do
         expect(result[:dependencies].find { |d| d[:name] == dependency[:name] }).to eq({
           name: dependency[:name],
           requirement: dependency[:version],
-          type: "lockfile"
+          type: "lockfile",
         })
       end
     end

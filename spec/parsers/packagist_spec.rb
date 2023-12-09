@@ -13,10 +13,10 @@ describe Bibliothecary::Parsers::Packagist do
         { name: "laravel/framework", requirement: "5.0.*", type: "runtime" },
         { name: "drupal/address", requirement: "^1.0", type: "runtime" },
         { name: "phpunit/phpunit", requirement: "~4.0", type: "development" },
-        { name: "phpspec/phpspec", requirement: "~2.1", type: "development" }
+        { name: "phpspec/phpspec", requirement: "~2.1", type: "development" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -34,10 +34,10 @@ describe Bibliothecary::Parsers::Packagist do
         { name: "symfony/symfony", requirement: "v2.6.1", type: "runtime" },
         { name: "twig/extensions", requirement: "v1.2.0", type: "runtime" },
         { name: "twig/twig", requirement: "v1.16.2", type: "runtime" },
-        { name: "sensio/generator-bundle", requirement: "v2.5.0", type: "development" }
+        { name: "sensio/generator-bundle", requirement: "v2.5.0", type: "development" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 

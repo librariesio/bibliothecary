@@ -46,10 +46,10 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "Microsoft.Framework.Configuration.Json",
          requirement: "1.0.0-beta7",
          type: "runtime" },
-        { name: "AutoMapper", requirement: "4.0.0-alpha1", type: "runtime" }
+        { name: "AutoMapper", requirement: "4.0.0-alpha1", type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -525,10 +525,10 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "System.Xml.ReaderWriter", requirement: "4.0.10", type: "runtime" },
         { name: "System.Xml.XDocument",
          requirement: "4.0.11-beta-23225",
-         type: "runtime" }
+         type: "runtime" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 
@@ -819,10 +819,10 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "System.Xml.XmlDocument", requirement: "4.3.0", type: "runtime" },
         { name: "System.Xml.XmlSerializer", requirement: "4.3.0", type: "runtime" },
         { name: "System.Xml.XPath", requirement: "4.3.0", type: "runtime" },
-        { name: "System.Xml.XPath.XDocument", requirement: "4.3.0", type: "runtime" }
+        { name: "System.Xml.XPath.XDocument", requirement: "4.3.0", type: "runtime" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 
@@ -839,10 +839,10 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "Ninject", requirement: "3.0.1.10", type: "runtime" },
         { name: "Ninject.Web.Common", requirement: "3.0.0.7", type: "runtime" },
         { name: "WebActivator", requirement: "1.5", type: "runtime" },
-        { name: "Microsoft.Net.Compilers", requirement: "1.0.0", type: "development" }
+        { name: "Microsoft.Net.Compilers", requirement: "1.0.0", type: "development" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -858,10 +858,10 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "Microsoft.Extensions.DependencyInjection", requirement: "1.1.1", type: "runtime" },
         { name: "Microsoft.VisualStudio.Web.BrowserLink", requirement: "1.1.0", type: "runtime" },
         { name: "System.Resources.Extensions", requirement: "4.7.0", type: "runtime" },
-        { name: "Contoso.Utility.UsefulStuff", requirement: "3.6.0", type: "development" }
+        { name: "Contoso.Utility.UsefulStuff", requirement: "3.6.0", type: "development" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -871,10 +871,10 @@ describe Bibliothecary::Parsers::Nuget do
       path: "example.csproj",
       dependencies: [
         { name: "Microsoft.AspNetCore.App", requirement: "*", type: "runtime" },
-        { name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "development" }
+        { name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "development" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -884,10 +884,10 @@ describe Bibliothecary::Parsers::Nuget do
       path: "example-update.csproj",
       dependencies: [
         { name: "Microsoft.AspNetCore", requirement: "1.1.1", type: "runtime" },
-        { name: "Microsoft.AspNetCore.StaticFiles", requirement: "2.2.0", type: "runtime" }
+        { name: "Microsoft.AspNetCore.StaticFiles", requirement: "2.2.0", type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -899,10 +899,10 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "FubuCore", requirement: "3.2.0.3001", type: "runtime" },
         { name: "HtmlTags", requirement: "[3.2.0.3001]", type: "runtime" },
         { name: "DotNetZip", requirement: "*", type: "runtime" },
-        { name: "DevelopmentOnlyPackage", requirement: "1.2.3", type: "development" }
+        { name: "DevelopmentOnlyPackage", requirement: "1.2.3", type: "development" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -915,10 +915,10 @@ describe Bibliothecary::Parsers::Nuget do
         { name: "Mono.Cecil", requirement: "0.9.6.1", type: "runtime" },
         { name: "Chessie", requirement: "0.5.1", type: "runtime" },
         { name: "FSharp.Core", requirement: "4.0.0.1", type: "runtime" },
-        { name: "Newtonsoft.Json", requirement: "9.0.1", type: "runtime" }
+        { name: "Newtonsoft.Json", requirement: "9.0.1", type: "runtime" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 
@@ -928,10 +928,10 @@ describe Bibliothecary::Parsers::Nuget do
       path: "project.assets.json",
       dependencies: [
         { name: "a", requirement: "1.0.0", type: "runtime" },
-        { name: "b", requirement: "1.0.0", type: "runtime" }
+        { name: "b", requirement: "1.0.0", type: "runtime" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     }
 
     result = described_class.analyse_contents("project.assets.json", load_fixture("nuget_project.assets.json"))

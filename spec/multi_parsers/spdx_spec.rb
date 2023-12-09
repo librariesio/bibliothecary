@@ -37,7 +37,7 @@ describe Bibliothecary::MultiParsers::Spdx do
 
     it "parses the file" do
       expect(parser.parse_spdx_tag_value(file)).to eq([
-        { name: "package1", requirement: "1.0.0", type: "lockfile" }
+        { name: "package1", requirement: "1.0.0", type: "lockfile" },
       ])
     end
   end
@@ -88,7 +88,7 @@ describe Bibliothecary::MultiParsers::Spdx do
     it "parses the file" do
       expect(parser.parse_spdx_tag_value(file)).to eq([
         { name: "package1", requirement: "1.0.0", type: "lockfile" },
-        { name: "package2", requirement: "1.0.1", type: "lockfile" }
+        { name: "package2", requirement: "1.0.1", type: "lockfile" },
       ])
     end
   end

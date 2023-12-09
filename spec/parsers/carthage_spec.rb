@@ -17,10 +17,10 @@ describe Bibliothecary::Parsers::Carthage do
          { name: "jspahrsummers/xcconfigs", requirement: "branch ", type: "runtime" },
          { name: "https://enterprise.local/ghe/desktop/git-error-translations",requirement: " ",type: "runtime" },
          { name: "https://enterprise.local/desktop/git-error-translations2.git",requirement: "development ",type: "runtime" },
-         { name: "file:///directory/to/project", requirement: "branch ", type: "runtime" }
+         { name: "file:///directory/to/project", requirement: "branch ", type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -31,10 +31,10 @@ describe Bibliothecary::Parsers::Carthage do
       dependencies: [
         { name: "Quick/Quick", requirement: "~> 0.9", type: "development" },
         { name: "Quick/Nimble", requirement: "~> 3.1", type: "development" },
-        { name: "jspahrsummers/xcconfigs",requirement: "ec5753493605deed7358dec5f9260f503d3ed650 ",type: "development" }
+        { name: "jspahrsummers/xcconfigs",requirement: "ec5753493605deed7358dec5f9260f503d3ed650 ",type: "development" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -51,10 +51,10 @@ describe Bibliothecary::Parsers::Carthage do
         { name: "jspahrsummers/xcconfigs",requirement: "ec5753493605deed7358dec5f9260f503d3ed650 ",type: "runtime" },
         { name: "Carthage/Commandant", requirement: "0.8.3 ", type: "runtime" },
         { name: "ReactiveCocoa/ReactiveCocoa", requirement: "v4.0.1 ", type: "runtime" },
-        { name: "Carthage/ReactiveTask", requirement: "0.9.1 ", type: "runtime" }
+        { name: "Carthage/ReactiveTask", requirement: "0.9.1 ", type: "runtime" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 

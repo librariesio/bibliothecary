@@ -11,36 +11,36 @@ module Bibliothecary
         {
           match_filename("Project.json") => {
             kind: "manifest",
-            parser: :parse_json_runtime_manifest
+            parser: :parse_json_runtime_manifest,
           },
           match_filename("Project.lock.json") => {
             kind: "lockfile",
-            parser: :parse_project_lock_json
+            parser: :parse_project_lock_json,
           },
           match_filename("packages.lock.json") => {
             kind: "lockfile",
-            parser: :parse_packages_lock_json
+            parser: :parse_packages_lock_json,
           },
           match_filename("packages.config") => {
             kind: "manifest",
-            parser: :parse_packages_config
+            parser: :parse_packages_config,
           },
           match_extension(".nuspec") => {
             kind: "manifest",
-            parser: :parse_nuspec
+            parser: :parse_nuspec,
           },
           match_extension(".csproj") => {
             kind: "manifest",
-            parser: :parse_csproj
+            parser: :parse_csproj,
           },
           match_filename("paket.lock") => {
             kind: "lockfile",
-            parser: :parse_paket_lock
+            parser: :parse_paket_lock,
           },
           match_filename("project.assets.json") => {
             kind: "lockfile",
-            parser: :parse_project_assets_json
-          }
+            parser: :parse_project_assets_json,
+          },
         }
       end
 
@@ -55,7 +55,7 @@ module Bibliothecary
           {
             name: dep[0],
             requirement: dep[1],
-            type: "runtime"
+            type: "runtime",
           }
         end
       end
@@ -73,7 +73,7 @@ module Bibliothecary
                 # 'resolved' has been set in all examples so far
                 # so fallback to requested is pure paranoia
                 requirement: details.fetch("resolved", details.fetch("requested", "*")),
-                type: "runtime"
+                type: "runtime",
               }
             end
         end
@@ -95,7 +95,7 @@ module Bibliothecary
           {
             name: dependency.id,
             requirement: (dependency.version if dependency.respond_to? "version") || "*",
-            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime"
+            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime",
           }
         end
       rescue
@@ -120,7 +120,7 @@ module Bibliothecary
           {
             name: dependency.Include,
             requirement: requirement,
-            type: type
+            type: type,
           }
         end
         packages.uniq {|package| package[:name] }
@@ -134,7 +134,7 @@ module Bibliothecary
           {
             name: dependency.id,
             requirement: dependency.attributes[:version] || "*",
-            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime"
+            type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime",
           }
         end
       rescue
@@ -148,7 +148,7 @@ module Bibliothecary
           {
             name: match[:name].strip,
             requirement: match[:version],
-            type: "runtime"
+            type: "runtime",
           }
         end
         # we only have to enforce uniqueness by name because paket ensures that there is only the single version globally in the project
@@ -167,9 +167,9 @@ module Bibliothecary
             {
               name: name_split[0],
               requirement: name_split[1],
-              type: "runtime"
+              type: "runtime",
             }
-          end
+            end
         end
 
         if frameworks.size > 0

@@ -16,6 +16,6 @@ module Bibliothecary
     "hex" => :hex,
     "nuget" => :nuget,
     "pypi" => :pypi,
-    "swift" => :swift_pm
+    "swift" => :swift_pm,
   }.freeze
 end

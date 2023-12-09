@@ -10,12 +10,12 @@ module Bibliothecary
         {
           match_filename("META.json", case_insensitive: true) => {
             kind: "manifest",
-            parser: :parse_json_manifest
+            parser: :parse_json_manifest,
           },
           match_filename("META.yml", case_insensitive: true) => {
             kind: "manifest",
-            parser: :parse_yaml_manifest
-          }
+            parser: :parse_yaml_manifest,
+          },
         }
       end
 

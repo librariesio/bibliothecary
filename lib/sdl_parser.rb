@@ -12,7 +12,7 @@ class SdlParser
       deps.push({
         name: dep.value,
         requirement: dep.attribute("version") || ">= 0",
-        type: type
+        type: type,
       })
     end.uniq
   end

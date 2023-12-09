@@ -12,10 +12,10 @@ describe Bibliothecary::Parsers::SwiftPM do
       dependencies: [
         { name: "github.com/qutheory/vapor", requirement: "0.12.0 - 0.12.9223372036854775807", type: "runtime" },
         { name: "github.com/czechboy0/Tasks", requirement: "0.2.0 - 0.2.9223372036854775807", type: "runtime" },
-        { name: "github.com/czechboy0/Environment", requirement: "0.4.0 - 0.4.9223372036854775807", type: "runtime" }
+        { name: "github.com/czechboy0/Environment", requirement: "0.4.0 - 0.4.9223372036854775807", type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 

@@ -14,22 +14,22 @@ module Bibliothecary
         {
           match_filename("Podfile") => {
             kind: "manifest",
-            parser: :parse_podfile
+            parser: :parse_podfile,
           },
           match_extension(".podspec") => {
             kind: "manifest",
             parser: :parse_podspec,
-            can_have_lockfile: false
+            can_have_lockfile: false,
           },
           match_filename("Podfile.lock") => {
             kind: "lockfile",
-            parser: :parse_podfile_lock
+            parser: :parse_podfile_lock,
           },
           match_extension(".podspec.json") => {
             kind: "manifest",
             parser: :parse_json_manifest,
-            can_have_lockfile: false
-          }
+            can_have_lockfile: false,
+          },
         }
       end
 
@@ -43,7 +43,7 @@ module Bibliothecary
           {
             name: match[1].split("/").first,
             requirement: match[2],
-            type: "runtime"
+            type: "runtime",
           }
         end.compact
       end
@@ -64,7 +64,7 @@ module Bibliothecary
           deps.push({
             name: dep[0],
             requirement: dep[1],
-            type: "runtime"
+            type: "runtime",
           })
         end.uniq
       end

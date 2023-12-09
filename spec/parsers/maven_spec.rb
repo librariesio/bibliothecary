@@ -93,10 +93,10 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         { name: "io.libraries:bibliothecary", requirement: "${bibliothecary.version}", type: "test" },
         { name: "io.libraries:recursive", requirement: "${recursive.test}", type: "runtime" },
         { name: "io.libraries:optional", requirement: "${optional.test}", type: "runtime", optional: true },
-        { name: "io.libraries:not-optional", requirement: "${not-optional.test}", type: "runtime", optional: false }
+        { name: "io.libraries:not-optional", requirement: "${not-optional.test}", type: "runtime", optional: false },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -132,10 +132,10 @@ RSpec.describe Bibliothecary::Parsers::Maven do
          { name: "org.apache.httpcomponents:httpmime",
           requirement: "4.5.2",
           type: "runtime" },
-         { name: "org.testng:testng", requirement: "6.9.12", type: "test" }
+         { name: "org.testng:testng", requirement: "6.9.12", type: "test" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -165,10 +165,10 @@ RSpec.describe Bibliothecary::Parsers::Maven do
          { name: "org.apache.httpcomponents:httpmime",
           requirement: "4.5.2",
           type: "runtime" },
-         { name: "org.testng:testng", requirement: "6.9.12", type: "test" }
+         { name: "org.testng:testng", requirement: "6.9.12", type: "test" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -198,10 +198,10 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         { name: "net.javacrumbs.json-unit:json-unit",
         requirement: "1.1.6",
         type: "runtime" },
-        { name: "org.mozilla:rhino", requirement: "1.7.7", type: "runtime" }
+        { name: "org.mozilla:rhino", requirement: "1.7.7", type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -226,7 +226,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         { name: "this.thing:neat", requirement: "*", type: "compileOnly" },
         { name: "hello.there:im.a.dep", requirement: "$versionThing", type: "testCompile" },
         { name: "this.has:parens", requirement: "*", type: "compile" },
-        { name: "junit:junit", requirement: "4.13.2", type: "compile" }
+        { name: "junit:junit", requirement: "4.13.2", type: "compile" },
       ])
     end
 
@@ -244,10 +244,10 @@ RSpec.describe Bibliothecary::Parsers::Maven do
           { name: "com.android.support:recyclerview-v7", requirement: "23.1.1", type: "compile" },
           { name: "com.android.support:design", requirement: "23.1.1", type: "compile" },
           { name: "com.android.support:customtabs", requirement: "23.1.1", type: "compile" },
-          { name: "com.google.guava:guava", requirement: "${guavaVersions['latest']}", type: "implementation" }
+          { name: "com.google.guava:guava", requirement: "${guavaVersions['latest']}", type: "implementation" },
         ],
         kind: "manifest",
-        success: true
+        success: true,
       })
     end
 
@@ -260,10 +260,10 @@ RSpec.describe Bibliothecary::Parsers::Maven do
           { name: "com.google.guava:guava", requirement: "30.1.1-jre", type: "implementation" },
           { name: "org.jetbrains.kotlin:kotlin-test", requirement: "*", type: "testImplementation" },
           { name: "org.jetbrains.kotlin:kotlin-test-junit", requirement: "1.0.0", type: "testImplementation" },
-          { name: "androidx.annotation:annotation", requirement: "${rootProject.extra[\"androidx_annotation_version\"]}", type: "implementation" }
+          { name: "androidx.annotation:annotation", requirement: "${rootProject.extra[\"androidx_annotation_version\"]}", type: "implementation" },
         ],
         kind: "manifest",
-        success: true
+        success: true,
       })
     end
   end
@@ -273,10 +273,10 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       platform: "maven",
       path: "com.example-hello_2.12-compile.xml",
       dependencies: [
-        { name: "org.scala-lang:scala-library", requirement: "2.12.5", type: "compile" }
+        { name: "org.scala-lang:scala-library", requirement: "2.12.5", type: "compile" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 
@@ -292,10 +292,10 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         { name: "com.typesafe.akka:akka-actor_2.12", requirement: "2.5.6", type: "test" },
         { name: "org.scala-lang.modules:scala-java8-compat_2.12", requirement: "0.8.0", type: "test" },
         { name: "com.typesafe:config", requirement: "1.3.1", type: "test" },
-        { name: "org.scala-lang:scala-library", requirement: "2.12.5", type: "test" }
+        { name: "org.scala-lang:scala-library", requirement: "2.12.5", type: "test" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 
@@ -306,7 +306,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       dependencies: nil,
       kind: "lockfile",
       success: false,
-      error_message: "missing_info.xml: ivy-report document lacks <info> element"
+      error_message: "missing_info.xml: ivy-report document lacks <info> element",
     })
   end
 
@@ -483,7 +483,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       [
         { name: "commons-io:commons-io", requirement: "2.6", original_name: "apache:commons-io", original_requirement: "1.4" },
         { name: "axis:axis", requirement: "1.4", original_name: "apache:axis", original_requirement: "*" },
-        { name: "axis:axis", requirement: "1.4", original_name: "another-alias-group:axis", original_requirement: "*" }
+        { name: "axis:axis", requirement: "1.4", original_name: "another-alias-group:axis", original_requirement: "*" },
       ].each do |dep|
         renamed_dep = runtime_classpath.select do |d| 
           d.slice(:name, :requirement, :original_name, :original_requirement) == dep.slice(:name, :requirement, :original_name, :original_requirement)
@@ -519,7 +519,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(described_class.parse_gradle_resolved("+--- project :api:my-internal-project")).to eq [{
         name: "internal:api-my-internal-project",
         requirement: "1.0.0",
-        type: nil
+        type: nil,
       }]
     end
 
@@ -529,7 +529,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         requirement: "1.0.0",
         original_name: "my-group:common-job-update-gateway-compress",
         original_requirement: "5.0.2",
-        type: nil
+        type: nil,
       }]
     end
 
@@ -537,7 +537,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(described_class.parse_gradle_resolved("+--- org.apiguardian:apiguardian-api:1.1.0 FAILED")).to eq [{
         name: "org.apiguardian:apiguardian-api",
         requirement: "1.1.0",
-        type: nil
+        type: nil,
       }]
     end
 
@@ -546,7 +546,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(described_class.parse_gradle_resolved(arrow_syntax)).to eq [{
                                                                            name: "org.springframework:spring-core",
                                                                            requirement: "5.2.5.RELEASE",
-                                                                           type: nil
+                                                                           type: nil,
                                                                          }]
 
     end
@@ -571,7 +571,7 @@ GRADLE
         .to eq [{
                          name: "org.springframework.security:spring-security-test",
                          requirement: "5.2.2.RELEASE",
-                         type: nil
+                         type: nil,
                        }]
     end
 
@@ -606,7 +606,7 @@ GRADLE
       expect(output).to eq [
         { name: "org.apache.ant:ant", requirement: "1.10.9", type: "provided" },
         { name: "net.sourceforge.pmd:pmd", requirement: "6.32.0-SNAPSHOT", type: "provided" },
-        { name: "net.java.dev.javacc:javacc", requirement: "5.0", type: "provided" }
+        { name: "net.java.dev.javacc:javacc", requirement: "5.0", type: "provided" },
       ]
     end
 

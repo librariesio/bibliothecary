@@ -7,7 +7,7 @@ module Bibliothecary
           {
             name: name,
             requirement: requirement,
-            type: "runtime"
+            type: "runtime",
           }
         end
       end

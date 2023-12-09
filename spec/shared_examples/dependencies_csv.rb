@@ -6,14 +6,14 @@ RSpec.shared_examples "dependencies.csv" do
           platform: "maven",
           name: "com.example:something",
           version: "1.0.3",
-          type: "runtime"
+          type: "runtime",
         },
       {
           platform: "maven",
           name: "com.example:something-dev",
           version: "1.0.4",
-          type: "development"
-        }
+          type: "development",
+        },
       ]
     end
 
@@ -30,7 +30,7 @@ RSpec.shared_examples "dependencies.csv" do
           name: dependency[:name],
           lockfile_requirement: dependency[:version],
           requirement: dependency[:version],
-          type: dependency[:type]
+          type: dependency[:type],
         })
       end
     end

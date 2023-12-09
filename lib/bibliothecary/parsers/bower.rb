@@ -9,8 +9,8 @@ module Bibliothecary
         {
           match_filename("bower.json") => {
             kind: "manifest",
-            parser: :parse_manifest
-          }
+            parser: :parse_manifest,
+          },
         }
       end
 

@@ -30,10 +30,10 @@ describe Bibliothecary::Parsers::Julia do
         { name: "Plots", requirement: "0.12 0.15", type: "runtime" },
         { name: "Showoff", requirement: "0.0.3", type: "runtime" },
         { name: "StatsBase", requirement: "*", type: "runtime" },
-        { name: "WinReg", requirement: "*", type: "runtime" }
+        { name: "WinReg", requirement: "*", type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 

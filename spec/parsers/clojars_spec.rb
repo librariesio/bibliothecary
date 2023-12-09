@@ -14,10 +14,10 @@ describe Bibliothecary::Parsers::Clojars do
         { name: "cheshire", requirement: "5.4.0", type: "runtime" },
         { name: "compojure", requirement: "1.3.2", type: "runtime" },
         { name: "ring/ring-defaults", requirement: "0.1.2", type: "runtime" },
-        { name: "ring/ring-jetty-adapter", requirement: "1.2.1", type: "runtime" }
+        { name: "ring/ring-jetty-adapter", requirement: "1.2.1", type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 

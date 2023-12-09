@@ -11,7 +11,7 @@ module Bibliothecary
         dependencies: nil,
         kind: kind,
         success: false,
-        error_message: message
+        error_message: message,
       }
     end
 
@@ -21,7 +21,7 @@ module Bibliothecary
         path: relative_path,
         dependencies: dependencies,
         kind: kind,
-        success: true
+        success: true,
       }
     end
 
@@ -60,7 +60,7 @@ module Bibliothecary
           {
             name: name,
             requirement: requirement,
-            type: type
+            type: type,
           }
         end
       end

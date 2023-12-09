@@ -21,10 +21,10 @@ describe Bibliothecary::Parsers::Elm do
          type: "runtime" },
         { name: "elm-lang/core",
          requirement: "1.0.0 <= v < 2.0.0",
-         type: "runtime" }
+         type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -36,10 +36,10 @@ describe Bibliothecary::Parsers::Elm do
         { name: "johnpmayer/elm-webgl", requirement: "0.1.1", type: "runtime" },
         { name: "johnpmayer/elm-linear-algebra",
          requirement: "1.0.1",
-         type: "runtime" }
+         type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -54,10 +54,10 @@ describe Bibliothecary::Parsers::Elm do
         { name: "evancz/elm-html", requirement: "2.0.0", type: "runtime" },
         { name: "elm-lang/core", requirement: "1.1.1", type: "runtime" },
         { name: "evancz/automaton", requirement: "1.0.0", type: "runtime" },
-        { name: "evancz/virtual-dom", requirement: "1.2.2", type: "runtime" }
+        { name: "evancz/virtual-dom", requirement: "1.2.2", type: "runtime" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 

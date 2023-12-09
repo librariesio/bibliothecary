@@ -15,18 +15,18 @@ module Bibliothecary
           match_filenames("Gemfile", "gems.rb") => {
             kind: "manifest",
             parser: :parse_gemfile,
-            related_to: [ "manifest", "lockfile" ]
+            related_to: [ "manifest", "lockfile" ],
           },
           match_extension(".gemspec") => {
             kind: "manifest",
             parser: :parse_gemspec,
-            related_to: [ "manifest", "lockfile" ]
+            related_to: [ "manifest", "lockfile" ],
           },
           match_filenames("Gemfile.lock", "gems.locked") => {
             kind: "lockfile",
             parser: :parse_gemfile_lock,
-            related_to: [ "manifest", "lockfile" ]
-          }
+            related_to: [ "manifest", "lockfile" ],
+          },
         }
       end
 
@@ -46,7 +46,7 @@ module Bibliothecary
             {
               name: name,
               requirement: version,
-              type: "runtime"
+              type: "runtime",
             }
           else
             parse_bundler(file_contents)
@@ -73,7 +73,7 @@ module Bibliothecary
         {
           name: "bundler",
           requirement: version,
-          type: "runtime"
+          type: "runtime",
         }
       end
     end

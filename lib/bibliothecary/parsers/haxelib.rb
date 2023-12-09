@@ -10,8 +10,8 @@ module Bibliothecary
         {
           match_filename("haxelib.json") => {
             kind: "manifest",
-            parser: :parse_json_runtime_manifest
-          }
+            parser: :parse_json_runtime_manifest,
+          },
         }
       end
 

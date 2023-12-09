@@ -15,10 +15,10 @@ describe Bibliothecary::Parsers::Meteor do
         { name: "base64", requirement: "1.0.1", type: "runtime" },
         { name: "binary-heap", requirement: "1.0.1", type: "runtime" },
         { name: "tracker", requirement: "1.0.3", type: "runtime" },
-        { name: "underscore", requirement: "1.0.1", type: "runtime" }
+        { name: "underscore", requirement: "1.0.1", type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 

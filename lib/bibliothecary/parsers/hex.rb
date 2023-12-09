@@ -9,12 +9,12 @@ module Bibliothecary
         {
           match_filename("mix.exs") => {
             kind: "manifest",
-            parser: :parse_mix
+            parser: :parse_mix,
           },
           match_filename("mix.lock") => {
             kind: "lockfile",
-            parser: :parse_mix_lock
-          }
+            parser: :parse_mix_lock,
+          },
         }
       end
 
@@ -31,7 +31,7 @@ module Bibliothecary
           {
             name: name,
             requirement: version,
-            type: "runtime"
+            type: "runtime",
           }
         end
       end
@@ -45,7 +45,7 @@ module Bibliothecary
           {
             name: name,
             requirement: info["version"],
-            type: "runtime"
+            type: "runtime",
           }
         end
       end

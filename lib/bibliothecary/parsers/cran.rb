@@ -11,8 +11,8 @@ module Bibliothecary
         {
           match_filename("DESCRIPTION", case_insensitive: true) => {
             kind: "manifest",
-            parser: :parse_description
-          }
+            parser: :parse_description,
+          },
         }
       end
 
@@ -36,7 +36,7 @@ module Bibliothecary
           {
             name: dep[1],
             requirement: dep[2] || "*",
-            type: name.downcase
+            type: name.downcase,
           }
         end
       end

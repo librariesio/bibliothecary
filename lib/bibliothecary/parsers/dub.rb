@@ -11,12 +11,12 @@ module Bibliothecary
         {
           match_filename("dub.json") => {
             kind: "manifest",
-            parser: :parse_json_runtime_manifest
+            parser: :parse_json_runtime_manifest,
           },
           match_filename("dub.sdl") => {
             kind: "manifest",
-            parser: :parse_sdl_manifest
-          }
+            parser: :parse_sdl_manifest,
+          },
         }
       end
 

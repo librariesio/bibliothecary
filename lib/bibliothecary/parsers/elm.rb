@@ -10,12 +10,12 @@ module Bibliothecary
         {
           match_filenames("elm-package.json", "elm_dependencies.json") => {
             kind: "manifest",
-            parser: :parse_json_runtime_manifest
+            parser: :parse_json_runtime_manifest,
           },
           match_filename("elm-stuff/exact-dependencies.json") => {
             kind: "lockfile",
-            parser: :parse_json_lock
-          }
+            parser: :parse_json_lock,
+          },
         }
       end
 
@@ -27,7 +27,7 @@ module Bibliothecary
           {
             name: name,
             requirement: requirement,
-            type: "runtime"
+            type: "runtime",
           }
         end
       end

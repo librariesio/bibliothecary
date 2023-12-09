@@ -36,7 +36,7 @@ module Bibliothecary
           @manifests[mapping] << {
             name: self.class.full_name_for_purl(purl),
             requirement: purl.version,
-            type: "lockfile"
+            type: "lockfile",
           }
         end
 
@@ -79,18 +79,17 @@ module Bibliothecary
           match_filename("cyclonedx.json") => {
             kind: "lockfile",
             parser: :parse_cyclonedx_json,
-            ungroupable: true
+            ungroupable: true,
           },
           match_filename("cyclonedx.xml") => {
             kind: "lockfile",
             parser: :parse_cyclonedx_xml,
-            ungroupable: true
-          }
+            ungroupable: true,
+          },
         }
       end
 
       def parse_cyclonedx_json(file_contents, options: {})
-        manifest = nil
 
         manifest = try_cache(options, options[:filename]) do
           JSON.parse(file_contents)

@@ -9,12 +9,12 @@ module Bibliothecary
         {
           match_filename("shard.yml", case_insensitive: true) => {
             kind: "manifest",
-            parser: :parse_yaml_manifest
+            parser: :parse_yaml_manifest,
           },
           match_filename("shard.lock", case_insensitive: true) => {
             kind: "lockfile",
-            parser: :parse_yaml_lockfile
-          }
+            parser: :parse_yaml_lockfile,
+          },
         }
       end
 
@@ -36,7 +36,7 @@ module Bibliothecary
           {
             name: name,
             requirement: requirement["version"] || "*",
-            type: type
+            type: type,
           }
         end
       end

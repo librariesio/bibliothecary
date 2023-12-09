@@ -30,10 +30,10 @@ describe Bibliothecary::Parsers::CocoaPods do
         { name: "FBSnapshotTestCase", requirement: ">= 0", type: :runtime },
         { name: "Nimble-Snapshots", requirement: ">= 0", type: :runtime },
         { name: "Quick", requirement: ">= 0", type: :runtime },
-        { name: "Forgeries", requirement: ">= 0", type: :runtime }
+        { name: "Forgeries", requirement: ">= 0", type: :runtime },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -91,10 +91,10 @@ describe Bibliothecary::Parsers::CocoaPods do
         { name: "SwiftyJSON", requirement: "2.2.1", type: "runtime" },
         { name: "UIImageViewAligned", requirement: "0.0.1", type: "runtime" },
         { name: "UIView+BooleanAnimations", requirement: "1.0.2", type: "runtime" },
-        { name: "XNGMarkdownParser", requirement: "0.3.0", type: "runtime" }
+        { name: "XNGMarkdownParser", requirement: "0.3.0", type: "runtime" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 
@@ -103,10 +103,10 @@ describe Bibliothecary::Parsers::CocoaPods do
       platform: "cocoapods",
       path: "example.podspec",
       dependencies: [
-        { name: "CocoaLumberjack", requirement: ">= 0", type: :runtime }
+        { name: "CocoaLumberjack", requirement: ">= 0", type: :runtime },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -115,10 +115,10 @@ describe Bibliothecary::Parsers::CocoaPods do
       platform: "cocoapods",
       path: "example.podspec.json",
       dependencies: [
-        { name: "OpenSSL", requirement: ["~> 1.0"], type: "runtime" }
+        { name: "OpenSSL", requirement: ["~> 1.0"], type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 

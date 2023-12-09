@@ -12,10 +12,10 @@ describe Bibliothecary::Parsers::Cargo do
       dependencies:[
         { name: "rustc-serialize", requirement: "*", type: "runtime" },
         { name: "regex", requirement: "*", type: "runtime" },
-        { name: "tempdir", requirement: "0.3", type: "development" }
+        { name: "tempdir", requirement: "0.3", type: "development" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -39,10 +39,10 @@ describe Bibliothecary::Parsers::Cargo do
         { name: "tempdir", requirement: "0.3.7", type: "runtime" },
         { name: "winapi", requirement: "0.3.9", type: "runtime" },
         { name: "winapi-i686-pc-windows-gnu", requirement: "0.4.0", type: "runtime" },
-        { name: "winapi-x86_64-pc-windows-gnu", requirement: "0.4.0", type: "runtime" }
+        { name: "winapi-x86_64-pc-windows-gnu", requirement: "0.4.0", type: "runtime" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 

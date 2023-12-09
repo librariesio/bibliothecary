@@ -12,24 +12,24 @@ module Bibliothecary
         {
           match_filename("package.json") => {
             kind: "manifest",
-            parser: :parse_manifest
+            parser: :parse_manifest,
           },
           match_filename("npm-shrinkwrap.json") => {
             kind: "lockfile",
-            parser: :parse_shrinkwrap
+            parser: :parse_shrinkwrap,
           },
           match_filename("yarn.lock") => {
             kind: "lockfile",
-            parser: :parse_yarn_lock
+            parser: :parse_yarn_lock,
           },
           match_filename("package-lock.json") => {
             kind: "lockfile",
-            parser: :parse_package_lock
+            parser: :parse_package_lock,
           },
           match_filename("npm-ls.json") => {
             kind: "lockfile",
-            parser: :parse_ls
-          }
+            parser: :parse_ls,
+          },
         }
       end
 
@@ -68,7 +68,7 @@ module Bibliothecary
             {
               name: name.split("node_modules/").last,
               requirement: dep["version"],
-              type: dep.fetch("dev", false) || dep.fetch("devOptional", false)  ? "development" : "runtime"
+              type: dep.fetch("dev", false) || dep.fetch("devOptional", false)  ? "development" : "runtime",
             }
           end
       end
@@ -87,7 +87,7 @@ module Bibliothecary
           [{
             name: name,
             requirement: version,
-            type: type
+            type: type,
           }] + child_dependencies
         end
       end
@@ -114,7 +114,7 @@ module Bibliothecary
             name: dep[:name],
             requirement: dep[:version],
             lockfile_requirement: dep[:requirement],
-            type: dep[:type]
+            type: dep[:type],
           }
         end
       end
@@ -144,8 +144,8 @@ module Bibliothecary
               name: name,
               requirement: metadata["version"],
               lockfile_requirement: metadata.fetch("from", "").split("@").last,
-              type: "runtime"
-            }
+              type: "runtime",
+            },
           ] + transform_tree_to_array(metadata.fetch("dependencies", {}))
         end.flatten(1)
       end

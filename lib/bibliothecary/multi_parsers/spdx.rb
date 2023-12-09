@@ -31,8 +31,8 @@ module Bibliothecary
           match_extension(".spdx") => {
             kind: "lockfile",
             parser: :parse_spdx_tag_value,
-            ungroupable: true
-          }
+            ungroupable: true,
+          },
         }
       end
 
@@ -79,7 +79,7 @@ module Bibliothecary
             entries[platform.to_sym] << {
               name: package_name,
               requirement: package_version,
-              type: "lockfile"
+              type: "lockfile",
             }
 
             package_name = package_version = platform = nil

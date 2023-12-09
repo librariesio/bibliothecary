@@ -9,12 +9,12 @@ module Bibliothecary
         {
           match_filename("pubspec.yaml", case_insensitive: true) => {
             kind: "manifest",
-            parser: :parse_yaml_manifest
+            parser: :parse_yaml_manifest,
           },
           match_filename("pubspec.lock", case_insensitive: true) => {
             kind: "lockfile",
-            parser: :parse_yaml_lockfile
-          }
+            parser: :parse_yaml_lockfile,
+          },
         }
       end
 
@@ -32,7 +32,7 @@ module Bibliothecary
           {
             name: name,
             requirement: dep["version"],
-            type: "runtime"
+            type: "runtime",
           }
         end
       end

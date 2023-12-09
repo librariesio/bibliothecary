@@ -7,12 +7,12 @@ module Bibliothecary
         {
           match_filename("Cargo.toml") => {
             kind: "manifest",
-            parser: :parse_manifest
+            parser: :parse_manifest,
           },
           match_filename("Cargo.lock") => {
             kind: "lockfile",
-            parser: :parse_lockfile
-          }
+            parser: :parse_lockfile,
+          },
         }
       end
 
@@ -33,7 +33,7 @@ module Bibliothecary
             {
               name: name,
               requirement: requirement,
-              type: index.zero? ? "runtime" : "development"
+              type: index.zero? ? "runtime" : "development",
             }
           end
         end
@@ -48,7 +48,7 @@ module Bibliothecary
           {
             name: dependency["name"],
             requirement: dependency["version"],
-            type: "runtime"
+            type: "runtime",
           }
         end
           .compact

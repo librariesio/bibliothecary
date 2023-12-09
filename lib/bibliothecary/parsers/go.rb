@@ -16,52 +16,52 @@ module Bibliothecary
           # Go Modules (recommended)
           match_filename("go.mod") => {
             kind: "manifest",
-            parser: :parse_go_mod
+            parser: :parse_go_mod,
           },
           match_filename("go.sum") => {
             kind: "lockfile",
-            parser: :parse_go_sum
+            parser: :parse_go_sum,
           },
           # Glide (unmaintained: https://github.com/Masterminds/glide#go-modules)
           match_filename("glide.yaml") => {
             kind: "manifest",
-            parser: :parse_glide_yaml
+            parser: :parse_glide_yaml,
           },
           match_filename("glide.lock") => {
             kind: "lockfile",
-            parser: :parse_glide_lockfile
+            parser: :parse_glide_lockfile,
           },
           # Godep (unmaintained: https://github.com/tools/godep)
           match_filename("Godeps/Godeps.json") => {
             kind: "manifest",
-            parser: :parse_godep_json
+            parser: :parse_godep_json,
           },
           match_filename("Godeps", case_insensitive: true) => {
             kind: "manifest",
-            parser: :parse_gpm
+            parser: :parse_gpm,
           },
           # Govendor (unmaintained: https://github.com/kardianos/govendor)
           match_filename("vendor/manifest") => {
             kind: "manifest",
-            parser: :parse_gb_manifest
+            parser: :parse_gb_manifest,
           },
           match_filename("vendor/vendor.json") => {
             kind: "manifest",
-            parser: :parse_govendor
+            parser: :parse_govendor,
           },
           # Go dep (deprecated: https://github.com/golang/dep#dep)
           match_filename("Gopkg.toml") => {
             kind: "manifest",
-            parser: :parse_dep_toml
+            parser: :parse_dep_toml,
           },
           match_filename("Gopkg.lock") => {
             kind: "lockfile",
-            parser: :parse_dep_lockfile
+            parser: :parse_dep_lockfile,
           },
           match_filename("go-resolved-dependencies.json") => {
             kind: "lockfile",
-            parser: :parse_go_resolved
-          }
+            parser: :parse_go_resolved,
+          },
         }
       end
 
@@ -82,7 +82,7 @@ module Bibliothecary
           deps << {
             name: match[1].strip,
             requirement: match[2].strip || "*",
-            type: "runtime"
+            type: "runtime",
           }
         end
         deps
@@ -123,11 +123,11 @@ module Bibliothecary
         deps = []
         file_contents.lines.map(&:strip).each do |line|
           next if line.match(GOMOD_IGNORABLE_REGEX)
-          if match = line.gsub(/(\/\/(.*))/, "").match(GOMOD_REGEX)
+          if (match = line.gsub(/(\/\/(.*))/, "").match(GOMOD_REGEX))
             deps << {
               name: match[2].strip,
               requirement: match[3].strip || "*",
-              type: "runtime"
+              type: "runtime",
             }
           end
         end
@@ -137,11 +137,11 @@ module Bibliothecary
       def self.parse_go_sum(file_contents, options: {})
         deps = []
         file_contents.lines.map(&:strip).each do |line|
-          if match = line.match(GOSUM_REGEX)
+          if (match = line.match(GOSUM_REGEX))
             deps << {
               name: match[1].strip,
               requirement: match[2].strip.split("/").first || "*",
-              type: "runtime"
+              type: "runtime",
             }
           end
         end
@@ -159,7 +159,7 @@ module Bibliothecary
           {
             name: dependency[dep_attr_name],
             requirement: dependency[version_attr_name]  || "*",
-            type: type
+            type: type,
           }
         end
       end

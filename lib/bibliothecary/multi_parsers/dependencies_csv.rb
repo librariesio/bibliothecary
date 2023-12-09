@@ -11,8 +11,8 @@ module Bibliothecary
           match_filename("dependencies.csv") => {
             kind: "lockfile",
             ungroupable: true,
-            parser: :parse_dependencies_csv
-          }
+            parser: :parse_dependencies_csv,
+          },
         }
       end
 
@@ -29,20 +29,20 @@ module Bibliothecary
         HEADERS = {
           "platform" => {
             match: [
-              /^platform$/i
-            ]
+              /^platform$/i,
+            ],
           },
           "name" => {
             match: [
-              /^name$/i
-            ]
+              /^name$/i,
+            ],
           },
           # Lockfiles have exact versions.
           "lockfile_requirement" => {
             match: [
               /^(lockfile |)requirement$/i,
-              /^version$/i
-            ]
+              /^version$/i,
+            ],
           },
           # Manifests have versions that can have operators.
           # However, since Bibliothecary only currently supports analyzing a
@@ -52,16 +52,16 @@ module Bibliothecary
           "requirement" => {
             match: [
               /^(lockfile |)requirement$/i,
-              /^version$/i
-            ]
+              /^version$/i,
+            ],
           },
           "type" => {
             default: "runtime",
             match: [
               /^(lockfile |)type$/i,
-              /^(manifest |)type$/i
-            ]
-          }
+              /^(manifest |)type$/i,
+            ],
+          },
         }
 
         attr_reader :result

@@ -14,10 +14,10 @@ describe Bibliothecary::Parsers::CPAN do
         { name: "File::Temp", requirement: 0, type: "runtime" },
         { name: "LWP", requirement: 0, type: "runtime" },
         { name: "XML::Simple", requirement: 0, type: "runtime" },
-        { name: "perl", requirement: "5.6.0", type: "runtime" }
+        { name: "perl", requirement: "5.6.0", type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -30,10 +30,10 @@ describe Bibliothecary::Parsers::CPAN do
         { name: "Test::More", requirement: "0.45", type: "runtime" },
         { name: "Module::Build", requirement: "0.28", type: "runtime" },
         { name: "Getopt::Long", requirement: "2.32", type: "runtime" },
-        { name: "List::Util", requirement: "1.07_00", type: "runtime" }
+        { name: "List::Util", requirement: "1.07_00", type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 

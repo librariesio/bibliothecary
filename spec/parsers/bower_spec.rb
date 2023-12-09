@@ -10,10 +10,10 @@ describe Bibliothecary::Parsers::Bower do
       platform: "bower",
       path: "bower.json",
       dependencies: [
-        { name: "jquery", requirement: ">= 1.9.1", type: "runtime" }
+        { name: "jquery", requirement: ">= 1.9.1", type: "runtime" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 

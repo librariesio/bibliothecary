@@ -10,12 +10,12 @@ module Bibliothecary
         {
           match_extension(".cabal") => {
             kind: "manifest",
-            parser: :parse_cabal
+            parser: :parse_cabal,
           },
           match_extension("cabal.config") => {
             kind: "lockfile",
-            parser: :parse_cabal_config
-          }
+            parser: :parse_cabal_config,
+          },
         }
       end
 
@@ -25,7 +25,7 @@ module Bibliothecary
 
       def self.parse_cabal(file_contents, options: {})
         headers = {
-          "Content-Type" => "text/plain;charset=utf-8"
+          "Content-Type" => "text/plain;charset=utf-8",
         }
 
         response = Typhoeus.post("#{Bibliothecary.configuration.cabal_parser_host}/parse", headers: headers, body: file_contents)
@@ -42,7 +42,7 @@ module Bibliothecary
           {
             name: dep[0],
             requirement: dep[1] || "*",
-            type: "runtime"
+            type: "runtime",
           }
         end
       end

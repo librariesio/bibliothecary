@@ -10,8 +10,8 @@ module Bibliothecary
         {
           match_filename("project.clj") => {
             kind: "manifest",
-            parser: :parse_manifest
-          }
+            parser: :parse_manifest,
+          },
         }
       end
 
@@ -29,7 +29,7 @@ module Bibliothecary
           {
             name: dependency[0],
             requirement: dependency[1],
-            type: "runtime"
+            type: "runtime",
           }
         end
       end

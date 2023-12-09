@@ -7,16 +7,16 @@ module Bibliothecary
         {
           match_filename("Cartfile") => {
             kind: "manifest",
-            parser: :parse_cartfile
+            parser: :parse_cartfile,
           },
           match_filename("Cartfile.private") => {
             kind: "manifest",
-            parser: :parse_cartfile_private
+            parser: :parse_cartfile_private,
           },
           match_filename("Cartfile.resolved") => {
             kind: "lockfile",
-            parser: :parse_cartfile_resolved
-          }
+            parser: :parse_cartfile_resolved,
+          },
         }
       end
 
@@ -43,7 +43,7 @@ module Bibliothecary
           {
             name: dependency["name"],
             requirement: dependency["version"],
-            type: dependency["type"]
+            type: dependency["type"],
           }
         end
       end

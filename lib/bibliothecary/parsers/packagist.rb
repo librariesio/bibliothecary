@@ -9,12 +9,12 @@ module Bibliothecary
         {
           match_filename("composer.json") => {
             kind: "manifest",
-            parser: :parse_manifest
+            parser: :parse_manifest,
           },
           match_filename("composer.lock") => {
             kind: "lockfile",
-            parser: :parse_lockfile
-          }
+            parser: :parse_lockfile,
+          },
         }
       end
 
@@ -28,7 +28,7 @@ module Bibliothecary
           {
             name: dependency["name"],
             requirement: dependency["version"],
-            type: "runtime"
+            type: "runtime",
           }.tap do |result|
             # Store Drupal version if Drupal, but include the original manifest version for reference
             result[:original_requirement], result[:requirement] = result[:requirement], dependency.dig("source", "reference") if is_drupal_module(dependency)
@@ -37,7 +37,7 @@ module Bibliothecary
           {
             name: dependency["name"],
             requirement: dependency["version"],
-            type: "development"
+            type: "development",
           }.tap do |result|
             # Store Drupal version if Drupal, but include the original manifest version for reference
             result[:original_requirement], result[:requirement] = result[:requirement], dependency.dig("source", "reference") if is_drupal_module(dependency)

@@ -36,10 +36,10 @@ describe Bibliothecary::Parsers::CRAN do
         { name: "rpart", requirement: "*", type: "suggests" },
         { name: "rmarkdown", requirement: "*", type: "suggests" },
         { name: "svglite", requirement: "*", type: "suggests" },
-        { name: "sp", requirement: "*", type: "enhances" }
+        { name: "sp", requirement: "*", type: "enhances" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -67,10 +67,10 @@ describe Bibliothecary::Parsers::CRAN do
         { name: "knitr", requirement: "*", type: "suggests" },
         { name: "curl", requirement: "*", type: "suggests" },
         { name: "zoo", requirement: "*", type: "suggests" },
-        { name: "plm", requirement: "*", type: "suggests" }
+        { name: "plm", requirement: "*", type: "suggests" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 

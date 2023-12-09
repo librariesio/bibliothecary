@@ -17,10 +17,10 @@ describe Bibliothecary::Parsers::Rubygems do
         { name: "thin", requirement: ">= 0", type: :development },
         { name: "puma", requirement: ">= 0", type: :runtime },
         { name: "rails_12factor", requirement: ">= 0", type: :runtime },
-        { name: "bugsnag", requirement: ">= 0", type: :runtime }
+        { name: "bugsnag", requirement: ">= 0", type: :runtime },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -36,10 +36,10 @@ describe Bibliothecary::Parsers::Rubygems do
         { name: "thin", requirement: ">= 0", type: :development },
         { name: "puma", requirement: ">= 0", type: :runtime },
         { name: "rails_12factor", requirement: ">= 0", type: :runtime },
-        { name: "bugsnag", requirement: ">= 0", type: :runtime }
+        { name: "bugsnag", requirement: ">= 0", type: :runtime },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -53,10 +53,10 @@ describe Bibliothecary::Parsers::Rubygems do
         { name: "bcrypt", requirement: "~> 3.0", type: :runtime },
         { name: "thread_safe", requirement: "~> 0.1", type: :runtime },
         { name: "railties", requirement: ">= 3.2.6, < 5", type: :runtime },
-        { name: "responders", requirement: ">= 0", type: :runtime }
+        { name: "responders", requirement: ">= 0", type: :runtime },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
@@ -68,10 +68,10 @@ describe Bibliothecary::Parsers::Rubygems do
         { name: "CFPropertyList", requirement: "2.3.1", type: "runtime" },
         { name: "actionmailer", requirement: "4.2.3", type: "runtime" },
         { name: "googleauth", requirement: "0.4.1", type: "runtime" },
-        { name: "hashie", requirement: "3.4.2", type: "runtime" }
+        { name: "hashie", requirement: "3.4.2", type: "runtime" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 
@@ -98,10 +98,10 @@ describe Bibliothecary::Parsers::Rubygems do
         platform: "rubygems",
         path: "Gemfile.lock",
         dependencies: [
-          { name: "rails", requirement: "5.2.3", type: "runtime" }
+          { name: "rails", requirement: "5.2.3", type: "runtime" },
         ],
         kind: "lockfile",
-        success: true
+        success: true,
       })
   end
 

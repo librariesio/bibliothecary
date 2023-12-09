@@ -15,8 +15,8 @@ plugin "cocoapods-keys", {
     "StripeProductionPublishableKey",
     "CardflightStagingAPIClientKey",
     "CardflightStagingMerchantAccountToken",
-    "StripeStagingPublishableKey"
-  ]
+    "StripeStagingPublishableKey",
+  ],
 }
 
 platform :ios, "8.0"

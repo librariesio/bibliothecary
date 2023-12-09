@@ -13,7 +13,7 @@ module Bibliothecary
               .sort_by(&:last)
               .map { |op, version| "#{op} #{version}" }
               .join(", "),
-            type: dep.type
+            type: dep.type,
           })
         end.uniq
       end

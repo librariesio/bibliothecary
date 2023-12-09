@@ -61,41 +61,41 @@ module Bibliothecary
         {
           match_filename("ivy.xml", case_insensitive: true) => {
             kind: "manifest",
-            parser: :parse_ivy_manifest
+            parser: :parse_ivy_manifest,
           },
           match_filename("pom.xml", case_insensitive: true) => {
             kind: "manifest",
-            parser: :parse_standalone_pom_manifest
+            parser: :parse_standalone_pom_manifest,
           },
           match_filename("build.gradle", case_insensitive: true) => {
             kind: "manifest",
-            parser: :parse_gradle
+            parser: :parse_gradle,
           },
           match_filename("build.gradle.kts", case_insensitive: true) => {
             kind: "manifest",
-            parser: :parse_gradle_kts
+            parser: :parse_gradle_kts,
           },
           match_extension(".xml", case_insensitive: true) => {
             content_matcher: :ivy_report?,
             kind: "lockfile",
-            parser: :parse_ivy_report
+            parser: :parse_ivy_report,
           },
           match_filename("gradle-dependencies-q.txt", case_insensitive: true) => {
             kind: "lockfile",
-            parser: :parse_gradle_resolved
+            parser: :parse_gradle_resolved,
           },
           match_filename("maven-resolved-dependencies.txt", case_insensitive: true) => {
             kind: "lockfile",
-            parser: :parse_maven_resolved
+            parser: :parse_maven_resolved,
           },
           match_filename("sbt-update-full.txt", case_insensitive: true) => {
             kind: "lockfile",
-            parser: :parse_sbt_update_full
+            parser: :parse_sbt_update_full,
           },
           match_filename("maven-dependency-tree.txt", case_insensitive: true) => {
             kind: "lockfile",
-            parser: :parse_maven_tree
-          }
+            parser: :parse_maven_tree,
+          },
         }
       end
 
@@ -110,7 +110,7 @@ module Bibliothecary
           {
             name: "#{attrs[:org]}:#{attrs[:name]}",
             requirement: attrs[:rev],
-            type: "runtime"
+            type: "runtime",
           }
         end
       end
@@ -146,7 +146,7 @@ module Bibliothecary
           {
             name: "#{org}:#{name}",
             requirement: version,
-            type: type
+            type: type,
           }
         end.compact
       end
@@ -193,7 +193,7 @@ module Bibliothecary
               original_requirement: dep[2],
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
-              type: current_type
+              type: current_type,
             }
           elsif dep.count == 5
             # get name from renamed package resolution "org:name -> renamed_org:name:version"
@@ -202,14 +202,14 @@ module Bibliothecary
               original_requirement: "*",
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
-              type: current_type
+              type: current_type,
             }
           else
             # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
             {
               name: dep[0..1].join(":"),
               requirement: dep[-1],
-              type: current_type
+              type: current_type,
             }
           end
         end
@@ -244,7 +244,7 @@ module Bibliothecary
           {
             name: parts[0..1].join(":"),
             requirement: version,
-            type: type
+            type: type,
           }
         end
 
@@ -264,7 +264,7 @@ module Bibliothecary
         {
           name: dep_parts[0, 2].join(":"),
           requirement: dep_parts[3],
-          type: dep_parts[4].split("--").first.strip
+          type: dep_parts[4].split("--").first.strip,
         }
       end
 
@@ -287,7 +287,7 @@ module Bibliothecary
               groupId: extract_pom_dep_info(xml, dep, "groupId", parent_properties),
               artifactId: extract_pom_dep_info(xml, dep, "artifactId", parent_properties),
               version: extract_pom_dep_info(xml, dep, "version", parent_properties),
-              scope: extract_pom_dep_info(xml, dep, "scope", parent_properties)
+              scope: extract_pom_dep_info(xml, dep, "scope", parent_properties),
             }
           end
           # <dependencies> is the namespace that will add dependencies to your project.
@@ -306,7 +306,7 @@ module Bibliothecary
             dep_hash = {
               name: "#{groupId}:#{artifactId}",
               requirement: version,
-              type: scope || "runtime"
+              type: scope || "runtime",
             }
             # optional field is, itself, optional, and will be either "true" or "false"
             optional = extract_pom_dep_info(xml, dep, "optional", parent_properties)
@@ -324,9 +324,9 @@ module Bibliothecary
           {
             name: [group, artifactId].join(":"),
             requirement: version || "*",
-            type: type
+            type: type,
           }
-        }
+          }
       end
 
       def self.parse_gradle_kts(file_contents, options: {})
@@ -337,7 +337,7 @@ module Bibliothecary
             {
               name: [group, artifactId].join(":"),
               requirement: version || "*",
-              type: type
+              type: type,
             }
           }
       end
@@ -427,7 +427,6 @@ module Bibliothecary
 
       def self.parse_sbt_update_full(file_contents, options: {})
         all_deps = []
-        type = nil
         lines = file_contents.split("\n")
         while lines.any?
           line = lines.shift
@@ -518,7 +517,7 @@ module Bibliothecary
           requirement: version,
           type: type,
           # we post-process using some of these fields and then delete them again
-          fields: fields
+          fields: fields,
         }
       end
     end

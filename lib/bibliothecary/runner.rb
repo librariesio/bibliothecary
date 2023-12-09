@@ -6,7 +6,7 @@ module Bibliothecary
     def initialize(configuration)
       @configuration = configuration
       @options = {
-        cache: {}
+        cache: {},
       }
     end
 

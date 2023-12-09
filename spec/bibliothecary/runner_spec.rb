@@ -25,7 +25,7 @@ describe Bibliothecary::Runner do
           # this file does have Maven
           maven_file_info("cyclonedx.xml"),
           file_info("Gemfile.lock", Bibliothecary::Parsers::Rubygems),
-          file_info("package.json", Bibliothecary::Parsers::NPM)
+          file_info("package.json", Bibliothecary::Parsers::NPM),
         ]
       )
     end
@@ -68,7 +68,7 @@ describe Bibliothecary::Runner do
           [
             maven_file_info("pom.xml"),
             maven_file_info("maven-dependency-tree.txt"),
-            maven_file_info("maven-resolved-dependencies.txt")
+            maven_file_info("maven-resolved-dependencies.txt"),
           ]
         )
       end
@@ -84,7 +84,7 @@ describe Bibliothecary::Runner do
         file_infos1 = [
           maven_file_info("pom.xml"),
           maven_file_info("maven-dependency-tree.txt"),
-          maven_file_info("maven-resolved-dependencies.txt")
+          maven_file_info("maven-resolved-dependencies.txt"),
         ]
 
         file_infos2 = file_infos1.dup

@@ -7,8 +7,8 @@ module Bibliothecary
         {
           match_filename("Package.swift", case_insensitive: true) => {
             kind: "manifest",
-            parser: :parse_package_swift
-          }
+            parser: :parse_package_swift,
+          },
         }
       end
 
@@ -26,7 +26,7 @@ module Bibliothecary
           {
             name: name,
             requirement: version,
-            type: "runtime"
+            type: "runtime",
           }
         end
       end
