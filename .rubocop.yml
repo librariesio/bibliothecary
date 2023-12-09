@@ -4,6 +4,30 @@ AllCops:
   DisabledByDefault: true
   TargetRubyVersion: 2.7
 
+# differences from standard ruby style guide.
+Style/RegexpLiteral:
+  Enabled: false
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+Layout/FirstArrayElementIndentation:
+  Enabled: false
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+Style/NumericPredicate:
+  Enabled: false
+Style/FormatStringToken:
+  Enabled: false
+Style/MultilineBlockChain:
+  Enabled: false
+Style/IfUnlessModifier:
+  Enabled: false
+Layout/BlockAlignment:
+  EnforcedStyleAlignWith: start_of_block
+
 Layout/AccessModifierIndentation:
   Description: Check indentation of private/protected visibility modifiers.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#indent-public-private-protected
@@ -13,10 +37,6 @@ Layout/ArrayAlignment:
   Description: Align the elements of an array literal if they span more than one line.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#align-multiline-arrays
   Enabled: false
-
-Layout/BlockAlignment:
-  Description: Align block ends correctly.
-  Enabled: true
 
 Layout/BlockEndNewline:
   Description: Put end statement of multiline block on its own line.
@@ -94,10 +114,6 @@ Layout/EndOfLine:
 
 Layout/ExtraSpacing:
   Description: Do not use unnecessary spacing.
-  Enabled: false
-
-Layout/FirstArrayElementIndentation:
-  Description: Checks the indentation of the first element in an array literal.
   Enabled: false
 
 Layout/FirstHashElementIndentation:
@@ -663,17 +679,6 @@ Style/GuardClause:
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#no-nested-conditionals
   Enabled: false
 
-Style/HashSyntax:
-  Description: 'Prefer Ruby 1.9 hash syntax { a: 1, b: 2 } over 1.8 syntax { :a =>
-    1, :b => 2 }.'
-  StyleGuide: https://github.com/bbatsov/ruby-style-guide#hash-literals
-  Enabled: true
-
-Style/IfUnlessModifier:
-  Description: Favor modifier if/unless usage when you have a single-line body.
-  StyleGuide: https://github.com/bbatsov/ruby-style-guide#if-as-a-modifier
-  Enabled: false
-
 Style/IfWithSemicolon:
   Description: Do not use if x; .... Use the ternary operator instead.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#no-semicolon-ifs
@@ -699,12 +704,6 @@ Style/LineEndConcatenation:
     end.
   Enabled: false
 
-Style/MethodCallWithoutArgsParentheses:
-  Description: Do not use parentheses for method calls with no arguments.
-  StyleGuide: "#method-invocation-parens"
-  Enabled: true
-  IgnoredMethods: []
-
 Style/MethodDefParentheses:
   Description: Checks if the method definitions have or don't have parentheses.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#method-parens
@@ -713,11 +712,6 @@ Style/MethodDefParentheses:
 Style/ModuleFunction:
   Description: Checks for usage of `extend self` in modules.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#module-function
-  Enabled: false
-
-Style/MultilineBlockChain:
-  Description: Avoid multi-line chains of blocks.
-  StyleGuide: https://github.com/bbatsov/ruby-style-guide#single-line-blocks
   Enabled: false
 
 Style/MultilineIfThen:
@@ -851,11 +845,6 @@ Style/RedundantSelf:
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#no-self-unless-required
   Enabled: false
 
-Style/RegexpLiteral:
-  Description: Use / or %r around regular expressions.
-  StyleGuide: https://github.com/bbatsov/ruby-style-guide#percent-r
-  Enabled: false
-
 Style/RescueModifier:
   Description: Avoid using rescue in its modifier form.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#no-rescue-modifiers
@@ -892,11 +881,6 @@ Style/SpecialGlobalVars:
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#no-cryptic-perlisms
   Enabled: false
 
-Style/StringLiterals:
-  Description: Checks if uses of quotes match the configured preference.
-  StyleGuide: https://github.com/bbatsov/ruby-style-guide#consistent-string-literals
-  Enabled: false
-
 Style/StringLiteralsInInterpolation:
   Description: Checks if uses of quotes inside expressions in interpolated strings
     match the configured preference.
@@ -919,15 +903,6 @@ Style/TrailingCommaInArguments:
   Description: Checks for trailing comma in parameter lists.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#no-trailing-params-comma
   Enabled: false
-
-Style/TrailingCommaInArrayLiteral:
-  Description: Checks for trailing comma in array literals.
-  StyleGuide: "#no-trailing-array-commas"
-  Enabled: true
-
-Style/TrailingCommaInHashLiteral:
-  Description: Checks for trailing comma in hash literals.
-  Enabled: true
 
 Style/TrailingUnderscoreVariable:
   Description: Checks for the usage of unneeded trailing underscores at the end of

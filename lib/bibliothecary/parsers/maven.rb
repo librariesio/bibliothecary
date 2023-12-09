@@ -287,7 +287,7 @@ module Bibliothecary
               groupId: extract_pom_dep_info(xml, dep, "groupId", parent_properties),
               artifactId: extract_pom_dep_info(xml, dep, "artifactId", parent_properties),
               version: extract_pom_dep_info(xml, dep, "version", parent_properties),
-              scope: extract_pom_dep_info(xml, dep, "scope", parent_properties),
+              scope: extract_pom_dep_info(xml, dep, "scope", parent_properties)
             }
           end
           # <dependencies> is the namespace that will add dependencies to your project.
