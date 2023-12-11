@@ -321,7 +321,8 @@ describe Bibliothecary do
         dependencies: [],
         kind: "unknown",
         success: false,
-        error_message: "No parser for this file type" }
+        error_message: "No parser for this file type",
+        error_location: nil }
       ])
 
     Bibliothecary.reset
