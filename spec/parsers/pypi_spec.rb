@@ -137,8 +137,8 @@ git://what@::/:/:/
         { name: "Jinja2", requirement: "*", type: "runtime" },
         { name: "pip-tools", requirement: "*", type: "runtime" },
       ],
-      kind: 'manifest',
-      success: true
+      kind: "manifest",
+      success: true,
     })
   end
   it "parses dependencies from requirements.txt as lockfile because of pip-compile" do

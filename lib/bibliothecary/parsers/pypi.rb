@@ -100,10 +100,10 @@ module Bibliothecary
         file_contents = Tomlrb.parse(file_contents)
 
         # Parse poetry [tool.poetry] deps
-        poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {})
-        deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
+        poetry_manifest = file_contents.fetch("tool", {}).fetch("poetry", {})
+        deps += map_dependencies(poetry_manifest["dependencies"], "runtime")
         # Poetry 1.0.0-1.2.0 way of defining dev deps
-        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
+        deps += map_dependencies(poetry_manifest["dev-dependencies"], "develop")
         # Poetry's 1.2.0+ of defining dev deps
         poetry_manifest
           .fetch("group", {})
@@ -186,11 +186,11 @@ module Bibliothecary
         deps = []
         manifest["package"].each do |package|
           # next if group == "_meta"
-          group = case package['category']
-                  when 'dev'
-                    'develop'
+          group = case package["category"]
+                  when "dev"
+                    "develop"
                   else
-                    'runtime'
+                    "runtime"
                   end
 
           deps << {
