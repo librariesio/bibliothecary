@@ -4,14 +4,15 @@ require_relative './analyser/analysis.rb'
 
 module Bibliothecary
   module Analyser
-    def self.create_error_analysis(platform_name, relative_path, kind, message)
+    def self.create_error_analysis(platform_name, relative_path, kind, message, location=nil)
       {
         platform: platform_name,
         path: relative_path,
         dependencies: nil,
         kind: kind,
         success: false,
-        error_message: message
+        error_message: message,
+        error_location: location,
       }
     end
 

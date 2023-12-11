@@ -42,7 +42,7 @@ module Bibliothecary
 
         dependencies_to_analysis(info, kind, dependencies)
       rescue Bibliothecary::FileParsingError => e
-        Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, kind, e.message)
+        Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, kind, e.message, e.location)
       end
       alias analyze_contents_from_info analyse_contents_from_info
 
@@ -87,7 +87,7 @@ module Bibliothecary
         location = e.backtrace_locations[0]
           .to_s
           .then { |l| l =~ /bibliothecary\// ? l.split("bibliothecary/").last : l.split("gems/").last }
-        raise Bibliothecary::FileParsingError.new("#{e.message.strip} (#{location})", filename)
+        raise Bibliothecary::FileParsingError.new(e.message.strip, filename, location)
       end
 
       private
