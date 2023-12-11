@@ -1,4 +1,4 @@
-require 'json'
+require "json"
 
 module Bibliothecary
   module Parsers
@@ -8,13 +8,13 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("mix.exs") => {
-            kind: 'manifest',
-            parser: :parse_mix
+            kind: "manifest",
+            parser: :parse_mix,
           },
           match_filename("mix.lock") => {
-            kind: 'lockfile',
-            parser: :parse_mix_lock
-          }
+            kind: "lockfile",
+            parser: :parse_mix_lock,
+          },
         }
       end
 
@@ -22,7 +22,7 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
-      def self.parse_mix(file_contents, options: {})
+      def self.parse_mix(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         response = Typhoeus.post("#{Bibliothecary.configuration.mix_parser_host}/", body: file_contents)
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.mix_parser_host}/", response.response_code) unless response.success?
         json = JSON.parse response.body
@@ -31,12 +31,12 @@ module Bibliothecary
           {
             name: name,
             requirement: version,
-            type: "runtime"
+            type: "runtime",
           }
         end
       end
 
-      def self.parse_mix_lock(file_contents, options: {})
+      def self.parse_mix_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         response = Typhoeus.post("#{Bibliothecary.configuration.mix_parser_host}/lock", body: file_contents)
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.mix_parser_host}/", response.response_code) unless response.success?
         json = JSON.parse response.body
@@ -44,8 +44,8 @@ module Bibliothecary
         json.map do |name, info|
           {
             name: name,
-            requirement: info['version'],
-            type: "runtime"
+            requirement: info["version"],
+            type: "runtime",
           }
         end
       end

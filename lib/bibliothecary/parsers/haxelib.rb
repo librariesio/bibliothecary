@@ -1,4 +1,4 @@
-require 'json'
+require "json"
 
 module Bibliothecary
   module Parsers
@@ -9,9 +9,9 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("haxelib.json") => {
-            kind: 'manifest',
-            parser: :parse_json_runtime_manifest
-          }
+            kind: "manifest",
+            parser: :parse_json_runtime_manifest,
+          },
         }
       end
 

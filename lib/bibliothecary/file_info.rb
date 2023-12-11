@@ -1,4 +1,4 @@
-require 'pathname'
+require "pathname"
 
 module Bibliothecary
   # A representation of a file on the filesystem, with location information
@@ -17,7 +17,7 @@ module Bibliothecary
             # file that's actually on the filesystem
             nil
           else
-            contents = Bibliothecary.utf8_string(File.open(@full_path).read)
+            Bibliothecary.utf8_string(File.open(@full_path).read)
           end
         end
     end

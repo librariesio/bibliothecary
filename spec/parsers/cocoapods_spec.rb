@@ -1,12 +1,12 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Bibliothecary::Parsers::CocoaPods do
-  it 'has a platform name' do
-    expect(described_class.platform_name).to eq('cocoapods')
+  it "has a platform name" do
+    expect(described_class.platform_name).to eq("cocoapods")
   end
 
-  it 'parses dependencies from Podfile' do
-    expect(described_class.analyse_contents('Podfile', load_fixture('Podfile'))).to eq({
+  it "parses dependencies from Podfile" do
+    expect(described_class.analyse_contents("Podfile", load_fixture("Podfile"))).to eq({
       platform: "cocoapods",
       path: "Podfile",
       dependencies: [
@@ -30,15 +30,15 @@ describe Bibliothecary::Parsers::CocoaPods do
         { name: "FBSnapshotTestCase", requirement: ">= 0", type: :runtime },
         { name: "Nimble-Snapshots", requirement: ">= 0", type: :runtime },
         { name: "Quick", requirement: ">= 0", type: :runtime },
-        { name: "Forgeries", requirement: ">= 0", type: :runtime }
+        { name: "Forgeries", requirement: ">= 0", type: :runtime },
       ],
-      kind: 'manifest',
-      success: true
+      kind: "manifest",
+      success: true,
     })
   end
 
-  it 'parses dependencies from Podfile.lock' do
-    expect(described_class.analyse_contents('Podfile.lock', load_fixture('Podfile.lock'))).to eq({
+  it "parses dependencies from Podfile.lock" do
+    expect(described_class.analyse_contents("Podfile.lock", load_fixture("Podfile.lock"))).to eq({
       platform: "cocoapods",
       path: "Podfile.lock",
       dependencies: [
@@ -91,42 +91,42 @@ describe Bibliothecary::Parsers::CocoaPods do
         { name: "SwiftyJSON", requirement: "2.2.1", type: "runtime" },
         { name: "UIImageViewAligned", requirement: "0.0.1", type: "runtime" },
         { name: "UIView+BooleanAnimations", requirement: "1.0.2", type: "runtime" },
-        { name: "XNGMarkdownParser", requirement: "0.3.0", type: "runtime" }
+        { name: "XNGMarkdownParser", requirement: "0.3.0", type: "runtime" },
       ],
-      kind: 'lockfile',
-      success: true
+      kind: "lockfile",
+      success: true,
     })
   end
 
-  it 'parses dependencies from example.podspec' do
-    expect(described_class.analyse_contents('example.podspec', load_fixture('example.podspec'))).to eq({
+  it "parses dependencies from example.podspec" do
+    expect(described_class.analyse_contents("example.podspec", load_fixture("example.podspec"))).to eq({
       platform: "cocoapods",
       path: "example.podspec",
       dependencies: [
-        { name: "CocoaLumberjack", requirement: ">= 0", type: :runtime }
+        { name: "CocoaLumberjack", requirement: ">= 0", type: :runtime },
       ],
-      kind: 'manifest',
-      success: true
+      kind: "manifest",
+      success: true,
     })
   end
 
-  it 'parses dependencies from example.podspec.json' do
-    expect(described_class.analyse_contents('example.podspec.json', load_fixture('example.podspec.json'))).to eq({
+  it "parses dependencies from example.podspec.json" do
+    expect(described_class.analyse_contents("example.podspec.json", load_fixture("example.podspec.json"))).to eq({
       platform: "cocoapods",
       path: "example.podspec.json",
       dependencies: [
-        { name: "OpenSSL", requirement: ["~> 1.0"], type: "runtime" }
+        { name: "OpenSSL", requirement: ["~> 1.0"], type: "runtime" },
       ],
-      kind: 'manifest',
-      success: true
+      kind: "manifest",
+      success: true,
     })
   end
 
-  it 'matches valid manifest filepaths' do
-    expect(described_class.match?('Podfile')).to be_truthy
-    expect(described_class.match?('Podfile.lock')).to be_truthy
-    expect(described_class.match?('devise.podspec')).to be_truthy
-    expect(described_class.match?('foo_meh-bar.podspec')).to be_truthy
-    expect(described_class.match?('devise.podspec.json')).to be_truthy
+  it "matches valid manifest filepaths" do
+    expect(described_class.match?("Podfile")).to be_truthy
+    expect(described_class.match?("Podfile.lock")).to be_truthy
+    expect(described_class.match?("devise.podspec")).to be_truthy
+    expect(described_class.match?("foo_meh-bar.podspec")).to be_truthy
+    expect(described_class.match?("devise.podspec.json")).to be_truthy
   end
 end

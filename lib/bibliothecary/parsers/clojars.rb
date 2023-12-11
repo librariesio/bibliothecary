@@ -1,5 +1,5 @@
-require 'json'
-require 'typhoeus'
+require "json"
+require "typhoeus"
 
 module Bibliothecary
   module Parsers
@@ -9,15 +9,15 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("project.clj") => {
-            kind: 'manifest',
-            parser: :parse_manifest
-          }
+            kind: "manifest",
+            parser: :parse_manifest,
+          },
         }
       end
 
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_manifest(file_contents, options: {})
+      def self.parse_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         response = Typhoeus.post("#{Bibliothecary.configuration.clojars_parser_host}/project.clj", body: file_contents)
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.clojars_parser_host}/project.clj", response.response_code) unless response.success?
         json = JSON.parse response.body
@@ -29,7 +29,7 @@ module Bibliothecary
           {
             name: dependency[0],
             requirement: dependency[1],
-            type: "runtime"
+            type: "runtime",
           }
         end
       end

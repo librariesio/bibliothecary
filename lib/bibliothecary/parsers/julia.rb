@@ -7,14 +7,14 @@ module Bibliothecary
         {
           match_filename("REQUIRE", case_insensitive: true) => {
             kind: "manifest",
-            parser: :parse_require
-          }
+            parser: :parse_require,
+          },
         }
       end
 
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_require(file_contents, options: {})
+      def self.parse_require(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         deps = []
         file_contents.split("\n").each do |line|
           next if line.match(/^#/) || line.empty?
@@ -32,7 +32,7 @@ module Bibliothecary
           deps << {
             name: name,
             requirement: reqs,
-            type: "runtime"
+            type: "runtime",
           }
         end
         deps

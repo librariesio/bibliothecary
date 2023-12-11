@@ -9,20 +9,20 @@ module Bibliothecary
         {
           match_filename("environment.yml") => {
             parser: :parse_conda,
-            kind: "manifest"
+            kind: "manifest",
           },
           match_filename("environment.yaml") => {
             parser: :parse_conda,
-            kind: "manifest"
+            kind: "manifest",
           },
           match_filename("environment.yml.lock") => {
             parser: :parse_conda_lockfile,
-            kind: "lockfile"
+            kind: "lockfile",
           },
           match_filename("environment.yaml.lock") => {
             parser: :parse_conda_lockfile,
-            kind: "lockfile"
-          }
+            kind: "lockfile",
+          },
         }
       end
 
@@ -30,11 +30,11 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
-      def self.parse_conda(file_contents, options: {})
+      def self.parse_conda(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         parse_conda_with_kind(file_contents, "manifest")
       end
 
-      def self.parse_conda_lockfile(file_contents, options: {})
+      def self.parse_conda_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         parse_conda_with_kind(file_contents, "lockfile")
       end
 
@@ -48,12 +48,12 @@ module Bibliothecary
         response = Typhoeus.post(
           "#{host}/parse",
           headers: {
-            ContentType: "multipart/form-data"
+            ContentType: "multipart/form-data",
           },
           body: {
             file: file_contents,
             # Unfortunately we do not get the filename in the mapping parsers, so hardcoding the file name depending on the kind
-            filename: kind == "manifest" ? "environment.yml" : "environment.yml.lock"
+            filename: kind == "manifest" ? "environment.yml" : "environment.yml.lock",
           }
         )
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{host}/parse", response.response_code) unless response.success?

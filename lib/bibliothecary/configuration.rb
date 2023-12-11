@@ -11,15 +11,15 @@ module Bibliothecary
     attr_accessor :cabal_parser_host
 
     def initialize
-      @ignored_dirs = ['.git', 'node_modules', 'bower_components', 'vendor', 'dist']
+      @ignored_dirs = [".git", "node_modules", "bower_components", "vendor", "dist"]
       @ignored_files = []
-      @carthage_parser_host = 'https://carthage.libraries.io'
-      @clojars_parser_host  = 'https://clojars.libraries.io'
-      @mix_parser_host      = 'https://mix.libraries.io'
-      @yarn_parser_host     = 'https://yarn-parser.libraries.io'
-      @conda_parser_host    = 'https://conda-parser.libraries.io'
-      @swift_parser_host    = 'http://swift.libraries.io'
-      @cabal_parser_host    = 'http://cabal.libraries.io'
+      @carthage_parser_host = "https://carthage.libraries.io"
+      @clojars_parser_host  = "https://clojars.libraries.io"
+      @mix_parser_host      = "https://mix.libraries.io"
+      @yarn_parser_host     = "https://yarn-parser.libraries.io"
+      @conda_parser_host    = "https://conda-parser.libraries.io"
+      @swift_parser_host    = "http://swift.libraries.io"
+      @cabal_parser_host    = "http://cabal.libraries.io"
     end
   end
 end

@@ -1,4 +1,4 @@
-require 'json'
+require "json"
 
 module Bibliothecary
   module Parsers
@@ -11,25 +11,25 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("package.json") => {
-            kind: 'manifest',
-            parser: :parse_manifest
+            kind: "manifest",
+            parser: :parse_manifest,
           },
           match_filename("npm-shrinkwrap.json") => {
-            kind: 'lockfile',
-            parser: :parse_shrinkwrap
+            kind: "lockfile",
+            parser: :parse_shrinkwrap,
           },
           match_filename("yarn.lock") => {
-            kind: 'lockfile',
-            parser: :parse_yarn_lock
+            kind: "lockfile",
+            parser: :parse_yarn_lock,
           },
           match_filename("package-lock.json") => {
-            kind: 'lockfile',
-            parser: :parse_package_lock
+            kind: "lockfile",
+            parser: :parse_package_lock,
           },
           match_filename("npm-ls.json") => {
-            kind: 'lockfile',
-            parser: :parse_ls
-          }
+            kind: "lockfile",
+            parser: :parse_ls,
+          },
         }
       end
 
@@ -37,7 +37,7 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_package_lock(file_contents, options: {})
+      def self.parse_package_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse(file_contents)
         # https://docs.npmjs.com/cli/v9/configuring-npm/package-lock-json#lockfileversion
         if manifest["lockfileVersion"].to_i <= 1
@@ -56,54 +56,54 @@ module Bibliothecary
       end
 
       def self.parse_package_lock_v1(manifest)
-        parse_package_lock_deps_recursively(manifest.fetch('dependencies', []))
+        parse_package_lock_deps_recursively(manifest.fetch("dependencies", []))
       end
 
       def self.parse_package_lock_v2(manifest)
         # "packages" is a flat object where each key is the installed location of the dep, e.g. node_modules/foo/node_modules/bar.
         manifest
           .fetch("packages")
-          .reject { |name, dep| name == "" } # this is the lockfile's package itself
+          .reject { |name, _dep| name == "" } # this is the lockfile's package itself
           .map do |name, dep|
             {
               name: name.split("node_modules/").last,
               requirement: dep["version"],
-              type: dep.fetch("dev", false) || dep.fetch("devOptional", false)  ? "development" : "runtime"
+              type: dep.fetch("dev", false) || dep.fetch("devOptional", false)  ? "development" : "runtime",
             }
           end
       end
 
       def self.parse_package_lock_deps_recursively(dependencies, depth=1)
         dependencies.flat_map do |name, requirement|
-          type = requirement.fetch("dev", false) ? 'development' : 'runtime'
+          type = requirement.fetch("dev", false) ? "development" : "runtime"
           version = requirement.key?("from") ? requirement["from"][/#(?:semver:)?v?(.*)/, 1] : nil
           version ||= requirement["version"].split("#").last
           child_dependencies = if depth >= PACKAGE_LOCK_JSON_MAX_DEPTH
             []
           else
-            parse_package_lock_deps_recursively(requirement.fetch('dependencies', []), depth + 1)
-          end
+            parse_package_lock_deps_recursively(requirement.fetch("dependencies", []), depth + 1)
+                               end
 
           [{
             name: name,
             requirement: version,
-            type: type
+            type: type,
           }] + child_dependencies
         end
       end
 
-      def self.parse_manifest(file_contents, options: {})
+      def self.parse_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse(file_contents)
-        raise "appears to be a lockfile rather than manifest format" if manifest.key?('lockfileVersion')
+        raise "appears to be a lockfile rather than manifest format" if manifest.key?("lockfileVersion")
 
         (
-          map_dependencies(manifest, 'dependencies', 'runtime') +
-          map_dependencies(manifest, 'devDependencies', 'development')
+          map_dependencies(manifest, "dependencies", "runtime") +
+          map_dependencies(manifest, "devDependencies", "development")
         )
           .reject { |dep| dep[:name].start_with?("//") } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
       end
 
-      def self.parse_yarn_lock(file_contents, options: {})
+      def self.parse_yarn_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         response = Typhoeus.post("#{Bibliothecary.configuration.yarn_parser_host}/parse", body: file_contents)
 
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.yarn_parser_host}/parse", response.response_code) unless response.success?
@@ -114,15 +114,15 @@ module Bibliothecary
             name: dep[:name],
             requirement: dep[:version],
             lockfile_requirement: dep[:requirement],
-            type: dep[:type]
+            type: dep[:type],
           }
         end
       end
 
-      def self.parse_ls(file_contents, options: {})
+      def self.parse_ls(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse(file_contents)
 
-        transform_tree_to_array(manifest.fetch('dependencies', {}))
+        transform_tree_to_array(manifest.fetch("dependencies", {}))
       end
 
       def self.lockfile_preference_order(file_infos)
@@ -143,9 +143,9 @@ module Bibliothecary
             {
               name: name,
               requirement: metadata["version"],
-              lockfile_requirement: metadata.fetch("from", "").split('@').last,
-              type: "runtime"
-            }
+              lockfile_requirement: metadata.fetch("from", "").split("@").last,
+              type: "runtime",
+            },
           ] + transform_tree_to_array(metadata.fetch("dependencies", {}))
         end.flatten(1)
       end

@@ -1,26 +1,26 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Bibliothecary::Parsers::Cargo do
-  it 'has a platform name' do
-    expect(described_class.platform_name).to eq('cargo')
+  it "has a platform name" do
+    expect(described_class.platform_name).to eq("cargo")
   end
 
-  it 'parses dependencies from Cargo.toml' do
-    expect(described_class.analyse_contents('Cargo.toml', load_fixture('Cargo.toml'))).to eq({
+  it "parses dependencies from Cargo.toml" do
+    expect(described_class.analyse_contents("Cargo.toml", load_fixture("Cargo.toml"))).to eq({
       platform: "cargo",
       path: "Cargo.toml",
       dependencies:[
         { name: "rustc-serialize", requirement: "*", type: "runtime" },
         { name: "regex", requirement: "*", type: "runtime" },
-        { name: "tempdir", requirement: "0.3", type: "development" }
+        { name: "tempdir", requirement: "0.3", type: "development" },
       ],
       kind: "manifest",
-      success: true
+      success: true,
     })
   end
 
-  it 'parses dependencies from Cargo.lock' do
-    expect(described_class.analyse_contents('Cargo.lock', load_fixture('Cargo.lock'))).to eq({
+  it "parses dependencies from Cargo.lock" do
+    expect(described_class.analyse_contents("Cargo.lock", load_fixture("Cargo.lock"))).to eq({
       platform: "cargo",
       path: "Cargo.lock",
       dependencies:[
@@ -39,15 +39,15 @@ describe Bibliothecary::Parsers::Cargo do
         { name: "tempdir", requirement: "0.3.7", type: "runtime" },
         { name: "winapi", requirement: "0.3.9", type: "runtime" },
         { name: "winapi-i686-pc-windows-gnu", requirement: "0.4.0", type: "runtime" },
-        { name: "winapi-x86_64-pc-windows-gnu", requirement: "0.4.0", type: "runtime" }
+        { name: "winapi-x86_64-pc-windows-gnu", requirement: "0.4.0", type: "runtime" },
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 
-  it 'matches valid manifest filepaths' do
-    expect(described_class.match?('Cargo.toml')).to be_truthy
-    expect(described_class.match?('Cargo.lock')).to be_truthy
+  it "matches valid manifest filepaths" do
+    expect(described_class.match?("Cargo.toml")).to be_truthy
+    expect(described_class.match?("Cargo.lock")).to be_truthy
   end
 end

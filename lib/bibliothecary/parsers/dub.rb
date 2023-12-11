@@ -1,5 +1,5 @@
-require 'json'
-require 'sdl_parser'
+require "json"
+require "sdl_parser"
 
 module Bibliothecary
   module Parsers
@@ -10,19 +10,19 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("dub.json") => {
-            kind: 'manifest',
-            parser: :parse_json_runtime_manifest
+            kind: "manifest",
+            parser: :parse_json_runtime_manifest,
           },
           match_filename("dub.sdl") => {
-            kind: 'manifest',
-            parser: :parse_sdl_manifest
-          }
+            kind: "manifest",
+            parser: :parse_sdl_manifest,
+          },
         }
       end
 
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_sdl_manifest(file_contents, options: {})
+      def self.parse_sdl_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         SdlParser.new(:runtime, file_contents).dependencies
       end
     end

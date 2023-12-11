@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Bibliothecary::MultiParsers::Spdx do
   let!(:parser_class) do
@@ -37,7 +37,7 @@ describe Bibliothecary::MultiParsers::Spdx do
 
     it "parses the file" do
       expect(parser.parse_spdx_tag_value(file)).to eq([
-        { name: "package1", requirement: "1.0.0", type: "lockfile" }
+        { name: "package1", requirement: "1.0.0", type: "lockfile" },
       ])
     end
   end
@@ -88,13 +88,13 @@ describe Bibliothecary::MultiParsers::Spdx do
     it "parses the file" do
       expect(parser.parse_spdx_tag_value(file)).to eq([
         { name: "package1", requirement: "1.0.0", type: "lockfile" },
-        { name: "package2", requirement: "1.0.1", type: "lockfile" }
+        { name: "package2", requirement: "1.0.1", type: "lockfile" },
       ])
     end
   end
 
-  describe 'Spdx::get_platform' do
-    it 'should handle formats correctly' do
+  describe "Spdx::get_platform" do
+    it "should handle formats correctly" do
       golang_purl = "pkg:golang/github.com/path/to/package"
 
       expect(parser.get_platform(golang_purl)).to eq(:go)
@@ -105,9 +105,9 @@ describe Bibliothecary::MultiParsers::Spdx do
     end
   end
 
-  context 'correct parsers implement it' do
+  context "correct parsers implement it" do
     Bibliothecary::PURL_TYPE_MAPPING.each_value do |parser|
-      constant_symbol = Bibliothecary::Parsers.constants.find { |c| c.to_s.downcase.gsub(/[^a-z]/, '') == parser.to_s.downcase.gsub(/[^a-z]/, '') }
+      constant_symbol = Bibliothecary::Parsers.constants.find { |c| c.to_s.downcase.gsub(/[^a-z]/, "") == parser.to_s.downcase.gsub(/[^a-z]/, "") }
       constant = Bibliothecary::Parsers.const_get(constant_symbol)
 
       # only analyzers have platform_name on the class

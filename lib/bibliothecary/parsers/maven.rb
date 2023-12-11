@@ -1,5 +1,5 @@
-require 'ox'
-require 'strings-ansi'
+require "ox"
+require "strings-ansi"
 
 # Known shortcomings and unimplemented Maven features:
 #   pom.xml
@@ -60,42 +60,42 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("ivy.xml", case_insensitive: true) => {
-            kind: 'manifest',
-            parser: :parse_ivy_manifest
+            kind: "manifest",
+            parser: :parse_ivy_manifest,
           },
           match_filename("pom.xml", case_insensitive: true) => {
-            kind: 'manifest',
-            parser: :parse_standalone_pom_manifest
+            kind: "manifest",
+            parser: :parse_standalone_pom_manifest,
           },
           match_filename("build.gradle", case_insensitive: true) => {
-            kind: 'manifest',
-            parser: :parse_gradle
+            kind: "manifest",
+            parser: :parse_gradle,
           },
           match_filename("build.gradle.kts", case_insensitive: true) => {
-            kind: 'manifest',
-            parser: :parse_gradle_kts
+            kind: "manifest",
+            parser: :parse_gradle_kts,
           },
           match_extension(".xml", case_insensitive: true) => {
             content_matcher: :ivy_report?,
-            kind: 'lockfile',
-            parser: :parse_ivy_report
+            kind: "lockfile",
+            parser: :parse_ivy_report,
           },
           match_filename("gradle-dependencies-q.txt", case_insensitive: true) => {
-            kind: 'lockfile',
-            parser: :parse_gradle_resolved
+            kind: "lockfile",
+            parser: :parse_gradle_resolved,
           },
           match_filename("maven-resolved-dependencies.txt", case_insensitive: true) => {
-            kind: 'lockfile',
-            parser: :parse_maven_resolved
+            kind: "lockfile",
+            parser: :parse_maven_resolved,
           },
           match_filename("sbt-update-full.txt", case_insensitive: true) => {
-            kind: 'lockfile',
-            parser: :parse_sbt_update_full
+            kind: "lockfile",
+            parser: :parse_sbt_update_full,
           },
           match_filename("maven-dependency-tree.txt", case_insensitive: true) => {
-            kind: 'lockfile',
-            parser: :parse_maven_tree
-          }
+            kind: "lockfile",
+            parser: :parse_maven_tree,
+          },
         }
       end
 
@@ -103,14 +103,14 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_ivy_manifest(file_contents, options: {})
+      def self.parse_ivy_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Ox.parse file_contents
-        manifest.dependencies.locate('dependency').map do |dependency|
+        manifest.dependencies.locate("dependency").map do |dependency|
           attrs = dependency.attributes
           {
             name: "#{attrs[:org]}:#{attrs[:name]}",
             requirement: attrs[:rev],
-            type: 'runtime'
+            type: "runtime",
           }
         end
       end
@@ -126,7 +126,7 @@ module Bibliothecary
         false
       end
 
-      def self.parse_ivy_report(file_contents, options: {})
+      def self.parse_ivy_report(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         doc = Ox.parse file_contents
         root = doc.locate("ivy-report").first
         raise "ivy-report document does not have ivy-report at the root" if root.nil?
@@ -139,19 +139,19 @@ module Bibliothecary
           attrs = mod.attributes
           org = attrs[:organisation]
           name = attrs[:name]
-          version = mod.locate('revision').first&.attributes[:name]
+          version = mod.locate("revision").first&.attributes[:name]
 
           next nil if org.nil? or name.nil? or version.nil?
 
           {
             name: "#{org}:#{name}",
             requirement: version,
-            type: type
+            type: type,
           }
         end.compact
       end
 
-      def self.parse_gradle_resolved(file_contents, options: {})
+      def self.parse_gradle_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         current_type = nil
 
         file_contents.split("\n").map do |line|
@@ -193,7 +193,7 @@ module Bibliothecary
               original_requirement: dep[2],
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
-              type: current_type
+              type: current_type,
             }
           elsif dep.count == 5
             # get name from renamed package resolution "org:name -> renamed_org:name:version"
@@ -202,14 +202,14 @@ module Bibliothecary
               original_requirement: "*",
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
-              type: current_type
+              type: current_type,
             }
           else
             # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
             {
               name: dep[0..1].join(":"),
               requirement: dep[-1],
-              type: current_type
+              type: current_type,
             }
           end
         end
@@ -217,7 +217,7 @@ module Bibliothecary
           .uniq { |item| item.values_at(:name, :requirement, :type, :original_name, :original_requirement) }
       end
 
-      def self.parse_maven_resolved(file_contents, options: {})
+      def self.parse_maven_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         Strings::ANSI.sanitize(file_contents)
           .split("\n")
           .map(&method(:parse_resolved_dep_line))
@@ -225,7 +225,7 @@ module Bibliothecary
           .uniq
       end
 
-      def self.parse_maven_tree(file_contents, options: {})
+      def self.parse_maven_tree(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         captures = Strings::ANSI.sanitize(file_contents)
           .gsub(/\r\n?/, "\n")
           .scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/)
@@ -244,7 +244,7 @@ module Bibliothecary
           {
             name: parts[0..1].join(":"),
             requirement: version,
-            type: type
+            type: type,
           }
         end
 
@@ -264,7 +264,7 @@ module Bibliothecary
         {
           name: dep_parts[0, 2].join(":"),
           requirement: dep_parts[3],
-          type: dep_parts[4].split("--").first.strip
+          type: dep_parts[4].split("--").first.strip,
         }
       end
 
@@ -274,9 +274,9 @@ module Bibliothecary
 
       # parent_properties is used by Libraries:
       # https://github.com/librariesio/libraries.io/blob/e970925aade2596a03268b6e1be785eba8502c62/app/models/package_manager/maven.rb#L129
-      def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {})
+      def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Ox.parse file_contents
-        xml = manifest.respond_to?('project') ? manifest.project : manifest
+        xml = manifest.respond_to?("project") ? manifest.project : manifest
         [].tap do |deps|
           # <dependencyManagement> is a namespace to specify artifact configuration (e.g. version), but it doesn't
           # actually add dependencies to your project. Grab these and keep them for reference while parsing <dependencies>
@@ -292,10 +292,10 @@ module Bibliothecary
           end
           # <dependencies> is the namespace that will add dependencies to your project.
           xml.locate("dependencies/dependency").each do |dep|
-            groupId = extract_pom_dep_info(xml, dep, 'groupId', parent_properties)
-            artifactId = extract_pom_dep_info(xml, dep, 'artifactId', parent_properties)
-            version = extract_pom_dep_info(xml, dep, 'version', parent_properties)
-            scope = extract_pom_dep_info(xml, dep, 'scope', parent_properties)
+            groupId = extract_pom_dep_info(xml, dep, "groupId", parent_properties)
+            artifactId = extract_pom_dep_info(xml, dep, "artifactId", parent_properties)
+            version = extract_pom_dep_info(xml, dep, "version", parent_properties)
+            scope = extract_pom_dep_info(xml, dep, "scope", parent_properties)
 
             # Use any dep configurations from <dependencyManagement> as fallbacks
             if (depConfig = dependencyManagement.find { |d| d[:groupId] == groupId && d[:artifactId] == artifactId })
@@ -306,30 +306,30 @@ module Bibliothecary
             dep_hash = {
               name: "#{groupId}:#{artifactId}",
               requirement: version,
-              type: scope || 'runtime',
+              type: scope || "runtime",
             }
             # optional field is, itself, optional, and will be either "true" or "false"
-            optional = extract_pom_dep_info(xml, dep, 'optional', parent_properties)
+            optional = extract_pom_dep_info(xml, dep, "optional", parent_properties)
             dep_hash[:optional] = optional == "true" unless optional.nil?
             deps.push(dep_hash)
           end
         end
       end
 
-      def self.parse_gradle(file_contents, options: {})
+      def self.parse_gradle(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         file_contents
-        .scan(GRADLE_GROOVY_SIMPLE_REGEX)                                                # match 'implementation "group:artifactId:version"'
-        .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
-        .map { |(type, group, artifactId, version)|
+          .scan(GRADLE_GROOVY_SIMPLE_REGEX)                                                # match 'implementation "group:artifactId:version"'
+          .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
+          .map { |(type, group, artifactId, version)|
           {
             name: [group, artifactId].join(":"),
             requirement: version || "*",
-            type: type
+            type: type,
           }
-        }
+          }
       end
 
-      def self.parse_gradle_kts(file_contents, options: {})
+      def self.parse_gradle_kts(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         file_contents
           .scan(GRADLE_KOTLIN_SIMPLE_REGEX)                                                # match 'implementation("group:artifactId:version")'
           .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
@@ -337,7 +337,7 @@ module Bibliothecary
             {
               name: [group, artifactId].join(":"),
               requirement: version || "*",
-              type: type
+              type: type,
             }
           }
       end
@@ -407,8 +407,8 @@ module Bibliothecary
 
         prop_field = xml.properties.locate(property_name).first if xml.respond_to?("properties")
         parent_prop = parent_properties[property_name] ||                 # e.g. "${foo}"
-          parent_properties[property_name.sub(/^project\./, '')] ||       # e.g. "${project.foo}"
-          parent_properties[property_name.sub(/^project\.parent\./, '')]  # e.g. "${project.parent.foo}"
+          parent_properties[property_name.sub(/^project\./, "")] ||       # e.g. "${project.foo}"
+          parent_properties[property_name.sub(/^project\.parent\./, "")]  # e.g. "${project.parent.foo}"
 
         if prop_field
           prop_field.nodes.first
@@ -425,9 +425,8 @@ module Bibliothecary
         end
       end
 
-      def self.parse_sbt_update_full(file_contents, options: {})
+      def self.parse_sbt_update_full(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         all_deps = []
-        type = nil
         lines = file_contents.split("\n")
         while lines.any?
           line = lines.shift
@@ -518,7 +517,7 @@ module Bibliothecary
           requirement: version,
           type: type,
           # we post-process using some of these fields and then delete them again
-          fields: fields
+          fields: fields,
         }
       end
     end

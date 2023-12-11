@@ -2,7 +2,7 @@
 # which warns a whole bunch in Ruby 2.7 as being an experimental feature, but has
 # been accepted in Ruby 3.0 (https://rubyreferences.github.io/rubychanges/3.0.html#pattern-matching).
 Warning[:experimental] = false
-require 'package_url'
+require "package_url"
 Warning[:experimental] = true
 
 module Bibliothecary
@@ -28,11 +28,11 @@ module Bibliothecary
 
       def self.mapping
         {
-          match_extension('.spdx') => {
-            kind: 'lockfile',
+          match_extension(".spdx") => {
+            kind: "lockfile",
             parser: :parse_spdx_tag_value,
-            ungroupable: true
-          }
+            ungroupable: true,
+          },
         }
       end
 
@@ -79,7 +79,7 @@ module Bibliothecary
             entries[platform.to_sym] << {
               name: package_name,
               requirement: package_version,
-              type: 'lockfile'
+              type: "lockfile",
             }
 
             package_name = package_version = platform = nil

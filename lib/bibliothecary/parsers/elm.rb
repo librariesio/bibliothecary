@@ -1,4 +1,4 @@
-require 'json'
+require "json"
 
 module Bibliothecary
   module Parsers
@@ -9,25 +9,25 @@ module Bibliothecary
       def self.mapping
         {
           match_filenames("elm-package.json", "elm_dependencies.json") => {
-            kind: 'manifest',
-            parser: :parse_json_runtime_manifest
+            kind: "manifest",
+            parser: :parse_json_runtime_manifest,
           },
           match_filename("elm-stuff/exact-dependencies.json") => {
-            kind: 'lockfile',
-            parser: :parse_json_lock
-          }
+            kind: "lockfile",
+            parser: :parse_json_lock,
+          },
         }
       end
 
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_json_lock(file_contents, options: {})
+      def self.parse_json_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse file_contents
         manifest.map do |name, requirement|
           {
             name: name,
             requirement: requirement,
-            type: 'runtime'
+            type: "runtime",
           }
         end
       end

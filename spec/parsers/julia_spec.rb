@@ -1,12 +1,12 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Bibliothecary::Parsers::Julia do
-  it 'has a platform name' do
-    expect(described_class.platform_name).to eq('julia')
+  it "has a platform name" do
+    expect(described_class.platform_name).to eq("julia")
   end
 
-  it 'parses dependencies from REQUIRE' do
-    expect(described_class.analyse_contents('REQUIRE', load_fixture('REQUIRE'))).to eq({
+  it "parses dependencies from REQUIRE" do
+    expect(described_class.analyse_contents("REQUIRE", load_fixture("REQUIRE"))).to eq({
       platform: "julia",
       path: "REQUIRE",
       dependencies: [
@@ -30,14 +30,14 @@ describe Bibliothecary::Parsers::Julia do
         { name: "Plots", requirement: "0.12 0.15", type: "runtime" },
         { name: "Showoff", requirement: "0.0.3", type: "runtime" },
         { name: "StatsBase", requirement: "*", type: "runtime" },
-        { name: "WinReg", requirement: "*", type: "runtime" }
+        { name: "WinReg", requirement: "*", type: "runtime" },
       ],
-      kind: 'manifest',
-      success: true
+      kind: "manifest",
+      success: true,
     })
   end
 
-  it 'matches valid manifest filepaths' do
-    expect(described_class.match?('REQUIRE')).to be_truthy
+  it "matches valid manifest filepaths" do
+    expect(described_class.match?("REQUIRE")).to be_truthy
   end
 end
