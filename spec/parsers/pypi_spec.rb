@@ -137,8 +137,8 @@ git://what@::/:/:/
         { name: "Jinja2", requirement: "*", type: "runtime" },
         { name: "pip-tools", requirement: "*", type: "runtime" },
       ],
-      kind: "manifest",
-      success: true,
+      kind: 'manifest',
+      success: true
     })
   end
   it "parses dependencies from requirements.txt as lockfile because of pip-compile" do
@@ -288,6 +288,8 @@ git://what@::/:/:/
         { name: "python", requirement: "^3.7", type: "runtime" },
         { name: "django", requirement: "^3.0.7", type: "runtime" },
         { name: "pytest", requirement: "^5.2", type: "develop" },
+        { name: "wcwidth", requirement: "*", type: "develop" },
+        { name: "sqlparse", requirement: "0.3.1", type: "test" },
       ],
       kind: "manifest",
       success: true,
