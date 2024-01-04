@@ -9,5 +9,29 @@ require (
   github.com/replicon/fast-archiver v0.0.0-20121220195659-060bf9adec25 // indirect
   gopkg.in/yaml.v1 v1.0.0-20140924161607-9f9df34309c0
 )
+
+require golang.org/x/net v1.2.3
+
 exclude old/thing 1.2.3
+
+exclude (
+  older/thing 4.5.6
+)
+
 replace bad/thing v1.4.5 => good/thing v1.4.5
+
+replace (
+    golang.org/x/net v1.2.3 => example.com/fork/net v1.4.5
+    golang.org/x/net => example.com/fork/net v1.4.5
+    golang.org/x/net v1.2.3 => ./fork/net
+    golang.org/x/net => ./fork/net
+)
+
+retract v1.0.0
+
+retract [v2.0.0, v1.9.9]
+
+retract (
+    v1.0.0
+    [v1.0.0, v1.9.9]
+)

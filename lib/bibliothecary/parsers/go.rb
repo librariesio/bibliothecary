@@ -7,8 +7,12 @@ module Bibliothecary
       include Bibliothecary::Analyser
 
       GPM_REGEXP = /^(.+)\s+(.+)$/
-      GOMOD_REGEX = /^(require\s+)?(.+)\s+(.+)$/
-      GOMOD_IGNORABLE_REGEX = /^(\/\/|module\s|go\s|exclude\s|replace\s|require\s+\(|\))/m
+      GOMOD_REPLACEMENT_SEPARATOR_REGEX = / => /
+      GOMOD_DEP_REGEX = /(?<name>\S+)\s?(?<requirement>[^ =>]+)?/
+      GOMOD_SINGLELINE_DEP_REGEX = /^(?<category>require|exclude|replace|retract)\s+#{GOMOD_DEP_REGEX}.*$/
+      GOMOD_MULTILINE_START_REGEX = /^(?<category>require|exclude|replace|retract)\s+\(/
+      GOMOD_MULTILINE_END_REGEX = /^\)/
+      GOMOD_MULTILINE_DEP_REGEX = /^#{GOMOD_DEP_REGEX}.*$/
       GOSUM_REGEX = /^(.+)\s+(.+)\s+(.+)$/
 
       def self.mapping
@@ -120,18 +124,45 @@ module Bibliothecary
       end
 
       def self.parse_go_mod(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
-        deps = []
+        categorized_deps = parse_go_mod_categorized_deps(file_contents)
+
+        deps = categorized_deps["require"]
+          .map do |dep|
+            # A "replace" directive doesn't add the dep to the module graph unless the original dep is also in a "require" directive,
+            # so we need to track down replacements here and use those instead of the originals, if present.
+            replaced_dep = categorized_deps["replace"]
+              .find do |replacement_dep| 
+                replacement_dep[:original_name] == dep[:name] && 
+                  (replacement_dep[:original_requirement] == "*" || replacement_dep[:original_requirement] == dep[:requirement])
+              end
+              
+            replaced_dep || dep
+          end
+
+        return deps
+      end
+
+      def self.parse_go_mod_categorized_deps(file_contents)
+        current_multiline_category = nil
+        # docs: https://go.dev/ref/mod#go-mod-file-require
+        categorized_deps = {
+          "require" => [],
+          "exclude" => [], # these deps are not necessarily used by the module
+          "replace" => [], # these deps are not necessarily used by the module
+          "retract" => [], # TODO: these are not parsed correctly right now, but they shouldn't be returned in list of deps anyway.
+        }
         file_contents.lines.map(&:strip).each do |line|
-          next if line.match(GOMOD_IGNORABLE_REGEX)
-          if (match = line.gsub(/(\/\/(.*))/, "").match(GOMOD_REGEX))
-            deps << {
-              name: match[2].strip,
-              requirement: match[3].strip || "*",
-              type: "runtime",
-            }
+          if line.match(GOMOD_MULTILINE_END_REGEX) # detect the end of a multiline
+            current_multiline_category = nil
+          elsif (match = line.match(GOMOD_MULTILINE_START_REGEX)) # or, detect the start of a multiline
+            current_multiline_category = match[1]
+          elsif (match = line.match(GOMOD_SINGLELINE_DEP_REGEX)) # or, detect a singleline dep
+            categorized_deps[match[:category]] << go_mod_category_relative_dep(match[:category], line, match)
+          elsif (current_multiline_category && match = line.gsub(/(\/\/(.*))/, "").match(GOMOD_MULTILINE_DEP_REGEX)) # otherwise, parse the multiline dep
+            categorized_deps[current_multiline_category] << go_mod_category_relative_dep(current_multiline_category, line, match) 
           end
         end
-        deps
+        categorized_deps
       end
 
       def self.parse_go_sum(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
@@ -160,6 +191,34 @@ module Bibliothecary
             name: dependency[dep_attr_name],
             requirement: dependency[version_attr_name]  || "*",
             type: type,
+          }
+        end
+      end
+
+      def self.go_mod_category_relative_dep(category, line, match)
+        case category
+        when "replace" 
+          replacement_dep = line.split(GOMOD_REPLACEMENT_SEPARATOR_REGEX, 2).last
+          replacement_match = replacement_dep.match(GOMOD_DEP_REGEX)
+          {
+            original_name: match[:name],
+            original_requirement: match[:requirement] || "*",
+            name: replacement_match[:name],
+            requirement: replacement_match[:requirement] || "*",
+            type: "runtime",
+          }
+        when "retract"
+          {
+            name: match[:name],
+            requirement: match[:requirement] || "*",
+            type: "runtime",
+            deprecated: true,
+          }
+        else
+          {
+            name: match[:name],
+            requirement: match[:requirement] || "*",
+            type: "runtime",
           }
         end
       end
