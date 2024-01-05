@@ -13,6 +13,7 @@ module Bibliothecary
       GOMOD_MULTILINE_DEP_REGEXP = /^#{GOMOD_DEP_REGEXP}.*$/
       GOMOD_MULTILINE_START_REGEXP = /^(?<category>require|exclude|replace|retract)\s+\(/
       GOMOD_MULTILINE_END_REGEXP = /^\)/
+      GOMOD_COMMENT_REGEXP = /(\/\/(.*))/
       GOSUM_REGEXP = /^(.+)\s+(.+)\s+(.+)$/
 
       def self.mapping
@@ -151,17 +152,21 @@ module Bibliothecary
           "replace" => [], # these deps are not necessarily used by the module
           "retract" => [], # TODO: these are not parsed correctly right now, but they shouldn't be returned in list of deps anyway.
         }
-        file_contents.lines.map(&:strip).each do |line|
-          if line.match(GOMOD_MULTILINE_END_REGEXP) # detect the end of a multiline
-            current_multiline_category = nil
-          elsif (match = line.match(GOMOD_MULTILINE_START_REGEXP)) # or, detect the start of a multiline
-            current_multiline_category = match[1]
-          elsif (match = line.match(GOMOD_SINGLELINE_DEP_REGEXP)) # or, detect a singleline dep
-            categorized_deps[match[:category]] << go_mod_category_relative_dep(category: match[:category], line: line, match: match)
-          elsif (current_multiline_category && match = line.gsub(/(\/\/(.*))/, "").match(GOMOD_MULTILINE_DEP_REGEXP)) # otherwise, parse the multiline dep
-            categorized_deps[current_multiline_category] << go_mod_category_relative_dep(category: current_multiline_category, line: line, match: match) 
+        file_contents
+          .lines
+          .reject { |line| line =~ /^#{GOMOD_COMMENT_REGEXP}/ } # ignore comment lines
+          .map { |line| line.strip.gsub(GOMOD_COMMENT_REGEXP, "") } # strip out trailing comments
+          .each do |line|
+            if line.match(GOMOD_MULTILINE_END_REGEXP) # detect the end of a multiline
+              current_multiline_category = nil
+            elsif (match = line.match(GOMOD_MULTILINE_START_REGEXP)) # or, detect the start of a multiline
+              current_multiline_category = match[1]
+            elsif (match = line.match(GOMOD_SINGLELINE_DEP_REGEXP)) # or, detect a singleline dep
+              categorized_deps[match[:category]] << go_mod_category_relative_dep(category: match[:category], line: line, match: match)
+            elsif (current_multiline_category && match = line.match(GOMOD_MULTILINE_DEP_REGEXP)) # otherwise, parse the multiline dep
+              categorized_deps[current_multiline_category] << go_mod_category_relative_dep(category: current_multiline_category, line: line, match: match) 
+            end
           end
-        end
         categorized_deps
       end
 
