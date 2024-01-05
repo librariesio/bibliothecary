@@ -7,13 +7,13 @@ module Bibliothecary
       include Bibliothecary::Analyser
 
       GPM_REGEXP = /^(.+)\s+(.+)$/
-      GOMOD_REPLACEMENT_SEPARATOR_REGEX = / => /
-      GOMOD_DEP_REGEX = /(?<name>\S+)\s?(?<requirement>[^ =>]+)?/
-      GOMOD_SINGLELINE_DEP_REGEX = /^(?<category>require|exclude|replace|retract)\s+#{GOMOD_DEP_REGEX}.*$/
-      GOMOD_MULTILINE_START_REGEX = /^(?<category>require|exclude|replace|retract)\s+\(/
-      GOMOD_MULTILINE_END_REGEX = /^\)/
-      GOMOD_MULTILINE_DEP_REGEX = /^#{GOMOD_DEP_REGEX}.*$/
-      GOSUM_REGEX = /^(.+)\s+(.+)\s+(.+)$/
+      GOMOD_REPLACEMENT_SEPARATOR_REGEXP = /\s=>\s/
+      GOMOD_DEP_REGEXP = /(?<name>\S+)\s?(?<requirement>[^\s=>]+)?/ # the " =>" negative character class is to make sure we don't capture the delimiter for "replace" deps
+      GOMOD_SINGLELINE_DEP_REGEXP = /^(?<category>require|exclude|replace|retract)\s+#{GOMOD_DEP_REGEXP}.*$/
+      GOMOD_MULTILINE_DEP_REGEXP = /^#{GOMOD_DEP_REGEXP}.*$/
+      GOMOD_MULTILINE_START_REGEXP = /^(?<category>require|exclude|replace|retract)\s+\(/
+      GOMOD_MULTILINE_END_REGEXP = /^\)/
+      GOSUM_REGEXP = /^(.+)\s+(.+)\s+(.+)$/
 
       def self.mapping
         {
@@ -152,14 +152,14 @@ module Bibliothecary
           "retract" => [], # TODO: these are not parsed correctly right now, but they shouldn't be returned in list of deps anyway.
         }
         file_contents.lines.map(&:strip).each do |line|
-          if line.match(GOMOD_MULTILINE_END_REGEX) # detect the end of a multiline
+          if line.match(GOMOD_MULTILINE_END_REGEXP) # detect the end of a multiline
             current_multiline_category = nil
-          elsif (match = line.match(GOMOD_MULTILINE_START_REGEX)) # or, detect the start of a multiline
+          elsif (match = line.match(GOMOD_MULTILINE_START_REGEXP)) # or, detect the start of a multiline
             current_multiline_category = match[1]
-          elsif (match = line.match(GOMOD_SINGLELINE_DEP_REGEX)) # or, detect a singleline dep
-            categorized_deps[match[:category]] << go_mod_category_relative_dep(match[:category], line, match)
-          elsif (current_multiline_category && match = line.gsub(/(\/\/(.*))/, "").match(GOMOD_MULTILINE_DEP_REGEX)) # otherwise, parse the multiline dep
-            categorized_deps[current_multiline_category] << go_mod_category_relative_dep(current_multiline_category, line, match) 
+          elsif (match = line.match(GOMOD_SINGLELINE_DEP_REGEXP)) # or, detect a singleline dep
+            categorized_deps[match[:category]] << go_mod_category_relative_dep(category: match[:category], line: line, match: match)
+          elsif (current_multiline_category && match = line.gsub(/(\/\/(.*))/, "").match(GOMOD_MULTILINE_DEP_REGEXP)) # otherwise, parse the multiline dep
+            categorized_deps[current_multiline_category] << go_mod_category_relative_dep(category: current_multiline_category, line: line, match: match) 
           end
         end
         categorized_deps
@@ -168,7 +168,7 @@ module Bibliothecary
       def self.parse_go_sum(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         deps = []
         file_contents.lines.map(&:strip).each do |line|
-          if (match = line.match(GOSUM_REGEX))
+          if (match = line.match(GOSUM_REGEXP))
             deps << {
               name: match[1].strip,
               requirement: match[2].strip.split("/").first || "*",
@@ -195,11 +195,12 @@ module Bibliothecary
         end
       end
 
-      def self.go_mod_category_relative_dep(category, line, match)
+      # Returns our standard-ish dep Hash based on the category of dep matched ("require", "replace", etc.)
+      def self.go_mod_category_relative_dep(category:, line:, match:)
         case category
         when "replace" 
-          replacement_dep = line.split(GOMOD_REPLACEMENT_SEPARATOR_REGEX, 2).last
-          replacement_match = replacement_dep.match(GOMOD_DEP_REGEX)
+          replacement_dep = line.split(GOMOD_REPLACEMENT_SEPARATOR_REGEXP, 2).last
+          replacement_match = replacement_dep.match(GOMOD_DEP_REGEXP)
           {
             original_name: match[:name],
             original_requirement: match[:requirement] || "*",
