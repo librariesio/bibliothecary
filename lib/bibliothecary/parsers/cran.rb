@@ -5,7 +5,7 @@ module Bibliothecary
     class CRAN
       include Bibliothecary::Analyser
 
-      REQUIRE_REGEXP = /([a-zA-Z0-9\-_\.]+)\s?\(?([><=\s\d\.,]+)?\)?/
+      REQUIRE_REGEXP = %r{([a-zA-Z0-9\-_\.]+)\s?\(?([><=\s\d\.,]+)?\)?}
 
       def self.mapping
         {

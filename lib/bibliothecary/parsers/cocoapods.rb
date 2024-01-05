@@ -8,7 +8,7 @@ module Bibliothecary
       extend Bibliothecary::MultiParsers::BundlerLikeManifest
 
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
-      NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
+      NAME_VERSION_4 = %r{^ {4}#{NAME_VERSION}$}
 
       def self.mapping
         {
@@ -39,7 +39,7 @@ module Bibliothecary
         manifest = YAML.load file_contents
         manifest["PODS"].map do |row|
           pod = row.is_a?(String) ? row : row.keys.first
-          match = pod.match(/(.+?)\s\((.+?)\)/i)
+          match = pod.match(%r{(.+?)\s\((.+?)\)}i)
           {
             name: match[1].split("/").first,
             requirement: match[2],

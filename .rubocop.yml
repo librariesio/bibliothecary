@@ -36,9 +36,10 @@ Metrics/ParameterLists:
 Style/Documentation:
   Enabled: false
 
-# differences from standard ruby style guide.
+# differences from standard ruby style guide
 Style/RegexpLiteral:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: percent_r
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 Style/TrailingCommaInArrayLiteral:

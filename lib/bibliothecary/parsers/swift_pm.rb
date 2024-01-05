@@ -21,7 +21,7 @@ module Bibliothecary
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.swift_parser_host}/to-json", response.response_code) unless response.success?
         json = JSON.parse(response.body)
         json["dependencies"].map do |dependency|
-          name = dependency["url"].gsub(/^https?:\/\//, "").gsub(/\.git$/,"")
+          name = dependency["url"].gsub(%r{^https?://}, "").gsub(%r{\.git$},"")
           version = "#{dependency['version']['lowerBound']} - #{dependency['version']['upperBound']}"
           {
             name: name,

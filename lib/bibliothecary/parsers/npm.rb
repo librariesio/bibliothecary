@@ -76,7 +76,7 @@ module Bibliothecary
       def self.parse_package_lock_deps_recursively(dependencies, depth=1)
         dependencies.flat_map do |name, requirement|
           type = requirement.fetch("dev", false) ? "development" : "runtime"
-          version = requirement.key?("from") ? requirement["from"][/#(?:semver:)?v?(.*)/, 1] : nil
+          version = requirement.key?("from") ? requirement["from"][%r{#(?:semver:)?v?(.*)}, 1] : nil
           version ||= requirement["version"].split("#").last
           child_dependencies = if depth >= PACKAGE_LOCK_JSON_MAX_DEPTH
             []

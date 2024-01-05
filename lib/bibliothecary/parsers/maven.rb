@@ -11,19 +11,19 @@ module Bibliothecary
       include Bibliothecary::Analyser
 
       # e.g. "annotationProcessor - Annotation processors and their dependencies for source set 'main'."
-      GRADLE_TYPE_REGEX = /^(\w+)/
+      GRADLE_TYPE_REGEX = %r{^(\w+)}
 
       # e.g. "|    \\--- com.google.guava:guava:23.5-jre (*)"
-      GRADLE_DEP_REGEX = /(\+---|\\---){1}/
+      GRADLE_DEP_REGEX = %r{(\+---|\\---){1}}
 
       # Dependencies that are on-disk projects, eg:
       # e.g. "\--- project :api:my-internal-project"
       # e.g. "+--- my-group:my-alias:1.2.3 -> project :client (*)"
-      GRADLE_PROJECT_REGEX = /project :(\S+)?/
+      GRADLE_PROJECT_REGEX = %r{project :(\S+)?}
 
       # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
       # e.g. the "(n)" in "+--- my-group:my-name:1.2.3 (n)"
-      GRADLE_LINE_ENDING_REGEX = /(\((c|n|\*)\))$/
+      GRADLE_LINE_ENDING_REGEX = %r{(\((c|n|\*)\))$}
 
       # Builtin methods: https://docs.gradle.org/current/userguide/java_plugin.html#tab:configurations
       # Deprecated methods: https://docs.gradle.org/current/userguide/upgrading_version_6.html#sec:configuration_removal
@@ -32,30 +32,30 @@ module Bibliothecary
       # Intentionally overly-simplified regexes to scrape deps from build.gradle (Groovy) and build.gradle.kts (Kotlin) files.
       # To be truly useful bibliothecary would need full Groovy / Kotlin parsers that speaks Gradle,
       # because the Groovy and Kotlin DSLs have many dynamic ways of declaring dependencies.
-      GRADLE_VERSION_REGEX = /[\w.-]+/ # e.g. '1.2.3'
-      GRADLE_VAR_INTERPOLATION_REGEX = /\$\w+/ # e.g. '$myVersion'
-      GRADLE_CODE_INTERPOLATION_REGEX = /\$\{.*\}/ # e.g. '${my-project-settings["version"]}'
-      GRADLE_GAV_REGEX = /([\w.-]+)\:([\w.-]+)(?:\:(#{GRADLE_VERSION_REGEX}|#{GRADLE_VAR_INTERPOLATION_REGEX}|#{GRADLE_CODE_INTERPOLATION_REGEX}))?/ # e.g. "group:artifactId:1.2.3"
-      GRADLE_GROOVY_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(?\s*['"]#{GRADLE_GAV_REGEX}['"]/m
-      GRADLE_KOTLIN_SIMPLE_REGEX = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(\s*"#{GRADLE_GAV_REGEX}"/m
+      GRADLE_VERSION_REGEX = %r{[\w.-]+} # e.g. '1.2.3'
+      GRADLE_VAR_INTERPOLATION_REGEX = %r{\$\w+} # e.g. '$myVersion'
+      GRADLE_CODE_INTERPOLATION_REGEX = %r{\$\{.*\}} # e.g. '${my-project-settings["version"]}'
+      GRADLE_GAV_REGEX = %r{([\w.-]+)\:([\w.-]+)(?:\:(#{GRADLE_VERSION_REGEX}|#{GRADLE_VAR_INTERPOLATION_REGEX}|#{GRADLE_CODE_INTERPOLATION_REGEX}))?} # e.g. "group:artifactId:1.2.3"
+      GRADLE_GROOVY_SIMPLE_REGEX = %r{(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(?\s*['"]#{GRADLE_GAV_REGEX}['"]}m
+      GRADLE_KOTLIN_SIMPLE_REGEX = %r{(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(\s*"#{GRADLE_GAV_REGEX}"}m
 
-      MAVEN_PROPERTY_REGEX = /\$\{(.+?)\}/
+      MAVEN_PROPERTY_REGEX = %r{\$\{(.+?)\}}
       MAX_DEPTH = 5
 
       # e.g. "[info]  test:"
-      SBT_TYPE_REGEX = /^\[info\]\s+([-\w]+):$/
+      SBT_TYPE_REGEX = %r{^\[info\]\s+([-\w]+):$}
 
       # e.g. "[info]  org.typelevel:spire-util_2.12"
-      SBT_DEP_REGEX = /^\[info\]\s+(.+)$/
+      SBT_DEP_REGEX = %r{^\[info\]\s+(.+)$}
 
       # e.g. "[info] 		- 1.7.5"
-      SBT_VERSION_REGEX = /^\[info\]\s+-\s+(.+)$/
+      SBT_VERSION_REGEX = %r{^\[info\]\s+-\s+(.+)$}
 
       # e.g. "[info] 			homepage: http://www.slf4j.org"
-      SBT_FIELD_REGEX = /^\[info\]\s+([^:]+):\s+(.+)$/
+      SBT_FIELD_REGEX = %r{^\[info\]\s+([^:]+):\s+(.+)$}
 
       # e.g. "[info]  "
-      SBT_IGNORE_REGEX = /^\[info\]\s*$/
+      SBT_IGNORE_REGEX = %r{^\[info\]\s*$}
 
       def self.mapping
         {
@@ -170,14 +170,14 @@ module Bibliothecary
             next if project_match[1].nil?
 
             # project names can have colons (e.g. for gradle projects in subfolders), which breaks maven artifact naming assumptions, so just replace them with hyphens.
-            project_name = project_match[1].gsub(/:/, "-")
+            project_name = project_match[1].gsub(%r{:}, "-")
             line = line.sub(GRADLE_PROJECT_REGEX, "internal:#{project_name}:1.0.0")
           end
 
           dep = line
             .split(split)[1]
             .sub(GRADLE_LINE_ENDING_REGEX, "")
-            .sub(/ FAILED$/, "") # dependency could not be resolved (but still may have a version)
+            .sub(%r{ FAILED$}, "") # dependency could not be resolved (but still may have a version)
             .sub(" -> ", ":") # handle version arrow syntax
             .strip
             .split(":")
@@ -227,8 +227,8 @@ module Bibliothecary
 
       def self.parse_maven_tree(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         captures = Strings::ANSI.sanitize(file_contents)
-          .gsub(/\r\n?/, "\n")
-          .scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/)
+          .gsub(%r{\r\n?}, "\n")
+          .scan(%r{^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)})
           .flatten
           .uniq
 
@@ -256,7 +256,7 @@ module Bibliothecary
       def self.parse_resolved_dep_line(line)
         # filter out anything that doesn't look like a
         # resolved dep line
-        return unless line[/  .*:[^-]+-- /]
+        return unless line[%r{  .*:[^-]+-- }]
 
         dep_parts = line.strip.split(":")
         return unless dep_parts.length == 5
@@ -350,9 +350,9 @@ module Bibliothecary
         # Strip comments, and single/doublequotes
         [group, name].map do |part|
           part
-            .gsub(/\s*\/\/.*$/, "") # Comments
-            .gsub(/^["']/, "") # Beginning single/doublequotes
-            .gsub(/["']$/, "") # Ending single/doublequotes
+            .gsub(%r{\s*//.*$}, "") # Comments
+            .gsub(%r{^["']}, "") # Beginning single/doublequotes
+            .gsub(%r{["']$}, "") # Ending single/doublequotes
         end.join(":")
       end
 
@@ -407,8 +407,8 @@ module Bibliothecary
 
         prop_field = xml.properties.locate(property_name).first if xml.respond_to?("properties")
         parent_prop = parent_properties[property_name] ||                 # e.g. "${foo}"
-          parent_properties[property_name.sub(/^project\./, "")] ||       # e.g. "${project.foo}"
-          parent_properties[property_name.sub(/^project\.parent\./, "")]  # e.g. "${project.parent.foo}"
+          parent_properties[property_name.sub(%r{^project\.}, "")] ||       # e.g. "${project.foo}"
+          parent_properties[property_name.sub(%r{^project\.parent\.}, "")]  # e.g. "${project.parent.foo}"
 
         if prop_field
           prop_field.nodes.first

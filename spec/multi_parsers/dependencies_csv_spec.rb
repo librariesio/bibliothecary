@@ -24,7 +24,7 @@ meow,woof,2.2.0
     end
 
     it "raises an error" do
-      expect { parser.parse_dependencies_csv(csv, options: options) }.to raise_error(/Missing required headers platform, name/)
+      expect { parser.parse_dependencies_csv(csv, options: options) }.to raise_error(%r{Missing required headers platform, name})
     end
   end
 
@@ -38,7 +38,7 @@ meow,wow,2.2.0
     end
 
     it "raises an error" do
-      expect { parser.parse_dependencies_csv(csv, options: options) }.to raise_error(/Missing required field 'platform' on line 3/)
+      expect { parser.parse_dependencies_csv(csv, options: options) }.to raise_error(%r{Missing required field 'platform' on line 3})
     end
   end
 

@@ -17,7 +17,7 @@ Dir[File.expand_path("../bibliothecary/parsers/*.rb", __FILE__)].each do |file|
 end
 
 module Bibliothecary
-  VERSION_OPERATORS = /[~^<>*"]/
+  VERSION_OPERATORS = %r{[~^<>*"]}
 
   def self.analyse(path, ignore_unparseable_files: true)
     runner.analyse(path, ignore_unparseable_files: ignore_unparseable_files)
@@ -80,7 +80,7 @@ module Bibliothecary
     string
       .dup # ensure we don't have a frozen string
       .force_encoding("UTF-8") # treat all strings as utf8
-      .sub(/^\xEF\xBB\xBF/, "") # remove any Byte Order Marks so JSON, etc don't fail while parsing them.
+      .sub(%r{^\xEF\xBB\xBF}, "") # remove any Byte Order Marks so JSON, etc don't fail while parsing them.
   end
 
   class << self

@@ -60,7 +60,7 @@ module Bibliothecary
       # so we return the Drupal requirement instead of semver requirement if it's here
       # (https://www.drupal.org/docs/develop/using-composer/using-composer-to-install-drupal-and-manage-dependencies#s-about-semantic-versioning)
       private_class_method def self.is_drupal_module(dependency)
-        dependency["type"] =~ /drupal/ && dependency.dig("source", "reference")
+        dependency["type"] =~ %r{drupal} && dependency.dig("source", "reference")
       end
     end
   end

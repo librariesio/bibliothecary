@@ -86,7 +86,7 @@ module Bibliothecary
         # the C xml parser also puts a newline at the end of the message
         location = e.backtrace_locations[0]
           .to_s
-          .then { |l| l =~ /bibliothecary\// ? l.split("bibliothecary/").last : l.split("gems/").last }
+          .then { |l| l =~ %r{bibliothecary/} ? l.split("bibliothecary/").last : l.split("gems/").last }
         raise Bibliothecary::FileParsingError.new(e.message.strip, filename, location)
       end
 

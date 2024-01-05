@@ -29,19 +29,19 @@ module Bibliothecary
         HEADERS = {
           "platform" => {
             match: [
-              /^platform$/i,
+              %r{^platform$}i,
             ],
           },
           "name" => {
             match: [
-              /^name$/i,
+              %r{^name$}i,
             ],
           },
           # Lockfiles have exact versions.
           "lockfile_requirement" => {
             match: [
-              /^(lockfile |)requirement$/i,
-              /^version$/i,
+              %r{^(lockfile |)requirement$}i,
+              %r{^version$}i,
             ],
           },
           # Manifests have versions that can have operators.
@@ -51,15 +51,15 @@ module Bibliothecary
           # when processing dependencies.csv for now.
           "requirement" => {
             match: [
-              /^(lockfile |)requirement$/i,
-              /^version$/i,
+              %r{^(lockfile |)requirement$}i,
+              %r{^version$}i,
             ],
           },
           "type" => {
             default: "runtime",
             match: [
-              /^(lockfile |)type$/i,
-              /^(manifest |)type$/i,
+              %r{^(lockfile |)type$}i,
+              %r{^(manifest |)type$}i,
             ],
           },
         }

@@ -3,19 +3,19 @@ module Bibliothecary
     class Pypi
       include Bibliothecary::Analyser
 
-      INSTALL_REGEXP = /install_requires\s*=\s*\[([\s\S]*?)\]/
+      INSTALL_REGEXP = %r{install_requires\s*=\s*\[([\s\S]*?)\]}
 
       # Capture Group 1 is package.
       # Optional Group 2 is [extras].
       # Capture Group 3 is Version
-      REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)(?:\[.*?\])*([><=\w\.,]+)?/
+      REQUIRE_REGEXP = %r{([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)(?:\[.*?\])*([><=\w\.,]+)?}
 
-      REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
-      MANIFEST_REGEXP = /.*require[^\/]*(\/)?[^\/]*\.(txt|pip|in)$/
-      PIP_COMPILE_REGEXP = /.*require.*$/
+      REQUIREMENTS_REGEXP = %r{^#{REQUIRE_REGEXP}}
+      MANIFEST_REGEXP = %r{.*require[^/]*(/)?[^/]*\.(txt|pip|in)$}
+      PIP_COMPILE_REGEXP = %r{.*require.*$}
 
       # Adapted from https://peps.python.org/pep-0508/#names
-      PEP_508_NAME_REGEX = /^([A-Z0-9][A-Z0-9._-]*[A-Z0-9]|[A-Z0-9])/i
+      PEP_508_NAME_REGEX = %r{^([A-Z0-9][A-Z0-9._-]*[A-Z0-9]|[A-Z0-9])}i
 
       def self.mapping
         {
@@ -206,8 +206,8 @@ module Bibliothecary
         match = file_contents.match(INSTALL_REGEXP)
         return [] unless match
         deps = []
-        match[1].gsub(/',(\s)?'/, "\n").split("\n").each do |line|
-          next if line.match(/^#/)
+        match[1].gsub(%r{',(\s)?'}, "\n").split("\n").each do |line|
+          next if line.match(%r{^#})
           match = line.match(REQUIRE_REGEXP)
           next unless match
           deps << {
@@ -232,9 +232,9 @@ module Bibliothecary
       def self.parse_requirements_txt(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         deps = []
         type = case options[:filename]
-               when /dev/ || /docs/ || /tools/
+               when %r{dev} || %r{docs} || %r{tools}
                  "development"
-               when /test/
+               when %r{test}
                  "test"
                else
                  "runtime"
@@ -269,10 +269,10 @@ module Bibliothecary
         uri = URI.parse(url)
         raise NoEggSpecified, "No egg specified in #{url}" unless uri.fragment
 
-        name = uri.fragment[/^egg=([^&]+)([&]|$)/, 1]
+        name = uri.fragment[%r{^egg=([^&]+)([&]|$)}, 1]
         raise NoEggSpecified, "No egg specified in #{url}" unless name
 
-        requirement = uri.path[/@(.+)$/, 1]
+        requirement = uri.path[%r{@(.+)$}, 1]
 
         { name: name, requirement: requirement || "*" }
       end
@@ -290,7 +290,7 @@ module Bibliothecary
       # Leaves the rest as-is with any leading semicolons or spaces stripped
       def self.parse_pep_508_dep_spec(dep)
         name, requirement = dep.split(PEP_508_NAME_REGEX, 2).last(2).map(&:strip)
-        requirement = requirement.sub(/^[\s;]*/, "")
+        requirement = requirement.sub(%r{^[\s;]*}, "")
         requirement = "*" if requirement == ""
         return name, requirement
       end

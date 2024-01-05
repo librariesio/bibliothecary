@@ -6,10 +6,10 @@ module Bibliothecary
     class Go
       include Bibliothecary::Analyser
 
-      GPM_REGEXP = /^(.+)\s+(.+)$/
-      GOMOD_REGEX = /^(require\s+)?(.+)\s+(.+)$/
-      GOMOD_IGNORABLE_REGEX = /^(\/\/|module\s|go\s|exclude\s|replace\s|require\s+\(|\))/m
-      GOSUM_REGEX = /^(.+)\s+(.+)\s+(.+)$/
+      GPM_REGEXP = %r{^(.+)\s+(.+)$}
+      GOMOD_REGEX = %r{^(require\s+)?(.+)\s+(.+)$}
+      GOMOD_IGNORABLE_REGEX = %r{^(//|module\s|go\s|exclude\s|replace\s|require\s+\(|\))}m
+      GOSUM_REGEX = %r{^(.+)\s+(.+)\s+(.+)$}
 
       def self.mapping
         {
@@ -77,7 +77,7 @@ module Bibliothecary
       def self.parse_gpm(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         deps = []
         file_contents.split("\n").each do |line|
-          match = line.gsub(/(\#(.*))/, "").match(GPM_REGEXP)
+          match = line.gsub(%r{(\#(.*))}, "").match(GPM_REGEXP)
           next unless match
           deps << {
             name: match[1].strip,
@@ -123,7 +123,7 @@ module Bibliothecary
         deps = []
         file_contents.lines.map(&:strip).each do |line|
           next if line.match(GOMOD_IGNORABLE_REGEX)
-          if (match = line.gsub(/(\/\/(.*))/, "").match(GOMOD_REGEX))
+          if (match = line.gsub(%r{(//(.*))}, "").match(GOMOD_REGEX))
             deps << {
               name: match[2].strip,
               requirement: match[3].strip || "*",

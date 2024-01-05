@@ -17,9 +17,9 @@ module Bibliothecary
       def self.parse_require(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         deps = []
         file_contents.split("\n").each do |line|
-          next if line.match(/^#/) || line.empty?
-          split = line.split(/\s/)
-          if line.match(/^@/)
+          next if line.match(%r{^#}) || line.empty?
+          split = line.split(%r{\s})
+          if line.match(%r{^@})
             name = split[1]
             reqs = split[2, split.length].join(" ")
           else

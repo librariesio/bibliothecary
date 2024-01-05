@@ -12,16 +12,16 @@ module Bibliothecary
       include Bibliothecary::Analyser::TryCache
 
       # e.g. 'SomeText:' (allowing for leading whitespace)
-      WELLFORMED_LINE_REGEX = /^\s*[a-zA-Z]+:/
+      WELLFORMED_LINE_REGEX = %r{^\s*[a-zA-Z]+:}
 
       # e.g. 'PackageName: (allowing for excessive whitespace)
-      PACKAGE_NAME_REGEX = /^\s*PackageName:\s*(.*)/
+      PACKAGE_NAME_REGEX = %r{^\s*PackageName:\s*(.*)}
 
       # e.g. 'PackageVersion:' (allowing for excessive whitespace)
-      PACKAGE_VERSION_REGEX =/^\s*PackageVersion:\s*(.*)/
+      PACKAGE_VERSION_REGEX =%r{^\s*PackageVersion:\s*(.*)}
 
       # e.g. "ExternalRef: PACKAGE-MANAGER purl (allowing for excessive whitespace)
-      PURL_REGEX = /^\s*ExternalRef:\s*PACKAGE[-|_]MANAGER\s*purl\s*(.*)/
+      PURL_REGEX = %r{^\s*ExternalRef:\s*PACKAGE[-|_]MANAGER\s*purl\s*(.*)}
 
       NoEntries = Class.new(StandardError)
       MalformedFile = Class.new(StandardError)

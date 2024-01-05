@@ -7,8 +7,8 @@ module Bibliothecary
       extend Bibliothecary::MultiParsers::BundlerLikeManifest
 
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
-      NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
-      BUNDLED_WITH = /BUNDLED WITH/
+      NAME_VERSION_4 = %r{^ {4}#{NAME_VERSION}$}
+      BUNDLED_WITH = %r{BUNDLED WITH}
 
       def self.mapping
         {
@@ -42,7 +42,7 @@ module Bibliothecary
 
           if match
             name = match[1]
-            version = match[2].gsub(/\(|\)/,"")
+            version = match[2].gsub(%r{\(|\)},"")
             {
               name: name,
               requirement: version,

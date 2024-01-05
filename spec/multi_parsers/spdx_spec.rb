@@ -107,7 +107,7 @@ describe Bibliothecary::MultiParsers::Spdx do
 
   context "correct parsers implement it" do
     Bibliothecary::PURL_TYPE_MAPPING.each_value do |parser|
-      constant_symbol = Bibliothecary::Parsers.constants.find { |c| c.to_s.downcase.gsub(/[^a-z]/, "") == parser.to_s.downcase.gsub(/[^a-z]/, "") }
+      constant_symbol = Bibliothecary::Parsers.constants.find { |c| c.to_s.downcase.gsub(%r{[^a-z]}, "") == parser.to_s.downcase.gsub(%r{[^a-z]}, "") }
       constant = Bibliothecary::Parsers.const_get(constant_symbol)
 
       # only analyzers have platform_name on the class
