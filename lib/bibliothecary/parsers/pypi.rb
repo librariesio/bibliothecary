@@ -15,7 +15,7 @@ module Bibliothecary
       PIP_COMPILE_REGEXP = /.*require.*$/
 
       # Adapted from https://peps.python.org/pep-0508/#names
-      PEP_508_NAME_REGEX = /^([A-Z0-9][A-Z0-9._-]*[A-Z0-9]|[A-Z0-9])/i
+      PEP_508_NAME_REGEXP = /^([A-Z0-9][A-Z0-9._-]*[A-Z0-9]|[A-Z0-9])/i
 
       def self.mapping
         {
@@ -289,7 +289,7 @@ module Bibliothecary
       # Simply parses out the name of a PEP 508 Dependency specification: https://peps.python.org/pep-0508/
       # Leaves the rest as-is with any leading semicolons or spaces stripped
       def self.parse_pep_508_dep_spec(dep)
-        name, requirement = dep.split(PEP_508_NAME_REGEX, 2).last(2).map(&:strip)
+        name, requirement = dep.split(PEP_508_NAME_REGEXP, 2).last(2).map(&:strip)
         requirement = requirement.sub(/^[\s;]*/, "")
         requirement = "*" if requirement == ""
         return name, requirement

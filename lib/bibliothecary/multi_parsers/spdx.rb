@@ -12,16 +12,16 @@ module Bibliothecary
       include Bibliothecary::Analyser::TryCache
 
       # e.g. 'SomeText:' (allowing for leading whitespace)
-      WELLFORMED_LINE_REGEX = /^\s*[a-zA-Z]+:/
+      WELLFORMED_LINE_REGEXP = /^\s*[a-zA-Z]+:/
 
       # e.g. 'PackageName: (allowing for excessive whitespace)
-      PACKAGE_NAME_REGEX = /^\s*PackageName:\s*(.*)/
+      PACKAGE_NAME_REGEXP = /^\s*PackageName:\s*(.*)/
 
       # e.g. 'PackageVersion:' (allowing for excessive whitespace)
-      PACKAGE_VERSION_REGEX =/^\s*PackageVersion:\s*(.*)/
+      PACKAGE_VERSION_REGEXP =/^\s*PackageVersion:\s*(.*)/
 
       # e.g. "ExternalRef: PACKAGE-MANAGER purl (allowing for excessive whitespace)
-      PURL_REGEX = /^\s*ExternalRef:\s*PACKAGE[-|_]MANAGER\s*purl\s*(.*)/
+      PURL_REGEXP = /^\s*ExternalRef:\s*PACKAGE[-|_]MANAGER\s*purl\s*(.*)/
 
       NoEntries = Class.new(StandardError)
       MalformedFile = Class.new(StandardError)
@@ -64,13 +64,13 @@ module Bibliothecary
 
           next if skip_line?(stripped_line)
 
-          raise MalformedFile unless stripped_line.match(WELLFORMED_LINE_REGEX)
+          raise MalformedFile unless stripped_line.match(WELLFORMED_LINE_REGEXP)
 
-          if (match = stripped_line.match(PACKAGE_NAME_REGEX))
+          if (match = stripped_line.match(PACKAGE_NAME_REGEXP))
             package_name = match[1]
-          elsif (match = stripped_line.match(PACKAGE_VERSION_REGEX))
+          elsif (match = stripped_line.match(PACKAGE_VERSION_REGEXP))
             package_version = match[1]
-          elsif (match = stripped_line.match(PURL_REGEX))
+          elsif (match = stripped_line.match(PURL_REGEXP))
             platform ||= get_platform(match[1])
           end
 
