@@ -1,12 +1,12 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Bibliothecary::Parsers::CRAN do
-  it 'has a platform name' do
-    expect(described_class.platform_name).to eq('cran')
+  it "has a platform name" do
+    expect(described_class.platform_name).to eq("cran")
   end
 
-  it 'parses dependencies from DESCRIPTION' do
-    expect(described_class.analyse_contents('DESCRIPTION', load_fixture('DESCRIPTION'))).to eq({
+  it "parses dependencies from DESCRIPTION" do
+    expect(described_class.analyse_contents("DESCRIPTION", load_fixture("DESCRIPTION"))).to eq({
       platform: "cran",
       path: "DESCRIPTION",
       dependencies: [
@@ -36,15 +36,15 @@ describe Bibliothecary::Parsers::CRAN do
         { name: "rpart", requirement: "*", type: "suggests" },
         { name: "rmarkdown", requirement: "*", type: "suggests" },
         { name: "svglite", requirement: "*", type: "suggests" },
-        { name: "sp", requirement: "*", type: "enhances" }
+        { name: "sp", requirement: "*", type: "enhances" },
       ],
-      kind: 'manifest',
-      success: true
+      kind: "manifest",
+      success: true,
     })
   end
 
-  it 'parses dependencies from minimal DESCRIPTION file' do
-    expect(described_class.analyse_contents('DESCRIPTION', load_fixture('DESCRIPTION2'))).to eq({
+  it "parses dependencies from minimal DESCRIPTION file" do
+    expect(described_class.analyse_contents("DESCRIPTION", load_fixture("DESCRIPTION2"))).to eq({
       platform: "cran",
       path: "DESCRIPTION",
       dependencies: [
@@ -67,14 +67,14 @@ describe Bibliothecary::Parsers::CRAN do
         { name: "knitr", requirement: "*", type: "suggests" },
         { name: "curl", requirement: "*", type: "suggests" },
         { name: "zoo", requirement: "*", type: "suggests" },
-        { name: "plm", requirement: "*", type: "suggests" }
+        { name: "plm", requirement: "*", type: "suggests" },
       ],
-      kind: 'manifest',
-      success: true
+      kind: "manifest",
+      success: true,
     })
   end
 
-  it 'matches valid manifest filepaths' do
-    expect(described_class.match?('DESCRIPTION')).to be_truthy
+  it "matches valid manifest filepaths" do
+    expect(described_class.match?("DESCRIPTION")).to be_truthy
   end
 end

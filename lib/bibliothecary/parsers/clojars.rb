@@ -1,5 +1,5 @@
-require 'json'
-require 'typhoeus'
+require "json"
+require "typhoeus"
 
 module Bibliothecary
   module Parsers
@@ -9,9 +9,9 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("project.clj") => {
-            kind: 'manifest',
-            parser: :parse_manifest
-          }
+            kind: "manifest",
+            parser: :parse_manifest,
+          },
         }
       end
 
@@ -30,7 +30,7 @@ module Bibliothecary
           {
             name: dependency[0],
             requirement: dependency[1],
-            type: "runtime"
+            type: "runtime",
           }
         end
       end

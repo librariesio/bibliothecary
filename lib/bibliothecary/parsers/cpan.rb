@@ -1,5 +1,5 @@
-require 'yaml'
-require 'json'
+require "yaml"
+require "json"
 
 module Bibliothecary
   module Parsers
@@ -9,29 +9,29 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("META.json", case_insensitive: true) => {
-            kind: 'manifest',
-            parser: :parse_json_manifest
+            kind: "manifest",
+            parser: :parse_json_manifest,
           },
           match_filename("META.yml", case_insensitive: true) => {
-            kind: 'manifest',
-            parser: :parse_yaml_manifest
-          }
+            kind: "manifest",
+            parser: :parse_yaml_manifest,
+          },
         }
       end
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_json_manifest(file_contents, options: {})
+      def self.parse_json_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse file_contents
-        manifest['prereqs'].map do |_group, deps|
-          map_dependencies(deps, 'requires', 'runtime')
+        manifest["prereqs"].map do |_group, deps|
+          map_dependencies(deps, "requires", "runtime")
         end.flatten
       end
 
-      def self.parse_yaml_manifest(file_contents, options: {})
+      def self.parse_yaml_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = YAML.load file_contents
-        map_dependencies(manifest, 'requires', 'runtime')
+        map_dependencies(manifest, "requires", "runtime")
       end
     end
   end

@@ -21,10 +21,10 @@ describe Bibliothecary::Parsers::Conda do
           { name: "python", requirement: "3.7.3", type: "runtime" },
           { name: "readline", requirement: "7.0", type: "runtime" },
           { name: "setuptools", requirement: "", type: "runtime" },
-          { name: "sqlite", requirement: "3.29.0", type: "runtime" }
+          { name: "sqlite", requirement: "3.29.0", type: "runtime" },
         ],
         kind: "manifest",
-        success: true
+        success: true,
       }
     )
   end
@@ -65,10 +65,10 @@ describe Bibliothecary::Parsers::Conda do
           { name: "tk", requirement: "8.6.8", type: "runtime" },
           { name: "wheel", requirement: "0.33.6", type: "runtime" },
           { name: "xz", requirement: "5.2.4", type: "runtime" },
-          { name: "zlib", requirement: "1.2.11", type: "runtime" }
+          { name: "zlib", requirement: "1.2.11", type: "runtime" },
          ],
          kind: "lockfile",
-         success: true
+         success: true,
        }
     )
   end

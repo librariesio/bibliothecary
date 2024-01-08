@@ -19,69 +19,69 @@ module Bibliothecary
 
       def self.mapping
         {
-          match_filenames('requirements-dev.txt', 'requirements/dev.txt',
-                          'requirements-docs.txt', 'requirements/docs.txt',
-                          'requirements-test.txt', 'requirements/test.txt',
-                          'requirements-tools.txt', 'requirements/tools.txt') => {
-            kind: 'manifest',
-            parser: :parse_requirements_txt
+          match_filenames("requirements-dev.txt", "requirements/dev.txt",
+                          "requirements-docs.txt", "requirements/docs.txt",
+                          "requirements-test.txt", "requirements/test.txt",
+                          "requirements-tools.txt", "requirements/tools.txt") => {
+            kind: "manifest",
+            parser: :parse_requirements_txt,
           },
           lambda { |p| PIP_COMPILE_REGEXP.match(p) } => {
             content_matcher: :pip_compile?,
-            kind: 'lockfile',
-            parser: :parse_requirements_txt
+            kind: "lockfile",
+            parser: :parse_requirements_txt,
           },
           lambda { |p| MANIFEST_REGEXP.match(p) } => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_requirements_txt,
-            can_have_lockfile: false
+            can_have_lockfile: false,
           },
-          match_filename('requirements.frozen') => { # pattern exists to store frozen deps in requirements.frozen
+          match_filename("requirements.frozen") => { # pattern exists to store frozen deps in requirements.frozen
             parser: :parse_requirements_txt,
-            kind: 'lockfile'
+            kind: "lockfile",
           },
-          match_filename('pip-resolved-dependencies.txt') => { # Inferred from pip
-            kind: 'lockfile',
-            parser: :parse_requirements_txt
+          match_filename("pip-resolved-dependencies.txt") => { # Inferred from pip
+            kind: "lockfile",
+            parser: :parse_requirements_txt,
           },
           match_filename("setup.py") => {
-            kind: 'manifest',
+            kind: "manifest",
             parser: :parse_setup_py,
-            can_have_lockfile: false
+            can_have_lockfile: false,
           },
           match_filename("Pipfile") => {
-            kind: 'manifest',
-            parser: :parse_pipfile
+            kind: "manifest",
+            parser: :parse_pipfile,
           },
           match_filename("Pipfile.lock") => {
-            kind: 'lockfile',
-            parser: :parse_pipfile_lock
+            kind: "lockfile",
+            parser: :parse_pipfile_lock,
           },
           match_filename("pyproject.toml") => {
-            kind: 'manifest',
-            parser: :parse_pyproject
+            kind: "manifest",
+            parser: :parse_pyproject,
           },
           match_filename("poetry.lock") => {
-            kind: 'lockfile',
-            parser: :parse_poetry_lock
+            kind: "lockfile",
+            parser: :parse_poetry_lock,
           },
           # Pip dependencies can be embedded in conda environment files
           match_filename("environment.yml") => {
             parser: :parse_conda,
-            kind: "manifest"
+            kind: "manifest",
           },
           match_filename("environment.yaml") => {
             parser: :parse_conda,
-            kind: "manifest"
+            kind: "manifest",
           },
           match_filename("environment.yml.lock") => {
             parser: :parse_conda,
-            kind: "lockfile"
+            kind: "lockfile",
           },
           match_filename("environment.yaml.lock") => {
             parser: :parse_conda,
-            kind: "lockfile"
-          }
+            kind: "lockfile",
+          },
         }
       end
 
@@ -89,21 +89,21 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
-      def self.parse_pipfile(file_contents, options: {})
+      def self.parse_pipfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Tomlrb.parse(file_contents)
-        map_dependencies(manifest['packages'], 'runtime') + map_dependencies(manifest['dev-packages'], 'develop')
+        map_dependencies(manifest["packages"], "runtime") + map_dependencies(manifest["dev-packages"], "develop")
       end
 
-      def self.parse_pyproject(file_contents, options: {})
+      def self.parse_pyproject(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         deps = []
 
         file_contents = Tomlrb.parse(file_contents)
 
         # Parse poetry [tool.poetry] deps
-        poetry_manifest = file_contents.fetch('tool', {}).fetch('poetry', {})
-        deps += map_dependencies(poetry_manifest['dependencies'], 'runtime')
+        poetry_manifest = file_contents.fetch("tool", {}).fetch("poetry", {})
+        deps += map_dependencies(poetry_manifest["dependencies"], "runtime")
         # Poetry 1.0.0-1.2.0 way of defining dev deps
-        deps += map_dependencies(poetry_manifest['dev-dependencies'], 'develop')
+        deps += map_dependencies(poetry_manifest["dev-dependencies"], "develop")
         # Poetry's 1.2.0+ of defining dev deps
         poetry_manifest
           .fetch("group", {})
@@ -113,9 +113,9 @@ module Bibliothecary
           end
 
         # Parse PEP621 [project] deps
-        pep621_manifest = file_contents.fetch('project', {})
-        pep621_deps = pep621_manifest.fetch('dependencies', []).map { |d| parse_pep_508_dep_spec(d) }
-        deps += map_dependencies(pep621_deps, 'runtime')
+        pep621_manifest = file_contents.fetch("project", {})
+        pep621_deps = pep621_manifest.fetch("dependencies", []).map { |d| parse_pep_508_dep_spec(d) }
+        deps += map_dependencies(pep621_deps, "runtime")
 
         # We're combining both poetry+PEP621 deps instead of making them mutually exclusive, until we
         # find a reason not to ingest them both.
@@ -128,7 +128,7 @@ module Bibliothecary
         parse_pyproject(file_contents, options)
       end
 
-      def self.parse_conda(file_contents, options: {})
+      def self.parse_conda(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         contents = YAML.safe_load(file_contents)
         return [] unless contents
 
@@ -145,64 +145,64 @@ module Bibliothecary
           {
             name: name,
             requirement: map_requirements(info),
-            type: type
+            type: type,
           }
         end
       end
 
       def self.map_requirements(info)
         if info.is_a?(Hash)
-          if info['version']
-            info['version']
-          elsif info['git']
-            info['git'] + '#' + info['ref']
+          if info["version"]
+            info["version"]
+          elsif info["git"]
+            info["git"] + "#" + info["ref"]
           else
-            '*'
+            "*"
           end
         else
-          info || '*'
+          info || "*"
         end
       end
 
-      def self.parse_pipfile_lock(file_contents, options: {})
+      def self.parse_pipfile_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse(file_contents)
         deps = []
         manifest.each do |group, dependencies|
           next if group == "_meta"
-          group = 'runtime' if group == 'default'
+          group = "runtime" if group == "default"
           dependencies.each do |name, info|
             deps << {
               name: name,
               requirement: map_requirements(info),
-              type: group
+              type: group,
             }
           end
         end
         deps
       end
 
-      def self.parse_poetry_lock(file_contents, options: {})
+      def self.parse_poetry_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Tomlrb.parse(file_contents)
         deps = []
         manifest["package"].each do |package|
           # next if group == "_meta"
-          group = case package['category']
-                  when 'dev'
-                    'develop'
+          group = case package["category"]
+                  when "dev"
+                    "develop"
                   else
-                    'runtime'
+                    "runtime"
                   end
 
           deps << {
-            name: package['name'],
+            name: package["name"],
             requirement: map_requirements(package),
-            type: group
+            type: group,
           }
         end
         deps
       end
 
-      def self.parse_setup_py(file_contents, options: {})
+      def self.parse_setup_py(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         match = file_contents.match(INSTALL_REGEXP)
         return [] unless match
         deps = []
@@ -212,8 +212,8 @@ module Bibliothecary
           next unless match
           deps << {
             name: match[1],
-            requirement: match[-1] || '*',
-            type: 'runtime'
+            requirement: match[-1] || "*",
+            type: "runtime",
           }
         end
         deps
@@ -229,22 +229,22 @@ module Bibliothecary
       # https://pip.pypa.io/en/stable/cli/pip_install/#requirement-specifiers
       # and https://pip.pypa.io/en/stable/topics/vcs-support/#git.
       # Invalid lines in requirements.txt are skipped.
-      def self.parse_requirements_txt(file_contents, options: {})
+      def self.parse_requirements_txt(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         deps = []
         type = case options[:filename]
                when /dev/ || /docs/ || /tools/
-                 'development'
+                 "development"
                when /test/
-                 'test'
+                 "test"
                else
-                 'runtime'
+                 "runtime"
                end
 
         file_contents.split("\n").each do |line|
-          if line['://']
+          if line["://"]
             begin
               result = parse_requirements_txt_url(line)
-            rescue URI::Error, NoEggSpecified => e
+            rescue URI::Error, NoEggSpecified
               next
             end
 
@@ -252,13 +252,13 @@ module Bibliothecary
               type: type
             )
           else
-            match = line.delete(' ').match(REQUIREMENTS_REGEXP)
+            match = line.delete(" ").match(REQUIREMENTS_REGEXP)
             next unless match
 
             deps << {
               name: match[1],
-              requirement: match[-1] || '*',
-              type: type
+              requirement: match[-1] || "*",
+              type: type,
             }
           end
         end

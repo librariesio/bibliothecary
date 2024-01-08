@@ -11,12 +11,12 @@ Gem::Specification.new do |s|
   s.email       = "contact@plataformatec.com.br"
   s.homepage    = "https://github.com/plataformatec/devise"
   s.description = "Flexible authentication solution for Rails with Warden"
-  s.authors     = ['José Valim', 'Carlos Antônio']
+  s.authors     = ["José Valim", "Carlos Antônio"]
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- test/*`.split("\n")
   s.require_paths = ["lib"]
-  s.required_ruby_version = '>= 1.9.3'
+  s.required_ruby_version = ">= 1.9.3"
 
   s.add_dependency("warden", "~> 1.2.3")
   s.add_development_dependency("orm_adapter", "~> 0.1")

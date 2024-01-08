@@ -1,4 +1,4 @@
-require 'json'
+require "json"
 
 module Bibliothecary
   module Parsers
@@ -8,13 +8,13 @@ module Bibliothecary
       def self.mapping
         {
           match_filename("mix.exs") => {
-            kind: 'manifest',
-            parser: :parse_mix
+            kind: "manifest",
+            parser: :parse_mix,
           },
           match_filename("mix.lock") => {
-            kind: 'lockfile',
-            parser: :parse_mix_lock
-          }
+            kind: "lockfile",
+            parser: :parse_mix_lock,
+          },
         }
       end
 
@@ -31,7 +31,7 @@ module Bibliothecary
           {
             name: name,
             requirement: version,
-            type: "runtime"
+            type: "runtime",
           }
         end
       end
@@ -44,8 +44,8 @@ module Bibliothecary
         json.map do |name, info|
           {
             name: name,
-            requirement: info['version'],
-            type: "runtime"
+            requirement: info["version"],
+            type: "runtime",
           }
         end
       end
