@@ -173,7 +173,7 @@ describe Bibliothecary::Parsers::NPM do
       kind: "manifest",
       success: false,
       error_message: "package.json: appears to be a lockfile rather than manifest format",
-      error_location: "parsers/npm.rb:97:in `parse_manifest'",
+      error_location: "parsers/npm.rb:102:in `parse_manifest'",
     })
   end
 
