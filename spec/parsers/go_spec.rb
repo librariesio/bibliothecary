@@ -8,29 +8,42 @@ describe Bibliothecary::Parsers::Go do
   it_behaves_like "CycloneDX"
 
   it "parses depenencies from go.mod" do
-    expect(described_class.analyse_contents("go.mod", load_fixture("go.mod"))).to eq({
-      platform: "go",
-      path: "go.mod",
-      dependencies: [
-        { name: "github.com/go-check/check",
-         requirement: "v0.0.0-20180628173108-788fd7840127",
-         type: "runtime" },
-        { name: "github.com/gomodule/redigo",
-         requirement: "v2.0.0+incompatible",
-         type: "runtime" },
-        { name: "github.com/kr/pretty",
-         requirement: "v0.1.0",
-         type: "runtime" },
-        { name: "github.com/replicon/fast-archiver",
-         requirement: "v0.0.0-20121220195659-060bf9adec25",
-         type: "runtime" },
-        { name: "gopkg.in/yaml.v1",
-         requirement: "v1.0.0-20140924161607-9f9df34309c0",
-         type: "runtime" },
-      ],
-      kind: "manifest",
-      success: true,
-    })
+    expect(described_class.analyse_contents("go.mod", load_fixture("go.mod"))).to eq({:platform=>"go",
+    path: "go.mod",
+    dependencies: [
+      {
+        name: "github.com/go-check/check",
+        requirement: "v0.0.0-20180628173108-788fd7840127",
+        type: "runtime",
+      },
+      {
+        name: "github.com/gomodule/redigo",
+        requirement: "v2.0.0+incompatible",
+        type: "runtime",
+      },
+      {
+        name: "github.com/kr/pretty", 
+        requirement: "v0.1.0", 
+        type: "runtime",
+      },
+      { name: "github.com/replicon/fast-archiver",
+        requirement: "v0.0.0-20121220195659-060bf9adec25",
+        type: "runtime",
+      },
+      {
+        name: "gopkg.in/yaml.v1",
+        requirement: "v1.0.0-20140924161607-9f9df34309c0",
+        type: "runtime"},
+      {
+        original_name: "golang.org/x/net", 
+        original_requirement: "v1.2.3", 
+        name: "example.com/fork/net", 
+        requirement: "v1.4.5", 
+        type: "runtime",
+      },
+    ],
+    kind: "manifest",
+    success: true})
   end
 
   it "parses depenencies from go.mod with a single require" do
