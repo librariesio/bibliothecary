@@ -115,8 +115,7 @@
       "Main": "false",
       "Version": "v1.7.0",
       "Indirect": "false",
-      "Scope": "test",
-      "Replace": "<nil>"
+      "Scope": "test"
     },
     {
       "Path": "golang.org/x/net", 

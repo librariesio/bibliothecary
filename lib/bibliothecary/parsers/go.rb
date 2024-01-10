@@ -188,7 +188,7 @@ module Bibliothecary
         JSON.parse(file_contents)
           .select { |dep| dep["Main"] != "true" }
           .map do |dep| 
-            if dep["Replace"] != "<nil>" && dep["Replace"] != ""
+            if dep["Replace"].is_a?(String) && dep["Replace"] != "<nil>" && dep["Replace"] != ""
               # NOTE: The "replace" directive doesn't actually change the version reported from Go (e.g. "go mod graph"), it only changes
               # the *source code*. So by replacing the deps here, we're giving more honest results than you'd get when asking go
               # about the versions used.
