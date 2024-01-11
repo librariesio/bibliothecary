@@ -3,98 +3,112 @@
       "Main": "true",
       "Version": "",
       "Indirect": "false",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "cloud.google.com/go",
       "Main": "false",
       "Version": "v0.36.0",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "dmitri.shuralyov.com/app/changes",
       "Main": "false",
       "Version": "v0.0.0-20180602232624-0a106ad413e3",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "dmitri.shuralyov.com/html/belt",
       "Main": "false",
       "Version": "v0.0.0-20180602232347-f7d459c86be0",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "dmitri.shuralyov.com/service/change",
       "Main": "false",
       "Version": "v0.0.0-20181023043359-a85b471d5412",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "dmitri.shuralyov.com/state",
       "Main": "false",
       "Version": "v0.0.0-20180228185332-28bcc343414c",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "git.apache.org/thrift.git",
       "Main": "false",
       "Version": "v0.0.0-20180902110319-2566ecd5d999",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "github.com/BurntSushi/toml",
       "Main": "false",
       "Version": "v0.3.1",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "github.com/Masterminds/semver",
       "Main": "false",
       "Version": "v1.5.0",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "github.com/Masterminds/semver/v3",
       "Main": "false",
       "Version": "v3.0.3",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "github.com/OneOfOne/xxhash",
       "Main": "false",
       "Version": "v1.2.2",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "github.com/ajg/form",
       "Main": "false",
       "Version": "v1.5.1",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "github.com/alecthomas/template",
       "Main": "false",
       "Version": "v0.0.0-20160405071501-a0175ee3bccc",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "github.com/alecthomas/units",
       "Main": "false",
       "Version": "v0.0.0-20151022065526-2efee857e7cf",
       "Indirect": "true",
-      "Scope": "runtime"
+      "Scope": "runtime",
+      "Replace": "<nil>"
     },
     {
       "Path": "github.com/stretchr/testify",
@@ -102,5 +116,19 @@
       "Version": "v1.7.0",
       "Indirect": "false",
       "Scope": "test"
+    },
+    {
+      "Path": "golang.org/x/net", 
+      "Main": "false", 
+      "Version": "v1.2.3", 
+      "Indirect": "false", 
+      "Replace": "example.com/fork/net v1.4.5"
+    },
+    {
+      "Path": "bad/thing", 
+      "Main": "false", 
+      "Version": "v1.4.5", 
+      "Indirect": "false", 
+      "Replace": "./some/local/path"
     }
   ]
