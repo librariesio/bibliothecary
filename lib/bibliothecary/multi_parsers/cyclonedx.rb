@@ -81,7 +81,17 @@ module Bibliothecary
             parser: :parse_cyclonedx_json,
             ungroupable: true,
           },
+          match_extension("cdx.json") => {
+            kind: "lockfile",
+            parser: :parse_cyclonedx_json,
+            ungroupable: true,
+          },
           match_filename("cyclonedx.xml") => {
+            kind: "lockfile",
+            parser: :parse_cyclonedx_xml,
+            ungroupable: true,
+          },
+          match_extension(".cdx.xml") => {
             kind: "lockfile",
             parser: :parse_cyclonedx_xml,
             ungroupable: true,
