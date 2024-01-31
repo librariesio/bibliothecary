@@ -64,12 +64,12 @@ describe Bibliothecary::Parsers::NPM do
         {:name=>"@typescript-eslint", :requirement=>"types", :type=>"runtime"}
       ],
       kind: "lockfile",
-      success: true
+      success: true,
     })
   end
 
-  it 'parses dependencies from package.json' do
-    expect(described_class.analyse_contents('package.json', load_fixture('package.json'))).to eq({
+  it "parses dependencies from package.json" do
+    expect(described_class.analyse_contents("package.json", load_fixture("package.json"))).to eq({
       platform: "npm",
       path: "package.json",
       dependencies: [

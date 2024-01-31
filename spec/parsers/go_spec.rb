@@ -296,6 +296,8 @@ describe Bibliothecary::Parsers::Go do
         { name: "github.com/alecthomas/template", requirement: "v0.0.0-20160405071501-a0175ee3bccc", type: "runtime" },
         { name: "github.com/alecthomas/units", requirement: "v0.0.0-20151022065526-2efee857e7cf", type: "runtime" },
         { name: "github.com/stretchr/testify", requirement: "v1.7.0", type: "test" },
+        { name: "example.com/fork/net", requirement: "v1.4.5", original_name: "golang.org/x/net", original_requirement: "v1.2.3", type: "runtime" },
+        { name: "./some/local/path", requirement: "*", original_name: "bad/thing", original_requirement: "v1.4.5", type: "runtime" },
       ],
       kind: "lockfile",
       success: true,

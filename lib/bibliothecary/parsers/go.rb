@@ -129,8 +129,12 @@ module Bibliothecary
 
         deps = categorized_deps["require"]
           .map do |dep|
-            # A "replace" directive doesn't add the dep to the module graph unless the original dep is also in a "require" directive,
+            # NOTE: A "replace" directive doesn't add the dep to the module graph unless the original dep is also in a "require" directive,
             # so we need to track down replacements here and use those instead of the originals, if present.
+            #
+            # NOTE: The "replace" directive doesn't actually change the version reported from Go (e.g. "go mod graph"), it only changes
+            # the *source code*. So by replacing the deps here, we're giving more honest results than you'd get when asking go
+            # about the versions used.
             replaced_dep = categorized_deps["replace"]
               .find do |replacement_dep| 
                 replacement_dep[:original_name] == dep[:name] && 
@@ -187,7 +191,18 @@ module Bibliothecary
       def self.parse_go_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         JSON.parse(file_contents)
           .select { |dep| dep["Main"] != "true" }
-          .map { |dep| { name: dep["Path"], requirement: dep["Version"], type: dep.fetch("Scope") { "runtime" } } }
+          .map do |dep| 
+            if dep["Replace"].is_a?(String) && dep["Replace"] != "<nil>" && dep["Replace"] != ""
+              # NOTE: The "replace" directive doesn't actually change the version reported from Go (e.g. "go mod graph"), it only changes
+              # the *source code*. So by replacing the deps here, we're giving more honest results than you'd get when asking go
+              # about the versions used.
+              name, requirement = dep["Replace"].split(" ", 2)
+              requirement = "*" if requirement.to_s.strip == ""
+              { name: name, requirement: requirement, original_name: dep["Path"], original_requirement: dep["Version"], type: dep.fetch("Scope") { "runtime" } }
+            else
+              { name: dep["Path"], requirement: dep["Version"], type: dep.fetch("Scope") { "runtime" } }
+            end
+          end
       end
 
       def self.map_dependencies(manifest, attr_name, dep_attr_name, version_attr_name, type)
