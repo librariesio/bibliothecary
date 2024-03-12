@@ -92,6 +92,12 @@ describe Bibliothecary do
     expect(result[0][:dependencies].length).to eq(0)
   end
 
+  it "skips analysis of non-text files" do
+    result = described_class.analyse_file("some.zip", "\xC2")
+
+    expect(result).to eq([])
+  end
+
   it "aliases analyse and analyse_file" do
     expect(Bibliothecary.method(:analyse)).to eq(Bibliothecary.method(:analyze))
     expect(Bibliothecary.method(:analyse_file)).to eq(Bibliothecary.method(:analyze_file))
