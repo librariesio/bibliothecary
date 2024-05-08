@@ -124,7 +124,7 @@ module Bibliothecary
             requirement: dep[:version],
             lockfile_requirement: dep[:requirement],
             type: dep[:type],
-            local: dep[:requirement].start_with?("file:"),
+            local: dep[:requirement]&.start_with?("file:"),
           }
         end
       end
