@@ -68,12 +68,18 @@ module Bibliothecary
         # "packages" is a flat object where each key is the installed location of the dep, e.g. node_modules/foo/node_modules/bar.
         manifest
           .fetch("packages")
-          .reject { |name, _dep| name == "" } # this is the lockfile's package itself
+          # there are a couple of scenarios where a package's name won't start with node_modules
+          #   1. name == "", this is the lockfile's package itself
+          #   2. when a package is a local path dependency, it will appear in package-lock.json twice.
+          #      * One occurrence has the node_modules/ prefix in the name (which we keep)
+          #      * The other occurrence's name is the path to the local dependency (which has less information, and is duplicative, so we discard)
+          .select { |name, _dep| name.start_with?("node_modules") }
           .map do |name, dep|
             {
               name: name.split("node_modules/").last,
-              requirement: dep["version"],
+              requirement: dep["version"] || "*",
               type: dep.fetch("dev", false) || dep.fetch("devOptional", false)  ? "development" : "runtime",
+              local: dep.fetch("link", false),
             }
           end
       end
@@ -106,6 +112,9 @@ module Bibliothecary
           map_dependencies(manifest, "devDependencies", "development")
         )
           .reject { |dep| dep[:name].start_with?("//") } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
+          .each do |dep|
+            dep[:local] = dep[:requirement].start_with?("file:")
+          end
       end
 
       def self.parse_yarn_lock(file_contents, options: {})
@@ -120,6 +129,7 @@ module Bibliothecary
             requirement: dep[:version],
             lockfile_requirement: dep[:requirement],
             type: dep[:type],
+            local: dep[:requirement]&.start_with?("file:"),
           }
         end
       end
