@@ -1,0 +1,244 @@
+[
+  {
+    "package": {
+      "key": "aiohttp",
+      "package_name": "aiohttp",
+      "installed_version": "3.9.5"
+    },
+    "dependencies": [
+      {
+        "key": "aiosignal",
+        "package_name": "aiosignal",
+        "installed_version": "1.3.1",
+        "required_version": ">=1.1.2"
+      },
+      {
+        "key": "async-timeout",
+        "package_name": "async-timeout",
+        "installed_version": "4.0.3",
+        "required_version": ">=4.0,<5.0"
+      },
+      {
+        "key": "attrs",
+        "package_name": "attrs",
+        "installed_version": "23.2.0",
+        "required_version": ">=17.3.0"
+      },
+      {
+        "key": "frozenlist",
+        "package_name": "frozenlist",
+        "installed_version": "1.4.1",
+        "required_version": ">=1.1.1"
+      },
+      {
+        "key": "multidict",
+        "package_name": "multidict",
+        "installed_version": "6.0.5",
+        "required_version": ">=4.5,<7.0"
+      },
+      {
+        "key": "yarl",
+        "package_name": "yarl",
+        "installed_version": "1.9.4",
+        "required_version": ">=1.0,<2.0"
+      }
+    ]
+  },
+  {
+    "package": {
+      "key": "aiosignal",
+      "package_name": "aiosignal",
+      "installed_version": "1.3.1"
+    },
+    "dependencies": [
+      {
+        "key": "frozenlist",
+        "package_name": "frozenlist",
+        "installed_version": "1.4.1",
+        "required_version": ">=1.1.0"
+      }
+    ]
+  },
+  {
+    "package": {
+      "key": "async-timeout",
+      "package_name": "async-timeout",
+      "installed_version": "4.0.3"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "attrs",
+      "package_name": "attrs",
+      "installed_version": "23.2.0"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "black",
+      "package_name": "black",
+      "installed_version": "23.12.0"
+    },
+    "dependencies": [
+      {
+        "key": "aiohttp",
+        "package_name": "aiohttp",
+        "installed_version": "3.9.5",
+        "required_version": ">=3.7.4"
+      },
+      {
+        "key": "click",
+        "package_name": "click",
+        "installed_version": "8.1.7",
+        "required_version": ">=8.0.0"
+      },
+      {
+        "key": "mypy-extensions",
+        "package_name": "mypy-extensions",
+        "installed_version": "1.0.0",
+        "required_version": ">=0.4.3"
+      },
+      {
+        "key": "packaging",
+        "package_name": "packaging",
+        "installed_version": "24.0",
+        "required_version": ">=22.0"
+      },
+      {
+        "key": "pathspec",
+        "package_name": "pathspec",
+        "installed_version": "0.12.1",
+        "required_version": ">=0.9.0"
+      },
+      {
+        "key": "platformdirs",
+        "package_name": "platformdirs",
+        "installed_version": "4.2.2",
+        "required_version": ">=2"
+      },
+      {
+        "key": "tomli",
+        "package_name": "tomli",
+        "installed_version": "2.0.1",
+        "required_version": ">=1.1.0"
+      },
+      {
+        "key": "typing-extensions",
+        "package_name": "typing_extensions",
+        "installed_version": "4.12.0",
+        "required_version": ">=4.0.1"
+      }
+    ]
+  },
+  {
+    "package": {
+      "key": "click",
+      "package_name": "click",
+      "installed_version": "8.1.7"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "frozenlist",
+      "package_name": "frozenlist",
+      "installed_version": "1.4.1"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "idna",
+      "package_name": "idna",
+      "installed_version": "3.7"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "multidict",
+      "package_name": "multidict",
+      "installed_version": "6.0.5"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "mypy-extensions",
+      "package_name": "mypy-extensions",
+      "installed_version": "1.0.0"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "packaging",
+      "package_name": "packaging",
+      "installed_version": "24.0"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "pathspec",
+      "package_name": "pathspec",
+      "installed_version": "0.12.1"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "platformdirs",
+      "package_name": "platformdirs",
+      "installed_version": "4.2.2"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "termcolor",
+      "package_name": "termcolor",
+      "installed_version": "2.4.0"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "tomli",
+      "package_name": "tomli",
+      "installed_version": "2.0.1"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "typing-extensions",
+      "package_name": "typing_extensions",
+      "installed_version": "4.12.0"
+    },
+    "dependencies": []
+  },
+  {
+    "package": {
+      "key": "yarl",
+      "package_name": "yarl",
+      "installed_version": "1.9.4"
+    },
+    "dependencies": [
+      {
+        "key": "idna",
+        "package_name": "idna",
+        "installed_version": "3.7",
+        "required_version": ">=2.0"
+      },
+      {
+        "key": "multidict",
+        "package_name": "multidict",
+        "installed_version": "6.0.5",
+        "required_version": ">=4.0"
+      }
+    ]
+  }
+]

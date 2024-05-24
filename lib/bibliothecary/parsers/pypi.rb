@@ -9,8 +9,8 @@ module Bibliothecary
       # Optional Group 2 is [extras].
       # Capture Group 3 is Version
       REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)(?:\[.*?\])*([><=\w\.,]+)?/
-
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
+
       MANIFEST_REGEXP = /.*require[^\/]*(\/)?[^\/]*\.(txt|pip|in)$/
       # TODO: can this be a more specific regexp so it doesn't match something like ".yarn/cache/create-require-npm-1.0.0.zip"?
       PIP_COMPILE_REGEXP = /.*require.*$/
@@ -44,6 +44,10 @@ module Bibliothecary
           match_filename("pip-resolved-dependencies.txt") => { # Inferred from pip
             kind: "lockfile",
             parser: :parse_requirements_txt,
+          },
+          match_filename("pip-dependency-tree.json") => { # Exported from pipdeptree --json
+            kind: "lockfile",
+            parser: :parse_dependency_tree_json,
           },
           match_filename("setup.py") => {
             kind: "manifest",
@@ -226,6 +230,18 @@ module Bibliothecary
       # should be treated as.
       NoEggSpecified = Class.new(ArgumentError)
 
+      def self.parse_dependency_tree_json(file_contents, options: {})
+        JSON.parse(file_contents)
+          .map do |pkg|
+            {
+                name: pkg.dig("package", "package_name"),
+                requirement: pkg.dig("package", "installed_version"),
+                type: "runtime",
+              }
+          end
+          .uniq
+      end
+
       # Parses a requirements.txt file, following the
       # https://pip.pypa.io/en/stable/cli/pip_install/#requirement-specifiers
       # and https://pip.pypa.io/en/stable/topics/vcs-support/#git.
@@ -252,10 +268,7 @@ module Bibliothecary
             deps << result.merge(
               type: type
             )
-          else
-            match = line.delete(" ").match(REQUIREMENTS_REGEXP)
-            next unless match
-
+          elsif (match = line.delete(" ").match(REQUIREMENTS_REGEXP))
             deps << {
               name: match[1],
               requirement: match[-1] || "*",
@@ -263,7 +276,8 @@ module Bibliothecary
             }
           end
         end
-        deps
+
+        deps.uniq
       end
 
       def self.parse_requirements_txt_url(url)
