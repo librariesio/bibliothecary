@@ -45,7 +45,7 @@ module Bibliothecary
             kind: "lockfile",
             parser: :parse_requirements_txt,
           },
-          match_filename("pip-dependency-tree.json") => { # Exported from pipdeptree --json
+          match_filename("pip-dependency-graph.json") => { # Exported from pipdeptree --json
             kind: "lockfile",
             parser: :parse_dependency_tree_json,
           },

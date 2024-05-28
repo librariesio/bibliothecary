@@ -204,10 +204,10 @@ git://what@::/:/:/
     })
   end
 
-  it "parses dependencies from pip-dependency-tree.json" do
-    expect(described_class.analyse_contents("pip-dependency-tree.json", load_fixture("pip-dependency-tree.json"))).to eq({
+  it "parses dependencies from pip-dependency-graph.json" do
+    expect(described_class.analyse_contents("pip-dependency-graph.json", load_fixture("pip-dependency-graph.json"))).to eq({
       platform: "pypi",
-      path: "pip-dependency-tree.json",
+      path: "pip-dependency-graph.json",
       dependencies: [
         { name: "aiohttp", requirement: "3.9.5", type: "runtime" },
         { name: "aiosignal", requirement: "1.3.1", type: "runtime" },
