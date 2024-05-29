@@ -232,6 +232,39 @@ git://what@::/:/:/
     })
   end
 
+
+  it "handles duplicate dependencies from pip-dependency-graph.json" do
+    lockfile = <<-JSON
+    [
+      {
+        "package": {
+          "key": "aiohttp",
+          "package_name": "aiohttp",
+          "installed_version": "3.9.5"
+        },
+        "dependencies": []
+      },
+      {
+        "package": {
+          "key": "aiohttp",
+          "package_name": "aiohttp",
+          "installed_version": "3.9.5"
+        },
+        "dependencies": []
+      }
+    ]    
+    JSON
+    expect(described_class.analyse_contents("pip-dependency-graph.json", lockfile)).to eq({
+      platform: "pypi",
+      path: "pip-dependency-graph.json",
+      dependencies: [
+        { name: "aiohttp", requirement: "3.9.5", type: "runtime" },
+      ],
+      kind: "lockfile",
+      success: true,
+    })
+  end
+
   it "parses dependencies from requirements.frozen" do
     expect(described_class.analyse_contents("requirements.frozen", load_fixture("requirements.frozen"))).to eq({
       platform: "pypi",
