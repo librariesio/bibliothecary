@@ -234,6 +234,8 @@ git://what@::/:/:/
 
 
   it "handles duplicate dependencies from pip-dependency-graph.json" do
+    # It doesn't seem possible that pipdeptree would output duplicate
+    # dependencies, but this ensures we catch it in case that is possible.
     lockfile = <<-JSON
     [
       {
