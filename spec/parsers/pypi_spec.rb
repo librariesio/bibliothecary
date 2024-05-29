@@ -204,6 +204,69 @@ git://what@::/:/:/
     })
   end
 
+  it "parses dependencies from pip-dependency-graph.json" do
+    expect(described_class.analyse_contents("pip-dependency-graph.json", load_fixture("pip-dependency-graph.json"))).to eq({
+      platform: "pypi",
+      path: "pip-dependency-graph.json",
+      dependencies: [
+        { name: "aiohttp", requirement: "3.9.5", type: "runtime" },
+        { name: "aiosignal", requirement: "1.3.1", type: "runtime" },
+        { name: "async-timeout", requirement: "4.0.3", type: "runtime" },
+        { name: "attrs", requirement: "23.2.0", type: "runtime" },
+        { name: "black", requirement: "23.12.0", type: "runtime" },
+        { name: "click", requirement: "8.1.7", type: "runtime" },
+        { name: "frozenlist", requirement: "1.4.1", type: "runtime" },
+        { name: "idna", requirement: "3.7", type: "runtime" },
+        { name: "multidict", requirement: "6.0.5", type: "runtime" },
+        { name: "mypy-extensions", requirement: "1.0.0", type: "runtime" },
+        { name: "packaging", requirement: "24.0", type: "runtime" },
+        { name: "pathspec", requirement: "0.12.1", type: "runtime" },
+        { name: "platformdirs", requirement: "4.2.2", type: "runtime" },
+        { name: "termcolor", requirement: "2.4.0", type: "runtime" },
+        { name: "tomli", requirement: "2.0.1", type: "runtime" },
+        { name: "typing_extensions", requirement: "4.12.0", type: "runtime" },
+        { name: "yarl", requirement: "1.9.4", type: "runtime" },
+      ],
+      kind: "lockfile",
+      success: true,
+    })
+  end
+
+
+  it "handles duplicate dependencies from pip-dependency-graph.json" do
+    # It doesn't seem possible that pipdeptree would output duplicate
+    # dependencies, but this ensures we catch it in case that is possible.
+    lockfile = <<-JSON
+    [
+      {
+        "package": {
+          "key": "aiohttp",
+          "package_name": "aiohttp",
+          "installed_version": "3.9.5"
+        },
+        "dependencies": []
+      },
+      {
+        "package": {
+          "key": "aiohttp",
+          "package_name": "aiohttp",
+          "installed_version": "3.9.5"
+        },
+        "dependencies": []
+      }
+    ]    
+    JSON
+    expect(described_class.analyse_contents("pip-dependency-graph.json", lockfile)).to eq({
+      platform: "pypi",
+      path: "pip-dependency-graph.json",
+      dependencies: [
+        { name: "aiohttp", requirement: "3.9.5", type: "runtime" },
+      ],
+      kind: "lockfile",
+      success: true,
+    })
+  end
+
   it "parses dependencies from requirements.frozen" do
     expect(described_class.analyse_contents("requirements.frozen", load_fixture("requirements.frozen"))).to eq({
       platform: "pypi",
