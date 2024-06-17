@@ -1,37 +1,45 @@
 version: 2.1
 orbs:
-  ruby: circleci/ruby@0.1.2
+  ruby: circleci/ruby@2.1.3
 
 executors:
   bibliothecary:
     docker:
-      - image: cimg/ruby:2.7.1
+      - image: cimg/ruby:3.0.7
     working_directory: ~/bibliothecary
+
+
+commands:
+  setup-ruby-env:
+    description: "Some requirements to ensure that the ruby orb install-deps works"
+    steps:
+      - run:
+          name: Prep ruby
+          command: |
+            touch /tmp/ruby-project-lockfile
+            bundle lock --add-platform x86_64-linux
+      - ruby/install-deps:
+          bundler-version: "2.3"
+
 
 jobs:
   test:
     executor: bibliothecary
     steps:
     - checkout
-    - run:
-        name: Which bundler?
-        command: bundle -v
-    - ruby/bundle-install
+    - setup-ruby-env
     - run:
         name: Run specs
         command: bundle exec rake spec
     - run:
         name: CodeClimate
-        command: bundle exec codeclimate-test-reporter
+        command: bundle exec codeclimate-test-reporter  
 
   lint:
     executor: bibliothecary
     steps:
     - checkout
-    - run:
-        name: Which bundler?
-        command: bundle -v
-    - ruby/bundle-install
+    - setup-ruby-env
     - run:
         name: Run specs
         command: bundle exec rake lint
