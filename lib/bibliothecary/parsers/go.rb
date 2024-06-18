@@ -7,13 +7,13 @@ module Bibliothecary
       include Bibliothecary::Analyser
 
       GPM_REGEXP = /^(.+)\s+(.+)$/
+      GOMOD_COMMENT_REGEXP = /(\/\/(.*))/
       GOMOD_REPLACEMENT_SEPARATOR_REGEXP = /\s=>\s/
-      GOMOD_DEP_REGEXP = /(?<name>\S+)\s?(?<requirement>[^\s=>]+)?/ # the " =>" negative character class is to make sure we don't capture the delimiter for "replace" deps
+      GOMOD_DEP_REGEXP = /(?<name>\S+)\s?(?<requirement>[^\s=>]+)?\s*(?<indirect>\/\/\s+indirect)?/ # the " =>" negative character class is to make sure we don't capture the delimiter for "replace" deps
       GOMOD_SINGLELINE_DEP_REGEXP = /^(?<category>require|exclude|replace|retract)\s+#{GOMOD_DEP_REGEXP}.*$/
       GOMOD_MULTILINE_DEP_REGEXP = /^#{GOMOD_DEP_REGEXP}.*$/
       GOMOD_MULTILINE_START_REGEXP = /^(?<category>require|exclude|replace|retract)\s+\(/
       GOMOD_MULTILINE_END_REGEXP = /^\)/
-      GOMOD_COMMENT_REGEXP = /(\/\/(.*))/
       GOSUM_REGEXP = /^(.+)\s+(.+)\s+(.+)$/
 
       def self.mapping
@@ -158,8 +158,8 @@ module Bibliothecary
         }
         file_contents
           .lines
+          .map(&:strip)
           .reject { |line| line =~ /^#{GOMOD_COMMENT_REGEXP}/ } # ignore comment lines
-          .map { |line| line.strip.gsub(GOMOD_COMMENT_REGEXP, "") } # strip out trailing comments
           .each do |line|
             if line.match(GOMOD_MULTILINE_END_REGEXP) # detect the end of a multiline
               current_multiline_category = nil
@@ -227,6 +227,7 @@ module Bibliothecary
             name: replacement_match[:name],
             requirement: replacement_match[:requirement] || "*",
             type: "runtime",
+            direct: !match[:indirect],
           }
         when "retract"
           {
@@ -234,12 +235,14 @@ module Bibliothecary
             requirement: match[:requirement] || "*",
             type: "runtime",
             deprecated: true,
+            direct: !match[:indirect],
           }
         else
           {
             name: match[:name],
             requirement: match[:requirement] || "*",
             type: "runtime",
+            direct: !match[:indirect],
           }
         end
       end
