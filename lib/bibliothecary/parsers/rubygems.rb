@@ -43,11 +43,11 @@ module Bibliothecary
           if match
             name = match[1]
             version = match[2].gsub(/\(|\)/,"")
-            {
+            Dependency.new(
               name: name,
               requirement: version,
               type: "runtime",
-            }
+            )
           else
             parse_bundler(file_contents)
           end
@@ -70,11 +70,11 @@ module Bibliothecary
 
         return nil unless version
 
-        {
+        Dependency.new(
           name: "bundler",
           requirement: version,
           type: "runtime",
-        }
+        )
       end
     end
   end

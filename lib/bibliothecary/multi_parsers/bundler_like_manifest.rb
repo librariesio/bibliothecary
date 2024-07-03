@@ -5,7 +5,7 @@ module Bibliothecary
       # manifests and turns them into a list of dependencies.
       def parse_ruby_manifest(manifest)
         manifest.dependencies.inject([]) do |deps, dep|
-          deps.push({
+          deps.push(Dependency.new(
             name: dep.name,
             requirement: dep
               .requirement
@@ -13,8 +13,8 @@ module Bibliothecary
               .sort_by(&:last)
               .map { |op, version| "#{op} #{version}" }
               .join(", "),
-            type: dep.type,
-          })
+            type: dep.type.to_s,
+          ))
         end.uniq
       end
     end

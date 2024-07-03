@@ -10,14 +10,14 @@ describe Bibliothecary::Parsers::Rubygems do
       platform: "rubygems",
       path: "Gemfile",
       dependencies: [
-        { name: "oj", requirement: ">= 0", type: :runtime },
-        { name: "rails", requirement: "= 4.2.0", type: :runtime },
-        { name: "leveldb-ruby", requirement: "= 0.15", type: :runtime },
-        { name: "spring", requirement: ">= 0", type: :development },
-        { name: "thin", requirement: ">= 0", type: :development },
-        { name: "puma", requirement: ">= 0", type: :runtime },
-        { name: "rails_12factor", requirement: ">= 0", type: :runtime },
-        { name: "bugsnag", requirement: ">= 0", type: :runtime },
+        Bibliothecary::Dependency.new(name: "oj", requirement: ">= 0", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "rails", requirement: "= 4.2.0", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "leveldb-ruby", requirement: "= 0.15", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "spring", requirement: ">= 0", type: "development"),
+        Bibliothecary::Dependency.new(name: "thin", requirement: ">= 0", type: "development"),
+        Bibliothecary::Dependency.new(name: "puma", requirement: ">= 0", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "rails_12factor", requirement: ">= 0", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "bugsnag", requirement: ">= 0", type: "runtime"),
       ],
       kind: "manifest",
       success: true,
@@ -29,14 +29,14 @@ describe Bibliothecary::Parsers::Rubygems do
       platform: "rubygems",
       path: "gems.rb",
       dependencies: [
-        { name: "oj", requirement: ">= 0", type: :runtime },
-        { name: "rails", requirement: "= 4.2.0", type: :runtime },
-        { name: "leveldb-ruby", requirement: "= 0.15", type: :runtime },
-        { name: "spring", requirement: ">= 0", type: :development },
-        { name: "thin", requirement: ">= 0", type: :development },
-        { name: "puma", requirement: ">= 0", type: :runtime },
-        { name: "rails_12factor", requirement: ">= 0", type: :runtime },
-        { name: "bugsnag", requirement: ">= 0", type: :runtime },
+        Bibliothecary::Dependency.new(name: "oj", requirement: ">= 0", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "rails", requirement: "= 4.2.0", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "leveldb-ruby", requirement: "= 0.15", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "spring", requirement: ">= 0", type: "development"),
+        Bibliothecary::Dependency.new(name: "thin", requirement: ">= 0", type: "development"),
+        Bibliothecary::Dependency.new(name: "puma", requirement: ">= 0", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "rails_12factor", requirement: ">= 0", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "bugsnag", requirement: ">= 0", type: "runtime"),
       ],
       kind: "manifest",
       success: true,
@@ -48,12 +48,12 @@ describe Bibliothecary::Parsers::Rubygems do
       platform: "rubygems",
       path: "devise.gemspec",
       dependencies: [
-        { name: "warden", requirement: "~> 1.2.3", type: :runtime },
-        { name: "orm_adapter", requirement: "~> 0.1", type: :development },
-        { name: "bcrypt", requirement: "~> 3.0", type: :runtime },
-        { name: "thread_safe", requirement: "~> 0.1", type: :runtime },
-        { name: "railties", requirement: ">= 3.2.6, < 5", type: :runtime },
-        { name: "responders", requirement: ">= 0", type: :runtime },
+        Bibliothecary::Dependency.new(name: "warden", requirement: "~> 1.2.3", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "orm_adapter", requirement: "~> 0.1", type: "development"),
+        Bibliothecary::Dependency.new(name: "bcrypt", requirement: "~> 3.0", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "thread_safe", requirement: "~> 0.1", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "railties", requirement: ">= 3.2.6, < 5", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "responders", requirement: ">= 0", type: "runtime"),
       ],
       kind: "manifest",
       success: true,
@@ -65,10 +65,10 @@ describe Bibliothecary::Parsers::Rubygems do
       platform: "rubygems",
       path: "Gemfile.lock",
       dependencies: [
-        { name: "CFPropertyList", requirement: "2.3.1", type: "runtime" },
-        { name: "actionmailer", requirement: "4.2.3", type: "runtime" },
-        { name: "googleauth", requirement: "0.4.1", type: "runtime" },
-        { name: "hashie", requirement: "3.4.2", type: "runtime" },
+        Bibliothecary::Dependency.new(name: "CFPropertyList", requirement: "2.3.1", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "actionmailer", requirement: "4.2.3", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "googleauth", requirement: "0.4.1", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "hashie", requirement: "3.4.2", type: "runtime"),
       ],
       kind: "lockfile",
       success: true,
@@ -84,7 +84,7 @@ describe Bibliothecary::Parsers::Rubygems do
        success: true
      )
 
-    expect(result[:dependencies]).to include({ name: "bundler", requirement: "2.3.19", type: "runtime" })
+    expect(result[:dependencies]).to include(Bibliothecary::Dependency.new(name: "bundler", requirement: "2.3.19", type: "runtime"))
   end
 
   it "parses dependencies from Gemfile.lock with windows line endings" do
@@ -98,7 +98,7 @@ describe Bibliothecary::Parsers::Rubygems do
         platform: "rubygems",
         path: "Gemfile.lock",
         dependencies: [
-          { name: "rails", requirement: "5.2.3", type: "runtime" },
+          Bibliothecary::Dependency.new(name: "rails", requirement: "5.2.3", type: "runtime"),
         ],
         kind: "lockfile",
         success: true,
