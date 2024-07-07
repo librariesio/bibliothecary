@@ -31,7 +31,9 @@ module Bibliothecary
         response = Typhoeus.post("#{Bibliothecary.configuration.cabal_parser_host}/parse", headers: headers, body: file_contents)
 
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.cabal_parser_host}/parse", response.response_code) unless response.success?
-        JSON.parse(response.body, symbolize_names: true)
+        JSON
+          .parse(response.body, symbolize_names: true)
+          .map { |dep_kvs| Dependency.new(**dep_kvs) }
       end
 
       def self.parse_cabal_config(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
@@ -39,11 +41,11 @@ module Bibliothecary
         deps = manifest.first["constraints"].delete("\n").split(",").map(&:strip)
         deps.map do |dependency|
           dep = dependency.delete("==").split(" ")
-          {
+          Dependency.new(
             name: dep[0],
             requirement: dep[1] || "*",
             type: "runtime",
-          }
+          )
         end
       end
     end
