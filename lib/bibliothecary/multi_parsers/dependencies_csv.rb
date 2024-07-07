@@ -140,7 +140,7 @@ module Bibliothecary
         csv_file = try_cache(options, options[:filename]) do
           raw_csv_file = CSVFile.new(file_contents)
           raw_csv_file.parse!
-          raw_csv_file
+          Dependency.new(**raw_csv_file)
         end
 
         csv_file.result.find_all do |dependency|
