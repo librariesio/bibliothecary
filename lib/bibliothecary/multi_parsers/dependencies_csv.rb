@@ -140,12 +140,13 @@ module Bibliothecary
         csv_file = try_cache(options, options[:filename]) do
           raw_csv_file = CSVFile.new(file_contents)
           raw_csv_file.parse!
-          Dependency.new(**raw_csv_file)
+          raw_csv_file
         end
 
-        csv_file.result.find_all do |dependency|
-          dependency[:platform] == platform_name.to_s
-        end
+        csv_file
+          .result
+          .find_all { |dependency| dependency[:platform] == platform_name.to_s }
+          .map { |dep_kvs| Dependency.new(**dep_kvs) }
       end
     end
   end

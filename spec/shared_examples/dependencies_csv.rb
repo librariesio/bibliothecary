@@ -25,13 +25,13 @@ RSpec.shared_examples "dependencies.csv" do
       result = described_class.analyse_contents("dependencies.csv", load_fixture("dependencies.csv"))
 
       dependencies_for_platform.each do |dependency|
-        expect(result[:dependencies].find { |d| d[:name] == dependency[:name] }).to eq({
+        expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(Bibliothecary::Dependency.new(
           platform: dependency[:platform],
           name: dependency[:name],
           lockfile_requirement: dependency[:version],
           requirement: dependency[:version],
           type: dependency[:type],
-        })
+        ))
       end
     end
   end
