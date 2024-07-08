@@ -164,7 +164,12 @@ All available config options are in: https://github.com/librariesio/bibliothecar
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, bump and commit the version number in `version.rb` in the `main` branch, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`.
+
+To release a new version:
+* move the changes under`"Unreleased"` in the `CHANGELOG.md` file into a new section with your verison number
+* bump and commit the version number in `version.rb` in the `main` branch
+* and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
