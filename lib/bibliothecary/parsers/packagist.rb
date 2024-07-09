@@ -47,8 +47,7 @@ module Bibliothecary
             requirement: requirement,
             type: "development",
             original_requirement: original_requirement
-          ).tap do |result|
-          end
+          )
         end
       end
 

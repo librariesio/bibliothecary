@@ -11,7 +11,7 @@ module Bibliothecary
   # @attr_reader [Boolean] direct Is this dependency a direct dependency (vs transitive dependency)? (default: nil)
   # @attr_reader [Boolean] deprecated Is this dependency deprecated? (default: nil)
   # @attr_reader [Boolean] local Is this dependency local? (default: nil)
-  # @attr_reader [Boolean] optional Is this dependency optional? (default: false)
+  # @attr_reader [Boolean] optional Is this dependency optional? (default: nil)
   # @attr_reader [String] original_name The original name used to require the dependency, for cases
   #   where it did not match the resolved name. This can be used for features like aliasing.
   # @attr_reader [String] original_requirement The original requirement used to require the dependency,
@@ -24,6 +24,8 @@ module Bibliothecary
     FIELDS = [
       :name,
       :requirement,
+      :original_requirement,
+      :lockfile_requirement,
       :platform,
       :type,
       :direct,
@@ -31,8 +33,6 @@ module Bibliothecary
       :local,
       :optional,
       :original_name,
-      :original_requirement,
-      :lockfile_requirement,
       :source,
     ]
 
@@ -41,6 +41,8 @@ module Bibliothecary
     def initialize(
       name:,
       requirement:,
+      original_requirement: nil,
+      lockfile_requirement: nil,
       platform: nil,
       type: nil,
       direct: nil,
@@ -48,22 +50,20 @@ module Bibliothecary
       local: nil,
       optional: nil,
       original_name: nil,
-      original_requirement: nil,
-      lockfile_requirement: nil,
       source: nil
     )
       @name = name
-      @requirement = requirement
       @platform = platform
-      @type = type
-      @direct = direct
-      @deprecated = deprecated || false
-      @local = local
-      @optional = optional || false
-      @original_name = original_name
+      @requirement = requirement
       @original_requirement = original_requirement
       # TODO: maybe deprecate this field? Is it possible to replace it with original_requirement?
       @lockfile_requirement = lockfile_requirement
+      @type = type
+      @direct = direct
+      @deprecated = deprecated
+      @local = local
+      @optional = optional
+      @original_name = original_name
       @source = source
     end
 

@@ -36,18 +36,6 @@ describe Bibliothecary::Dependency do
       expect { subject.new() }.to raise_error(ArgumentError, "missing keywords: :name, :requirement")
     end
 
-    it "defaults to false for deprecated" do
-      dep = Bibliothecary::Dependency.new(name: "foo", requirement: "1.0.0")
-
-      expect(dep.deprecated).to be(false)
-    end
-
-    it "defaults to false for optional" do
-      dep = Bibliothecary::Dependency.new(name: "foo", requirement: "1.0.0")
-
-      expect(dep.optional).to be(false)
-    end
-
     it "can check equality" do
       dep = Bibliothecary::Dependency.new(name: "foo", requirement: "1.0.0")
       

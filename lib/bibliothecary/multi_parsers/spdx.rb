@@ -76,11 +76,11 @@ module Bibliothecary
 
           unless package_name.nil? || package_version.nil? || platform.nil?
             entries[platform.to_sym] ||= []
-            entries[platform.to_sym] << {
+            entries[platform.to_sym] << Dependency.new(
               name: package_name,
               requirement: package_version,
               type: "lockfile",
-            }
+            )
 
             package_name = package_version = platform = nil
           end

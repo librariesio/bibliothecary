@@ -33,11 +33,11 @@ module Bibliothecary
           return unless mapping
 
           @manifests[mapping] ||= Set.new
-          @manifests[mapping] << {
+          @manifests[mapping] <<  Dependency.new(
             name: self.class.full_name_for_purl(purl),
             requirement: purl.version,
             type: "lockfile",
-          }
+          )
         end
 
         # Iterates over each manifest entry in the parse_queue, and accepts a block which will
