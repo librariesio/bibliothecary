@@ -23,11 +23,11 @@ module Bibliothecary
         json["dependencies"].map do |dependency|
           name = dependency["url"].gsub(/^https?:\/\//, "").gsub(/\.git$/,"")
           version = "#{dependency['version']['lowerBound']} - #{dependency['version']['upperBound']}"
-          {
+          Dependency.new(
             name: name,
             requirement: version,
             type: "runtime",
-          }
+          )
         end
       end
     end

@@ -107,11 +107,11 @@ module Bibliothecary
         manifest = Ox.parse file_contents
         manifest.dependencies.locate("dependency").map do |dependency|
           attrs = dependency.attributes
-          {
+          Dependency.new(
             name: "#{attrs[:org]}:#{attrs[:name]}",
             requirement: attrs[:rev],
             type: "runtime",
-          }
+          )
         end
       end
 
@@ -143,11 +143,11 @@ module Bibliothecary
 
           next nil if org.nil? or name.nil? or version.nil?
 
-          {
+          Dependency.new(
             name: "#{org}:#{name}",
             requirement: version,
             type: type,
-          }
+          )
         end.compact
       end
 
@@ -188,33 +188,33 @@ module Bibliothecary
 
           if dep.count == 6
             # get name from renamed package resolution "org:name:version -> renamed_org:name:version"
-            {
+            Dependency.new(
               original_name: dep[0,2].join(":"),
               original_requirement: dep[2],
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
               type: current_type,
-            }
+            )
           elsif dep.count == 5
             # get name from renamed package resolution "org:name -> renamed_org:name:version"
-            {
+            Dependency.new(
               original_name: dep[0,2].join(":"),
               original_requirement: "*",
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
               type: current_type,
-            }
+            )
           else
             # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
-            {
+            Dependency.new(
               name: dep[0..1].join(":"),
               requirement: dep[-1],
               type: current_type,
-            }
+            )
           end
         end
           .compact
-          .uniq { |item| item.values_at(:name, :requirement, :type, :original_name, :original_requirement) }
+          .uniq { |item| [item.name, item.requirement, item.type, item.original_name, item.original_requirement] }
       end
 
       def self.parse_maven_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
@@ -241,16 +241,16 @@ module Bibliothecary
           when 5..6
             version, type = parts[-2..]
           end
-          {
+          Dependency.new(
             name: parts[0..1].join(":"),
             requirement: version,
             type: type,
-          }
+          )
         end
 
         # First dep line will be the package itself (unless we're only analyzing a single line)
         package = deps[0]
-        deps.size < 2 ? deps : deps[1..-1].reject { |d| d[:name] == package[:name] && d[:requirement] == package[:requirement] }
+        deps.size < 2 ? deps : deps[1..-1].reject { |d| d.name == package.name && d.requirement == package.requirement }
       end
 
       def self.parse_resolved_dep_line(line)
@@ -261,11 +261,11 @@ module Bibliothecary
         dep_parts = line.strip.split(":")
         return unless dep_parts.length == 5
         # org.springframework.boot:spring-boot-starter-web:jar:2.0.3.RELEASE:compile[36m -- module spring.boot.starter.web[0;1m [auto][m
-        {
+        Dependency.new(
           name: dep_parts[0, 2].join(":"),
           requirement: dep_parts[3],
           type: dep_parts[4].split("--").first.strip,
-        }
+        )
       end
 
       def self.parse_standalone_pom_manifest(file_contents, options: {})
@@ -311,7 +311,7 @@ module Bibliothecary
             # optional field is, itself, optional, and will be either "true" or "false"
             optional = extract_pom_dep_info(xml, dep, "optional", parent_properties)
             dep_hash[:optional] = optional == "true" unless optional.nil?
-            deps.push(dep_hash)
+            deps.push(Dependency.new(**dep_hash))
           end
         end
       end
@@ -321,11 +321,11 @@ module Bibliothecary
           .scan(GRADLE_GROOVY_SIMPLE_REGEXP)                                                # match 'implementation "group:artifactId:version"'
           .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
           .map { |(type, group, artifactId, version)|
-          {
-            name: [group, artifactId].join(":"),
-            requirement: version || "*",
-            type: type,
-          }
+            Dependency.new(
+              name: [group, artifactId].join(":"),
+              requirement: version || "*",
+              type: type,
+            )
           }
       end
 
@@ -334,11 +334,11 @@ module Bibliothecary
           .scan(GRADLE_KOTLIN_SIMPLE_REGEXP)                                                # match 'implementation("group:artifactId:version")'
           .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
           .map { |(type, group, artifactId, version)|
-            {
+            Dependency.new(
               name: [group, artifactId].join(":"),
               requirement: version || "*",
               type: type,
-            }
+            )
           }
       end
 
@@ -458,7 +458,7 @@ module Bibliothecary
           dep.delete(:fields)
         end
 
-        return squished
+        return squished.map { |dep_kvs| Dependency.new(**dep_kvs) }
       end
 
       def self.parse_sbt_deps(type, lines)

@@ -26,11 +26,11 @@ module Bibliothecary
         return [] unless index;
         dependencies = json[index + 1]
         dependencies.map do |dependency|
-          {
+          Dependency.new(
             name: dependency[0],
             requirement: dependency[1],
             type: "runtime",
-          }
+          )
         end
       end
     end

@@ -40,7 +40,7 @@ module Bibliothecary
 
       def self.parse_conda_with_kind(info, kind)
         dependencies = call_conda_parser_web(info, kind)[kind.to_sym]
-        dependencies.map { |dep| dep.merge(type: "runtime") }
+        dependencies.map { |dep_kv| Dependency.new(**dep_kv.merge(type: "runtime")) }
       end
 
       private_class_method def self.call_conda_parser_web(file_contents, kind)

@@ -147,11 +147,11 @@ module Bibliothecary
       def self.map_dependencies(packages, type)
         return [] unless packages
         packages.map do |name, info|
-          {
+          Dependency.new(
             name: name,
             requirement: map_requirements(info),
             type: type,
-          }
+          )
         end
       end
 
@@ -176,11 +176,11 @@ module Bibliothecary
           next if group == "_meta"
           group = "runtime" if group == "default"
           dependencies.each do |name, info|
-            deps << {
+            deps << Dependency.new(
               name: name,
               requirement: map_requirements(info),
               type: group,
-            }
+            )
           end
         end
         deps
@@ -198,11 +198,11 @@ module Bibliothecary
                     "runtime"
                   end
 
-          deps << {
+          deps << Dependency.new(
             name: package["name"],
             requirement: map_requirements(package),
             type: group,
-          }
+          )
         end
         deps
       end
@@ -215,11 +215,11 @@ module Bibliothecary
           next if line.match(/^#/)
           match = line.match(REQUIRE_REGEXP)
           next unless match
-          deps << {
+          deps << Dependency.new(
             name: match[1],
             requirement: match[-1] || "*",
             type: "runtime",
-          }
+          )
         end
         deps
       end
@@ -233,11 +233,11 @@ module Bibliothecary
       def self.parse_dependency_tree_json(file_contents, options: {})
         JSON.parse(file_contents)
           .map do |pkg|
-            {
+            Dependency.new(
                 name: pkg.dig("package", "package_name"),
                 requirement: pkg.dig("package", "installed_version"),
                 type: "runtime",
-              }
+            )
           end
           .uniq
       end
@@ -260,27 +260,25 @@ module Bibliothecary
         file_contents.split("\n").each do |line|
           if line["://"]
             begin
-              result = parse_requirements_txt_url(line)
+              result = parse_requirements_txt_url(line, type)
             rescue URI::Error, NoEggSpecified
               next
             end
 
-            deps << result.merge(
-              type: type
-            )
+            deps << result
           elsif (match = line.delete(" ").match(REQUIREMENTS_REGEXP))
-            deps << {
+            deps << Dependency.new(
               name: match[1],
               requirement: match[-1] || "*",
               type: type,
-            }
+            )
           end
         end
 
         deps.uniq
       end
 
-      def self.parse_requirements_txt_url(url)
+      def self.parse_requirements_txt_url(url, type=nil)
         uri = URI.parse(url)
         raise NoEggSpecified, "No egg specified in #{url}" unless uri.fragment
 
@@ -289,7 +287,7 @@ module Bibliothecary
 
         requirement = uri.path[/@(.+)$/, 1]
 
-        { name: name, requirement: requirement || "*" }
+        Dependency.new(name: name, requirement: requirement || "*", type: type)
       end
 
       def self.pip_compile?(file_contents)

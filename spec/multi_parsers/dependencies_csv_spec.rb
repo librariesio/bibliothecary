@@ -56,8 +56,8 @@ raow,wow,2.2.0,6.0.0
 
       result = parser.parse_dependencies_csv(csv, options: options)
 
-      expect(result.first[:requirement]).to eq("6.0.0")
-      expect(result.first[:lockfile_requirement]).to eq("6.0.0")
+      expect(result.first.requirement).to eq("6.0.0")
+      expect(result.first.lockfile_requirement).to eq("6.0.0")
     end
   end
 
@@ -78,8 +78,8 @@ hiss,raow,2.2.1,bird
         result = parser.parse_dependencies_csv(csv, options: options)
 
         expect(result).to eq([
-        { platform: "hiss", name: "wow", requirement: "2.2.0", lockfile_requirement: "2.2.0", type: "runtime" },
-        { platform: "hiss", name: "raow", requirement: "2.2.1", lockfile_requirement: "2.2.1", type: "bird" },
+          Bibliothecary::Dependency.new(platform: "hiss", name: "wow", requirement: "2.2.0", lockfile_requirement: "2.2.0", type: "runtime"),
+          Bibliothecary::Dependency.new(platform: "hiss", name: "raow", requirement: "2.2.1", lockfile_requirement: "2.2.1", type: "bird"),
         ])
 
         # the cache should contain a CSVFile
@@ -104,8 +104,8 @@ hiss,raow,2.2.1,bird,
           result = parser.parse_dependencies_csv(csv, options: options)
 
           expect(result).to eq([
-            { platform: "hiss", name: "wow", lockfile_requirement: "2.2.0", type: "runtime", requirement: "2.2.0" },
-            { platform: "hiss", name: "raow", lockfile_requirement: "2.2.1", type: "bird", requirement: "2.2.1" },
+            Bibliothecary::Dependency.new(platform: "hiss", name: "wow", lockfile_requirement: "2.2.0", type: "runtime", requirement: "2.2.0"),
+            Bibliothecary::Dependency.new(platform: "hiss", name: "raow", lockfile_requirement: "2.2.1", type: "bird", requirement: "2.2.1"),
           ])
 
           # the cache should contain a CSVFile
@@ -129,10 +129,10 @@ hiss,raow,2.2.0,bird,2.2.1
           result = parser.parse_dependencies_csv(csv, options: options)
 
           expect(result).to eq([
-            { platform: "hiss", name: "wow", type: "runtime", requirement: "2.2.0", lockfile_requirement:"2.2.0"  },
+            Bibliothecary::Dependency.new(platform: "hiss", name: "wow", type: "runtime", requirement: "2.2.0", lockfile_requirement:"2.2.0"),
             # headers are searched left to right for each field, and the
             # highest priority matching one wins
-            { platform: "hiss", name: "raow", type: "bird", requirement: "2.2.0", lockfile_requirement: "2.2.0" },
+            Bibliothecary::Dependency.new(platform: "hiss", name: "raow", type: "bird", requirement: "2.2.0", lockfile_requirement: "2.2.0"),
           ])
 
           # the cache should contain a CSVFile
