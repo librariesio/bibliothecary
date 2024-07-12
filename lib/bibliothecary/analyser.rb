@@ -58,11 +58,11 @@ module Bibliothecary
 
       def map_dependencies(hash, key, type)
         hash.fetch(key,[]).map do |name, requirement|
-          {
+          Dependency.new(
             name: name,
             requirement: requirement,
             type: type,
-          }
+          )
         end
       end
 

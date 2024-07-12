@@ -29,11 +29,11 @@ module Bibliothecary
       def self.parse_yaml_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = YAML.load file_contents
         manifest.fetch("packages", []).map do |name, dep|
-          {
+          Dependency.new(
             name: name,
             requirement: dep["version"],
             type: "runtime",
-          }
+          )
         end
       end
     end

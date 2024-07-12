@@ -29,11 +29,11 @@ module Bibliothecary
           reqs = "*" if reqs.empty?
           next if name.empty?
 
-          deps << {
+          deps << Dependency.new(
             name: name,
             requirement: reqs,
             type: "runtime",
-          }
+          )
         end
         deps
       end

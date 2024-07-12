@@ -28,11 +28,11 @@ module Bibliothecary
         json = JSON.parse response.body
 
         json.map do |name, version|
-          {
+          Dependency.new(
             name: name,
             requirement: version,
             type: "runtime",
-          }
+          )
         end
       end
 
@@ -42,11 +42,11 @@ module Bibliothecary
         json = JSON.parse response.body
 
         json.map do |name, info|
-          {
+          Dependency.new(
             name: name,
             requirement: info["version"],
             type: "runtime",
-          }
+          )
         end
       end
     end

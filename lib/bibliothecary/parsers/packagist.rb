@@ -25,23 +25,29 @@ module Bibliothecary
       def self.parse_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse file_contents
         manifest.fetch("packages",[]).map do |dependency|
-          {
+          requirement = dependency["version"]
+
+          # Store Drupal version if Drupal, but include the original manifest version for reference
+          original_requirement, requirement = requirement, dependency.dig("source", "reference") if is_drupal_module(dependency)
+
+          Dependency.new(
             name: dependency["name"],
-            requirement: dependency["version"],
+            requirement: requirement,
             type: "runtime",
-          }.tap do |result|
-            # Store Drupal version if Drupal, but include the original manifest version for reference
-            result[:original_requirement], result[:requirement] = result[:requirement], dependency.dig("source", "reference") if is_drupal_module(dependency)
-          end
+            original_requirement: original_requirement
+          )
         end + manifest.fetch("packages-dev",[]).map do |dependency|
-          {
+          requirement = dependency["version"]
+
+          # Store Drupal version if Drupal, but include the original manifest version for reference
+          original_requirement, requirement = requirement, dependency.dig("source", "reference") if is_drupal_module(dependency)
+
+          Dependency.new(
             name: dependency["name"],
-            requirement: dependency["version"],
+            requirement: requirement,
             type: "development",
-          }.tap do |result|
-            # Store Drupal version if Drupal, but include the original manifest version for reference
-            result[:original_requirement], result[:requirement] = result[:requirement], dependency.dig("source", "reference") if is_drupal_module(dependency)
-          end
+            original_requirement: original_requirement
+          )
         end
       end
 

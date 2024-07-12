@@ -10,10 +10,8 @@ describe Bibliothecary::Parsers::Dub do
       platform: "dub",
       path: "dub.json",
       dependencies: [
-        { name: "vibe-d", requirement: "~>0.7.22", type: "runtime" },
-        { name: "libdparse",
-         requirement: { "optional"=>true, "version"=>"~>0.2.0" },
-         type: "runtime" },
+        Bibliothecary::Dependency.new(name: "vibe-d", requirement: "~>0.7.22", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "libdparse", requirement: { "optional"=>true, "version"=>"~>0.2.0" }, type: "runtime"),
       ],
       kind: "manifest",
       success: true,
@@ -25,7 +23,7 @@ describe Bibliothecary::Parsers::Dub do
       platform: "dub",
       path: "dub.sdl",
       dependencies: [
-        { name: "vibe-d", requirement: "~>0.7.23", type: :runtime },
+        Bibliothecary::Dependency.new(name: "vibe-d", requirement: "~>0.7.23", type: :runtime),
       ],
       kind: "manifest",
       success: true,

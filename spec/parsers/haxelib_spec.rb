@@ -10,8 +10,8 @@ describe Bibliothecary::Parsers::Haxelib do
       platform: "haxelib",
       path: "haxelib.json",
       dependencies: [
-        { name: "lime", requirement: "2.9.1", type: "runtime" },
-        { name: "openfl", requirement: "3.6.1", type: "runtime" },
+        Bibliothecary::Dependency.new(name: "lime", requirement: "2.9.1", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "openfl", requirement: "3.6.1", type: "runtime"),
       ],
       kind: "manifest",
       success: true,

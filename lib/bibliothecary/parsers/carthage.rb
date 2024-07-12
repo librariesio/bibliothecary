@@ -40,11 +40,11 @@ module Bibliothecary
         json = JSON.parse(response.body)
 
         json.map do |dependency|
-          {
+          Dependency.new(
             name: dependency["name"],
             requirement: dependency["version"],
             type: dependency["type"],
-          }
+          )
         end
       end
     end

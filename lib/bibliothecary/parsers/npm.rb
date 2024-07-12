@@ -70,12 +70,12 @@ module Bibliothecary
           #      * The other occurrence's name is the path to the local dependency (which has less information, and is duplicative, so we discard)
           .select { |name, _dep| name.start_with?("node_modules") }
           .map do |name, dep|
-            {
+            Dependency.new(
               name: name.split("node_modules/").last,
               requirement: dep["version"] || "*",
               type: dep.fetch("dev", false) || dep.fetch("devOptional", false)  ? "development" : "runtime",
               local: dep.fetch("link", false),
-            }
+            )
           end
       end
 
@@ -90,11 +90,11 @@ module Bibliothecary
             parse_package_lock_deps_recursively(requirement.fetch("dependencies", []), depth + 1)
                                end
 
-          [{
+          [Dependency.new(
             name: name,
             requirement: version,
             type: type,
-          }] + child_dependencies
+          )] + child_dependencies
         end
       end
 
@@ -102,14 +102,29 @@ module Bibliothecary
         manifest = JSON.parse(file_contents)
         raise "appears to be a lockfile rather than manifest format" if manifest.key?("lockfileVersion")
 
-        (
-          map_dependencies(manifest, "dependencies", "runtime") +
-          map_dependencies(manifest, "devDependencies", "development")
-        )
-          .reject { |dep| dep[:name].start_with?("//") } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
-          .each do |dep|
-            dep[:local] = dep[:requirement].start_with?("file:")
+        dependencies = manifest.fetch("dependencies", [])
+          .reject { |name, _requirement| name.start_with?("//") } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
+          .map do |name, requirement|
+            Dependency.new(
+              name: name,
+              requirement: requirement,
+              type: "runtime",
+              local: requirement.start_with?("file:")
+            )
           end
+
+        dependencies += manifest.fetch("devDependencies", [])
+          .reject { |name, _requirement| name.start_with?("//") } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
+          .map do |name, requirement|
+            Dependency.new(
+              name: name,
+              requirement: requirement,
+              type: "development",
+              local: requirement.start_with?("file:")
+            )
+          end
+
+        dependencies
       end
 
       def self.parse_yarn_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
@@ -119,13 +134,13 @@ module Bibliothecary
 
         json = JSON.parse(response.body, symbolize_names: true)
         json.uniq.map do |dep|
-          {
+          Dependency.new(
             name: dep[:name],
             requirement: dep[:version],
             lockfile_requirement: dep[:requirement],
             type: dep[:type],
             local: dep[:requirement]&.start_with?("file:"),
-          }
+          )
         end
       end
 
@@ -150,12 +165,12 @@ module Bibliothecary
       private_class_method def self.transform_tree_to_array(deps_by_name)
         deps_by_name.map do |name, metadata|
           [
-            {
+            Dependency.new(
               name: name,
               requirement: metadata["version"],
               lockfile_requirement: metadata.fetch("from", "").split("@").last,
               type: "runtime",
-            },
+            ),
           ] + transform_tree_to_array(metadata.fetch("dependencies", {}))
         end.flatten(1)
       end

@@ -84,11 +84,11 @@ module Bibliothecary
         file_contents.split("\n").each do |line|
           match = line.gsub(/(\#(.*))/, "").match(GPM_REGEXP)
           next unless match
-          deps << {
+          deps << Dependency.new(
             name: match[1].strip,
             requirement: match[2].strip || "*",
             type: "runtime",
-          }
+          )
         end
         deps
       end
@@ -136,9 +136,9 @@ module Bibliothecary
             # the *source code*. So by replacing the deps here, we're giving more honest results than you'd get when asking go
             # about the versions used.
             replaced_dep = categorized_deps["replace"]
-              .find do |replacement_dep| 
-                replacement_dep[:original_name] == dep[:name] && 
-                  (replacement_dep[:original_requirement] == "*" || replacement_dep[:original_requirement] == dep[:requirement])
+              .find do |replacement_dep|
+                replacement_dep.original_name == dep.name &&
+                  (replacement_dep.original_requirement == "*" || replacement_dep.original_requirement == dep.requirement)
               end
               
             replaced_dep || dep
@@ -178,11 +178,11 @@ module Bibliothecary
         deps = []
         file_contents.lines.map(&:strip).each do |line|
           if (match = line.match(GOSUM_REGEXP))
-            deps << {
+            deps << Dependency.new(
               name: match[1].strip,
               requirement: match[2].strip.split("/").first || "*",
               type: "runtime",
-            }
+            )
           end
         end
         deps.uniq
@@ -198,20 +198,24 @@ module Bibliothecary
               # about the versions used.
               name, requirement = dep["Replace"].split(" ", 2)
               requirement = "*" if requirement.to_s.strip == ""
-              { name: name, requirement: requirement, original_name: dep["Path"], original_requirement: dep["Version"], type: dep.fetch("Scope") { "runtime" } }
+              Dependency.new(
+                name: name, requirement: requirement, original_name: dep["Path"], original_requirement: dep["Version"], type: dep.fetch("Scope") { "runtime" }
+              )
             else
-              { name: dep["Path"], requirement: dep["Version"], type: dep.fetch("Scope") { "runtime" } }
+              Dependency.new(
+                name: dep["Path"], requirement: dep["Version"], type: dep.fetch("Scope") { "runtime" }
+              )
             end
           end
       end
 
       def self.map_dependencies(manifest, attr_name, dep_attr_name, version_attr_name, type)
         manifest.fetch(attr_name,[]).map do |dependency|
-          {
+          Dependency.new(
             name: dependency[dep_attr_name],
             requirement: dependency[version_attr_name]  || "*",
             type: type,
-          }
+          )
         end
       end
 
@@ -221,29 +225,29 @@ module Bibliothecary
         when "replace" 
           replacement_dep = line.split(GOMOD_REPLACEMENT_SEPARATOR_REGEXP, 2).last
           replacement_match = replacement_dep.match(GOMOD_DEP_REGEXP)
-          {
+          Dependency.new(
             original_name: match[:name],
             original_requirement: match[:requirement] || "*",
             name: replacement_match[:name],
             requirement: replacement_match[:requirement] || "*",
             type: "runtime",
             direct: !match[:indirect],
-          }
+          )
         when "retract"
-          {
+          Dependency.new(
             name: match[:name],
             requirement: match[:requirement] || "*",
             type: "runtime",
             deprecated: true,
             direct: !match[:indirect],
-          }
+          )
         else
-          {
+          Dependency.new(
             name: match[:name],
             requirement: match[:requirement] || "*",
             type: "runtime",
             direct: !match[:indirect],
-          }
+          )
         end
       end
     end

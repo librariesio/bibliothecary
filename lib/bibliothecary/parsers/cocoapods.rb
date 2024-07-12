@@ -40,11 +40,11 @@ module Bibliothecary
         manifest["PODS"].map do |row|
           pod = row.is_a?(String) ? row : row.keys.first
           match = pod.match(/(.+?)\s\((.+?)\)/i)
-          {
+          Dependency.new(
             name: match[1].split("/").first,
             requirement: match[2],
             type: "runtime",
-          }
+          )
         end.compact
       end
 
@@ -61,11 +61,11 @@ module Bibliothecary
       def self.parse_json_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse(file_contents)
         manifest["dependencies"].inject([]) do |deps, dep|
-          deps.push({
+          deps.push(Dependency.new(
             name: dep[0],
             requirement: dep[1],
             type: "runtime",
-          })
+          ))
         end.uniq
       end
     end

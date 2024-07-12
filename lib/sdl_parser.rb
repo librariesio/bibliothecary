@@ -9,11 +9,11 @@ class SdlParser
 
   def dependencies
     parse.children("dependency").inject([]) do |deps, dep|
-      deps.push({
+      deps.push(Bibliothecary::Dependency.new(
         name: dep.value,
         requirement: dep.attribute("version") || ">= 0",
         type: type,
-      })
+      ))
     end.uniq
   end
 

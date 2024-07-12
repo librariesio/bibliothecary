@@ -52,11 +52,11 @@ module Bibliothecary
         manifest = JSON.parse file_contents
         manifest.fetch("libraries",[]).map do |name, _requirement|
           dep = name.split("/")
-          {
+          Dependency.new(
             name: dep[0],
             requirement: dep[1],
             type: "runtime",
-          }
+          )
         end
       end
 
@@ -68,13 +68,13 @@ module Bibliothecary
           frameworks[framework] = deps
             .reject { |_name, details| details["type"] == "Project" } # Projects do not have versions
             .map do |name, details|
-              {
+              Dependency.new(
                 name: name,
                 # 'resolved' has been set in all examples so far
                 # so fallback to requested is pure paranoia
                 requirement: details.fetch("resolved", details.fetch("requested", "*")),
                 type: "runtime",
-              }
+              )
             end
         end
 
@@ -92,11 +92,11 @@ module Bibliothecary
       def self.parse_packages_config(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Ox.parse file_contents
         manifest.packages.locate("package").map do |dependency|
-          {
+          Dependency.new(
             name: dependency.id,
             requirement: (dependency.version if dependency.respond_to? "version") || "*",
             type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime",
-          }
+          )
         end
       rescue
         []
@@ -117,13 +117,13 @@ module Bibliothecary
                    "runtime"
                  end
 
-          {
+          Dependency.new(
             name: dependency.Include,
             requirement: requirement,
             type: type,
-          }
+          )
         end
-        packages.uniq {|package| package[:name] }
+        packages.uniq {|package| package.name }
       rescue
         []
       end
@@ -131,11 +131,11 @@ module Bibliothecary
       def self.parse_nuspec(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Ox.parse file_contents
         manifest.package.metadata.dependencies.locate("dependency").map do |dependency|
-          {
+          Dependency.new(
             name: dependency.id,
             requirement: dependency.attributes[:version] || "*",
             type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime",
-          }
+          )
         end
       rescue
         []
@@ -145,14 +145,14 @@ module Bibliothecary
         lines = file_contents.split("\n")
         package_version_re = /\s+(?<name>\S+)\s\((?<version>\d+\.\d+[\.\d+[\.\d+]*]*)\)/
         packages = lines.select { |line| package_version_re.match(line) }.map { |line| package_version_re.match(line) }.map do |match|
-          {
+          Dependency.new(
             name: match[:name].strip,
             requirement: match[:version],
             type: "runtime",
-          }
+          )
         end
         # we only have to enforce uniqueness by name because paket ensures that there is only the single version globally in the project
-        packages.uniq {|package| package[:name] }
+        packages.uniq {|package| package.name }
       end
 
       def self.parse_project_assets_json(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
@@ -164,11 +164,11 @@ module Bibliothecary
             .select { |_name, details| details["type"] == "package" }
             .map do |name, _details|
             name_split = name.split("/")
-            {
+            Dependency.new(
               name: name_split[0],
               requirement: name_split[1],
               type: "runtime",
-            }
+            )
             end
         end
 

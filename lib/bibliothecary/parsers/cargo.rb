@@ -30,11 +30,11 @@ module Bibliothecary
             if requirement.respond_to?(:fetch)
               requirement = requirement["version"] or next
             end
-            {
+            Dependency.new(
               name: name,
               requirement: requirement,
               type: index.zero? ? "runtime" : "development",
-            }
+            )
           end
         end
 
@@ -45,11 +45,11 @@ module Bibliothecary
         manifest = Tomlrb.parse(file_contents)
         manifest.fetch("package",[]).map do |dependency|
           next if not dependency["source"] or not dependency["source"].start_with?("registry+")
-          {
+          Dependency.new(
             name: dependency["name"],
             requirement: dependency["version"],
             type: "runtime",
-          }
+          )
         end
           .compact
       end

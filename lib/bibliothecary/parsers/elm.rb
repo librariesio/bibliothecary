@@ -24,11 +24,11 @@ module Bibliothecary
       def self.parse_json_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse file_contents
         manifest.map do |name, requirement|
-          {
+          Dependency.new(
             name: name,
             requirement: requirement,
             type: "runtime",
-          }
+          )
         end
       end
     end
