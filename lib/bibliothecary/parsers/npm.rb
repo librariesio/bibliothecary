@@ -133,15 +133,20 @@ module Bibliothecary
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.yarn_parser_host}/parse", response.response_code) unless response.success?
 
         json = JSON.parse(response.body, symbolize_names: true)
-        json.uniq.map do |dep|
-          Dependency.new(
-            name: dep[:name],
-            requirement: dep[:version],
-            lockfile_requirement: dep[:requirement],
-            type: dep[:type],
-            local: dep[:requirement]&.start_with?("file:"),
-          )
-        end
+        json
+          .uniq
+          .reject do |dep|
+            dep[:requirement]&.include?("workspace") && dep[:version].include?("use.local")
+          end
+          .map do |dep|
+            Dependency.new(
+              name: dep[:name],
+              requirement: dep[:version],
+              lockfile_requirement: dep[:requirement],
+              type: dep[:type],
+              local: dep[:requirement]&.start_with?("file:"),
+            )
+          end
       end
 
       def self.parse_ls(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
