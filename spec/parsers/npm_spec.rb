@@ -217,6 +217,21 @@ describe Bibliothecary::Parsers::NPM do
     end
   end
 
+  it "does not parse self-referential dependencies from yarn.lock", :vcr do
+    expect(described_class.analyse_contents("yarn.lock", load_fixture("yarn-v4-lockfile/yarn.lock"))).to eq({
+      platform: "npm",
+      path: "yarn.lock",
+      dependencies: [
+        Bibliothecary::Dependency.new(name: "js-tokens", requirement: "4.0.0", lockfile_requirement: "^3.0.0 || ^4.0.0", type: "runtime", local: false),
+        Bibliothecary::Dependency.new(name: "left-pad", requirement: "1.3.0", lockfile_requirement: "^1.3.0", type: "runtime", local: false),
+        Bibliothecary::Dependency.new(name: "loose-envify", requirement: "1.4.0", lockfile_requirement: "^1.1.0", type: "runtime", local: false),
+        Bibliothecary::Dependency.new(name: "react", requirement: "18.3.1", lockfile_requirement: "^18.3.1", type: "runtime", local: false),
+      ],
+      kind: "lockfile",
+      success: true,
+    })
+  end
+
   it "parses package-lock.json with scm based versions" do
     contents = JSON.dump(
       {
