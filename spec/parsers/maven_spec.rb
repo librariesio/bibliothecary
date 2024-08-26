@@ -205,6 +205,11 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     })
   end
 
+  it "treats omitted version on dependencies as wildcard" do
+    dependencies = described_class.analyse_contents("pom.xml", load_fixture("pom_dependencies_no_requirement.xml")).fetch(:dependencies)
+    expect(dependencies.first.requirement).to eq("*")
+  end
+
   context "gradle" do
     it "parses various dependency syntax variations" do
       source = <<~FILE

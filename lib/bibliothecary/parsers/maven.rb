@@ -305,7 +305,7 @@ module Bibliothecary
 
             dep_hash = {
               name: "#{groupId}:#{artifactId}",
-              requirement: version,
+              requirement: version || "*",
               type: scope || "runtime",
             }
             # optional field is, itself, optional, and will be either "true" or "false"
