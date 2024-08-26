@@ -54,7 +54,7 @@ module Bibliothecary
     )
       @name = name
       @platform = platform
-      @requirement = requirement
+      @requirement = requirement || "*"
       @original_requirement = original_requirement
       # TODO: maybe deprecate this field? Is it possible to replace it with original_requirement?
       @lockfile_requirement = lockfile_requirement

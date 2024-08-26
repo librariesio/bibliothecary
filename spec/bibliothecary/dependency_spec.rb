@@ -4,20 +4,20 @@ describe Bibliothecary::Dependency do
   describe "#new" do
     it "sets all properties" do
       dep = described_class.new(
-        name: "foo", 
-        requirement: "1.0.0", 
+        name: "foo",
+        requirement: "1.0.0",
         platform: "maven",
-        type: "runtime", 
-        direct: true, 
-        deprecated: true, 
+        type: "runtime",
+        direct: true,
+        deprecated: true,
         local: true,
         optional: true,
-        original_name: "foo-alias", 
+        original_name: "foo-alias",
         original_requirement: "1.0.0.rc1",
         lockfile_requirement: "^1.0.0",
         source: "package.json",
       )
-      
+
       expect(dep.name).to eq("foo")
       expect(dep.requirement).to eq("1.0.0")
       expect(dep.platform).to eq("maven")
@@ -38,7 +38,7 @@ describe Bibliothecary::Dependency do
 
     it "can check equality" do
       dep = Bibliothecary::Dependency.new(name: "foo", requirement: "1.0.0")
-      
+
       expect(dep).to eq(Bibliothecary::Dependency.new(name: "foo", requirement: "1.0.0"))
       expect(dep).to_not eq(Bibliothecary::Dependency.new(name: "foo", requirement: "2.0.0"))
     end
@@ -47,29 +47,34 @@ describe Bibliothecary::Dependency do
       dep1 = Bibliothecary::Dependency.new(name: "foo", requirement: "1.0.0")
       dep2 = Bibliothecary::Dependency.new(name: "foo", requirement: "2.0.0")
       dep3 = Bibliothecary::Dependency.new(name: "foo", requirement: "2.0.0")
-      
+
       expect([dep1, dep2, dep3].uniq).to eq([dep1, dep2])
     end
 
     it "can be serialized with to_h" do
-      attrs = { 
-        name: "foo", 
-        requirement: "1.0.0", 
+      attrs = {
+        name: "foo",
+        requirement: "1.0.0",
         platform: "maven",
-        type: "runtime", 
-        direct: true, 
-        deprecated: true, 
+        type: "runtime",
+        direct: true,
+        deprecated: true,
         local: true,
         optional: true,
-        original_name: "foo-alias", 
+        original_name: "foo-alias",
         original_requirement: "1.0.0.rc1",
         lockfile_requirement: "^1.0.0",
         source: "package.json",
       }
-      
+
       dep = described_class.new(**attrs)
 
       expect(dep.to_h).to eq(attrs)
+    end
+
+    it "sets empty requirement to wildcard" do
+      dependency = Bibliothecary::Dependency.new(name: "foo", requirement: nil)
+      expect(dependency.requirement).to eq("*")
     end
   end
 end
