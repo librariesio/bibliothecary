@@ -73,8 +73,13 @@ describe Bibliothecary::Dependency do
     end
 
     it "sets empty requirement to wildcard" do
-      dependency = Bibliothecary::Dependency.new(name: "foo", requirement: nil)
+      dependency = described_class.new(name: "foo", requirement: nil)
       expect(dependency.requirement).to eq("*")
+    end
+
+    it "can be read like a hash" do
+      dependency = described_class.new(name: "foo", requirement: nil)
+      expect(dependency[:name]).to eq("foo")
     end
   end
 end
