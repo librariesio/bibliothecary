@@ -72,6 +72,10 @@ module Bibliothecary
     end
     alias :== :eql?
 
+    def [](key)
+      public_send(key)
+    end
+
     def to_h
       FIELDS.to_h { |f| [f, public_send(f)] }
     end
