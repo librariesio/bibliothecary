@@ -305,7 +305,7 @@ module Bibliothecary
 
             dep_hash = {
               name: "#{groupId}:#{artifactId}",
-              requirement: version || "*",
+              requirement: version,
               type: scope || "runtime",
             }
             # optional field is, itself, optional, and will be either "true" or "false"
@@ -323,7 +323,7 @@ module Bibliothecary
           .map { |(type, group, artifactId, version)|
             Dependency.new(
               name: [group, artifactId].join(":"),
-              requirement: version || "*",
+              requirement: version,
               type: type,
             )
           }
@@ -336,7 +336,7 @@ module Bibliothecary
           .map { |(type, group, artifactId, version)|
             Dependency.new(
               name: [group, artifactId].join(":"),
-              requirement: version || "*",
+              requirement: version,
               type: type,
             )
           }

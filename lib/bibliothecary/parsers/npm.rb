@@ -72,7 +72,7 @@ module Bibliothecary
           .map do |name, dep|
             Dependency.new(
               name: name.split("node_modules/").last,
-              requirement: dep["version"] || "*",
+              requirement: dep["version"],
               type: dep.fetch("dev", false) || dep.fetch("devOptional", false)  ? "development" : "runtime",
               local: dep.fetch("link", false),
             )

@@ -86,7 +86,7 @@ module Bibliothecary
           next unless match
           deps << Dependency.new(
             name: match[1].strip,
-            requirement: match[2].strip || "*",
+            requirement: match[2].strip,
             type: "runtime",
           )
         end
@@ -140,7 +140,7 @@ module Bibliothecary
                 replacement_dep.original_name == dep.name &&
                   (replacement_dep.original_requirement == "*" || replacement_dep.original_requirement == dep.requirement)
               end
-              
+
             replaced_dep || dep
           end
 
@@ -168,7 +168,7 @@ module Bibliothecary
             elsif (match = line.match(GOMOD_SINGLELINE_DEP_REGEXP)) # or, detect a singleline dep
               categorized_deps[match[:category]] << go_mod_category_relative_dep(category: match[:category], line: line, match: match)
             elsif (current_multiline_category && match = line.match(GOMOD_MULTILINE_DEP_REGEXP)) # otherwise, parse the multiline dep
-              categorized_deps[current_multiline_category] << go_mod_category_relative_dep(category: current_multiline_category, line: line, match: match) 
+              categorized_deps[current_multiline_category] << go_mod_category_relative_dep(category: current_multiline_category, line: line, match: match)
             end
           end
         categorized_deps
@@ -180,7 +180,7 @@ module Bibliothecary
           if (match = line.match(GOSUM_REGEXP))
             deps << Dependency.new(
               name: match[1].strip,
-              requirement: match[2].strip.split("/").first || "*",
+              requirement: match[2].strip.split("/").first,
               type: "runtime",
             )
           end
@@ -191,7 +191,7 @@ module Bibliothecary
       def self.parse_go_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         JSON.parse(file_contents)
           .select { |dep| dep["Main"] != "true" }
-          .map do |dep| 
+          .map do |dep|
             if dep["Replace"].is_a?(String) && dep["Replace"] != "<nil>" && dep["Replace"] != ""
               # NOTE: The "replace" directive doesn't actually change the version reported from Go (e.g. "go mod graph"), it only changes
               # the *source code*. So by replacing the deps here, we're giving more honest results than you'd get when asking go
@@ -213,7 +213,7 @@ module Bibliothecary
         manifest.fetch(attr_name,[]).map do |dependency|
           Dependency.new(
             name: dependency[dep_attr_name],
-            requirement: dependency[version_attr_name]  || "*",
+            requirement: dependency[version_attr_name],
             type: type,
           )
         end
@@ -222,21 +222,21 @@ module Bibliothecary
       # Returns our standard-ish dep Hash based on the category of dep matched ("require", "replace", etc.)
       def self.go_mod_category_relative_dep(category:, line:, match:)
         case category
-        when "replace" 
+        when "replace"
           replacement_dep = line.split(GOMOD_REPLACEMENT_SEPARATOR_REGEXP, 2).last
           replacement_match = replacement_dep.match(GOMOD_DEP_REGEXP)
           Dependency.new(
             original_name: match[:name],
-            original_requirement: match[:requirement] || "*",
+            original_requirement: match[:requirement],
             name: replacement_match[:name],
-            requirement: replacement_match[:requirement] || "*",
+            requirement: replacement_match[:requirement],
             type: "runtime",
             direct: !match[:indirect],
           )
         when "retract"
           Dependency.new(
             name: match[:name],
-            requirement: match[:requirement] || "*",
+            requirement: match[:requirement],
             type: "runtime",
             deprecated: true,
             direct: !match[:indirect],
@@ -244,7 +244,7 @@ module Bibliothecary
         else
           Dependency.new(
             name: match[:name],
-            requirement: match[:requirement] || "*",
+            requirement: match[:requirement],
             type: "runtime",
             direct: !match[:indirect],
           )

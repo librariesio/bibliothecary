@@ -35,7 +35,7 @@ module Bibliothecary
         hash.fetch(key,[]).map do |name, requirement|
           Dependency.new(
             name: name,
-            requirement: requirement["version"] || "*",
+            requirement: requirement["version"],
             type: type,
           )
         end
