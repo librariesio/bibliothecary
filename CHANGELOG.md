@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- `Bibliothecary::Dependency#requirement` now defaults to all versions (`"*"`) instead of `nil` if no version range is specified for the dependency,
+- `Bibliothecary::Dependency#requirement` now defaults to all versions (`"*"`) instead of `nil` if no version range is specified for the dependency.
 
 ## [10.1.0] - 2024-07-23
 
