@@ -205,6 +205,11 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     })
   end
 
+  it "treats omitted version on dependencies as wildcard" do
+    dependencies = described_class.analyse_contents("pom.xml", load_fixture("pom_dependencies_no_requirement.xml")).fetch(:dependencies)
+    expect(dependencies.first.requirement).to eq("*")
+  end
+
   context "gradle" do
     it "parses various dependency syntax variations" do
       source = <<~FILE
@@ -389,7 +394,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "can extract parent properties specified with a lookup prefix during resolve" do
       parent_props = { "scm.url"=>"scm:git:git@github.com:accidia/echo.git" }
-      
+
       # Esnure that all of these lookup variations resolve to the parent's relevant property.
       ["project.parent.scm.url", "project.scm.url", "scm.url"].each do |lookup_var|
         xml = Ox.parse(%Q!
@@ -481,12 +486,12 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         Bibliothecary::Dependency.new(name: "axis:axis", requirement: "1.4", original_name: "apache:axis", original_requirement: "*"),
         Bibliothecary::Dependency.new(name: "axis:axis", requirement: "1.4", original_name: "another-alias-group:axis", original_requirement: "*"),
       ].each do |dep|
-        renamed_dep = runtime_classpath.select do |d| 
+        renamed_dep = runtime_classpath.select do |d|
           d.name == dep.name && d.requirement == dep.requirement && d.original_name == dep.original_name && d.original_requirement == dep.original_requirement
         end
         expect(renamed_dep.length).to eq(1), "couldn't find dep '#{dep.original_name}' renamed to '#{dep.name}'"
       end
-  
+
       test_runtime_only = deps[:dependencies].select {|item| item.type == "testRuntimeOnly"}
 
       expect(test_runtime_only.length).to eq 0
@@ -551,7 +556,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       gradle_dependencies_out = <<-GRADLE
 ------------------------------------------------------------
 Project ':submodules:test'
-------------------------------------------------------------            
+------------------------------------------------------------
 
 compileClasspath - Compile classpath for source set 'main'.
 +--- project : (*)

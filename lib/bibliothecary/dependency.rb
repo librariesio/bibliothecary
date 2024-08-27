@@ -54,7 +54,7 @@ module Bibliothecary
     )
       @name = name
       @platform = platform
-      @requirement = requirement
+      @requirement = requirement || "*"
       @original_requirement = original_requirement
       # TODO: maybe deprecate this field? Is it possible to replace it with original_requirement?
       @lockfile_requirement = lockfile_requirement
@@ -71,6 +71,10 @@ module Bibliothecary
       FIELDS.all? { |f| public_send(f) == other.public_send(f) }
     end
     alias :== :eql?
+
+    def [](key)
+      public_send(key)
+    end
 
     def to_h
       FIELDS.to_h { |f| [f, public_send(f)] }

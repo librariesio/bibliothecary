@@ -43,7 +43,7 @@ module Bibliothecary
           dep = dependency.delete("==").split(" ")
           Dependency.new(
             name: dep[0],
-            requirement: dep[1] || "*",
+            requirement: dep[1],
             type: "runtime",
           )
         end

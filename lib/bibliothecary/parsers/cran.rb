@@ -35,7 +35,7 @@ module Bibliothecary
           dep = dependency.match(REQUIRE_REGEXP)
           Dependency.new(
             name: dep[1],
-            requirement: dep[2] || "*",
+            requirement: dep[2],
             type: name.downcase,
           )
         end

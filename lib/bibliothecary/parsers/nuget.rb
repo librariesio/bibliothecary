@@ -94,7 +94,7 @@ module Bibliothecary
         manifest.packages.locate("package").map do |dependency|
           Dependency.new(
             name: dependency.id,
-            requirement: (dependency.version if dependency.respond_to? "version") || "*",
+            requirement: (dependency.version if dependency.respond_to? "version"),
             type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime",
           )
         end
@@ -106,7 +106,7 @@ module Bibliothecary
         manifest = Ox.parse file_contents
 
         packages = manifest.locate("ItemGroup/PackageReference").select{ |dep| dep.respond_to? "Include" }.map do |dependency|
-          requirement = (dependency.Version if dependency.respond_to? "Version") || "*"
+          requirement = (dependency.Version if dependency.respond_to? "Version")
           if requirement.is_a?(Ox::Element)
             requirement = dependency.nodes.detect{ |n| n.value == "Version" }&.text
           end
@@ -133,7 +133,7 @@ module Bibliothecary
         manifest.package.metadata.dependencies.locate("dependency").map do |dependency|
           Dependency.new(
             name: dependency.id,
-            requirement: dependency.attributes[:version] || "*",
+            requirement: dependency.attributes[:version],
             type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime",
           )
         end

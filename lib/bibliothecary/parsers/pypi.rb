@@ -165,7 +165,7 @@ module Bibliothecary
             "*"
           end
         else
-          info || "*"
+          info
         end
       end
 
@@ -217,7 +217,7 @@ module Bibliothecary
           next unless match
           deps << Dependency.new(
             name: match[1],
-            requirement: match[-1] || "*",
+            requirement: match[-1],
             type: "runtime",
           )
         end
@@ -269,7 +269,7 @@ module Bibliothecary
           elsif (match = line.delete(" ").match(REQUIREMENTS_REGEXP))
             deps << Dependency.new(
               name: match[1],
-              requirement: match[-1] || "*",
+              requirement: match[-1],
               type: type,
             )
           end
@@ -287,7 +287,7 @@ module Bibliothecary
 
         requirement = uri.path[/@(.+)$/, 1]
 
-        Dependency.new(name: name, requirement: requirement || "*", type: type)
+        Dependency.new(name: name, requirement: requirement, type: type)
       end
 
       def self.pip_compile?(file_contents)

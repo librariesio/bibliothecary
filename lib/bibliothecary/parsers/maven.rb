@@ -323,7 +323,7 @@ module Bibliothecary
           .map { |(type, group, artifactId, version)|
             Dependency.new(
               name: [group, artifactId].join(":"),
-              requirement: version || "*",
+              requirement: version,
               type: type,
             )
           }
@@ -336,7 +336,7 @@ module Bibliothecary
           .map { |(type, group, artifactId, version)|
             Dependency.new(
               name: [group, artifactId].join(":"),
-              requirement: version || "*",
+              requirement: version,
               type: type,
             )
           }
