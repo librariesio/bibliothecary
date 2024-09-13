@@ -1,5 +1,4 @@
 require "ox"
-require "strings-ansi"
 
 # Known shortcomings and unimplemented Maven features:
 #   pom.xml
@@ -57,6 +56,27 @@ module Bibliothecary
       # e.g. "[info]  "
       SBT_IGNORE_REGEXP = /^\[info\]\s*$/
 
+
+      # Copied from the "strings-ansi" gem, because it seems abandoned: https://github.com/piotrmurach/strings-ansi/pull/2
+      # From: https://github.com/piotrmurach/strings-ansi/blob/35d0c9430cf0a8022dc12bdab005bce296cb9f00/lib/strings/ansi.rb#L14-L29
+      # License: MIT
+      # The regex to match ANSI codes
+      ANSI_MATCHER = %r{
+        (?>\033(
+          \[[\[?>!]?\d*(;\d+)*[ ]?[a-zA-Z~@$^\]_\{\\] # graphics
+          |
+          \#?\d # cursor modes
+          |
+          [)(%+\-*/. ](\d|[a-zA-Z@=%]|) # character sets
+          |
+          O[p-xA-Z] # special keys
+          |
+          [a-zA-Z=><~\}|] # cursor movement
+          |
+          \]8;[^;]*;.*?(\033\\|\07) # hyperlink
+        ))
+      }x.freeze
+      
       def self.mapping
         {
           match_filename("ivy.xml", case_insensitive: true) => {
@@ -218,7 +238,8 @@ module Bibliothecary
       end
 
       def self.parse_maven_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
-        Strings::ANSI.sanitize(file_contents)
+        file_contents
+          .gsub(ANSI_MATCHER, "")
           .split("\n")
           .map(&method(:parse_resolved_dep_line))
           .compact
@@ -226,7 +247,8 @@ module Bibliothecary
       end
 
       def self.parse_maven_tree(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
-        captures = Strings::ANSI.sanitize(file_contents)
+        captures = file_contents
+          .gsub(ANSI_MATCHER, "")
           .gsub(/\r\n?/, "\n")
           .scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/)
           .flatten

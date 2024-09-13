@@ -312,7 +312,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       kind: "lockfile",
       success: false,
       error_message: "missing_info.xml: ivy-report document lacks <info> element",
-      error_location: "parsers/maven.rb:134:in `parse_ivy_report'",
+      error_location: "parsers/maven.rb:154:in `parse_ivy_report'",
     })
   end
 
