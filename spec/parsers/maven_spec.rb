@@ -305,14 +305,14 @@ RSpec.describe Bibliothecary::Parsers::Maven do
   end
 
   it "reports success: false on a broken ivy report" do
-    expect(described_class.analyse_contents("missing_info.xml", load_fixture("ivy_reports/missing_info.xml"))).to eq({
+    expect(described_class.analyse_contents("missing_info.xml", load_fixture("ivy_reports/missing_info.xml"))).to match({
       platform: "maven",
       path: "missing_info.xml",
       dependencies: nil,
       kind: "lockfile",
       success: false,
       error_message: "missing_info.xml: ivy-report document lacks <info> element",
-      error_location: "parsers/maven.rb:154:in `parse_ivy_report'",
+      error_location: match("in `parse_ivy_report'"),
     })
   end
 

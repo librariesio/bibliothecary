@@ -5,7 +5,7 @@ orbs:
 executors:
   bibliothecary:
     docker:
-      - image: cimg/ruby:3.0.7
+      - image: cimg/ruby:3.2.5
     working_directory: ~/bibliothecary
 
 

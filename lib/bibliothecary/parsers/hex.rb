@@ -21,6 +21,7 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
+      add_multi_parser(Bibliothecary::MultiParsers::SpdxJson)
 
       def self.parse_mix(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         response = Typhoeus.post("#{Bibliothecary.configuration.mix_parser_host}/", body: file_contents)
