@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support parsing *.spdx.json files
 
+### Changed
+- `Bibliothecary::PURL_TYPE_MAPPING` has changed to `Bibliothecary::PurlUtil::PURL_TYPE_MAPPING`
+- `Bibliothecary::MultiParsers::CycloneDX::ManifestEntries.full_name_for_purl` has changed to `Bibliothecary::PurlUtil.full_name(purl)`
+
 ## [10.2.0] - 2024-08-27
 
 ### Changed
