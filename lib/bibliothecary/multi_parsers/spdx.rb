@@ -18,7 +18,7 @@ module Bibliothecary
       PACKAGE_NAME_REGEXP = /^\s*PackageName:\s*(.*)/
 
       # e.g. 'PackageVersion:' (allowing for excessive whitespace)
-      PACKAGE_VERSION_REGEXP =/^\s*PackageVersion:\s*(.*)/
+      PACKAGE_VERSION_REGEXP = /^\s*PackageVersion:\s*(.*)/
 
       # e.g. "ExternalRef: PACKAGE-MANAGER purl (allowing for excessive whitespace)
       PURL_REGEXP = /^\s*ExternalRef:\s*PACKAGE[-|_]MANAGER\s*purl\s*(.*)/
@@ -53,44 +53,44 @@ module Bibliothecary
 
       def parse_spdx_tag_value_file_contents(file_contents)
         entries = {}
+        spdx_name = spdx_version = platform = purl_name = purl_version = nil
 
-        package_name = nil
-        package_version = nil
-        platform = nil
-
-        file_contents.split("\n").each do |line|
+        file_contents.each_line do |line|
           stripped_line = line.strip
-
           next if skip_tag_value_line?(stripped_line)
 
-          raise MalformedFile unless stripped_line.match(WELLFORMED_LINE_REGEXP)
+          raise MalformedFile unless stripped_line.match?(WELLFORMED_LINE_REGEXP)
 
           if (match = stripped_line.match(PACKAGE_NAME_REGEXP))
-            package_name = match[1]
+            # Per the spec:
+            # > A new package Information section is denoted by the package name (7.1) field.
+            add_entry(entries: entries, platform: platform, purl_name: purl_name,
+                      spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version)
+
+            # reset for this new package
+            spdx_name = spdx_version = platform = purl_name = purl_version = nil
+
+            # capture the new package's name
+            spdx_package_name = match[1]
           elsif (match = stripped_line.match(PACKAGE_VERSION_REGEXP))
-            package_version = match[1]
+            spdx_version = match[1]
           elsif (match = stripped_line.match(PURL_REGEXP))
-            platform ||= get_platform(match[1])
-          end
-
-          unless package_name.nil? || package_version.nil? || platform.nil?
-            entries[platform.to_sym] ||= []
-            entries[platform.to_sym] << Dependency.new(
-              name: package_name,
-              requirement: package_version,
-              type: "lockfile",
-            )
-
-            package_name = package_version = platform = nil
+            purl = PackageURL.parse(match[1])
+            platform ||= purl.type
+            purl_name ||= PurlUtil.full_name(purl)
+            purl_version ||= purl.version
           end
         end
+
+        add_entry(entries: entries, platform: platform, purl_name: purl_name,
+                  spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version)
 
         entries
       end
 
       def skip_tag_value_line?(stripped_line)
         # Ignore blank lines and comments
-        stripped_line == "" || stripped_line[0] == "#"
+        stripped_line.empty? || stripped_line.start_with?("#")
       end
 
       def parse_spdx_json(file_contents, options: {})
@@ -108,35 +108,36 @@ module Bibliothecary
         manifest = JSON.parse(file_contents)
 
         manifest["packages"]&.each do |package|
-          package_name = package["name"]
-          package_version = package["versionInfo"]
+          spdx_name = package["name"]
+          spdx_version = package["versionInfo"]
 
-          platform = nil
-          package["externalRefs"]&.each do |ref|
-            if ref["referenceType"] == "purl"
-              purl = ref["referenceLocator"]
-              platform ||= get_platform(purl)
-            end
-          end
+          first_purl_string = package.dig("externalRefs")&.find { |ref| ref["referenceType"] == "purl" }&.dig("referenceLocator")
+          purl = first_purl_string && PackageURL.parse(first_purl_string)
+          platform = purl&.type
+          purl_name = PurlUtil.full_name(purl)
+          purl_version = purl&.version
 
-          if package_name && package_version && platform
-            entries[platform.to_sym] ||= []
-            entries[platform.to_sym] << Dependency.new(
-              name: package_name,
-              requirement: package_version,
-              type: "lockfile",
-            )
-          end
+          add_entry(entries: entries, platform: platform, purl_name: purl_name,
+                    spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version)
         end
 
         entries
       end
 
-      def get_platform(purl_string)
-        platform = PackageURL.parse(purl_string).type
+      def add_entry(entries:, platform:, purl_name:, spdx_name:, purl_version:, spdx_version:)
+        package_name = purl_name || spdx_name
+        package_version = purl_version || spdx_version
 
-        Bibliothecary::PURL_TYPE_MAPPING[platform]
+        if platform && package_name && package_version
+          entries[platform.to_sym] ||= []
+          entries[platform.to_sym] << Dependency.new(
+            name: package_name,
+            requirement: package_version,
+            type: "lockfile"
+          )
+        end
       end
+
     end
   end
 end

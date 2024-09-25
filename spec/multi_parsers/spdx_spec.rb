@@ -112,20 +112,8 @@ describe Bibliothecary::MultiParsers::Spdx do
     end
   end
 
-  describe "Spdx::get_platform" do
-    it "should handle formats correctly" do
-      golang_purl = "pkg:golang/github.com/path/to/package"
-
-      expect(parser.get_platform(golang_purl)).to eq(:go)
-
-      maven_purl = "pkg:maven/path/to/package@1.12.122"
-
-      expect(parser.get_platform(maven_purl)).to eq(:maven)
-    end
-  end
-
   context "correct parsers implement Spdx" do
-    Bibliothecary::PURL_TYPE_MAPPING.each_value do |parser|
+    Bibliothecary::PurlUtil::PURL_TYPE_MAPPING.each_value do |parser|
       constant_symbol = Bibliothecary::Parsers.constants.find { |c| c.to_s.downcase.gsub(/[^a-z]/, "") == parser.to_s.downcase.gsub(/[^a-z]/, "") }
       constant = Bibliothecary::Parsers.const_get(constant_symbol)
 
