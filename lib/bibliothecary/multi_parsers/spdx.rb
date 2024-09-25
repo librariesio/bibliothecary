@@ -33,6 +33,11 @@ module Bibliothecary
             parser: :parse_spdx_tag_value,
             ungroupable: true,
           },
+          match_extension(".spdx.json") => {
+            kind: "lockfile",
+            parser: :parse_spdx_json,
+            ungroupable: true,
+          },
         }
       end
 
@@ -46,12 +51,6 @@ module Bibliothecary
         entries[platform_name.to_sym]
       end
 
-      def get_platform(purl_string)
-        platform = PackageURL.parse(purl_string).type
-
-        Bibliothecary::PURL_TYPE_MAPPING[platform]
-      end
-
       def parse_spdx_tag_value_file_contents(file_contents)
         entries = {}
 
@@ -62,7 +61,7 @@ module Bibliothecary
         file_contents.split("\n").each do |line|
           stripped_line = line.strip
 
-          next if skip_line?(stripped_line)
+          next if skip_tag_value_line?(stripped_line)
 
           raise MalformedFile unless stripped_line.match(WELLFORMED_LINE_REGEXP)
 
@@ -89,9 +88,54 @@ module Bibliothecary
         entries
       end
 
-      def skip_line?(stripped_line)
+      def skip_tag_value_line?(stripped_line)
         # Ignore blank lines and comments
         stripped_line == "" || stripped_line[0] == "#"
+      end
+
+      def parse_spdx_json(file_contents, options: {})
+        entries = try_cache(options, options[:filename]) do
+          parse_spdx_json_file_contents(file_contents)
+        end
+
+        raise NoEntries if entries.empty?
+
+        entries[platform_name.to_sym]
+      end
+
+      def parse_spdx_json_file_contents(file_contents)
+        entries = {}
+        manifest = JSON.parse(file_contents)
+
+        manifest["packages"]&.each do |package|
+          package_name = package["name"]
+          package_version = package["versionInfo"]
+
+          platform = nil
+          package["externalRefs"]&.each do |ref|
+            if ref["referenceType"] == "purl"
+              purl = ref["referenceLocator"]
+              platform ||= get_platform(purl)
+            end
+          end
+
+          if package_name && package_version && platform
+            entries[platform.to_sym] ||= []
+            entries[platform.to_sym] << Dependency.new(
+              name: package_name,
+              requirement: package_version,
+              type: "lockfile",
+            )
+          end
+        end
+
+        entries
+      end
+
+      def get_platform(purl_string)
+        platform = PackageURL.parse(purl_string).type
+
+        Bibliothecary::PURL_TYPE_MAPPING[platform]
       end
     end
   end

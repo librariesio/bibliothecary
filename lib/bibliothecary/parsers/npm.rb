@@ -35,7 +35,6 @@ module Bibliothecary
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
-      add_multi_parser(Bibliothecary::MultiParsers::SpdxJson)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
       def self.parse_package_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument

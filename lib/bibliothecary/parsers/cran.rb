@@ -19,7 +19,6 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
-      add_multi_parser(Bibliothecary::MultiParsers::SpdxJson)
 
       def self.parse_description(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = DebControl::ControlFileBase.parse(file_contents)
