@@ -97,6 +97,11 @@ All available config options are in: https://github.com/librariesio/bibliothecar
   - JSON as cyclonedx.json
   - Note that CycloneDX manifests can contain information on multiple
     package manager's packages!
+- SPDX
+  - tag:value as *.spdx
+  - JSON as *.spdx.json
+  - Note that SPDX manifests can contain information on multiple
+    package manager's packages!
 - Bower
   - bower.json
 - CPAN
