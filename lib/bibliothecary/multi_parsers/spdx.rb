@@ -76,7 +76,7 @@ module Bibliothecary
             spdx_version = match[1]
           elsif (match = stripped_line.match(PURL_REGEXP))
             purl = PackageURL.parse(match[1])
-            platform ||= purl.type
+            platform ||= PurlUtil::PURL_TYPE_MAPPING[purl.type]
             purl_name ||= PurlUtil.full_name(purl)
             purl_version ||= purl.version
           end
@@ -113,7 +113,7 @@ module Bibliothecary
 
           first_purl_string = package.dig("externalRefs")&.find { |ref| ref["referenceType"] == "purl" }&.dig("referenceLocator")
           purl = first_purl_string && PackageURL.parse(first_purl_string)
-          platform = purl&.type
+          platform = PurlUtil::PURL_TYPE_MAPPING[purl&.type]
           purl_name = PurlUtil.full_name(purl)
           purl_version = purl&.version
 
