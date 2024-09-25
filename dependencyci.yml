@@ -1,9 +1,0 @@
-platforms:
-  NPM:
-    jade:
-      tests:
-        deprecated: skip
-  NuGet:
-    tests:
-      unlicensed: skip
-      removed: skip

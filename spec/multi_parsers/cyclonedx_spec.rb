@@ -56,20 +56,8 @@ describe Bibliothecary::MultiParsers::CycloneDX do
     end
   end
 
-  describe "ManifestEntries.full_name_for_purl" do
-    it "should handle formats correctly" do
-      maven = PackageURL.parse("pkg:maven/cat/dog@1.2.3")
-
-      expect(described_class::ManifestEntries.full_name_for_purl(maven)).to eq("cat:dog")
-
-      npm = PackageURL.parse("pkg:npm/cat/dog@1.2.3")
-
-      expect(described_class::ManifestEntries.full_name_for_purl(npm)).to eq("cat/dog")
-    end
-  end
-
   context "correct parsers implement it" do
-    Bibliothecary::PURL_TYPE_MAPPING.each_value do |parser|
+    Bibliothecary::PurlUtil::PURL_TYPE_MAPPING.each_value do |parser|
       constant_symbol = Bibliothecary::Parsers.constants.find { |c| c.to_s.downcase.gsub(/[^a-z]/, "") == parser.to_s.downcase.gsub(/[^a-z]/, "") }
       constant = Bibliothecary::Parsers.const_get(constant_symbol)
 

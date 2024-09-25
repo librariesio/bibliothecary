@@ -29,12 +29,12 @@ module Bibliothecary
         end
 
         def <<(purl)
-          mapping = Bibliothecary::PURL_TYPE_MAPPING[purl.type]
+          mapping = PurlUtil::PURL_TYPE_MAPPING[purl.type]
           return unless mapping
 
           @manifests[mapping] ||= Set.new
           @manifests[mapping] <<  Dependency.new(
-            name: self.class.full_name_for_purl(purl),
+            name: PurlUtil.full_name(purl),
             requirement: purl.version,
             type: "lockfile",
           )
@@ -59,18 +59,6 @@ module Bibliothecary
 
         def [](key)
           @manifests[key]&.to_a
-        end
-
-        # @return [String] The properly namespaced package name
-        def self.full_name_for_purl(purl)
-          parts = [purl.namespace, purl.name].compact
-
-          case purl.type
-          when "maven"
-            parts.join(":")
-          else
-            parts.join("/")
-          end
         end
       end
 

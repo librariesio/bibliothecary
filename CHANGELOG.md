@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [10.2.2] - 2024-09-25
+
+### Added
+
+- Support parsing *.spdx.json files
+
 ## [10.2.0] - 2024-08-27
 
 ### Changed
