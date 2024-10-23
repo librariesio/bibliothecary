@@ -1,2 +1,0 @@
-ci:
-  extra_ignore_directories: [ spec/fixtures ]
