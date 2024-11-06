@@ -392,6 +392,15 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(bibliothecary_dep.requirement).to eq("9.9.9")
     end
 
+    it "uses parent properties from pom file for groupid" do
+      deps = described_class.parse_pom_manifest(load_fixture("pom_no_props.xml"))
+
+      # this is referenced as ${parent.groupId} for the groupId in the pom file but we
+      # can use from the parent
+      dep_with_propertied_parent = deps.find { |dep| dep.name == "org.accidia:echo-parent"}
+      expect(dep_with_propertied_parent.requirement).to eq ("0.1.23")
+    end
+
     it "can extract parent properties specified with a lookup prefix during resolve" do
       parent_props = { "scm.url"=>"scm:git:git@github.com:accidia/echo.git" }
 
