@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [10.2.4] - 2024-11-06
+
+### Changed
+
+- Fixed parsing of pom files where parent properties within the file are required for dependencies
+
 ## [10.2.2] - 2024-09-25
 
 ### Added
