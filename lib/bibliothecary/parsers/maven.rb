@@ -425,7 +425,6 @@ module Bibliothecary
         # the xml root is <project> so lookup the non property name in the xml
         # this converts ${project/group.id} -> ${group/id}
         non_prop_name = property_name.gsub(".", "/").gsub("project/", "")
-        return "${#{property_name}}" if !xml.respond_to?("properties") && parent_properties.empty? && xml.locate(non_prop_name).empty?
 
         prop_field = xml.properties.locate(property_name).first if xml.respond_to?("properties")
         parent_prop = parent_properties[property_name] ||                 # e.g. "${foo}"
