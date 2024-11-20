@@ -128,25 +128,74 @@ module Bibliothecary
       end
 
       def self.parse_yarn_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
-        response = Typhoeus.post("#{Bibliothecary.configuration.yarn_parser_host}/parse", body: file_contents)
+        dep_hash = if file_contents.match(/__metadata:/)
+          parse_v2_yarn_lock(file_contents)
+        else
+          parse_v1_yarn_lock(file_contents)
+        end
 
-        raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.yarn_parser_host}/parse", response.response_code) unless response.success?
+        dep_hash.map do |dep|
+          Dependency.new(
+            name: dep[:name],
+            requirement: dep[:version],
+            type: "runtime", # lockfile doesn't tell us more about the type of dep
+            local: dep[:requirements]&.first&.start_with?("file:"),
+          )
+        end
+    end
 
-        json = JSON.parse(response.body, symbolize_names: true)
-        json
-          .uniq
-          .reject do |dep|
-            dep[:requirement]&.include?("workspace") && dep[:version].include?("use.local")
-          end
-          .map do |dep|
-            Dependency.new(
-              name: dep[:name],
-              requirement: dep[:version],
-              type: dep[:type],
-              local: dep[:requirement]&.start_with?("file:"),
-            )
-          end
-      end
+    # Returns a hash representation of the deps in yarn.lock, eg:
+    # [{
+    #   name: "foo",
+    #   requirements: [["foo", "^1.0.0"], ["foo", "^1.0.1"]],
+    #   version: "1.2.0",
+    # }, ...]
+    def self.parse_v1_yarn_lock(contents)
+      contents
+        .gsub(/^#.*/, "")
+        .strip
+        .split("\n\n")
+        .map do |chunk|
+          requirements = chunk
+            .lines
+            .find { |l| !l.start_with?(" ") && l.strip.end_with?(":") } # first line, eg: '"@bar/foo@1.0.0", "@bar/foo@^1.0.1":'
+            .strip
+            .gsub(/"|:$/, "") # don't need quotes or trailing colon
+            .split(",") # split the list of requirements
+            .map { |d| d.strip.split(/(?<!^)@/, 2) } # split each requirement on name/version "@"", not on leading namespace "@"
+          version = chunk.match(/version "?([^"]*)"?/)[1]
+
+          {
+            name: requirements.first.first,
+            requirements: requirements.map { |x| x[1] },
+            version: version,
+          }
+        end
+    end
+
+    def self.parse_v2_yarn_lock(contents)
+      parsed = YAML.load(contents)
+      parsed = parsed.except("__metadata")
+      parsed
+        .reject do |packages, info|
+          # yarn v4+ creates a lockfile entry: "myproject@workspace" with a "use.local" version
+          #   this lockfile entry is a reference to the project to which the lockfile belongs
+          # skip this self-referential package
+          info["version"].to_s.include?("use.local") && packages.include?("workspace")
+        end
+        .map do |packages, info|
+          packages = packages.split(", ")
+          # use first requirement's name, assuming that deps will always resolve from deps of the same name
+          name = packages.first.rpartition("@").first
+          requirements = packages.map { |p| p.rpartition("@").last.gsub(/^.*:/, "") }
+
+          {
+            name: name,
+            requirements: requirements,
+            version: info["version"].to_s,
+          }
+        end
+    end      
 
       def self.parse_ls(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse(file_contents)

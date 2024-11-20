@@ -90,7 +90,7 @@ describe Bibliothecary::Parsers::NPM do
     )
   end
 
-  it "parses dependencies from yarn.lock", :vcr do
+  it "parses dependencies from yarn.lock" do
     expect(described_class.analyse_contents("yarn.lock", load_fixture("yarn.lock"))).to eq({
       platform: "npm",
       path: "yarn.lock",
@@ -121,7 +121,7 @@ describe Bibliothecary::Parsers::NPM do
     })
   end
 
-  it "parses git dependencies from yarn.lock", :vcr do
+  it "parses git dependencies from yarn.lock" do
     expect(described_class.analyse_contents("yarn.lock", load_fixture("yarn-with-git-repo/yarn.lock"))).to eq({
       platform: "npm",
       path: "yarn.lock",
@@ -402,7 +402,7 @@ describe Bibliothecary::Parsers::NPM do
       })
     end
 
-    it "parses local path dependencies from yarn.lock", :vcr do
+    it "parses local path dependencies from yarn.lock" do
       expect(described_class.analyse_contents("yarn.lock", load_fixture("npm-local-file/yarn.lock"))).to eq({
         platform: "npm",
         path: "yarn.lock",
@@ -419,7 +419,7 @@ describe Bibliothecary::Parsers::NPM do
     end
   end
 
-  it "does not parse self-referential dependencies from yarn.lock", :vcr do
+  it "does not parse self-referential dependencies from yarn.lock" do
     expect(described_class.analyse_contents("yarn.lock", load_fixture("yarn-v4-lockfile/yarn.lock"))).to eq({
       platform: "npm",
       path: "yarn.lock",
@@ -521,7 +521,7 @@ describe Bibliothecary::Parsers::NPM do
     })
   end
 
-  it "parses dependencies that have multiple versions in yarn.json", :vcr do
+  it "parses dependencies that have multiple versions in yarn.json" do
     expect(described_class.analyse_contents("yarn.lock", load_fixture("multiple_versions/yarn.lock"))).to eq({
       dependencies: [
         Bibliothecary::Dependency.new(name: "find-versions", requirement: "4.0.0", type: "runtime", local: false),
