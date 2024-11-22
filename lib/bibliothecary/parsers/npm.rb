@@ -142,7 +142,6 @@ module Bibliothecary
             Dependency.new(
               name: dep[:name],
               requirement: dep[:version],
-              lockfile_requirement: dep[:requirement],
               type: dep[:type],
               local: dep[:requirement]&.start_with?("file:"),
             )
@@ -173,7 +172,6 @@ module Bibliothecary
             Dependency.new(
               name: name,
               requirement: metadata["version"],
-              lockfile_requirement: metadata.fetch("from", "").split("@").last,
               type: "runtime",
             ),
           ] + transform_tree_to_array(metadata.fetch("dependencies", {}))
