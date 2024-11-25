@@ -15,7 +15,6 @@ module Bibliothecary
       @carthage_parser_host = "https://carthage.libraries.io"
       @clojars_parser_host  = "https://clojars.libraries.io"
       @mix_parser_host      = "https://mix.libraries.io"
-      @conda_parser_host    = "https://conda-parser.libraries.io"
       @swift_parser_host    = "http://swift.libraries.io"
       @cabal_parser_host    = "http://cabal.libraries.io"
     end

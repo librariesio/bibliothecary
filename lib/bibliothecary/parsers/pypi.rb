@@ -79,14 +79,6 @@ module Bibliothecary
             parser: :parse_conda,
             kind: "manifest",
           },
-          match_filename("environment.yml.lock") => {
-            parser: :parse_conda,
-            kind: "lockfile",
-          },
-          match_filename("environment.yaml.lock") => {
-            parser: :parse_conda,
-            kind: "lockfile",
-          },
         }
       end
 
