@@ -21,14 +21,7 @@ RSpec.configure do |config|
   end
 end
 
-require "vcr"
 require "webmock/rspec"
 WebMock.disable_net_connect!(allow_localhost: true)
-
-VCR.configure do |c|
-  c.cassette_library_dir = "spec/vcr"
-  c.configure_rspec_metadata!
-  c.hook_into :webmock
-end
 
 require "pry"
