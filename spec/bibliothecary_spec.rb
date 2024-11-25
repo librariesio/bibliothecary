@@ -130,7 +130,7 @@ describe Bibliothecary do
         related_paths: ["Gemfile", "Gemfile.lock"] }])
   end
 
-  it "handles a complicated folder with many manifests", :vcr do
+  it "handles a complicated folder with many manifests" do
     # If we run the analysis in pwd, confusion about absolute vs.
     # relative paths is concealed because both work
     orig_pwd = Dir.pwd
@@ -207,7 +207,7 @@ describe Bibliothecary do
     Bibliothecary.reset
   end
 
-  it "handles a complicated folder with many manifests", :vcr do
+  it "handles a complicated folder with many manifests" do
     # If we run the analysis in pwd, confusion about absolute vs.
     # relative paths is concealed because both work
     orig_pwd = Dir.pwd
@@ -293,7 +293,7 @@ describe Bibliothecary do
     Bibliothecary.reset
   end
 
-  it "handles a dual-platformed file (pip/conda)", :vcr do
+  it "handles a dual-platformed file (pip/conda)" do
     # If we run the analysis in pwd, confusion about absolute vs.
     # relative paths is concealed because both work
     orig_pwd = Dir.pwd
