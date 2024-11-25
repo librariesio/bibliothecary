@@ -13,11 +13,8 @@ module Bibliothecary
       "conda" => :conda,
       "cran" => :cran,
       "gem" => :rubygems,
-      "hackage" => :hackage,
-      "hex" => :hex,
       "nuget" => :nuget,
       "pypi" => :pypi,
-      "swift" => :swift_pm,
     }.freeze
 
 
