@@ -9,8 +9,6 @@ describe Bibliothecary do
     expect(described_class.package_managers).to eq([
           Bibliothecary::Parsers::Bower,
           Bibliothecary::Parsers::Cargo,
-          Bibliothecary::Parsers::Carthage,
-          Bibliothecary::Parsers::Clojars,
           Bibliothecary::Parsers::CocoaPods,
           Bibliothecary::Parsers::Conda,
           Bibliothecary::Parsers::CPAN,
@@ -18,9 +16,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Dub,
           Bibliothecary::Parsers::Elm,
           Bibliothecary::Parsers::Go,
-          Bibliothecary::Parsers::Hackage,
           Bibliothecary::Parsers::Haxelib,
-          Bibliothecary::Parsers::Hex,
           Bibliothecary::Parsers::Julia,
           Bibliothecary::Parsers::Maven,
           Bibliothecary::Parsers::Meteor,
@@ -31,7 +27,6 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Pypi,
           Bibliothecary::Parsers::Rubygems,
           Bibliothecary::Parsers::Shard,
-          Bibliothecary::Parsers::SwiftPM,
         ])
   end
 
