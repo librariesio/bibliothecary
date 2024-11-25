@@ -14,14 +14,12 @@ describe Bibliothecary::Dependency do
         optional: true,
         original_name: "foo-alias",
         original_requirement: "1.0.0.rc1",
-        lockfile_requirement: "^1.0.0",
         source: "package.json",
       )
 
       expect(dep.name).to eq("foo")
       expect(dep.requirement).to eq("1.0.0")
       expect(dep.platform).to eq("maven")
-      expect(dep.lockfile_requirement).to eq("^1.0.0")
       expect(dep.type).to eq("runtime")
       expect(dep.direct).to eq(true)
       expect(dep.deprecated).to eq(true)
@@ -63,7 +61,6 @@ describe Bibliothecary::Dependency do
         optional: true,
         original_name: "foo-alias",
         original_requirement: "1.0.0.rc1",
-        lockfile_requirement: "^1.0.0",
         source: "package.json",
       }
 

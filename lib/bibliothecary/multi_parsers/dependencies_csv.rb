@@ -37,13 +37,6 @@ module Bibliothecary
               /^name$/i,
             ],
           },
-          # Lockfiles have exact versions.
-          "lockfile_requirement" => {
-            match: [
-              /^(lockfile |)requirement$/i,
-              /^version$/i,
-            ],
-          },
           # Manifests have versions that can have operators.
           # However, since Bibliothecary only currently supports analyzing a
           # single file as a single thing (either manifest or lockfile)

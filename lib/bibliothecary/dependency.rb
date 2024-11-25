@@ -16,8 +16,6 @@ module Bibliothecary
   #   where it did not match the resolved name. This can be used for features like aliasing.
   # @attr_reader [String] original_requirement The original requirement used to require the dependency,
   #   for cases where it did not match the resolved name. This can be used for features like aliasing.
-  # @attr_reader [String] lockfile_requirement The requirement found in the lockfile, e.g. "1.0.0" or "^1.0.0". This is
-  #   only returned from the yarn.lock parser and may not be used by downstream users. TODO: should this be deprecated?
   # @source [String] source An optional string to store the location of the manifest that contained this
   #   dependency, e.g. "src/package.json".
   class Dependency
@@ -25,7 +23,6 @@ module Bibliothecary
       :name,
       :requirement,
       :original_requirement,
-      :lockfile_requirement,
       :platform,
       :type,
       :direct,
@@ -42,7 +39,6 @@ module Bibliothecary
       name:,
       requirement:,
       original_requirement: nil,
-      lockfile_requirement: nil,
       platform: nil,
       type: nil,
       direct: nil,
@@ -56,8 +52,6 @@ module Bibliothecary
       @platform = platform
       @requirement = requirement || "*"
       @original_requirement = original_requirement
-      # TODO: maybe deprecate this field? Is it possible to replace it with original_requirement?
-      @lockfile_requirement = lockfile_requirement
       @type = type
       @direct = direct
       @deprecated = deprecated
