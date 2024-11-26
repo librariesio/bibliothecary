@@ -374,16 +374,16 @@ git://what@::/:/:/
     })
   end
 
-  it "parses dependencies from conda environment.yml.lock with pip" do
-    expect(described_class.analyse_contents("conda_with_pip/environment.yml.lock", load_fixture("conda_with_pip/environment.yml"))).to eq(
+  it "parses dependencies from conda environment.yml with pip" do
+    expect(described_class.analyse_contents("conda_with_pip/environment.yml", load_fixture("conda_with_pip/environment.yml"))).to eq(
       {
         platform: "pypi",
-        path: "conda_with_pip/environment.yml.lock",
+        path: "conda_with_pip/environment.yml",
         dependencies: [
           Bibliothecary::Dependency.new( name: "urllib3", requirement: "*", type: "runtime"),
           Bibliothecary::Dependency.new( name: "Django", requirement: "==2.0.0", type: "runtime"),
         ],
-        kind: "lockfile",
+        kind: "manifest",
         success: true,
        }
     )

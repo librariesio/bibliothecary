@@ -9,8 +9,6 @@ describe Bibliothecary do
     expect(described_class.package_managers).to eq([
           Bibliothecary::Parsers::Bower,
           Bibliothecary::Parsers::Cargo,
-          Bibliothecary::Parsers::Carthage,
-          Bibliothecary::Parsers::Clojars,
           Bibliothecary::Parsers::CocoaPods,
           Bibliothecary::Parsers::Conda,
           Bibliothecary::Parsers::CPAN,
@@ -18,9 +16,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Dub,
           Bibliothecary::Parsers::Elm,
           Bibliothecary::Parsers::Go,
-          Bibliothecary::Parsers::Hackage,
           Bibliothecary::Parsers::Haxelib,
-          Bibliothecary::Parsers::Hex,
           Bibliothecary::Parsers::Julia,
           Bibliothecary::Parsers::Maven,
           Bibliothecary::Parsers::Meteor,
@@ -31,7 +27,6 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Pypi,
           Bibliothecary::Parsers::Rubygems,
           Bibliothecary::Parsers::Shard,
-          Bibliothecary::Parsers::SwiftPM,
         ])
   end
 
@@ -135,7 +130,7 @@ describe Bibliothecary do
         related_paths: ["Gemfile", "Gemfile.lock"] }])
   end
 
-  it "handles a complicated folder with many manifests", :vcr do
+  it "handles a complicated folder with many manifests" do
     # If we run the analysis in pwd, confusion about absolute vs.
     # relative paths is concealed because both work
     orig_pwd = Dir.pwd
@@ -212,7 +207,7 @@ describe Bibliothecary do
     Bibliothecary.reset
   end
 
-  it "handles a complicated folder with many manifests", :vcr do
+  it "handles a complicated folder with many manifests" do
     # If we run the analysis in pwd, confusion about absolute vs.
     # relative paths is concealed because both work
     orig_pwd = Dir.pwd
@@ -298,7 +293,7 @@ describe Bibliothecary do
     Bibliothecary.reset
   end
 
-  it "handles a dual-platformed file (pip/conda)", :vcr do
+  it "handles a dual-platformed file (pip/conda)" do
     # If we run the analysis in pwd, confusion about absolute vs.
     # relative paths is concealed because both work
     orig_pwd = Dir.pwd
