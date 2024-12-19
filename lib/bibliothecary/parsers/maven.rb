@@ -338,6 +338,73 @@ module Bibliothecary
         end
       end
 
+      # @param files [Array<string>] Ordered array of strings containing the
+      # pom.xml bodies. The first element should be the child file.
+      def self.parse_pom_manifests(files, merged_properties)
+        documents = files.map do |file|
+          doc = Ox.parse(file)
+          doc.respond_to?("project") ? doc.project : doc
+        end
+
+        # create the merged properties
+        # merged_properties = {}
+        #
+        # # create the merged dependencyManagements
+        dependencyManagements = {}
+        documents.each do |document|
+           document.locate("dependencyManagement/dependencies/dependency").each do |dep|
+              groupId = extract_pom_dep_info(document, dep, "groupId", merged_properties)
+              artifactId = extract_pom_dep_info(document, dep, "artifactId", merged_properties)
+            key = "#{groupId}:#{artifactId}"
+            dependencyManagements[key] ||=
+              {
+                groupId: groupId,
+                artifactId: artifactId,
+                version: extract_pom_dep_info(document, dep, "version", merged_properties),
+                scope: extract_pom_dep_info(document, dep, "scope", merged_properties),
+              }
+           end
+        end
+        #
+        # # create the final dependencies
+        dep_hashes = {}
+        documents.each do |document|
+          document.locate("dependencies/dependency").each do |dep|
+            groupId = extract_pom_dep_info(document, dep, "groupId", merged_properties)
+            artifactId = extract_pom_dep_info(document, dep, "artifactId", merged_properties)
+            key = "#{groupId}:#{artifactId}"
+            unless dep_hashes.key?(key)
+              dep_hashes[key] = {
+                name: key,
+                requirement: nil,
+                type: nil,
+                optional: nil,
+              }
+            end
+            dep_hash = dep_hashes[key]
+
+            dep_hash[:requirement] ||= extract_pom_dep_info(document, dep, "version", merged_properties)
+            dep_hash[:type] ||= extract_pom_dep_info(document, dep, "scope", merged_properties)
+
+            # optional field is, itself, optional, and will be either "true" or "false"
+            optional = extract_pom_dep_info(document, dep, "optional", merged_properties)
+            unless optional.nil?
+              dep_hash[:optional] ||= optional == true
+            end
+          end
+        end
+        #
+        # # anything that wasn't covered by a dependency version, get from the dependencyManagements
+        dep_hashes.each do |key, dep_hash|
+          if (dependencyManagement = dependencyManagements[key])
+            dep_hash[:requirement] ||= dependencyManagement[:version]
+            dep_hash[:type] ||= dependencyManagement[:scope] || "runtime"
+          end
+        end
+
+        dep_hashes.map{|key, dep_hash| Dependency.new(**dep_hash)}
+      end
+
       def self.parse_gradle(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         file_contents
           .scan(GRADLE_GROOVY_SIMPLE_REGEXP)                                                # match 'implementation "group:artifactId:version"'
