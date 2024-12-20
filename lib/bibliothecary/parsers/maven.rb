@@ -294,8 +294,6 @@ module Bibliothecary
         parse_pom_manifest(file_contents, {}, options: options)
       end
 
-      # parent_properties is used by Libraries:
-      # https://github.com/librariesio/libraries.io/blob/e970925aade2596a03268b6e1be785eba8502c62/app/models/package_manager/maven.rb#L129
       def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         parse_pom_manifests([file_contents], parent_properties)
       end
