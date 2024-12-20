@@ -294,48 +294,74 @@ module Bibliothecary
         parse_pom_manifest(file_contents, {}, options: options)
       end
 
-      # parent_properties is used by Libraries:
-      # https://github.com/librariesio/libraries.io/blob/e970925aade2596a03268b6e1be785eba8502c62/app/models/package_manager/maven.rb#L129
       def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {}) # rubocop:disable Lint/UnusedMethodArgument
-        manifest = Ox.parse file_contents
-        xml = manifest.respond_to?("project") ? manifest.project : manifest
-        [].tap do |deps|
-          # <dependencyManagement> is a namespace to specify artifact configuration (e.g. version), but it doesn't
-          # actually add dependencies to your project. Grab these and keep them for reference while parsing <dependencies>
-          # Ref: https://maven.apache.org/pom.html#Dependency_Management
-          # Ref: https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#transitive-dependencies
-          dependencyManagement = xml.locate("dependencyManagement/dependencies/dependency").map do |dep|
-            {
-              groupId: extract_pom_dep_info(xml, dep, "groupId", parent_properties),
-              artifactId: extract_pom_dep_info(xml, dep, "artifactId", parent_properties),
-              version: extract_pom_dep_info(xml, dep, "version", parent_properties),
-              scope: extract_pom_dep_info(xml, dep, "scope", parent_properties),
-            }
-          end
-          # <dependencies> is the namespace that will add dependencies to your project.
-          xml.locate("dependencies/dependency").each do |dep|
-            groupId = extract_pom_dep_info(xml, dep, "groupId", parent_properties)
-            artifactId = extract_pom_dep_info(xml, dep, "artifactId", parent_properties)
-            version = extract_pom_dep_info(xml, dep, "version", parent_properties)
-            scope = extract_pom_dep_info(xml, dep, "scope", parent_properties)
+        parse_pom_manifests([file_contents], parent_properties)
+      end
 
-            # Use any dep configurations from <dependencyManagement> as fallbacks
-            if (depConfig = dependencyManagement.find { |d| d[:groupId] == groupId && d[:artifactId] == artifactId })
-              version ||= depConfig[:version]
-              scope ||= depConfig[:scope]
+      # @param files [Array<String>] Ordered array of strings containing the
+      # pom.xml bodies. The first element should be the child file.
+      # @param merged_properties [Hash]
+      def self.parse_pom_manifests(files, merged_properties)
+        documents = files.map do |file|
+          doc = Ox.parse(file)
+          doc.respond_to?("project") ? doc.project : doc
+        end
+
+        mergedDependencyManagements = {}
+        documents.each do |document|
+           document.locate("dependencyManagement/dependencies/dependency").each do |dep|
+              groupId = extract_pom_dep_info(document, dep, "groupId", merged_properties)
+              artifactId = extract_pom_dep_info(document, dep, "artifactId", merged_properties)
+              key = "#{groupId}:#{artifactId}"
+              mergedDependencyManagements[key] ||=
+                {
+                  groupId: groupId,
+                  artifactId: artifactId,
+                  version: extract_pom_dep_info(document, dep, "version", merged_properties),
+                  scope: extract_pom_dep_info(document, dep, "scope", merged_properties),
+                }
+           end
+        end
+
+        dep_hashes = {}
+        documents.each do |document|
+          document.locate("dependencies/dependency").each do |dep|
+            groupId = extract_pom_dep_info(document, dep, "groupId", merged_properties)
+            artifactId = extract_pom_dep_info(document, dep, "artifactId", merged_properties)
+            key = "#{groupId}:#{artifactId}"
+            unless dep_hashes.key?(key)
+              dep_hashes[key] = {
+                name: key,
+                requirement: nil,
+                type: nil,
+                optional: nil,
+              }
             end
+            dep_hash = dep_hashes[key]
 
-            dep_hash = {
-              name: "#{groupId}:#{artifactId}",
-              requirement: version,
-              type: scope || "runtime",
-            }
+            dep_hash[:requirement] ||= extract_pom_dep_info(document, dep, "version", merged_properties)
+            dep_hash[:type] ||= extract_pom_dep_info(document, dep, "scope", merged_properties)
+
             # optional field is, itself, optional, and will be either "true" or "false"
-            optional = extract_pom_dep_info(xml, dep, "optional", parent_properties)
-            dep_hash[:optional] = optional == "true" unless optional.nil?
-            deps.push(Dependency.new(**dep_hash))
+            optional = extract_pom_dep_info(document, dep, "optional", merged_properties)
+            if dep_hash[:optional].nil? && !optional.nil?
+              dep_hash[:optional] = optional == "true"
+            end
           end
         end
+
+        # Anything that wasn't covered by a dependency version, get from the
+        # dependencyManagements
+        dep_hashes.each do |key, dep_hash|
+          if (dependencyManagement = mergedDependencyManagements[key])
+            dep_hash[:requirement] ||= dependencyManagement[:version]
+            dep_hash[:type] ||= dependencyManagement[:scope]
+          end
+
+          dep_hash[:type] ||= "runtime"
+        end
+
+        dep_hashes.map{|key, dep_hash| Dependency.new(**dep_hash)}
       end
 
       def self.parse_gradle(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
