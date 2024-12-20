@@ -366,8 +366,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       parent_props = {}
       deps = described_class.parse_pom_manifest(load_fixture("pom.xml"), parent_props)
 
-      jersey_dep = deps.find { |dep| dep.name == "io.libraries:bibliothecary" }
-      expect(jersey_dep.requirement).to eq("${bibliothecary.version}")
+      bibliothecary_dep = deps.find { |dep| dep.name == "io.libraries:bibliothecary" }
+      expect(bibliothecary_dep.requirement).to eq("${bibliothecary.version}")
 
       echo_parent_dep = deps.find { |dep| dep.name == "org.accidia:echo-parent" }
       expect(echo_parent_dep.requirement).to eq("0.1.23")
@@ -377,8 +377,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       parent_props = { "bibliothecary.version"=>"9.9.9" }
       deps = described_class.parse_pom_manifest(load_fixture("pom.xml"), parent_props)
 
-      jersey_dep = deps.find { |dep| dep.name == "io.libraries:bibliothecary" }
-      expect(jersey_dep.requirement).to eq("9.9.9")
+      bibliothecary_dep = deps.find { |dep| dep.name == "io.libraries:bibliothecary" }
+      expect(bibliothecary_dep.requirement).to eq("9.9.9")
 
       echo_parent_dep = deps.find { |dep| dep.name == "org.accidia:echo-parent" }
       expect(echo_parent_dep.requirement).to eq("0.1.23")
@@ -629,4 +629,48 @@ GRADLE
       expect(guavas[0].requirement).to eq "30.1.1-jre"
     end
   end
+
+  describe "parse_pom_manifests" do
+    it "totally ignores parent props" do
+      pom_xml = load_fixture("pom.xml")
+      parent_props = {}
+      deps = described_class.parse_pom_manifests([pom_xml], parent_props)
+
+      bibliothecary_dep = deps.find { |dep| dep.name == "io.libraries:bibliothecary" }
+      expect(bibliothecary_dep.requirement).to eq("${bibliothecary.version}")
+
+      echo_parent_dep = deps.find { |dep| dep.name == "org.accidia:echo-parent" }
+      expect(echo_parent_dep.requirement).to eq("0.1.23")
+    end
+
+    it "uses parent properties during resolve" do
+      pom_xml = load_fixture("pom.xml")
+      parent_props = { "bibliothecary.version"=>"9.9.9" }
+      deps = described_class.parse_pom_manifests([pom_xml], parent_props)
+
+      bibliothecary_dep = deps.find { |dep| dep.name == "io.libraries:bibliothecary" }
+      expect(bibliothecary_dep.requirement).to eq("9.9.9")
+
+      echo_parent_dep = deps.find { |dep| dep.name == "org.accidia:echo-parent" }
+      expect(echo_parent_dep.requirement).to eq("0.1.23")
+    end
+
+    it "treats omitted version on dependencies as wildcard" do
+        pom_xml = load_fixture("pom_dependencies_no_requirement.xml")
+        parent_props = { }
+        deps = described_class.parse_pom_manifests([pom_xml], parent_props)
+        expect(deps.first.requirement).to eq("*")
+    end
+
+    it "uses parent pom for resolve" do
+        pom_xml = load_fixture("maven_parent_deps/jaxb-runtime-2.3.1.pom.xml")
+        parent_xml = load_fixture("maven_parent_deps/jaxb-bom-2.3.1.pom.xml")
+        parent_props = { }
+        deps = described_class.parse_pom_manifests([pom_xml, parent_xml], parent_props)
+        dep = deps.find{|x| x.name == "com.sun.xml.fastinfoset:FastInfoset"}
+        expect(dep.requirement).to eq("1.2.15")
+    end
+
+  end
+
 end

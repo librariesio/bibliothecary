@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+
+## [11.0.1] - 2024-12-20
+
+### Changed
+
+- Alow retrieving maven versions from parent poms
+
 ## [11.0.0] - 2024-11-22
 
 ### Changed
