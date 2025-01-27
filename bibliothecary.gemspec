@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "strings-ansi" # NB this is also pegged to a git sha in Gemfile temporarily.  
   spec.add_dependency "strings"
   spec.add_dependency "packageurl-ruby"
+  spec.add_dependency "bundler"
 
   spec.add_development_dependency "pry"
   spec.add_development_dependency "rake"

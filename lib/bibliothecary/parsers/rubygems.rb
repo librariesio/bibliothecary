@@ -1,3 +1,4 @@
+require "bundler"
 require "gemnasium/parser"
 
 module Bibliothecary
@@ -35,23 +36,26 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
       def self.parse_gemfile_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
-        file_contents.lines(chomp: true).map do |line|
-          match = line.match(NAME_VERSION_4)
-          bundler_match = line.match(BUNDLED_WITH)
-          next unless match || bundler_match
-
-          if match
-            name = match[1]
-            version = match[2].gsub(/\(|\)/,"")
-            {
-              name: name,
-              requirement: version,
-              type: "runtime",
-            }
-          else
-            parse_bundler(file_contents)
-          end
-        end.compact
+        lockfile = Bundler::LockfileParser.new(file_contents)
+      
+        dependencies = lockfile.specs.map do |spec|
+          {
+            name: spec.name,
+            requirement: spec.version.to_s,
+            type: "runtime",
+          }
+        end
+      
+        bundler_version = lockfile.bundler_version
+        if bundler_version
+          dependencies << {
+            name: "bundler",
+            requirement: bundler_version.to_s,
+            type: "runtime",
+          }
+        end
+      
+        dependencies
       end
 
       def self.parse_gemfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
