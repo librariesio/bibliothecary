@@ -1,9 +1,10 @@
 # Bibliothecary
 
-Dependency manifest parsing library for https://libraries.io
+Dependency manifest parsing library for https://github.com/ecosyste-ms 
 
-[![Build Status](https://travis-ci.org/librariesio/bibliothecary.svg?branch=master)](https://travis-ci.org/librariesio/bibliothecary)
-[![license](https://img.shields.io/github/license/librariesio/bibliothecary.svg)](https://github.com/librariesio/bibliothecary/blob/master/LICENSE.txt)
+This is a maintained fork of the original [Bibliothecary](https://github.com/librariesio/bibliothecary) gem, with support for additional manifest formats and bug fixes.
+
+[![license](https://img.shields.io/github/license/ecosyste-ms/bibliothecary.svg)](https://github.com/ecosyste-ms/bibliothecary/blob/master/LICENSE.txt)
 
 ## Installation
 
@@ -51,7 +52,7 @@ Bibliothecary.configure do |config|
 end
 ```
 
-All available config options are in: https://github.com/librariesio/bibliothecary/blob/master/lib/bibliothecary/configuration.rb
+All available config options are in: https://github.com/ecosyste-ms/bibliothecary/blob/master/lib/bibliothecary/configuration.rb
 
 ## Supported package manager file formats
 
@@ -184,4 +185,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/librariesio/bibliothecary. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/ecosyste-ms/bibliothecary. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
