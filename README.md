@@ -13,16 +13,12 @@ Requires Ruby 3.0 or above.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'bibliothecary'
+gem "bibliothecary", git: "https://github.com/ecosyste-ms/bibliothecary.git"
 ```
 
 And then execute:
 
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install bibliothecary
+    $ bundle install
 
 ## Usage
 
