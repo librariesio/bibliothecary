@@ -87,6 +87,10 @@ module Bibliothecary
             parser: :parse_conda,
             kind: "lockfile",
           },
+          match_filename("uv.lock") => {
+            parser: :parse_uv_lock,
+            kind: "lockfile"
+          }
         }
       end
 
@@ -205,6 +209,17 @@ module Bibliothecary
           }
         end
         deps
+      end
+
+      def self.parse_uv_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+        manifest = Tomlrb.parse(file_contents)
+        manifest.fetch("package", []).map do |package|
+          {
+            name: package["name"],
+            requirement: map_requirements(package),
+            type: "runtime", # All dependencies are considered runtime
+          }
+        end
       end
 
       def self.parse_setup_py(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
