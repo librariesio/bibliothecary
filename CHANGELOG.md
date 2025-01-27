@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [12.0.0] - 2025-01-27
+
+### Removed
+
+- This is a MAJOR release in that it removes support for hackage, carthage, hex, clojar, and swiftpm
+  from Bibliothecary. We are no longer doing any network calls when using Bibliothecary and reimplementing
+  parsing for those file types natively is non-trivial. Patches welcome :-)
+
+### Changed
+
+- Rewrote conda and yarn parsers to be in process vs calling out over the network
 
 ## [11.0.1] - 2024-12-20
 
