@@ -22,13 +22,13 @@ module Bibliothecary
 
       def self.parse_description(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = DebControl::ControlFileBase.parse(file_contents)
-        parse_section(manifest, "Depends") +
-        parse_section(manifest, "Imports") +
-        parse_section(manifest, "Suggests") +
-        parse_section(manifest, "Enhances")
+        parse_section(manifest, "Depends", options.fetch(:filename, nil)) +
+        parse_section(manifest, "Imports", options.fetch(:filename, nil)) +
+        parse_section(manifest, "Suggests", options.fetch(:filename, nil)) +
+        parse_section(manifest, "Enhances", options.fetch(:filename, nil))
       end
 
-      def self.parse_section(manifest, name)
+      def self.parse_section(manifest, name, source=nil)
         return [] unless manifest.first[name]
         deps = manifest.first[name].delete("\n").split(",").map(&:strip)
         deps.map do |dependency|
@@ -37,6 +37,7 @@ module Bibliothecary
             name: dep[1],
             requirement: dep[2],
             type: name.downcase,
+            source: source
           )
         end
       end
