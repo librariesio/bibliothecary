@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- gem's .ruby-version changed from 3.0.7 to 3.2.6
+
 ### Removed
 
 ## [12.0.0] - 2025-01-27
