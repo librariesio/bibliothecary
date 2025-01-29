@@ -24,13 +24,13 @@ module Bibliothecary
       def self.parse_json_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse file_contents
         manifest["prereqs"].map do |_group, deps|
-          map_dependencies(deps, "requires", "runtime")
+          map_dependencies(deps, "requires", "runtime", options.fetch(:filename, nil))
         end.flatten
       end
 
       def self.parse_yaml_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = YAML.load file_contents
-        map_dependencies(manifest, "requires", "runtime")
+        map_dependencies(manifest, "requires", "runtime", options.fetch(:filename, nil))
       end
     end
   end
