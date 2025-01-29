@@ -105,7 +105,8 @@ module Bibliothecary
       end
 
       def self.parse_glide_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
-        manifest = YAML.load(file_contents, permitted_classes: [Time])
+        # glide.lock files contain an "updated" Time field, but Ruby 3.2+ requires us to safelist that class
+        manifest = YAML.load file_contents, permitted_classes: [Time]
         map_dependencies(manifest, "imports", "name", "version", "runtime")
       end
 
