@@ -131,6 +131,7 @@ module Bibliothecary
             name: "#{attrs[:org]}:#{attrs[:name]}",
             requirement: attrs[:rev],
             type: "runtime",
+            source: options.fetch(:filename, nil),
           )
         end
       end
@@ -167,6 +168,7 @@ module Bibliothecary
             name: "#{org}:#{name}",
             requirement: version,
             type: type,
+            source: options.fetch(:filename, nil),
           )
         end.compact
       end
@@ -214,6 +216,7 @@ module Bibliothecary
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
               type: current_type,
+              source: options.fetch(:filename, nil)
             )
           elsif dep.count == 5
             # get name from renamed package resolution "org:name -> renamed_org:name:version"
@@ -223,6 +226,7 @@ module Bibliothecary
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
               type: current_type,
+              source: options.fetch(:filename, nil)
             )
           else
             # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
@@ -230,6 +234,7 @@ module Bibliothecary
               name: dep[0..1].join(":"),
               requirement: dep[-1],
               type: current_type,
+              source: options.fetch(:filename, nil)
             )
           end
         end
@@ -241,7 +246,7 @@ module Bibliothecary
         file_contents
           .gsub(ANSI_MATCHER, "")
           .split("\n")
-          .map(&method(:parse_resolved_dep_line))
+          .map { |line| parse_resolved_dep_line(line, options: options) }
           .compact
           .uniq
       end
@@ -267,6 +272,7 @@ module Bibliothecary
             name: parts[0..1].join(":"),
             requirement: version,
             type: type,
+            source: options.fetch(:filename, nil)
           )
         end
 
@@ -275,7 +281,7 @@ module Bibliothecary
         deps.size < 2 ? deps : deps[1..-1].reject { |d| d.name == package.name && d.requirement == package.requirement }
       end
 
-      def self.parse_resolved_dep_line(line)
+      def self.parse_resolved_dep_line(line, options: {})
         # filter out anything that doesn't look like a
         # resolved dep line
         return unless line[/  .*:[^-]+-- /]
@@ -287,6 +293,7 @@ module Bibliothecary
           name: dep_parts[0, 2].join(":"),
           requirement: dep_parts[3],
           type: dep_parts[4].split("--").first.strip,
+          source: options.fetch(:filename, nil)
         )
       end
 
@@ -295,13 +302,13 @@ module Bibliothecary
       end
 
       def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {}) # rubocop:disable Lint/UnusedMethodArgument
-        parse_pom_manifests([file_contents], parent_properties)
+        parse_pom_manifests([file_contents], parent_properties, options.fetch(:filename, nil))
       end
 
       # @param files [Array<String>] Ordered array of strings containing the
       # pom.xml bodies. The first element should be the child file.
       # @param merged_properties [Hash]
-      def self.parse_pom_manifests(files, merged_properties)
+      def self.parse_pom_manifests(files, merged_properties, source=nil)
         documents = files.map do |file|
           doc = Ox.parse(file)
           doc.respond_to?("project") ? doc.project : doc
@@ -359,6 +366,7 @@ module Bibliothecary
           end
 
           dep_hash[:type] ||= "runtime"
+          dep_hash[:source] = source
         end
 
         dep_hashes.map{|key, dep_hash| Dependency.new(**dep_hash)}
@@ -373,6 +381,7 @@ module Bibliothecary
               name: [group, artifactId].join(":"),
               requirement: version,
               type: type,
+              source: options.fetch(:filename, nil),
             )
           }
       end
@@ -386,6 +395,7 @@ module Bibliothecary
               name: [group, artifactId].join(":"),
               requirement: version,
               type: type,
+              source: options.fetch(:filename, nil),
             )
           }
       end
@@ -505,7 +515,11 @@ module Bibliothecary
           dep.delete(:fields)
         end
 
-        return squished.map { |dep_kvs| Dependency.new(**dep_kvs) }
+        return squished.map { |dep_kvs|
+          Dependency.new(
+            **dep_kvs.merge(source: options.fetch(:filename, nil))
+          )
+        }
       end
 
       def self.parse_sbt_deps(type, lines)
