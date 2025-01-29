@@ -56,6 +56,7 @@ module Bibliothecary
             name: dep[0],
             requirement: dep[1],
             type: "runtime",
+            source: options.fetch(:filename, nil),
           )
         end
       end
@@ -74,6 +75,7 @@ module Bibliothecary
                 # so fallback to requested is pure paranoia
                 requirement: details.fetch("resolved", details.fetch("requested", "*")),
                 type: "runtime",
+                source: options.fetch(:filename, nil),
               )
             end
         end
@@ -96,6 +98,7 @@ module Bibliothecary
             name: dependency.id,
             requirement: (dependency.version if dependency.respond_to? "version"),
             type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime",
+            source: options.fetch(:filename, nil),
           )
         end
       rescue
@@ -121,6 +124,7 @@ module Bibliothecary
             name: dependency.Include,
             requirement: requirement,
             type: type,
+            source: options.fetch(:filename, nil),
           )
         end
         packages.uniq {|package| package.name }
@@ -135,6 +139,7 @@ module Bibliothecary
             name: dependency.id,
             requirement: dependency.attributes[:version],
             type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime",
+            source: options.fetch(:filename, nil),
           )
         end
       rescue
@@ -149,6 +154,7 @@ module Bibliothecary
             name: match[:name].strip,
             requirement: match[:version],
             type: "runtime",
+            source: options.fetch(:filename, nil),
           )
         end
         # we only have to enforce uniqueness by name because paket ensures that there is only the single version globally in the project
@@ -168,6 +174,7 @@ module Bibliothecary
               name: name_split[0],
               requirement: name_split[1],
               type: "runtime",
+              source: options.fetch(:filename, nil),
             )
             end
         end
