@@ -42,11 +42,11 @@ module Bibliothecary
         # https://docs.npmjs.com/cli/v9/configuring-npm/package-lock-json#lockfileversion
         if manifest["lockfileVersion"].to_i <= 1
           # lockfileVersion 1 uses the "dependencies" object
-          parse_package_lock_v1(manifest)
+          parse_package_lock_v1(manifest, options.fetch(:filename, nil))
         else
           # lockfileVersion 2 has backwards-compatability by including both "packages" and the legacy "dependencies" object
           # lockfileVersion 3 has no backwards-compatibility and only includes the "packages" object
-          parse_package_lock_v2(manifest)
+          parse_package_lock_v2(manifest, options.fetch(:filename, nil))
         end
       end
 
@@ -55,11 +55,11 @@ module Bibliothecary
         alias_method :parse_shrinkwrap, :parse_package_lock
       end
 
-      def self.parse_package_lock_v1(manifest)
-        parse_package_lock_deps_recursively(manifest.fetch("dependencies", []))
+      def self.parse_package_lock_v1(manifest, source=nil)
+        parse_package_lock_deps_recursively(manifest.fetch("dependencies", []), source)
       end
 
-      def self.parse_package_lock_v2(manifest)
+      def self.parse_package_lock_v2(manifest, source=nil)
         # "packages" is a flat object where each key is the installed location of the dep, e.g. node_modules/foo/node_modules/bar.
         manifest
           .fetch("packages")
@@ -75,11 +75,12 @@ module Bibliothecary
               requirement: dep["version"],
               type: dep.fetch("dev", false) || dep.fetch("devOptional", false)  ? "development" : "runtime",
               local: dep.fetch("link", false),
+              source: source,
             )
           end
       end
 
-      def self.parse_package_lock_deps_recursively(dependencies, depth=1)
+      def self.parse_package_lock_deps_recursively(dependencies, source=nil, depth=1)
         dependencies.flat_map do |name, requirement|
           type = requirement.fetch("dev", false) ? "development" : "runtime"
           version = requirement.key?("from") ? requirement["from"][/#(?:semver:)?v?(.*)/, 1] : nil
@@ -87,13 +88,14 @@ module Bibliothecary
           child_dependencies = if depth >= PACKAGE_LOCK_JSON_MAX_DEPTH
             []
           else
-            parse_package_lock_deps_recursively(requirement.fetch("dependencies", []), depth + 1)
-                               end
+            parse_package_lock_deps_recursively(requirement.fetch("dependencies", []), source, depth + 1)
+          end
 
           [Dependency.new(
             name: name,
             requirement: version,
             type: type,
+            source: source,
           )] + child_dependencies
         end
       end
@@ -109,7 +111,8 @@ module Bibliothecary
               name: name,
               requirement: requirement,
               type: "runtime",
-              local: requirement.start_with?("file:")
+              local: requirement.start_with?("file:"),
+              source: options.fetch(:filename, nil)
             )
           end
 
@@ -120,7 +123,8 @@ module Bibliothecary
               name: name,
               requirement: requirement,
               type: "development",
-              local: requirement.start_with?("file:")
+              local: requirement.start_with?("file:"),
+              source: options.fetch(:filename, nil),
             )
           end
 
@@ -129,9 +133,9 @@ module Bibliothecary
 
       def self.parse_yarn_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         dep_hash = if file_contents.match(/__metadata:/)
-          parse_v2_yarn_lock(file_contents)
+          parse_v2_yarn_lock(file_contents, options.fetch(:filename, nil))
         else
-          parse_v1_yarn_lock(file_contents)
+          parse_v1_yarn_lock(file_contents, options.fetch(:filename, nil))
         end
 
         dep_hash.map do |dep|
@@ -140,6 +144,7 @@ module Bibliothecary
             requirement: dep[:version],
             type: "runtime", # lockfile doesn't tell us more about the type of dep
             local: dep[:requirements]&.first&.start_with?("file:"),
+            source: options.fetch(:filename, nil),
           )
         end
     end
@@ -150,7 +155,7 @@ module Bibliothecary
     #   requirements: [["foo", "^1.0.0"], ["foo", "^1.0.1"]],
     #   version: "1.2.0",
     # }, ...]
-    def self.parse_v1_yarn_lock(contents)
+    def self.parse_v1_yarn_lock(contents, source=nil)
       contents
         .gsub(/^#.*/, "")
         .strip
@@ -169,11 +174,12 @@ module Bibliothecary
             name: requirements.first.first,
             requirements: requirements.map { |x| x[1] },
             version: version,
+            source: source,
           }
         end
     end
 
-    def self.parse_v2_yarn_lock(contents)
+    def self.parse_v2_yarn_lock(contents, source=nil)
       parsed = YAML.load(contents)
       parsed = parsed.except("__metadata")
       parsed
@@ -193,6 +199,7 @@ module Bibliothecary
             name: name,
             requirements: requirements,
             version: info["version"].to_s,
+            source: source,
           }
         end
     end      
@@ -200,7 +207,7 @@ module Bibliothecary
       def self.parse_ls(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse(file_contents)
 
-        transform_tree_to_array(manifest.fetch("dependencies", {}))
+        transform_tree_to_array(manifest.fetch("dependencies", {}), options.fetch(:filename, nil))
       end
 
       def self.lockfile_preference_order(file_infos)
@@ -215,15 +222,16 @@ module Bibliothecary
         end
       end
 
-      private_class_method def self.transform_tree_to_array(deps_by_name)
+      private_class_method def self.transform_tree_to_array(deps_by_name, source=nil)
         deps_by_name.map do |name, metadata|
           [
             Dependency.new(
               name: name,
               requirement: metadata["version"],
               type: "runtime",
+              source: source,
             ),
-          ] + transform_tree_to_array(metadata.fetch("dependencies", {}))
+          ] + transform_tree_to_array(metadata.fetch("dependencies", {}), source)
         end.flatten(1)
       end
     end
