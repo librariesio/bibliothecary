@@ -34,7 +34,8 @@ module Bibliothecary
             name: dependency["name"],
             requirement: requirement,
             type: "runtime",
-            original_requirement: original_requirement
+            original_requirement: original_requirement,
+            source: options.fetch(:filename, nil),
           )
         end + manifest.fetch("packages-dev",[]).map do |dependency|
           requirement = dependency["version"]
@@ -46,15 +47,16 @@ module Bibliothecary
             name: dependency["name"],
             requirement: requirement,
             type: "development",
-            original_requirement: original_requirement
+            original_requirement: original_requirement,
+            source: options.fetch(:filename, nil),
           )
         end
       end
 
       def self.parse_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = JSON.parse file_contents
-        map_dependencies(manifest, "require", "runtime") +
-        map_dependencies(manifest, "require-dev", "development")
+        map_dependencies(manifest, "require", "runtime", options.fetch(:filename, nil)) +
+        map_dependencies(manifest, "require-dev", "development", options.fetch(:filename, nil))
       end
 
       # Drupal hosts its own Composer repository, where its "modules" are indexed and searchable. The best way to
