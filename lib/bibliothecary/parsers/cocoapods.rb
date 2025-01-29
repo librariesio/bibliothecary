@@ -44,18 +44,19 @@ module Bibliothecary
             name: match[1].split("/").first,
             requirement: match[2],
             type: "runtime",
+            source: options.fetch(:filename, nil)
           )
         end.compact
       end
 
       def self.parse_podspec(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Gemnasium::Parser.send(:podspec, file_contents)
-        parse_ruby_manifest(manifest)
+        parse_ruby_manifest(manifest, options.fetch(:filename, nil))
       end
 
       def self.parse_podfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Gemnasium::Parser.send(:podfile, file_contents)
-        parse_ruby_manifest(manifest)
+        parse_ruby_manifest(manifest, options.fetch(:filename, nil))
       end
 
       def self.parse_json_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
@@ -65,6 +66,7 @@ module Bibliothecary
             name: dep[0],
             requirement: dep[1],
             type: "runtime",
+            source: options.fetch(:filename, nil),
           ))
         end.uniq
       end

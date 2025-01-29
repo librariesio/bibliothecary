@@ -3,7 +3,7 @@ module Bibliothecary
     module BundlerLikeManifest
       # this takes parsed Bundler and Bundler-like (CocoaPods)
       # manifests and turns them into a list of dependencies.
-      def parse_ruby_manifest(manifest)
+      def parse_ruby_manifest(manifest, source=nil)
         manifest.dependencies.inject([]) do |deps, dep|
           deps.push(Dependency.new(
             name: dep.name,
@@ -14,6 +14,7 @@ module Bibliothecary
               .map { |op, version| "#{op} #{version}" }
               .join(", "),
             type: dep.type.to_s,
+            source: source,
           ))
         end.uniq
       end
