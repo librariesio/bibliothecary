@@ -13,11 +13,12 @@ group :development, :test do
   gem "rake", "~> 12.0"
   gem "rubocop", "~> 1.71"
   gem "rubocop-rails"
+  gem "rubocop-rake" # This is needed by packageurl-ruby, until it reclassifies it as a dev dependency.
 end
 
 group :test do
   gem "codeclimate-test-reporter", "~> 1.0.0"
+  gem "rspec", "~> 3.0"
   gem "simplecov"
   gem "webmock"
-  gem "rspec", "~> 3.0"
 end

@@ -138,8 +138,7 @@ module Bibliothecary
       end
       allowed_file_list = allowed_file_list.reject { |f| ignored_files.include?(f) }
       package_managers.map do |pm|
-        allowed_file_list.select do |file_path|
-          allowed_file_list.grep(pm)
+        allowed_file_list.select do |file_path| # rubocop:disable  Style/SelectByRegexp (this is a rubocop false positive, match? is a custom method)
           # this is a call to match? without file contents, which will skip
           # ambiguous filenames that are only possibly a manifest
           pm.match?(file_path)
