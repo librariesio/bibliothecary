@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Improved Rubocop rules to make future spec changes easier via Rubocop auto-correcting formatting violations.
 - Populate Bibliothecary::Dependency#source field in all parsers. This makes the source field useful when consuming 
   from Bibliothecary, and removes a step from consumers having to populate this field themselves.
 
