@@ -20,6 +20,7 @@ commands:
             bundle lock --add-platform x86_64-linux
       - ruby/install-deps:
           bundler-version: "2.3"
+          key: gems-v3
 
 
 jobs:
