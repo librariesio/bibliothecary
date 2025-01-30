@@ -1,10 +1,12 @@
-require_relative "./analyser/matchers.rb"
-require_relative "./analyser/determinations.rb"
-require_relative "./analyser/analysis.rb"
+# frozen_string_literal: true
+
+require_relative "analyser/matchers"
+require_relative "analyser/determinations"
+require_relative "analyser/analysis"
 
 module Bibliothecary
   module Analyser
-    def self.create_error_analysis(platform_name, relative_path, kind, message, location=nil)
+    def self.create_error_analysis(platform_name, relative_path, kind, message, location = nil)
       {
         platform: platform_name,
         path: relative_path,
@@ -53,11 +55,11 @@ module Bibliothecary
       end
 
       def platform_name
-        self.name.to_s.split("::").last.downcase
+        name.to_s.split("::").last.downcase
       end
 
-      def map_dependencies(hash, key, type, source=nil)
-        hash.fetch(key,[]).map do |name, requirement|
+      def map_dependencies(hash, key, type, source = nil)
+        hash.fetch(key, []).map do |name, requirement|
           Dependency.new(
             name: name,
             requirement: requirement,
@@ -76,7 +78,7 @@ module Bibliothecary
       def add_multi_parser(klass)
         raise "No mapping found! You should place the add_multi_parser call below def self.mapping." unless respond_to?(:mapping)
 
-        original_mapping = self.mapping
+        original_mapping = mapping
 
         define_singleton_method(:mapping) do
           original_mapping.merge(klass.mapping)

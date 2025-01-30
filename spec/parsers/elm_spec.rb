@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::Parsers::Elm do
@@ -7,46 +9,46 @@ describe Bibliothecary::Parsers::Elm do
 
   it "parses dependencies from elm-package.json" do
     expect(described_class.analyse_contents("elm-package.json", load_fixture("elm-package.json"))).to eq({
-      platform: "elm",
-      path: "elm-package.json",
-      dependencies: [
+                                                                                                           platform: "elm",
+                                                                                                           path: "elm-package.json",
+                                                                                                           dependencies: [
         Bibliothecary::Dependency.new(name: "evancz/elm-markdown", requirement: "1.1.0 <= v < 2.0.0", type: "runtime", source: "elm-package.json"),
         Bibliothecary::Dependency.new(name: "evancz/elm-html", requirement: "1.0.0 <= v < 2.0.0", type: "runtime", source: "elm-package.json"),
         Bibliothecary::Dependency.new(name: "evancz/local-channel", requirement: "1.0.0 <= v < 2.0.0", type: "runtime", source: "elm-package.json"),
         Bibliothecary::Dependency.new(name: "elm-lang/core", requirement: "1.0.0 <= v < 2.0.0", type: "runtime", source: "elm-package.json"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                           kind: "manifest",
+                                                                                                           success: true,
+                                                                                                         })
   end
 
   it "parses dependencies from elm_dependencies.json" do
     expect(described_class.analyse_contents("elm_dependencies.json", load_fixture("elm_dependencies.json"))).to eq({
-      platform: "elm",
-      path: "elm_dependencies.json",
-      dependencies: [
+                                                                                                                     platform: "elm",
+                                                                                                                     path: "elm_dependencies.json",
+                                                                                                                     dependencies: [
         Bibliothecary::Dependency.new(name: "johnpmayer/elm-webgl", requirement: "0.1.1", type: "runtime", source: "elm_dependencies.json"),
         Bibliothecary::Dependency.new(name: "johnpmayer/elm-linear-algebra", requirement: "1.0.1", type: "runtime", source: "elm_dependencies.json"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                                     kind: "manifest",
+                                                                                                                     success: true,
+                                                                                                                   })
   end
 
   it "parses dependencies from elm-stuff/exact-dependencies.json" do
     expect(described_class.analyse_contents("elm-stuff/exact-dependencies.json", load_fixture("exact-dependencies.json"))).to eq({
-      platform: "elm",
-      path: "elm-stuff/exact-dependencies.json",
-      dependencies: [
+                                                                                                                                   platform: "elm",
+                                                                                                                                   path: "elm-stuff/exact-dependencies.json",
+                                                                                                                                   dependencies: [
         Bibliothecary::Dependency.new(name: "jvoigtlaender/elm-drag-and-drop", requirement: "1.0.1", type: "runtime", source: "elm-stuff/exact-dependencies.json"),
         Bibliothecary::Dependency.new(name: "evancz/elm-html", requirement: "2.0.0", type: "runtime", source: "elm-stuff/exact-dependencies.json"),
         Bibliothecary::Dependency.new(name: "elm-lang/core", requirement: "1.1.1", type: "runtime", source: "elm-stuff/exact-dependencies.json"),
         Bibliothecary::Dependency.new(name: "evancz/automaton", requirement: "1.0.0", type: "runtime", source: "elm-stuff/exact-dependencies.json"),
         Bibliothecary::Dependency.new(name: "evancz/virtual-dom", requirement: "1.2.2", type: "runtime", source: "elm-stuff/exact-dependencies.json"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                                                   kind: "lockfile",
+                                                                                                                                   success: true,
+                                                                                                                                 })
   end
 
   it "matches valid manifest filepaths" do

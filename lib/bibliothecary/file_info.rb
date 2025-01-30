@@ -1,24 +1,22 @@
+# frozen_string_literal: true
+
 require "pathname"
 
 module Bibliothecary
   # A representation of a file on the filesystem, with location information
   # and package manager information if needed.
   class FileInfo
-    attr_reader :folder_path
-    attr_reader :relative_path
-    attr_reader :full_path
+    attr_reader :folder_path, :relative_path, :full_path
     attr_accessor :package_manager
 
     def contents
       @contents ||=
-        begin
-          if @folder_path.nil?
-            # if we have no folder_path then we aren't dealing with a
-            # file that's actually on the filesystem
-            nil
-          else
-            Bibliothecary.utf8_string(File.open(@full_path).read)
-          end
+        if @folder_path.nil?
+          # if we have no folder_path then we aren't dealing with a
+          # file that's actually on the filesystem
+          nil
+        else
+          Bibliothecary.utf8_string(File.read(@full_path))
         end
     end
 

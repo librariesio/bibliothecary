@@ -1,13 +1,8 @@
+# frozen_string_literal: true
+
 module Bibliothecary
   class Configuration
-    attr_accessor :ignored_dirs
-    attr_accessor :ignored_files
-    attr_accessor :carthage_parser_host
-    attr_accessor :clojars_parser_host
-    attr_accessor :mix_parser_host
-    attr_accessor :conda_parser_host
-    attr_accessor :swift_parser_host
-    attr_accessor :cabal_parser_host
+    attr_accessor :ignored_dirs, :ignored_files, :carthage_parser_host, :clojars_parser_host, :mix_parser_host, :conda_parser_host, :swift_parser_host, :cabal_parser_host
 
     def initialize
       @ignored_dirs = [".git", "node_modules", "bower_components", "vendor", "dist"]

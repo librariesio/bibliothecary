@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::Dependency do
@@ -14,7 +16,7 @@ describe Bibliothecary::Dependency do
         optional: true,
         original_name: "foo-alias",
         original_requirement: "1.0.0.rc1",
-        source: "package.json",
+        source: "package.json"
       )
 
       expect(dep.name).to eq("foo")
@@ -31,7 +33,7 @@ describe Bibliothecary::Dependency do
     end
 
     it "only requires name and requirement" do
-      expect { subject.new() }.to raise_error(ArgumentError, "missing keywords: :name, :requirement")
+      expect { subject.new }.to raise_error(ArgumentError, "missing keywords: :name, :requirement")
     end
 
     it "can check equality" do

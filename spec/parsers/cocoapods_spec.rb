@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::Parsers::CocoaPods do
@@ -7,9 +9,9 @@ describe Bibliothecary::Parsers::CocoaPods do
 
   it "parses dependencies from Podfile" do
     expect(described_class.analyse_contents("Podfile", load_fixture("Podfile"))).to eq({
-      platform: "cocoapods",
-      path: "Podfile",
-      dependencies: [
+                                                                                         platform: "cocoapods",
+                                                                                         path: "Podfile",
+                                                                                         dependencies: [
         Bibliothecary::Dependency.new(name: "Artsy-UIButtons", requirement: ">= 0", type: "runtime", source: "Podfile"),
         Bibliothecary::Dependency.new(name: "ORStackView", requirement: ">= 0", type: "runtime", source: "Podfile"),
         Bibliothecary::Dependency.new(name: "FLKAutoLayout", requirement: ">= 0", type: "runtime", source: "Podfile"),
@@ -32,16 +34,16 @@ describe Bibliothecary::Parsers::CocoaPods do
         Bibliothecary::Dependency.new(name: "Quick", requirement: ">= 0", type: "runtime", source: "Podfile"),
         Bibliothecary::Dependency.new(name: "Forgeries", requirement: ">= 0", type: "runtime", source: "Podfile"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                         kind: "manifest",
+                                                                                         success: true,
+                                                                                       })
   end
 
   it "parses dependencies from Podfile.lock" do
     expect(described_class.analyse_contents("Podfile.lock", load_fixture("Podfile.lock"))).to eq({
-      platform: "cocoapods",
-      path: "Podfile.lock",
-      dependencies: [
+                                                                                                   platform: "cocoapods",
+                                                                                                   path: "Podfile.lock",
+                                                                                                   dependencies: [
         Bibliothecary::Dependency.new(name: "Alamofire", requirement: "2.0.1", type: "runtime", source: "Podfile.lock"),
         Bibliothecary::Dependency.new(name: "ARAnalytics", requirement: "3.8.0", type: "runtime", source: "Podfile.lock"),
         Bibliothecary::Dependency.new(name: "ARAnalytics", requirement: "3.8.0", type: "runtime", source: "Podfile.lock"),
@@ -93,33 +95,33 @@ describe Bibliothecary::Parsers::CocoaPods do
         Bibliothecary::Dependency.new(name: "UIView+BooleanAnimations", requirement: "1.0.2", type: "runtime", source: "Podfile.lock"),
         Bibliothecary::Dependency.new(name: "XNGMarkdownParser", requirement: "0.3.0", type: "runtime", source: "Podfile.lock"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                   kind: "lockfile",
+                                                                                                   success: true,
+                                                                                                 })
   end
 
   it "parses dependencies from example.podspec" do
     expect(described_class.analyse_contents("example.podspec", load_fixture("example.podspec"))).to eq({
-      platform: "cocoapods",
-      path: "example.podspec",
-      dependencies: [
+                                                                                                         platform: "cocoapods",
+                                                                                                         path: "example.podspec",
+                                                                                                         dependencies: [
         Bibliothecary::Dependency.new(name: "CocoaLumberjack", requirement: ">= 0", type: "runtime", source: "example.podspec"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                         kind: "manifest",
+                                                                                                         success: true,
+                                                                                                       })
   end
 
   it "parses dependencies from example.podspec.json" do
     expect(described_class.analyse_contents("example.podspec.json", load_fixture("example.podspec.json"))).to eq({
-      platform: "cocoapods",
-      path: "example.podspec.json",
-      dependencies: [
+                                                                                                                   platform: "cocoapods",
+                                                                                                                   path: "example.podspec.json",
+                                                                                                                   dependencies: [
         Bibliothecary::Dependency.new(name: "OpenSSL", requirement: ["~> 1.0"], type: "runtime", source: "example.podspec.json"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                                   kind: "manifest",
+                                                                                                                   success: true,
+                                                                                                                 })
   end
 
   it "matches valid manifest filepaths" do

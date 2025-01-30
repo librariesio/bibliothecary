@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "yaml"
 require "json"
 
@@ -74,62 +76,63 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_godep_json(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_godep_json(file_contents, options: {})
         manifest = JSON.parse file_contents
         map_dependencies(manifest, "Deps", "ImportPath", "Rev", "runtime", options.fetch(:filename, nil))
       end
 
-      def self.parse_gpm(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_gpm(file_contents, options: {})
         deps = []
         file_contents.split("\n").each do |line|
           match = line.gsub(/(\#(.*))/, "").match(GPM_REGEXP)
           next unless match
+
           deps << Dependency.new(
             name: match[1].strip,
             requirement: match[2].strip,
             type: "runtime",
-             source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil)
           )
         end
         deps
       end
 
-      def self.parse_govendor(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
-        manifest = JSON.load file_contents
+      def self.parse_govendor(file_contents, options: {})
+        manifest = JSON.parse file_contents
         map_dependencies(manifest, "package", "path", "revision", "runtime", options.fetch(:filename, nil))
       end
 
-      def self.parse_glide_yaml(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_glide_yaml(file_contents, options: {})
         manifest = YAML.load file_contents
         map_dependencies(manifest, "import", "package", "version", "runtime", options.fetch(:filename, nil)) +
-        map_dependencies(manifest, "devImports", "package", "version", "development", options.fetch(:filename, nil))
+          map_dependencies(manifest, "devImports", "package", "version", "development", options.fetch(:filename, nil))
       end
 
-      def self.parse_glide_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_glide_lockfile(file_contents, options: {})
         # glide.lock files contain an "updated" Time field, but Ruby 3.2+ requires us to safelist that class
         manifest = YAML.load file_contents, permitted_classes: [Time]
         map_dependencies(manifest, "imports", "name", "version", "runtime", options.fetch(:filename, nil))
       end
 
-      def self.parse_gb_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_gb_manifest(file_contents, options: {})
         manifest = JSON.parse file_contents
         map_dependencies(manifest, "dependencies", "importpath", "revision", "runtime", options.fetch(:filename, nil))
       end
 
-      def self.parse_dep_toml(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_dep_toml(file_contents, options: {})
         manifest = Tomlrb.parse file_contents
         map_dependencies(manifest, "constraint", "name", "version", "runtime", options.fetch(:filename, nil))
       end
 
-      def self.parse_dep_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_dep_lockfile(file_contents, options: {})
         manifest = Tomlrb.parse file_contents
         map_dependencies(manifest, "projects", "name", "revision", "runtime", options.fetch(:filename, nil))
       end
 
-      def self.parse_go_mod(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_go_mod(file_contents, options: {})
         categorized_deps = parse_go_mod_categorized_deps(file_contents, options.fetch(:filename, nil))
 
-        deps = categorized_deps["require"]
+        categorized_deps["require"]
           .map do |dep|
             # NOTE: A "replace" directive doesn't add the dep to the module graph unless the original dep is also in a "require" directive,
             # so we need to track down replacements here and use those instead of the originals, if present.
@@ -145,8 +148,6 @@ module Bibliothecary
 
             replaced_dep || dep
           end
-
-        return deps
       end
 
       def self.parse_go_mod_categorized_deps(file_contents, source)
@@ -161,7 +162,7 @@ module Bibliothecary
         file_contents
           .lines
           .map(&:strip)
-          .reject { |line| line =~ /^#{GOMOD_COMMENT_REGEXP}/ } # ignore comment lines
+          .grep_v(/^#{GOMOD_COMMENT_REGEXP}/) # ignore comment lines
           .each do |line|
             if line.match(GOMOD_MULTILINE_END_REGEXP) # detect the end of a multiline
               current_multiline_category = nil
@@ -169,31 +170,31 @@ module Bibliothecary
               current_multiline_category = match[1]
             elsif (match = line.match(GOMOD_SINGLELINE_DEP_REGEXP)) # or, detect a singleline dep
               categorized_deps[match[:category]] << go_mod_category_relative_dep(category: match[:category], line: line, match: match, source: source)
-            elsif (current_multiline_category && match = line.match(GOMOD_MULTILINE_DEP_REGEXP)) # otherwise, parse the multiline dep
+            elsif current_multiline_category && (match = line.match(GOMOD_MULTILINE_DEP_REGEXP)) # otherwise, parse the multiline dep
               categorized_deps[current_multiline_category] << go_mod_category_relative_dep(category: current_multiline_category, line: line, match: match, source: source)
             end
           end
         categorized_deps
       end
 
-      def self.parse_go_sum(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_go_sum(file_contents, options: {})
         deps = []
         file_contents.lines.map(&:strip).each do |line|
-          if (match = line.match(GOSUM_REGEXP))
-            deps << Dependency.new(
-              name: match[1].strip,
-              requirement: match[2].strip.split("/").first,
-              type: "runtime",
-              source: options.fetch(:filename, nil)
-            )
-          end
+          next unless (match = line.match(GOSUM_REGEXP))
+
+          deps << Dependency.new(
+            name: match[1].strip,
+            requirement: match[2].strip.split("/").first,
+            type: "runtime",
+            source: options.fetch(:filename, nil)
+          )
         end
         deps.uniq
       end
 
-      def self.parse_go_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_go_resolved(file_contents, options: {})
         JSON.parse(file_contents)
-          .select { |dep| dep["Main"] != "true" }
+          .reject { |dep| dep["Main"] == "true" }
           .map do |dep|
             if dep["Replace"].is_a?(String) && dep["Replace"] != "<nil>" && dep["Replace"] != ""
               # NOTE: The "replace" directive doesn't actually change the version reported from Go (e.g. "go mod graph"), it only changes
@@ -202,18 +203,18 @@ module Bibliothecary
               name, requirement = dep["Replace"].split(" ", 2)
               requirement = "*" if requirement.to_s.strip == ""
               Dependency.new(
-                name: name, requirement: requirement, original_name: dep["Path"], original_requirement: dep["Version"], type: dep.fetch("Scope") { "runtime" }, source: options.fetch(:filename, nil)
+                name: name, requirement: requirement, original_name: dep["Path"], original_requirement: dep["Version"], type: dep.fetch("Scope", "runtime"), source: options.fetch(:filename, nil)
               )
             else
               Dependency.new(
-                name: dep["Path"], requirement: dep["Version"], type: dep.fetch("Scope") { "runtime" }, source: options.fetch(:filename, nil)
+                name: dep["Path"], requirement: dep["Version"], type: dep.fetch("Scope", "runtime"), source: options.fetch(:filename, nil)
               )
             end
           end
       end
 
-      def self.map_dependencies(manifest, attr_name, dep_attr_name, version_attr_name, type, source=nil)
-        manifest.fetch(attr_name,[]).map do |dependency|
+      def self.map_dependencies(manifest, attr_name, dep_attr_name, version_attr_name, type, source = nil)
+        manifest.fetch(attr_name, []).map do |dependency|
           Dependency.new(
             name: dependency[dep_attr_name],
             requirement: dependency[version_attr_name],
@@ -236,7 +237,7 @@ module Bibliothecary
             requirement: replacement_match[:requirement],
             type: "runtime",
             direct: !match[:indirect],
-            source: source,
+            source: source
           )
         when "retract"
           Dependency.new(
@@ -245,7 +246,7 @@ module Bibliothecary
             type: "runtime",
             deprecated: true,
             direct: !match[:indirect],
-            source: source,
+            source: source
           )
         else
           Dependency.new(
@@ -253,7 +254,7 @@ module Bibliothecary
             requirement: match[:requirement],
             type: "runtime",
             direct: !match[:indirect],
-            source: source,
+            source: source
           )
         end
       end

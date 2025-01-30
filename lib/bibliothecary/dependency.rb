@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bibliothecary
   # Dependency represents a single unique dependency that was parsed out of a manifest.
   #
@@ -19,21 +21,21 @@ module Bibliothecary
   # @source [String] source An optional string to store the location of the manifest that contained this
   #   dependency, e.g. "src/package.json".
   class Dependency
-    FIELDS = [
-      :name,
-      :requirement,
-      :original_requirement,
-      :platform,
-      :type,
-      :direct,
-      :deprecated,
-      :local,
-      :optional,
-      :original_name,
-      :source,
-    ]
+    FIELDS = %i[
+      name
+      requirement
+      original_requirement
+      platform
+      type
+      direct
+      deprecated
+      local
+      optional
+      original_name
+      source
+    ].freeze
 
-    attr_reader *FIELDS
+    attr_reader(*FIELDS)
 
     def initialize(
       name:,
@@ -64,7 +66,7 @@ module Bibliothecary
     def eql?(other)
       FIELDS.all? { |f| public_send(f) == other.public_send(f) }
     end
-    alias :== :eql?
+    alias == eql?
 
     def [](key)
       public_send(key)

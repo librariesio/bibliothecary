@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::Parsers::NPM do
@@ -33,68 +35,68 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses dependencies from npm-ls.json" do
     expect(described_class.analyse_contents("npm-ls.json", load_fixture("npm-ls.json"))).to eq({
-      platform: "npm",
-      path: "npm-ls.json",
-      dependencies: [
-        Bibliothecary::Dependency.new( name: "ansicolor", requirement: "1.1.93", type: "runtime", source: "npm-ls.json"),
+                                                                                                 platform: "npm",
+                                                                                                 path: "npm-ls.json",
+                                                                                                 dependencies: [
+        Bibliothecary::Dependency.new(name: "ansicolor", requirement: "1.1.93", type: "runtime", source: "npm-ls.json"),
         Bibliothecary::Dependency.new(name: "babel-cli", requirement: "6.26.0", type: "runtime", source: "npm-ls.json"),
         Bibliothecary::Dependency.new(name: "debug", requirement: "2.6.9", type: "runtime", source: "npm-ls.json"),
-        Bibliothecary::Dependency.new(name:"babel-polyfill", requirement: "6.26.0", type: "runtime", source: "npm-ls.json"),
-        Bibliothecary::Dependency.new(name:"core-js", requirement: "2.6.12", type: "runtime", source: "npm-ls.json"),
-        Bibliothecary::Dependency.new(name:"lodash", requirement: "4.17.21", type: "runtime", source: "npm-ls.json"),
+        Bibliothecary::Dependency.new(name: "babel-polyfill", requirement: "6.26.0", type: "runtime", source: "npm-ls.json"),
+        Bibliothecary::Dependency.new(name: "core-js", requirement: "2.6.12", type: "runtime", source: "npm-ls.json"),
+        Bibliothecary::Dependency.new(name: "lodash", requirement: "4.17.21", type: "runtime", source: "npm-ls.json"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                 kind: "lockfile",
+                                                                                                 success: true,
+                                                                                               })
   end
 
   it "parses dependencies from package.json" do
     expect(described_class.analyse_contents("package.json", load_fixture("package.json"))).to eq({
-      platform: "npm",
-      path: "package.json",
-      dependencies: [
+                                                                                                   platform: "npm",
+                                                                                                   path: "package.json",
+                                                                                                   dependencies: [
         Bibliothecary::Dependency.new(name: "babel", requirement: "^4.6.6", type: "runtime", local: false, source: "package.json"),
         Bibliothecary::Dependency.new(name: "mocha", requirement: "^2.2.1", type: "development", local: false, source: "package.json"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                   kind: "manifest",
+                                                                                                   success: true,
+                                                                                                 })
   end
 
   it "parses dependencies from npm-shrinkwrap.json" do
     expect(described_class.analyse_contents("npm-shrinkwrap.json", load_fixture("npm-shrinkwrap.json"))).to include({
-      platform: "npm",
-      path: "npm-shrinkwrap.json",
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                                      platform: "npm",
+                                                                                                                      path: "npm-shrinkwrap.json",
+                                                                                                                      kind: "lockfile",
+                                                                                                                      success: true,
+                                                                                                                    })
     expect(described_class.analyse_contents("npm-shrinkwrap.json", load_fixture("npm-shrinkwrap.json"))[:dependencies]).to include(
-      Bibliothecary::Dependency.new(name:"babel", requirement:"4.7.16", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"body-parser", requirement:"1.13.3", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"bugsnag", requirement:"1.6.5", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"cookie-session", requirement:"1.2.0", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"debug", requirement:"2.2.0", type:"development", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"deep-diff", requirement:"0.3.2", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"deep-equal", requirement:"1.0.0", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"express", requirement:"4.13.3", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"express-session", requirement:"1.11.3", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"jade", requirement:"1.11.0", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"js-yaml", requirement:"3.4.0", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"memwatch-next", requirement:"0.2.9", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"multer", requirement:"0.1.8", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"qs", requirement:"2.4.2", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"redis", requirement:"0.12.1", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"semver", requirement:"4.3.6", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"serve-static", requirement:"1.10.0", type:"runtime", source: "npm-shrinkwrap.json"),
-      Bibliothecary::Dependency.new(name:"toml", requirement:"2.3.0", type:"runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "babel", requirement: "4.7.16", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "body-parser", requirement: "1.13.3", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "bugsnag", requirement: "1.6.5", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "cookie-session", requirement: "1.2.0", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "debug", requirement: "2.2.0", type: "development", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "deep-diff", requirement: "0.3.2", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "deep-equal", requirement: "1.0.0", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "express", requirement: "4.13.3", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "express-session", requirement: "1.11.3", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "jade", requirement: "1.11.0", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "js-yaml", requirement: "3.4.0", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "memwatch-next", requirement: "0.2.9", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "multer", requirement: "0.1.8", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "qs", requirement: "2.4.2", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "redis", requirement: "0.12.1", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "semver", requirement: "4.3.6", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "serve-static", requirement: "1.10.0", type: "runtime", source: "npm-shrinkwrap.json"),
+      Bibliothecary::Dependency.new(name: "toml", requirement: "2.3.0", type: "runtime", source: "npm-shrinkwrap.json")
     )
   end
 
   it "parses dependencies from yarn.lock" do
     expect(described_class.analyse_contents("yarn.lock", load_fixture("yarn.lock"))).to eq({
-      platform: "npm",
-      path: "yarn.lock",
-      dependencies: [
+                                                                                             platform: "npm",
+                                                                                             path: "yarn.lock",
+                                                                                             dependencies: [
         Bibliothecary::Dependency.new(name: "body-parser", requirement: "1.16.1", type: "runtime", local: false, source: "yarn.lock"),
         Bibliothecary::Dependency.new(name: "bytes", requirement: "2.4.0", type: "runtime", local: false, source: "yarn.lock"),
         Bibliothecary::Dependency.new(name: "content-type", requirement: "1.0.2", type: "runtime", local: false, source: "yarn.lock"),
@@ -116,52 +118,52 @@ describe Bibliothecary::Parsers::NPM do
         Bibliothecary::Dependency.new(name: "type-is", requirement: "1.6.14", type: "runtime", local: false, source: "yarn.lock"),
         Bibliothecary::Dependency.new(name: "unpipe", requirement: "1.0.0", type: "runtime", local: false, source: "yarn.lock"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                             kind: "lockfile",
+                                                                                             success: true,
+                                                                                           })
   end
 
   it "parses git dependencies from yarn.lock" do
     expect(described_class.analyse_contents("yarn.lock", load_fixture("yarn-with-git-repo/yarn.lock"))).to eq({
-      platform: "npm",
-      path: "yarn.lock",
-      dependencies: [
+                                                                                                                platform: "npm",
+                                                                                                                path: "yarn.lock",
+                                                                                                                dependencies: [
         Bibliothecary::Dependency.new(name: "vue", requirement: "2.6.12", type: "runtime", local: false, source: "yarn.lock"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                                kind: "lockfile",
+                                                                                                                success: true,
+                                                                                                              })
   end
 
   it "parses git dependencies from package.json" do
     expect(described_class.analyse_contents("package.json", load_fixture("yarn-with-git-repo/package.json"))).to eq({
-      platform: "npm",
-      path: "package.json",
-      dependencies: [
+                                                                                                                      platform: "npm",
+                                                                                                                      path: "package.json",
+                                                                                                                      dependencies: [
         Bibliothecary::Dependency.new(name: "vue", requirement: "https://github.com/vuejs/vue.git#v2.6.12", type: "runtime", local: false, source: "package.json"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                                      kind: "manifest",
+                                                                                                                      success: true,
+                                                                                                                    })
   end
 
   it "wont load package-lock.json from a package.json" do
     expect(described_class.analyse_contents("package.json", load_fixture("package-lock.json"))).to match({
-      platform: "npm",
-      path: "package.json",
-      dependencies: nil,
-      kind: "manifest",
-      success: false,
-      error_message: "package.json: appears to be a lockfile rather than manifest format",
-      error_location: match("in `parse_manifest'"),
-    })
+                                                                                                           platform: "npm",
+                                                                                                           path: "package.json",
+                                                                                                           dependencies: nil,
+                                                                                                           kind: "manifest",
+                                                                                                           success: false,
+                                                                                                           error_message: "package.json: appears to be a lockfile rather than manifest format",
+                                                                                                           error_location: match("in `parse_manifest'"),
+                                                                                                         })
   end
 
   it "parses dependencies from package-lock.json" do
     expect(described_class.analyse_contents("package-lock.json", load_fixture("package-lock.json"))).to eq({
-      platform: "npm",
-      path: "package-lock.json",
-      dependencies: [
+                                                                                                             platform: "npm",
+                                                                                                             path: "package-lock.json",
+                                                                                                             dependencies: [
         Bibliothecary::Dependency.new(name: "accepts", requirement: "1.3.3", type: "runtime", source: "package-lock.json"),
         Bibliothecary::Dependency.new(name: "ajv", requirement: "4.11.8", type: "runtime", source: "package-lock.json"),
         Bibliothecary::Dependency.new(name: "ansi-escapes", requirement: "1.4.0", type: "runtime", source: "package-lock.json"),
@@ -365,31 +367,31 @@ describe Bibliothecary::Parsers::NPM do
         Bibliothecary::Dependency.new(name: "xtend", requirement: "4.0.1", type: "runtime", source: "package-lock.json"),
         Bibliothecary::Dependency.new(name: "yarn", requirement: "0.24.6", type: "runtime", source: "package-lock.json"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                             kind: "lockfile",
+                                                                                                             success: true,
+                                                                                                           })
   end
 
   context "with local path dependencies" do
     it "parses local path dependencies from package.json" do
       expect(described_class.analyse_contents("package.json", load_fixture("npm-local-file/package.json"))).to eq({
-        platform: "npm",
-        path: "package.json",
-        dependencies: [
+                                                                                                                    platform: "npm",
+                                                                                                                    path: "package.json",
+                                                                                                                    dependencies: [
           Bibliothecary::Dependency.new(name: "left-pad", requirement: "^1.3.0", type: "runtime", local: false, source: "package.json"),
           Bibliothecary::Dependency.new(name: "other-package", requirement: "file:src/other-package", type: "runtime", local: true, source: "package.json"),
           Bibliothecary::Dependency.new(name: "react", requirement: "^18.3.1", type: "runtime", local: false, source: "package.json"),
         ],
-        kind: "manifest",
-        success: true,
-      })
+                                                                                                                    kind: "manifest",
+                                                                                                                    success: true,
+                                                                                                                  })
     end
 
     it "parses local path dependencies from package-lock.json" do
       expect(described_class.analyse_contents("package-lock.json", load_fixture("npm-local-file/package-lock.json"))).to eq({
-        platform: "npm",
-        path: "package-lock.json",
-        dependencies: [
+                                                                                                                              platform: "npm",
+                                                                                                                              path: "package-lock.json",
+                                                                                                                              dependencies: [
           Bibliothecary::Dependency.new(name: "js-tokens", requirement: "4.0.0", type: "runtime", local: false, source: "package-lock.json"),
           Bibliothecary::Dependency.new(name: "left-pad", requirement: "1.3.0", type: "runtime", local: false, source: "package-lock.json"),
           Bibliothecary::Dependency.new(name: "lodash", requirement: "4.17.21", type: "development", local: false, source: "package-lock.json"),
@@ -397,62 +399,62 @@ describe Bibliothecary::Parsers::NPM do
           Bibliothecary::Dependency.new(name: "other-package", requirement: "*", type: "runtime", local: true, source: "package-lock.json"),
           Bibliothecary::Dependency.new(name: "react", requirement: "18.3.1", type: "runtime", local: false, source: "package-lock.json"),
         ],
-        kind: "lockfile",
-        success: true,
-      })
+                                                                                                                              kind: "lockfile",
+                                                                                                                              success: true,
+                                                                                                                            })
     end
 
     it "parses local path dependencies from yarn.lock" do
       expect(described_class.analyse_contents("yarn.lock", load_fixture("npm-local-file/yarn.lock"))).to eq({
-        platform: "npm",
-        path: "yarn.lock",
-        dependencies: [
+                                                                                                              platform: "npm",
+                                                                                                              path: "yarn.lock",
+                                                                                                              dependencies: [
           Bibliothecary::Dependency.new(name: "js-tokens", requirement: "4.0.0", type: "runtime", local: false, source: "yarn.lock"),
           Bibliothecary::Dependency.new(name: "left-pad", requirement: "1.3.0", type: "runtime", local: false, source: "yarn.lock"),
           Bibliothecary::Dependency.new(name: "loose-envify", requirement: "1.4.0", type: "runtime", local: false, source: "yarn.lock"),
           Bibliothecary::Dependency.new(name: "other-package", requirement: "1.0.0", type: "runtime", local: true, source: "yarn.lock"),
           Bibliothecary::Dependency.new(name: "react", requirement: "18.3.1", type: "runtime", local: false, source: "yarn.lock"),
         ],
-        kind: "lockfile",
-        success: true,
-      })
+                                                                                                              kind: "lockfile",
+                                                                                                              success: true,
+                                                                                                            })
     end
   end
 
   it "does not parse self-referential dependencies from yarn.lock" do
     expect(described_class.analyse_contents("yarn.lock", load_fixture("yarn-v4-lockfile/yarn.lock"))).to eq({
-      platform: "npm",
-      path: "yarn.lock",
-      dependencies: [
+                                                                                                              platform: "npm",
+                                                                                                              path: "yarn.lock",
+                                                                                                              dependencies: [
         Bibliothecary::Dependency.new(name: "js-tokens", requirement: "4.0.0", type: "runtime", local: false, source: "yarn.lock"),
         Bibliothecary::Dependency.new(name: "left-pad", requirement: "1.3.0", type: "runtime", local: false, source: "yarn.lock"),
         Bibliothecary::Dependency.new(name: "loose-envify", requirement: "1.4.0", type: "runtime", local: false, source: "yarn.lock"),
         Bibliothecary::Dependency.new(name: "react", requirement: "18.3.1", type: "runtime", local: false, source: "yarn.lock"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                              kind: "lockfile",
+                                                                                                              success: true,
+                                                                                                            })
   end
 
   it "parses package-lock.json with scm based versions" do
     contents = JSON.dump(
       {
-        "name": "js-app",
-        "version": "1.0.0",
-        "lockfileVersion": 1,
-        "requires": true,
-        "dependencies": {
-          "tagged": {
-            "version": "git+ssh://git@github.com/some-co/tagged.git#7404d32056c7f0250aa27e038136011b",
-            "from": "git+ssh://git@github.com/some-co/tagged.git#v2.10.0",
+        name: "js-app",
+        version: "1.0.0",
+        lockfileVersion: 1,
+        requires: true,
+        dependencies: {
+          tagged: {
+            version: "git+ssh://git@github.com/some-co/tagged.git#7404d32056c7f0250aa27e038136011b",
+            from: "git+ssh://git@github.com/some-co/tagged.git#v2.10.0",
           },
-          "semver": {
-            "version": "git+ssh://git@github.com/some-co/semver.git#b8979ec5e34d5fac0f0b3b660dc67f2e",
-            "from": "git+ssh://git@github.com/some-co/semver.git#semver:v5.5.5",
+          semver: {
+            version: "git+ssh://git@github.com/some-co/semver.git#b8979ec5e34d5fac0f0b3b660dc67f2e",
+            from: "git+ssh://git@github.com/some-co/semver.git#semver:v5.5.5",
           },
-          "head": {
-            "version": "git+ssh://git@github.com/some-co/head.git#ecce958093a5451452ee1dd0c0d723c9",
-            "from": "git+ssh://git@github.com/some-co/semver.git",
+          head: {
+            version: "git+ssh://git@github.com/some-co/head.git#ecce958093a5451452ee1dd0c0d723c9",
+            from: "git+ssh://git@github.com/some-co/semver.git",
           },
         },
       }
@@ -467,12 +469,12 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses newer package-lock.json with dev and integrity fields" do
     analysis = described_class.analyse_contents("2018-package-lock/package-lock.json", load_fixture("2018-package-lock/package-lock.json"))
-    expect(analysis.select { |k,_v| k != :dependencies }).to eq({
-      platform: "npm",
-      path: "2018-package-lock/package-lock.json",
-      kind: "lockfile",
-      success: true,
-    })
+    expect(analysis.except(:dependencies)).to eq({
+                                                   platform: "npm",
+                                                   path: "2018-package-lock/package-lock.json",
+                                                   kind: "lockfile",
+                                                   success: true,
+                                                 })
 
     # spot-check dependencies to avoid having them all inline here.
     # Mostly for this "2018" lock file we want to be sure dev=true becomes
@@ -482,8 +484,8 @@ describe Bibliothecary::Parsers::NPM do
                                     name: "@vue/test-utils",
                                     requirement: "1.0.0-beta.13",
                                     type: "runtime",
-                                    source: "2018-package-lock/package-lock.json",
-                              ))
+                                    source: "2018-package-lock/package-lock.json"
+                                  ))
     expect(dependencies.select { |dep| dep.type == "runtime" }.length).to eq(373)
     expect(dependencies.select { |dep| dep.type == "development" }.length).to eq(1601)
     # a nested dependency
@@ -510,30 +512,30 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses dependencies that have multiple versions in package-lock.json" do
     expect(described_class.analyse_contents("package-lock.json", load_fixture("multiple_versions/package-lock.json"))).to eq({
-      dependencies: [
-        Bibliothecary::Dependency.new(name: "find-versions", requirement: "4.0.0", type: "runtime", local: false, source: "package-lock.json"),
-        Bibliothecary::Dependency.new(name: "semver-regex", requirement: "3.1.3", type: "runtime", local: false, source: "package-lock.json"),
-        Bibliothecary::Dependency.new(name: "semver-regex", requirement: "4.0.2", type: "runtime", local: false, source: "package-lock.json"),
-      ],
-      kind: "lockfile",
-      path: "package-lock.json",
-      platform: "npm",
-      success: true,
-    })
+                                                                                                                               dependencies: [
+                                                                                                                                 Bibliothecary::Dependency.new(name: "find-versions", requirement: "4.0.0", type: "runtime", local: false, source: "package-lock.json"),
+                                                                                                                                 Bibliothecary::Dependency.new(name: "semver-regex", requirement: "3.1.3", type: "runtime", local: false, source: "package-lock.json"),
+                                                                                                                                 Bibliothecary::Dependency.new(name: "semver-regex", requirement: "4.0.2", type: "runtime", local: false, source: "package-lock.json"),
+                                                                                                                               ],
+                                                                                                                               kind: "lockfile",
+                                                                                                                               path: "package-lock.json",
+                                                                                                                               platform: "npm",
+                                                                                                                               success: true,
+                                                                                                                             })
   end
 
   it "parses dependencies that have multiple versions in yarn.json" do
     expect(described_class.analyse_contents("yarn.lock", load_fixture("multiple_versions/yarn.lock"))).to eq({
-      dependencies: [
-        Bibliothecary::Dependency.new(name: "find-versions", requirement: "4.0.0", type: "runtime", local: false, source: "yarn.lock"),
-        Bibliothecary::Dependency.new(name: "semver-regex", requirement: "3.1.3", type: "runtime", local: false, source: "yarn.lock"),
-        Bibliothecary::Dependency.new(name: "semver-regex", requirement: "4.0.2", type: "runtime", local: false, source: "yarn.lock"),
-      ],
-      kind: "lockfile",
-      path: "yarn.lock",
-      platform: "npm",
-      success: true,
-    })
+                                                                                                               dependencies: [
+                                                                                                                 Bibliothecary::Dependency.new(name: "find-versions", requirement: "4.0.0", type: "runtime", local: false, source: "yarn.lock"),
+                                                                                                                 Bibliothecary::Dependency.new(name: "semver-regex", requirement: "3.1.3", type: "runtime", local: false, source: "yarn.lock"),
+                                                                                                                 Bibliothecary::Dependency.new(name: "semver-regex", requirement: "4.0.2", type: "runtime", local: false, source: "yarn.lock"),
+                                                                                                               ],
+                                                                                                               kind: "lockfile",
+                                                                                                               path: "yarn.lock",
+                                                                                                               platform: "npm",
+                                                                                                               success: true,
+                                                                                                             })
   end
 
   describe ".lockfile_preference_order" do
@@ -544,13 +546,13 @@ describe Bibliothecary::Parsers::NPM do
     it "prefers npm-shrinkwrap file infos first" do
       expect(described_class.lockfile_preference_order([
         package, package_lock, shrinkwrap
-      ])).to eq([ shrinkwrap, package, package_lock ])
+      ])).to eq([shrinkwrap, package, package_lock])
     end
 
     it "changes nothing if no shrinkwrap" do
       expect(described_class.lockfile_preference_order([
         package, package_lock
-      ])).to eq([ package, package_lock ])
+      ])).to eq([package, package_lock])
     end
   end
 
@@ -558,44 +560,46 @@ describe Bibliothecary::Parsers::NPM do
     it "parses version 1 package-lock.json" do
       analysis = described_class.analyse_contents("npm-lockfile-version-1/package-lock.json", load_fixture("npm-lockfile-version-1/package-lock.json"))
       expect(analysis).to eq({
-        platform: "npm",
-        path: "npm-lockfile-version-1/package-lock.json",
-        dependencies: [
+                               platform: "npm",
+                               path: "npm-lockfile-version-1/package-lock.json",
+                               dependencies: [
           Bibliothecary::Dependency.new(name: "find-versions", requirement: "4.0.0", type: "runtime", source: "npm-lockfile-version-1/package-lock.json"),
           Bibliothecary::Dependency.new(name: "semver-regex", requirement: "3.1.4", type: "runtime", source: "npm-lockfile-version-1/package-lock.json"),
           Bibliothecary::Dependency.new(name: "semver-regex", requirement: "4.0.5", type: "runtime", source: "npm-lockfile-version-1/package-lock.json"),
         ],
-        kind: "lockfile",
-        success: true,
-      })
+                               kind: "lockfile",
+                               success: true,
+                             })
     end
 
     it "parses version 2 package-lock.json" do
       analysis = described_class.analyse_contents("npm-lockfile-version-2/package-lock.json", load_fixture("npm-lockfile-version-2/package-lock.json"))
       expect(analysis).to eq({
-        platform: "npm",
-        path: "npm-lockfile-version-2/package-lock.json",
-        dependencies: [
+                               platform: "npm",
+                               path: "npm-lockfile-version-2/package-lock.json",
+                               dependencies: [
           Bibliothecary::Dependency.new(name: "find-versions", requirement: "4.0.0", type: "runtime", local: false, source: "npm-lockfile-version-2/package-lock.json"),
           Bibliothecary::Dependency.new(name: "semver-regex", requirement: "3.1.4", type: "runtime", local: false, source: "npm-lockfile-version-2/package-lock.json"),
-          Bibliothecary::Dependency.new(name: "semver-regex", requirement: "4.0.5", type: "runtime", local: false, source: "npm-lockfile-version-2/package-lock.json")],
-        kind: "lockfile",
-        success: true,
-      })
+          Bibliothecary::Dependency.new(name: "semver-regex", requirement: "4.0.5", type: "runtime", local: false, source: "npm-lockfile-version-2/package-lock.json"),
+],
+                               kind: "lockfile",
+                               success: true,
+                             })
     end
 
     it "parses version 3 package-lock.json" do
       analysis = described_class.analyse_contents("npm-lockfile-version-3/package-lock.json", load_fixture("npm-lockfile-version-3/package-lock.json"))
       expect(analysis).to eq({
-        platform: "npm",
-        path: "npm-lockfile-version-3/package-lock.json",
-        dependencies: [
+                               platform: "npm",
+                               path: "npm-lockfile-version-3/package-lock.json",
+                               dependencies: [
           Bibliothecary::Dependency.new(name: "find-versions", requirement: "4.0.0", type: "runtime", local: false, source: "npm-lockfile-version-3/package-lock.json"),
           Bibliothecary::Dependency.new(name: "semver-regex", requirement: "3.1.4", type: "runtime", local: false, source: "npm-lockfile-version-3/package-lock.json"),
-          Bibliothecary::Dependency.new(name: "semver-regex", requirement: "4.0.5", type: "runtime", local: false, source: "npm-lockfile-version-3/package-lock.json")],
-        kind: "lockfile",
-        success: true,
-      })
+          Bibliothecary::Dependency.new(name: "semver-regex", requirement: "4.0.5", type: "runtime", local: false, source: "npm-lockfile-version-3/package-lock.json"),
+],
+                               kind: "lockfile",
+                               success: true,
+                             })
     end
   end
 end

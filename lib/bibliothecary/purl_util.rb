@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bibliothecary
   class PurlUtil
     # If a purl type (key) exists, it will be used in a manifest for
@@ -16,7 +18,6 @@ module Bibliothecary
       "nuget" => :nuget,
       "pypi" => :pypi,
     }.freeze
-
 
     # @param purl [PackageURL]
     # @return [String] The properly namespaced package name

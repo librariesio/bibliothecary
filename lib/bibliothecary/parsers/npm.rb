@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "json"
 
 module Bibliothecary
@@ -37,7 +39,7 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_package_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_package_lock(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         # https://docs.npmjs.com/cli/v9/configuring-npm/package-lock-json#lockfileversion
         if manifest["lockfileVersion"].to_i <= 1
@@ -52,14 +54,14 @@ module Bibliothecary
 
       class << self
         # "package-lock.json" and "npm-shrinkwrap.json" have same format, so use same parsing logic
-        alias_method :parse_shrinkwrap, :parse_package_lock
+        alias parse_shrinkwrap parse_package_lock
       end
 
-      def self.parse_package_lock_v1(manifest, source=nil)
+      def self.parse_package_lock_v1(manifest, source = nil)
         parse_package_lock_deps_recursively(manifest.fetch("dependencies", []), source)
       end
 
-      def self.parse_package_lock_v2(manifest, source=nil)
+      def self.parse_package_lock_v2(manifest, source = nil)
         # "packages" is a flat object where each key is the installed location of the dep, e.g. node_modules/foo/node_modules/bar.
         manifest
           .fetch("packages")
@@ -73,35 +75,39 @@ module Bibliothecary
             Dependency.new(
               name: name.split("node_modules/").last,
               requirement: dep["version"],
-              type: dep.fetch("dev", false) || dep.fetch("devOptional", false)  ? "development" : "runtime",
+              type: dep.fetch("dev", false) || dep.fetch("devOptional", false) ? "development" : "runtime",
               local: dep.fetch("link", false),
-              source: source,
+              source: source
             )
           end
       end
 
-      def self.parse_package_lock_deps_recursively(dependencies, source=nil, depth=1)
+      def self.parse_package_lock_deps_recursively(dependencies, source = nil, depth = 1)
         dependencies.flat_map do |name, requirement|
           type = requirement.fetch("dev", false) ? "development" : "runtime"
           version = requirement.key?("from") ? requirement["from"][/#(?:semver:)?v?(.*)/, 1] : nil
           version ||= requirement["version"].split("#").last
           child_dependencies = if depth >= PACKAGE_LOCK_JSON_MAX_DEPTH
-            []
-          else
-            parse_package_lock_deps_recursively(requirement.fetch("dependencies", []), source, depth + 1)
-          end
+                                 []
+                               else
+                                 parse_package_lock_deps_recursively(requirement.fetch("dependencies", []), source, depth + 1)
+                               end
 
           [Dependency.new(
             name: name,
             requirement: version,
             type: type,
-            source: source,
+            source: source
           )] + child_dependencies
         end
       end
 
-      def self.parse_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_manifest(file_contents, options: {})
+        # on ruby 3.2 we suddenly get this JSON error, so detect and return early: "package.json: unexpected token at ''"
+        return [] if file_contents.empty?
+
         manifest = JSON.parse(file_contents)
+
         raise "appears to be a lockfile rather than manifest format" if manifest.key?("lockfileVersion")
 
         dependencies = manifest.fetch("dependencies", [])
@@ -124,19 +130,19 @@ module Bibliothecary
               requirement: requirement,
               type: "development",
               local: requirement.start_with?("file:"),
-              source: options.fetch(:filename, nil),
+              source: options.fetch(:filename, nil)
             )
           end
 
         dependencies
       end
 
-      def self.parse_yarn_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_yarn_lock(file_contents, options: {})
         dep_hash = if file_contents.match(/__metadata:/)
-          parse_v2_yarn_lock(file_contents, options.fetch(:filename, nil))
-        else
-          parse_v1_yarn_lock(file_contents, options.fetch(:filename, nil))
-        end
+                     parse_v2_yarn_lock(file_contents, options.fetch(:filename, nil))
+                   else
+                     parse_v1_yarn_lock(file_contents, options.fetch(:filename, nil))
+                   end
 
         dep_hash.map do |dep|
           Dependency.new(
@@ -144,67 +150,67 @@ module Bibliothecary
             requirement: dep[:version],
             type: "runtime", # lockfile doesn't tell us more about the type of dep
             local: dep[:requirements]&.first&.start_with?("file:"),
-            source: options.fetch(:filename, nil),
+            source: options.fetch(:filename, nil)
           )
         end
-    end
+      end
 
-    # Returns a hash representation of the deps in yarn.lock, eg:
-    # [{
-    #   name: "foo",
-    #   requirements: [["foo", "^1.0.0"], ["foo", "^1.0.1"]],
-    #   version: "1.2.0",
-    # }, ...]
-    def self.parse_v1_yarn_lock(contents, source=nil)
-      contents
-        .gsub(/^#.*/, "")
-        .strip
-        .split("\n\n")
-        .map do |chunk|
-          requirements = chunk
-            .lines
-            .find { |l| !l.start_with?(" ") && l.strip.end_with?(":") } # first line, eg: '"@bar/foo@1.0.0", "@bar/foo@^1.0.1":'
-            .strip
-            .gsub(/"|:$/, "") # don't need quotes or trailing colon
-            .split(",") # split the list of requirements
-            .map { |d| d.strip.split(/(?<!^)@/, 2) } # split each requirement on name/version "@"", not on leading namespace "@"
-          version = chunk.match(/version "?([^"]*)"?/)[1]
+      # Returns a hash representation of the deps in yarn.lock, eg:
+      # [{
+      #   name: "foo",
+      #   requirements: [["foo", "^1.0.0"], ["foo", "^1.0.1"]],
+      #   version: "1.2.0",
+      # }, ...]
+      def self.parse_v1_yarn_lock(contents, source = nil)
+        contents
+          .gsub(/^#.*/, "")
+          .strip
+          .split("\n\n")
+          .map do |chunk|
+            requirements = chunk
+              .lines
+              .find { |l| !l.start_with?(" ") && l.strip.end_with?(":") } # first line, eg: '"@bar/foo@1.0.0", "@bar/foo@^1.0.1":'
+              .strip
+              .gsub(/"|:$/, "") # don't need quotes or trailing colon
+              .split(",") # split the list of requirements
+              .map { |d| d.strip.split(/(?<!^)@/, 2) } # split each requirement on name/version "@"", not on leading namespace "@"
+            version = chunk.match(/version "?([^"]*)"?/)[1]
 
-          {
-            name: requirements.first.first,
-            requirements: requirements.map { |x| x[1] },
-            version: version,
-            source: source,
-          }
-        end
-    end
+            {
+              name: requirements.first.first,
+              requirements: requirements.map { |x| x[1] },
+              version: version,
+              source: source,
+            }
+          end
+      end
 
-    def self.parse_v2_yarn_lock(contents, source=nil)
-      parsed = YAML.load(contents)
-      parsed = parsed.except("__metadata")
-      parsed
-        .reject do |packages, info|
-          # yarn v4+ creates a lockfile entry: "myproject@workspace" with a "use.local" version
-          #   this lockfile entry is a reference to the project to which the lockfile belongs
-          # skip this self-referential package
-          info["version"].to_s.include?("use.local") && packages.include?("workspace")
-        end
-        .map do |packages, info|
-          packages = packages.split(", ")
-          # use first requirement's name, assuming that deps will always resolve from deps of the same name
-          name = packages.first.rpartition("@").first
-          requirements = packages.map { |p| p.rpartition("@").last.gsub(/^.*:/, "") }
+      def self.parse_v2_yarn_lock(contents, source = nil)
+        parsed = YAML.load(contents)
+        parsed = parsed.except("__metadata")
+        parsed
+          .reject do |packages, info|
+            # yarn v4+ creates a lockfile entry: "myproject@workspace" with a "use.local" version
+            #   this lockfile entry is a reference to the project to which the lockfile belongs
+            # skip this self-referential package
+            info["version"].to_s.include?("use.local") && packages.include?("workspace")
+          end
+          .map do |packages, info|
+            packages = packages.split(", ")
+            # use first requirement's name, assuming that deps will always resolve from deps of the same name
+            name = packages.first.rpartition("@").first
+            requirements = packages.map { |p| p.rpartition("@").last.gsub(/^.*:/, "") }
 
-          {
-            name: name,
-            requirements: requirements,
-            version: info["version"].to_s,
-            source: source,
-          }
-        end
-    end      
+            {
+              name: name,
+              requirements: requirements,
+              version: info["version"].to_s,
+              source: source,
+            }
+          end
+      end
 
-      def self.parse_ls(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_ls(file_contents, options: {})
         manifest = JSON.parse(file_contents)
 
         transform_tree_to_array(manifest.fetch("dependencies", {}), options.fetch(:filename, nil))
@@ -222,14 +228,14 @@ module Bibliothecary
         end
       end
 
-      private_class_method def self.transform_tree_to_array(deps_by_name, source=nil)
+      private_class_method def self.transform_tree_to_array(deps_by_name, source = nil)
         deps_by_name.map do |name, metadata|
           [
             Dependency.new(
               name: name,
               requirement: metadata["version"],
               type: "runtime",
-              source: source,
+              source: source
             ),
           ] + transform_tree_to_array(metadata.fetch("dependencies", {}), source)
         end.flatten(1)

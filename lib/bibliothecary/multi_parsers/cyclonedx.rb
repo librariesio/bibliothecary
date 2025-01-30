@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "json"
 require "ox"
 
@@ -28,7 +30,7 @@ module Bibliothecary
           @parse_queue = parse_queue.dup
         end
 
-        def add(purl, source=nil)
+        def add(purl, source = nil)
           mapping = PurlUtil::PURL_TYPE_MAPPING[purl.type]
           return unless mapping
 
@@ -37,15 +39,15 @@ module Bibliothecary
             name: PurlUtil.full_name(purl),
             requirement: purl.version,
             type: "lockfile",
-            source: source,
+            source: source
           )
         end
 
         # Iterates over each manifest entry in the parse_queue, and accepts a block which will
         # be called on each component. The block has two jobs: 1) add more sub-components
         # to parse (if they exist), and 2) return the components purl.
-        def parse!(source=nil, &block)
-          while @parse_queue.length > 0
+        def parse!(source = nil, &block)
+          until @parse_queue.empty?
             component = @parse_queue.shift
 
             purl_text = block.call(component, @parse_queue)
@@ -54,7 +56,7 @@ module Bibliothecary
 
             purl = PackageURL.parse(purl_text)
 
-            self.add(purl, source)
+            add(purl, source)
           end
         end
 
@@ -89,7 +91,6 @@ module Bibliothecary
       end
 
       def parse_cyclonedx_json(file_contents, options: {})
-
         manifest = try_cache(options, options[:filename]) do
           JSON.parse(file_contents)
         end
