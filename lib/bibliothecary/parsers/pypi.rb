@@ -88,7 +88,8 @@ module Bibliothecary
 
       def self.parse_pipfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Tomlrb.parse(file_contents)
-        map_dependencies(manifest["packages"], "runtime") + map_dependencies(manifest["dev-packages"], "develop")
+        map_dependencies(manifest["packages"], "runtime", options.fetch(:filename, nil)) +
+          map_dependencies(manifest["dev-packages"], "develop", options.fetch(:filename, nil))
       end
 
       def self.parse_pyproject(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
@@ -98,21 +99,21 @@ module Bibliothecary
 
         # Parse poetry [tool.poetry] deps
         poetry_manifest = file_contents.fetch("tool", {}).fetch("poetry", {})
-        deps += map_dependencies(poetry_manifest["dependencies"], "runtime")
+        deps += map_dependencies(poetry_manifest["dependencies"], "runtime", options.fetch(:filename, nil))
         # Poetry 1.0.0-1.2.0 way of defining dev deps
-        deps += map_dependencies(poetry_manifest["dev-dependencies"], "develop")
+        deps += map_dependencies(poetry_manifest["dev-dependencies"], "develop", options.fetch(:filename, nil))
         # Poetry's 1.2.0+ of defining dev deps
         poetry_manifest
           .fetch("group", {})
           .each_pair do |group_name, obj|
             group_name = "develop" if group_name == "dev"
-            deps += map_dependencies(obj.fetch("dependencies", {}), group_name)
+            deps += map_dependencies(obj.fetch("dependencies", {}), group_name, options.fetch(:filename, nil))
           end
 
         # Parse PEP621 [project] deps
         pep621_manifest = file_contents.fetch("project", {})
         pep621_deps = pep621_manifest.fetch("dependencies", []).map { |d| parse_pep_508_dep_spec(d) }
-        deps += map_dependencies(pep621_deps, "runtime")
+        deps += map_dependencies(pep621_deps, "runtime", options.fetch(:filename, nil))
 
         # We're combining both poetry+PEP621 deps instead of making them mutually exclusive, until we
         # find a reason not to ingest them both.
@@ -133,16 +134,17 @@ module Bibliothecary
         pip = dependencies.find { |dep| dep.is_a?(Hash) && dep["pip"]}
         return [] unless pip
 
-        Pypi.parse_requirements_txt(pip["pip"].join("\n"))
+        Pypi.parse_requirements_txt(pip["pip"].join("\n"), options: options)
       end
 
-      def self.map_dependencies(packages, type)
+      def self.map_dependencies(packages, type, source=nil)
         return [] unless packages
         packages.map do |name, info|
           Dependency.new(
             name: name,
             requirement: map_requirements(info),
             type: type,
+            source: source,
           )
         end
       end
@@ -172,6 +174,7 @@ module Bibliothecary
               name: name,
               requirement: map_requirements(info),
               type: group,
+              source: options.fetch(:filename, nil),
             )
           end
         end
@@ -194,6 +197,7 @@ module Bibliothecary
             name: package["name"],
             requirement: map_requirements(package),
             type: group,
+            source: options.fetch(:filename, nil),
           )
         end
         deps
@@ -211,6 +215,7 @@ module Bibliothecary
             name: match[1],
             requirement: match[-1],
             type: "runtime",
+            source: options.fetch(:filename, nil),
           )
         end
         deps
@@ -229,6 +234,7 @@ module Bibliothecary
                 name: pkg.dig("package", "package_name"),
                 requirement: pkg.dig("package", "installed_version"),
                 type: "runtime",
+                source: options.fetch(:filename, nil),
             )
           end
           .uniq
@@ -252,7 +258,7 @@ module Bibliothecary
         file_contents.split("\n").each do |line|
           if line["://"]
             begin
-              result = parse_requirements_txt_url(line, type)
+              result = parse_requirements_txt_url(line, type, options.fetch(:filename, nil))
             rescue URI::Error, NoEggSpecified
               next
             end
@@ -263,6 +269,7 @@ module Bibliothecary
               name: match[1],
               requirement: match[-1],
               type: type,
+              source: options.fetch(:filename, nil),
             )
           end
         end
@@ -270,7 +277,7 @@ module Bibliothecary
         deps.uniq
       end
 
-      def self.parse_requirements_txt_url(url, type=nil)
+      def self.parse_requirements_txt_url(url, type=nil, source=nil)
         uri = URI.parse(url)
         raise NoEggSpecified, "No egg specified in #{url}" unless uri.fragment
 
@@ -279,7 +286,7 @@ module Bibliothecary
 
         requirement = uri.path[/@(.+)$/, 1]
 
-        Dependency.new(name: name, requirement: requirement, type: type)
+        Dependency.new(name: name, requirement: requirement, type: type, source: source)
       end
 
       def self.pip_compile?(file_contents)
