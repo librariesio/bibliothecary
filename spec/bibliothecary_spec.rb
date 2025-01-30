@@ -70,7 +70,7 @@ describe Bibliothecary do
   end
 
   it "analyses contents of a file with a Byte Order Mark" do
-    file_with_byte_order_mark = "\xEF\xBB\xBF{}"
+    file_with_byte_order_mark = "\xEF\xBB\xBF"
     result = described_class.analyse_file("package.json", file_with_byte_order_mark)
 
     expect(result[0][:error_message]).to eq(nil)
@@ -78,7 +78,7 @@ describe Bibliothecary do
   end
 
   it "analyses contents of a file with non-UTF8 encodings" do
-    ascii_8bit_encoded_file = "\xEF\xBB\xBF{}".force_encoding(Encoding::ASCII_8BIT)
+    ascii_8bit_encoded_file = "\xEF\xBB\xBF".dup.force_encoding(Encoding::ASCII_8BIT)
     result = described_class.analyse_file("package.json", ascii_8bit_encoded_file)
 
     expect(result[0][:error_message]).to eq(nil)

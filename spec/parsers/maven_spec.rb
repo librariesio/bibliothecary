@@ -591,7 +591,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
   it "parses dependencies from maven-resolved-dependencies.txt" do
     deps = described_class.analyse_contents("maven-resolved-dependencies.txt", load_fixture("maven-resolved-dependencies.txt"))
-    puts "deps are #{deps}"
+
     expect(deps[:kind]).to eq "lockfile"
     spring_boot = deps[:dependencies].select { |item| item.name == "org.springframework.boot:spring-boot-starter-web" }
     expect(spring_boot.length).to eq 1

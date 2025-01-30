@@ -103,7 +103,11 @@ module Bibliothecary
       end
 
       def self.parse_manifest(file_contents, options: {})
+        # on ruby 3.2 we suddenly get this JSON error, so detect and return early: "package.json: unexpected token at ''"
+        return [] if file_contents.empty?
+
         manifest = JSON.parse(file_contents)
+
         raise "appears to be a lockfile rather than manifest format" if manifest.key?("lockfileVersion")
 
         dependencies = manifest.fetch("dependencies", [])

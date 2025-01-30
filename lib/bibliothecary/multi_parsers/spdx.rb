@@ -74,7 +74,7 @@ module Bibliothecary
             spdx_name = spdx_version = platform = purl_name = purl_version = nil
 
             # capture the new package's name
-            match[1]
+            spdx_name = match[1]
           elsif (match = stripped_line.match(PACKAGE_VERSION_REGEXP))
             spdx_version = match[1]
           elsif (match = stripped_line.match(PURL_REGEXP))
