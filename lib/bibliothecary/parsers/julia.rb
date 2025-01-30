@@ -33,6 +33,7 @@ module Bibliothecary
             name: name,
             requirement: reqs,
             type: "runtime",
+            source: options.fetch(:filename, nil),
           )
         end
         deps

@@ -34,6 +34,7 @@ module Bibliothecary
               name: name,
               requirement: requirement,
               type: index.zero? ? "runtime" : "development",
+              source: options.fetch(:filename, nil),
             )
           end
         end
@@ -49,6 +50,7 @@ module Bibliothecary
             name: dependency["name"],
             requirement: dependency["version"],
             type: "runtime",
+            source: options.fetch(:filename, nil)
           )
         end
           .compact

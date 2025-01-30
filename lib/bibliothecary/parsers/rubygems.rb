@@ -47,24 +47,25 @@ module Bibliothecary
               name: name,
               requirement: version,
               type: "runtime",
+              source: options.fetch(:filename, nil),
             )
           else
-            parse_bundler(file_contents)
+            parse_bundler(file_contents, options.fetch(:filename, nil))
           end
         end.compact
       end
 
       def self.parse_gemfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Gemnasium::Parser.send(:gemfile, file_contents)
-        parse_ruby_manifest(manifest)
+        parse_ruby_manifest(manifest, options.fetch(:filename, nil))
       end
 
       def self.parse_gemspec(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = Gemnasium::Parser.send(:gemspec, file_contents)
-        parse_ruby_manifest(manifest)
+        parse_ruby_manifest(manifest, options.fetch(:filename, nil))
       end
 
-      def self.parse_bundler(file_contents)
+      def self.parse_bundler(file_contents, source=nil)
         bundled_with_index = file_contents.lines(chomp: true).find_index { |line| line.match(BUNDLED_WITH) }
         version = file_contents.lines(chomp: true).fetch(bundled_with_index + 1)&.strip
 
@@ -74,6 +75,7 @@ module Bibliothecary
           name: "bundler",
           requirement: version,
           type: "runtime",
+          source: source,
         )
       end
     end

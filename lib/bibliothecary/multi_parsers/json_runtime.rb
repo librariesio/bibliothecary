@@ -8,6 +8,7 @@ module Bibliothecary
             name: name,
             requirement: requirement,
             type: "runtime",
+            source: options.fetch(:filename, nil),
           )
         end
       end

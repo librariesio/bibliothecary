@@ -43,7 +43,7 @@ module Bibliothecary
 
       def parse_spdx_tag_value(file_contents, options: {})
         entries = try_cache(options, options[:filename]) do
-          parse_spdx_tag_value_file_contents(file_contents)
+          parse_spdx_tag_value_file_contents(file_contents, options.fetch(:filename, nil))
         end
 
         raise NoEntries if entries.empty?
@@ -51,7 +51,7 @@ module Bibliothecary
         entries[platform_name.to_sym]
       end
 
-      def parse_spdx_tag_value_file_contents(file_contents)
+      def parse_spdx_tag_value_file_contents(file_contents, source=nil)
         entries = {}
         spdx_name = spdx_version = platform = purl_name = purl_version = nil
 
@@ -65,7 +65,8 @@ module Bibliothecary
             # Per the spec:
             # > A new package Information section is denoted by the package name (7.1) field.
             add_entry(entries: entries, platform: platform, purl_name: purl_name,
-                      spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version)
+                      spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
+                      source: source)
 
             # reset for this new package
             spdx_name = spdx_version = platform = purl_name = purl_version = nil
@@ -83,7 +84,8 @@ module Bibliothecary
         end
 
         add_entry(entries: entries, platform: platform, purl_name: purl_name,
-                  spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version)
+                  spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
+                  source: source)
 
         entries
       end
@@ -95,7 +97,7 @@ module Bibliothecary
 
       def parse_spdx_json(file_contents, options: {})
         entries = try_cache(options, options[:filename]) do
-          parse_spdx_json_file_contents(file_contents)
+          parse_spdx_json_file_contents(file_contents, options.fetch(:filename, nil))
         end
 
         raise NoEntries if entries.empty?
@@ -103,7 +105,7 @@ module Bibliothecary
         entries[platform_name.to_sym]
       end
 
-      def parse_spdx_json_file_contents(file_contents)
+      def parse_spdx_json_file_contents(file_contents, source=nil)
         entries = {}
         manifest = JSON.parse(file_contents)
 
@@ -118,13 +120,14 @@ module Bibliothecary
           purl_version = purl&.version
 
           add_entry(entries: entries, platform: platform, purl_name: purl_name,
-                    spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version)
+                    spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
+                    source: source)
         end
 
         entries
       end
 
-      def add_entry(entries:, platform:, purl_name:, spdx_name:, purl_version:, spdx_version:)
+      def add_entry(entries:, platform:, purl_name:, spdx_name:, purl_version:, spdx_version:, source: nil)
         package_name = purl_name || spdx_name
         package_version = purl_version || spdx_version
 
@@ -133,7 +136,8 @@ module Bibliothecary
           entries[platform.to_sym] << Dependency.new(
             name: package_name,
             requirement: package_version,
-            type: "lockfile"
+            type: "lockfile",
+            source: source,
           )
         end
       end

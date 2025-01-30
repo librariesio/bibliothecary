@@ -139,7 +139,11 @@ module Bibliothecary
         csv_file
           .result
           .find_all { |dependency| dependency[:platform] == platform_name.to_s }
-          .map { |dep_kvs| Dependency.new(**dep_kvs) }
+          .map { |dep_kvs|
+            Dependency.new(
+              **dep_kvs.merge(source: options.fetch(:filename, nil))
+            )
+          }
       end
     end
   end
