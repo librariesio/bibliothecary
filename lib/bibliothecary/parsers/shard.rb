@@ -22,21 +22,22 @@ module Bibliothecary
 
       def self.parse_yaml_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = YAML.load file_contents
-        map_dependencies(manifest, "shards", "runtime")
+        map_dependencies(manifest, "shards", "runtime", options.fetch(:filename, nil))
       end
 
       def self.parse_yaml_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
         manifest = YAML.load file_contents
-        map_dependencies(manifest, "dependencies", "runtime") +
-        map_dependencies(manifest, "development_dependencies", "runtime")
+        map_dependencies(manifest, "dependencies", "runtime", options.fetch(:filename, nil)) +
+        map_dependencies(manifest, "development_dependencies", "runtime", options.fetch(:filename, nil))
       end
 
-      def self.map_dependencies(hash, key, type)
+      def self.map_dependencies(hash, key, type, source=nil)
         hash.fetch(key,[]).map do |name, requirement|
           Dependency.new(
             name: name,
             requirement: requirement["version"],
             type: type,
+            source: source,
           )
         end
       end
