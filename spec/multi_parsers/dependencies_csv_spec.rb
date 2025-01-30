@@ -77,8 +77,8 @@ hiss,raow,2.2.1,bird
         result = parser.parse_dependencies_csv(csv, options: options)
 
         expect(result).to eq([
-          Bibliothecary::Dependency.new(platform: "hiss", name: "wow", requirement: "2.2.0", type: "runtime"),
-          Bibliothecary::Dependency.new(platform: "hiss", name: "raow", requirement: "2.2.1", type: "bird"),
+          Bibliothecary::Dependency.new(platform: "hiss", name: "wow", requirement: "2.2.0", type: "runtime", source: "dependencies.csv"),
+          Bibliothecary::Dependency.new(platform: "hiss", name: "raow", requirement: "2.2.1", type: "bird", source: "dependencies.csv"),
         ])
 
         # the cache should contain a CSVFile
@@ -103,8 +103,8 @@ hiss,raow,2.2.1,bird,
           result = parser.parse_dependencies_csv(csv, options: options)
 
           expect(result).to eq([
-            Bibliothecary::Dependency.new(platform: "hiss", name: "wow", type: "runtime", requirement: "2.2.0"),
-            Bibliothecary::Dependency.new(platform: "hiss", name: "raow", type: "bird", requirement: "2.2.1"),
+            Bibliothecary::Dependency.new(platform: "hiss", name: "wow", type: "runtime", requirement: "2.2.0", source: "dependencies.csv"),
+            Bibliothecary::Dependency.new(platform: "hiss", name: "raow", type: "bird", requirement: "2.2.1", source: "dependencies.csv"),
           ])
 
           # the cache should contain a CSVFile
@@ -128,10 +128,10 @@ hiss,raow,2.2.0,bird,2.2.1
           result = parser.parse_dependencies_csv(csv, options: options)
 
           expect(result).to eq([
-            Bibliothecary::Dependency.new(platform: "hiss", name: "wow", type: "runtime", requirement: "2.2.0"),
+            Bibliothecary::Dependency.new(platform: "hiss", name: "wow", type: "runtime", requirement: "2.2.0", source: "dependencies.csv"),
             # headers are searched left to right for each field, and the
             # highest priority matching one wins
-            Bibliothecary::Dependency.new(platform: "hiss", name: "raow", type: "bird", requirement: "2.2.0"),
+            Bibliothecary::Dependency.new(platform: "hiss", name: "raow", type: "bird", requirement: "2.2.0", source: "dependencies.csv"),
           ])
 
           # the cache should contain a CSVFile

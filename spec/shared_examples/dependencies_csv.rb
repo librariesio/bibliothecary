@@ -30,6 +30,7 @@ RSpec.shared_examples "dependencies.csv" do
           name: dependency[:name],
           requirement: dependency[:version],
           type: dependency[:type],
+          source: "dependencies.csv",
         ))
       end
     end

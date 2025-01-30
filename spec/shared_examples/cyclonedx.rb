@@ -42,6 +42,7 @@ RSpec.shared_examples "CycloneDX" do
           name: dependency[:name],
           requirement: dependency[:version],
           type: "lockfile",
+          source: "cyclonedx.json",
         ))
       end
     end
@@ -54,6 +55,7 @@ RSpec.shared_examples "CycloneDX" do
           name: dependency[:name],
           requirement: dependency[:version],
           type: "lockfile",
+          source: "cyclonedx.json",
         ))
       end
     end
@@ -66,6 +68,7 @@ RSpec.shared_examples "CycloneDX" do
           name: dependency[:name],
           requirement: dependency[:version],
           type: "lockfile",
+          source: "cyclonedx.xml",
         ))
       end
     end
@@ -78,6 +81,7 @@ RSpec.shared_examples "CycloneDX" do
           name: dependency[:name],
           requirement: dependency[:version],
           type: "lockfile",
+          source: "cyclonedx.xml",
         ))
       end
     end
