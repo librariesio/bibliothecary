@@ -249,7 +249,7 @@ module Bibliothecary
         file_contents
           .gsub(ANSI_MATCHER, "")
           .split("\n")
-          .map { |line| parse_resolved_dep_line(line, options:) }
+          .map { |line| parse_resolved_dep_line(line, options: options) }
           .compact
           .uniq
       end

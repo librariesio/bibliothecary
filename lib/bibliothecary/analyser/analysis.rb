@@ -10,7 +10,7 @@ module Bibliothecary
       # @param file_list [Array<String>]
       # @param options [Hash]
       def analyse(folder_path, file_list, options: {})
-        analyse_file_info(file_list.map { |full_path| FileInfo.new(folder_path, full_path) }, options:)
+        analyse_file_info(file_list.map { |full_path| FileInfo.new(folder_path, full_path) }, options: options)
       end
       alias analyze analyse
 
@@ -22,14 +22,14 @@ module Bibliothecary
           .select(&method(:match_info?))
 
         matching_info.flat_map do |info|
-          analyse_contents_from_info(info, options:)
+          analyse_contents_from_info(info, options: options)
             .merge(related_paths: related_paths(info, matching_info))
         end
       end
       alias analyze_file_info analyse_file_info
 
       def analyse_contents(filename, contents, options: {})
-        analyse_contents_from_info(FileInfo.new(nil, filename, contents), options:)
+        analyse_contents_from_info(FileInfo.new(nil, filename, contents), options: options)
       end
       alias analyze_contents analyse_contents
 
@@ -40,7 +40,7 @@ module Bibliothecary
         # If your Parser needs to return multiple responses for one file, please override this method
         # For example see conda.rb
         kind = determine_kind_from_info(info)
-        dependencies = parse_file(info.relative_path, info.contents, options:)
+        dependencies = parse_file(info.relative_path, info.contents, options: options)
 
         dependencies_to_analysis(info, kind, dependencies)
       rescue Bibliothecary::FileParsingError => e
@@ -86,7 +86,7 @@ module Bibliothecary
         # any dependencies, and should never return nil. At the time of writing
         # this comment, some of the parsers return [] or nil to mean an error
         # which is confusing to users.
-        send(details[:parser], contents, options: options.merge(filename:))
+        send(details[:parser], contents, options: options.merge(filename: filename))
       rescue Exception => e # default is StandardError but C bindings throw Exceptions # rubocop:disable Lint/RescueException
         # the C xml parser also puts a newline at the end of the message
         location = e.backtrace_locations[0]

@@ -157,7 +157,7 @@ module Bibliothecary
     # This means we're likely analyzing these files twice in processing,
     # but we need that accurate package manager information.
     def filter_multi_manifest_entries(path, related_files_info_entries)
-      MultiManifestFilter.new(path:, related_files_info_entries:, runner: self).results
+      MultiManifestFilter.new(path: path, related_files_info_entries: related_files_info_entries, runner: self).results
     end
 
     private
