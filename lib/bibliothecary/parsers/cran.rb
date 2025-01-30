@@ -40,7 +40,7 @@ module Bibliothecary
             name: dep[1],
             requirement: dep[2],
             type: name.downcase,
-            source:
+            source: source
           )
         end
       end

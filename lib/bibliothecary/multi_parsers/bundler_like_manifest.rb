@@ -16,7 +16,7 @@ module Bibliothecary
                         .map { |op, version| "#{op} #{version}" }
                         .join(", "),
                       type: dep.type.to_s,
-                      source:
+                      source: source
                     ))
         end.uniq
       end

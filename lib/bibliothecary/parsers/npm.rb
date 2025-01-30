@@ -77,7 +77,7 @@ module Bibliothecary
               requirement: dep["version"],
               type: dep.fetch("dev", false) || dep.fetch("devOptional", false) ? "development" : "runtime",
               local: dep.fetch("link", false),
-              source:
+              source: source
             )
           end
       end

@@ -39,7 +39,7 @@ module Bibliothecary
             name: PurlUtil.full_name(purl),
             requirement: purl.version,
             type: "lockfile",
-            source:
+            source: source
           )
         end
 
