@@ -170,7 +170,7 @@ module Bibliothecary
           Dependency.new(
             name: "#{org}:#{name}",
             requirement: version,
-            type:,
+            type: type,
             source: options.fetch(:filename, nil)
           )
         end.compact
@@ -274,7 +274,7 @@ module Bibliothecary
           Dependency.new(
             name: parts[0..1].join(":"),
             requirement: version,
-            type:,
+            type: type,
             source: options.fetch(:filename, nil)
           )
         end
@@ -384,7 +384,7 @@ module Bibliothecary
             Dependency.new(
               name: [group, artifact_id].join(":"),
               requirement: version,
-              type:,
+              type: type,
               source: options.fetch(:filename, nil)
             )
           end
@@ -398,7 +398,7 @@ module Bibliothecary
             Dependency.new(
               name: [group, artifact_id].join(":"),
               requirement: version,
-              type:,
+              type: type,
               source: options.fetch(:filename, nil)
             )
           end
@@ -576,11 +576,11 @@ module Bibliothecary
         end
 
         {
-          name:,
+          name: name,
           requirement: version,
-          type:,
+          type: type,
           # we post-process using some of these fields and then delete them again
-          fields:,
+          fields: fields,
         }
       end
     end

@@ -33,7 +33,7 @@ module Bibliothecary
           next if name.empty?
 
           deps << Dependency.new(
-            name:,
+            name: name,
             requirement: reqs,
             type: "runtime",
             source: options.fetch(:filename, nil)

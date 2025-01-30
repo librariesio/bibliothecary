@@ -36,10 +36,10 @@ module Bibliothecary
       def self.map_dependencies(hash, key, type, source = nil)
         hash.fetch(key, []).map do |name, requirement|
           Dependency.new(
-            name:,
+            name: name,
             requirement: requirement["version"],
-            type:,
-            source:
+            type: type,
+            source: source
           )
         end
       end

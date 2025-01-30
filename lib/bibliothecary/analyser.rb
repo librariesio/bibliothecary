@@ -11,7 +11,7 @@ module Bibliothecary
         platform: platform_name,
         path: relative_path,
         dependencies: nil,
-        kind:,
+        kind: kind,
         success: false,
         error_message: message,
         error_location: location,
@@ -22,8 +22,8 @@ module Bibliothecary
       {
         platform: platform_name,
         path: relative_path,
-        dependencies:,
-        kind:,
+        dependencies: dependencies,
+        kind: kind,
         success: true,
       }
     end
@@ -61,10 +61,10 @@ module Bibliothecary
       def map_dependencies(hash, key, type, source = nil)
         hash.fetch(key, []).map do |name, requirement|
           Dependency.new(
-            name:,
-            requirement:,
-            type:,
-            source:
+            name: name,
+            requirement: requirement,
+            type: type,
+            source: source
           )
         end
       end

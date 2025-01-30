@@ -46,7 +46,7 @@ module Bibliothecary
             name = match[1]
             version = match[2].gsub(/\(|\)/, "")
             Dependency.new(
-              name:,
+              name: name,
               requirement: version,
               type: "runtime",
               source: options.fetch(:filename, nil)
@@ -77,7 +77,7 @@ module Bibliothecary
           name: "bundler",
           requirement: version,
           type: "runtime",
-          source:
+          source: source
         )
       end
     end

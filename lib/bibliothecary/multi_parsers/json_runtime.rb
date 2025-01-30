@@ -7,8 +7,8 @@ module Bibliothecary
       def parse_json_runtime_manifest(file_contents, options: {})
         JSON.parse(file_contents).fetch("dependencies", []).map do |name, requirement|
           Dependency.new(
-            name:,
-            requirement:,
+            name: name,
+            requirement: requirement,
             type: "runtime",
             source: options.fetch(:filename, nil)
           )

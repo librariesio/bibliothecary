@@ -34,8 +34,8 @@ module Bibliothecary
             end
 
             Dependency.new(
-              name:,
-              requirement:,
+              name: name,
+              requirement: requirement,
               type: index.zero? ? "runtime" : "development",
               source: options.fetch(:filename, nil)
             )

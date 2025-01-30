@@ -27,8 +27,8 @@ module Bibliothecary
         manifest = JSON.parse file_contents
         manifest.map do |name, requirement|
           Dependency.new(
-            name:,
-            requirement:,
+            name: name,
+            requirement: requirement,
             type: "runtime",
             source: options.fetch(:filename, nil)
           )

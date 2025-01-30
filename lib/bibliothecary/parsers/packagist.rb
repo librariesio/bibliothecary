@@ -37,9 +37,9 @@ module Bibliothecary
 
           Dependency.new(
             name: dependency["name"],
-            requirement:,
+            requirement: requirement,
             type: "runtime",
-            original_requirement:,
+            original_requirement: original_requirement,
             source: options.fetch(:filename, nil)
           )
         end + manifest.fetch("packages-dev", []).map do |dependency|
@@ -53,9 +53,9 @@ module Bibliothecary
 
           Dependency.new(
             name: dependency["name"],
-            requirement:,
+            requirement: requirement,
             type: "development",
-            original_requirement:,
+            original_requirement: original_requirement,
             source: options.fetch(:filename, nil)
           )
         end

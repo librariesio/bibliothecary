@@ -79,7 +79,7 @@ module Bibliothecary
         end
 
         {
-          name:,
+          name: name,
           requirement: version || "", # NOTE: this ignores build info
         }
       end

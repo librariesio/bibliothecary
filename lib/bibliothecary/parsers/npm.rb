@@ -94,10 +94,10 @@ module Bibliothecary
                                end
 
           [Dependency.new(
-            name:,
+            name: name,
             requirement: version,
-            type:,
-            source:
+            type: type,
+            source: source,
           )] + child_dependencies
         end
       end
@@ -110,8 +110,8 @@ module Bibliothecary
           .reject { |name, _requirement| name.start_with?("//") } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
           .map do |name, requirement|
             Dependency.new(
-              name:,
-              requirement:,
+              name: name,
+              requirement: requirement,
               type: "runtime",
               local: requirement.start_with?("file:"),
               source: options.fetch(:filename, nil)
@@ -122,8 +122,8 @@ module Bibliothecary
           .reject { |name, _requirement| name.start_with?("//") } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
           .map do |name, requirement|
             Dependency.new(
-              name:,
-              requirement:,
+              name: name,
+              requirement: requirement,
               type: "development",
               local: requirement.start_with?("file:"),
               source: options.fetch(:filename, nil)
@@ -175,8 +175,8 @@ module Bibliothecary
             {
               name: requirements.first.first,
               requirements: requirements.map { |x| x[1] },
-              version:,
-              source:,
+              version: version,
+              source: source,
             }
           end
       end
@@ -198,10 +198,10 @@ module Bibliothecary
             requirements = packages.map { |p| p.rpartition("@").last.gsub(/^.*:/, "") }
 
             {
-              name:,
-              requirements:,
+              name: name,
+              requirements: requirements,
               version: info["version"].to_s,
-              source:,
+              source: source,
             }
           end
       end
@@ -228,10 +228,10 @@ module Bibliothecary
         deps_by_name.map do |name, metadata|
           [
             Dependency.new(
-              name:,
+              name: name,
               requirement: metadata["version"],
               type: "runtime",
-              source:
+              source: source
             ),
           ] + transform_tree_to_array(metadata.fetch("dependencies", {}), source)
         end.flatten(1)

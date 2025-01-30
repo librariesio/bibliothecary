@@ -24,7 +24,7 @@ module Bibliothecary
   INVALID_UTF8_ERROR_REGEXP = /invalid byte sequence/
 
   def self.analyse(path, ignore_unparseable_files: true)
-    runner.analyse(path, ignore_unparseable_files:)
+    runner.analyse(path, ignore_unparseable_files: ignore_unparseable_files)
   end
 
   # deprecated; use load_file_info_list.

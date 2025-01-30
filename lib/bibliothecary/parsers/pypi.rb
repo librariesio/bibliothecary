@@ -144,10 +144,10 @@ module Bibliothecary
 
         packages.map do |name, info|
           Dependency.new(
-            name:,
+            name: name,
             requirement: map_requirements(info),
-            type:,
-            source:
+            type: type,
+            source: source
           )
         end
       end
@@ -175,7 +175,7 @@ module Bibliothecary
           group = "runtime" if group == "default"
           dependencies.each do |name, info|
             deps << Dependency.new(
-              name:,
+              name: name,
               requirement: map_requirements(info),
               type: group,
               source: options.fetch(:filename, nil)
@@ -275,7 +275,7 @@ module Bibliothecary
             deps << Dependency.new(
               name: match[1],
               requirement: match[-1],
-              type:,
+              type: type,
               source: options.fetch(:filename, nil)
             )
           end
@@ -293,7 +293,12 @@ module Bibliothecary
 
         requirement = uri.path[/@(.+)$/, 1]
 
-        Dependency.new(name:, requirement:, type:, source:)
+        Dependency.new(
+          name: name,
+          requirement: requirement,
+          type: type,
+          source: source
+        )
       end
 
       def self.pip_compile?(file_contents)

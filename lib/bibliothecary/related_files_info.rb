@@ -41,13 +41,13 @@ module Bibliothecary
 
       @manifests = filter_file_infos_by_package_manager_type(
         file_infos: ordered_file_infos,
-        package_manager:,
+        package_manager: package_manager,
         type: "manifest"
       )
 
       @lockfiles = filter_file_infos_by_package_manager_type(
         file_infos: ordered_file_infos,
-        package_manager:,
+        package_manager: package_manager,
         type: "lockfile"
       )
     end

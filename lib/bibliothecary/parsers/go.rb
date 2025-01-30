@@ -169,9 +169,9 @@ module Bibliothecary
             elsif (match = line.match(GOMOD_MULTILINE_START_REGEXP)) # or, detect the start of a multiline
               current_multiline_category = match[1]
             elsif (match = line.match(GOMOD_SINGLELINE_DEP_REGEXP)) # or, detect a singleline dep
-              categorized_deps[match[:category]] << go_mod_category_relative_dep(category: match[:category], line:, match:, source:)
+              categorized_deps[match[:category]] << go_mod_category_relative_dep(category: match[:category], line: line, match: match, source: source)
             elsif current_multiline_category && (match = line.match(GOMOD_MULTILINE_DEP_REGEXP)) # otherwise, parse the multiline dep
-              categorized_deps[current_multiline_category] << go_mod_category_relative_dep(category: current_multiline_category, line:, match:, source:)
+              categorized_deps[current_multiline_category] << go_mod_category_relative_dep(category: current_multiline_category, line: line, match: match, source: source)
             end
           end
         categorized_deps
@@ -203,7 +203,7 @@ module Bibliothecary
               name, requirement = dep["Replace"].split(" ", 2)
               requirement = "*" if requirement.to_s.strip == ""
               Dependency.new(
-                name:, requirement:, original_name: dep["Path"], original_requirement: dep["Version"], type: dep.fetch("Scope", "runtime"), source: options.fetch(:filename, nil)
+                name: name, requirement: requirement, original_name: dep["Path"], original_requirement: dep["Version"], type: dep.fetch("Scope", "runtime"), source: options.fetch(:filename, nil)
               )
             else
               Dependency.new(
@@ -218,8 +218,8 @@ module Bibliothecary
           Dependency.new(
             name: dependency[dep_attr_name],
             requirement: dependency[version_attr_name],
-            type:,
-            source:
+            type: type,
+            source: source
           )
         end
       end
@@ -237,7 +237,7 @@ module Bibliothecary
             requirement: replacement_match[:requirement],
             type: "runtime",
             direct: !match[:indirect],
-            source:
+            source: source
           )
         when "retract"
           Dependency.new(
@@ -246,7 +246,7 @@ module Bibliothecary
             type: "runtime",
             deprecated: true,
             direct: !match[:indirect],
-            source:
+            source: source
           )
         else
           Dependency.new(
@@ -254,7 +254,7 @@ module Bibliothecary
             requirement: match[:requirement],
             type: "runtime",
             direct: !match[:indirect],
-            source:
+            source: source
           )
         end
       end

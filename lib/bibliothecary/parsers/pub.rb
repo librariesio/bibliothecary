@@ -32,7 +32,7 @@ module Bibliothecary
         manifest = YAML.load file_contents
         manifest.fetch("packages", []).map do |name, dep|
           Dependency.new(
-            name:,
+            name: name,
             requirement: dep["version"],
             type: "runtime"
           )

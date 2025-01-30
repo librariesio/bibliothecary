@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "bibliothecary/version"
 
 Gem::Specification.new do |spec|
-  spec.required_ruby_version = "3.2.6"
+  spec.required_ruby_version = ">= 3.2.0"
 
   spec.name          = "bibliothecary"
   spec.version       = Bibliothecary::VERSION

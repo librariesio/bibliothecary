@@ -66,9 +66,9 @@ module Bibliothecary
           if (match = stripped_line.match(PACKAGE_NAME_REGEXP))
             # Per the spec:
             # > A new package Information section is denoted by the package name (7.1) field.
-            add_entry(entries:, platform:, purl_name:,
-                      spdx_name:, purl_version:, spdx_version:,
-                      source:)
+            add_entry(entries: entries, platform: platform, purl_name: purl_name,
+                      spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
+                      source: source)
 
             # reset for this new package
             spdx_name = spdx_version = platform = purl_name = purl_version = nil
@@ -85,9 +85,9 @@ module Bibliothecary
           end
         end
 
-        add_entry(entries:, platform:, purl_name:,
-                  spdx_name:, purl_version:, spdx_version:,
-                  source:)
+        add_entry(entries: entries, platform: platform, purl_name: purl_name,
+                  spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
+                  source: source)
 
         entries
       end
@@ -121,9 +121,10 @@ module Bibliothecary
           purl_name = PurlUtil.full_name(purl)
           purl_version = purl&.version
 
-          add_entry(entries:, platform:, purl_name:,
-                    spdx_name:, purl_version:, spdx_version:,
-                    source:)
+          add_entry(entries: entries, platform: platform, purl_name: purl_name,
+                  spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
+                  source: source)
+
         end
 
         entries
@@ -140,7 +141,7 @@ module Bibliothecary
           name: package_name,
           requirement: package_version,
           type: "lockfile",
-          source:
+          source: source
         )
       end
     end

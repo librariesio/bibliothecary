@@ -72,7 +72,7 @@ module Bibliothecary
             .reject { |_name, details| details["type"] == "Project" } # Projects do not have versions
             .map do |name, details|
               Dependency.new(
-                name:,
+                name: name,
                 # 'resolved' has been set in all examples so far
                 # so fallback to requested is pure paranoia
                 requirement: details.fetch("resolved", details.fetch("requested", "*")),
@@ -124,8 +124,8 @@ module Bibliothecary
 
           Dependency.new(
             name: dependency.Include,
-            requirement:,
-            type:,
+            requirement: requirement,
+            type: type,
             source: options.fetch(:filename, nil)
           )
         end
