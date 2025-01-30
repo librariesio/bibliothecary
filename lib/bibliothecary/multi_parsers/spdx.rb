@@ -122,9 +122,8 @@ module Bibliothecary
           purl_version = purl&.version
 
           add_entry(entries: entries, platform: platform, purl_name: purl_name,
-                  spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
-                  source: source)
-
+                    spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
+                    source: source)
         end
 
         entries

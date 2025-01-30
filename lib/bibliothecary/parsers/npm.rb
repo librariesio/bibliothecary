@@ -97,7 +97,7 @@ module Bibliothecary
             name: name,
             requirement: version,
             type: type,
-            source: source,
+            source: source
           )] + child_dependencies
         end
       end

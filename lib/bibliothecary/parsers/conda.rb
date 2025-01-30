@@ -31,7 +31,7 @@ module Bibliothecary
           next unless dep.is_a? String # only deal with strings to skip parsing pip stuff
 
           parsed = parse_name_requirement_from_matchspec(dep)
-          Dependency.new(**parsed.merge(type: "runtime", source: options.fetch(:filename, nil)))
+          Dependency.new(**parsed, type: "runtime", source: options.fetch(:filename, nil))
         end.compact
       end
 

@@ -519,7 +519,7 @@ module Bibliothecary
 
         squished.map do |dep_kvs|
           Dependency.new(
-            **dep_kvs.merge(source: options.fetch(:filename, nil))
+            **dep_kvs, source: options.fetch(:filename, nil)
           )
         end
       end

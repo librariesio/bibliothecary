@@ -144,7 +144,7 @@ module Bibliothecary
           .find_all { |dependency| dependency[:platform] == platform_name.to_s }
           .map do |dep_kvs|
             Dependency.new(
-              **dep_kvs.merge(source: options.fetch(:filename, nil))
+              **dep_kvs, source: options.fetch(:filename, nil)
             )
           end
       end
