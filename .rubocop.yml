@@ -14,6 +14,7 @@ Metrics/BlockLength:
     - spec/**/*_spec.rb
     - spec/factories.rb
     - lib/tasks/*.rake
+    - vendor/bundle/**/* # This is actually needed for CI, not for biblio itself
 
 # metrics and documentation. code is complex as it needs to be,
 # and docs shouldn't be required. add them when needed.
