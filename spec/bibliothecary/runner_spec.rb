@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 def file_info(filename, parser)
@@ -14,7 +16,7 @@ end
 
 describe Bibliothecary::Runner do
   describe Bibliothecary::Runner::MultiManifestFilter do
-    let(:subject) { described_class.new(path: path, related_files_info_entries: related_files_info_entries, runner: runner) }
+    let(:subject) { described_class.new(path:, related_files_info_entries:, runner:) }
 
     let(:path) { "spec/fixtures" }
     let(:related_files_info_entries) do

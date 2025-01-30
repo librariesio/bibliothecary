@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::Parsers::CRAN do
@@ -7,9 +9,9 @@ describe Bibliothecary::Parsers::CRAN do
 
   it "parses dependencies from DESCRIPTION" do
     expect(described_class.analyse_contents("DESCRIPTION", load_fixture("DESCRIPTION"))).to eq({
-      platform: "cran",
-      path: "DESCRIPTION",
-      dependencies: [
+                                                                                                 platform: "cran",
+                                                                                                 path: "DESCRIPTION",
+                                                                                                 dependencies: [
         Bibliothecary::Dependency.new(name: "R", requirement: ">= 3.1", type: "depends", source: "DESCRIPTION"),
         Bibliothecary::Dependency.new(name: "digest", requirement: "*", type: "imports", source: "DESCRIPTION"),
         Bibliothecary::Dependency.new(name: "grid", requirement: "*", type: "imports", source: "DESCRIPTION"),
@@ -38,16 +40,16 @@ describe Bibliothecary::Parsers::CRAN do
         Bibliothecary::Dependency.new(name: "svglite", requirement: "*", type: "suggests", source: "DESCRIPTION"),
         Bibliothecary::Dependency.new(name: "sp", requirement: "*", type: "enhances", source: "DESCRIPTION"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                 kind: "manifest",
+                                                                                                 success: true,
+                                                                                               })
   end
 
   it "parses dependencies from minimal DESCRIPTION file" do
     expect(described_class.analyse_contents("DESCRIPTION", load_fixture("DESCRIPTION2"))).to eq({
-      platform: "cran",
-      path: "DESCRIPTION",
-      dependencies: [
+                                                                                                  platform: "cran",
+                                                                                                  path: "DESCRIPTION",
+                                                                                                  dependencies: [
         Bibliothecary::Dependency.new(name: "R", requirement: ">= 2.14.1", type: "depends", source: "DESCRIPTION"),
         Bibliothecary::Dependency.new(name: "methods", requirement: "*", type: "imports", source: "DESCRIPTION"),
         Bibliothecary::Dependency.new(name: "chron", requirement: "*", type: "imports", source: "DESCRIPTION"),
@@ -69,9 +71,9 @@ describe Bibliothecary::Parsers::CRAN do
         Bibliothecary::Dependency.new(name: "zoo", requirement: "*", type: "suggests", source: "DESCRIPTION"),
         Bibliothecary::Dependency.new(name: "plm", requirement: "*", type: "suggests", source: "DESCRIPTION"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                  kind: "manifest",
+                                                                                                  success: true,
+                                                                                                })
   end
 
   it "matches valid manifest filepaths" do

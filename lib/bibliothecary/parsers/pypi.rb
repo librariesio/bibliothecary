@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bibliothecary
   module Parsers
     class Pypi
@@ -24,15 +26,15 @@ module Bibliothecary
                           "requirements-docs.txt", "requirements/docs.txt",
                           "requirements-test.txt", "requirements/test.txt",
                           "requirements-tools.txt", "requirements/tools.txt") => {
-            kind: "manifest",
-            parser: :parse_requirements_txt,
-          },
-          lambda { |p| PIP_COMPILE_REGEXP.match(p) } => {
+                            kind: "manifest",
+                            parser: :parse_requirements_txt,
+                          },
+          ->(p) { PIP_COMPILE_REGEXP.match(p) } => {
             content_matcher: :pip_compile?,
             kind: "lockfile",
             parser: :parse_requirements_txt,
           },
-          lambda { |p| MANIFEST_REGEXP.match(p) } => {
+          ->(p) { MANIFEST_REGEXP.match(p) } => {
             kind: "manifest",
             parser: :parse_requirements_txt,
             can_have_lockfile: false,
@@ -86,13 +88,13 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
-      def self.parse_pipfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_pipfile(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
         map_dependencies(manifest["packages"], "runtime", options.fetch(:filename, nil)) +
           map_dependencies(manifest["dev-packages"], "develop", options.fetch(:filename, nil))
       end
 
-      def self.parse_pyproject(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_pyproject(file_contents, options: {})
         deps = []
 
         file_contents = Tomlrb.parse(file_contents)
@@ -126,25 +128,26 @@ module Bibliothecary
         parse_pyproject(file_contents, options)
       end
 
-      def self.parse_conda(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_conda(file_contents, options: {})
         contents = YAML.safe_load(file_contents)
         return [] unless contents
 
         dependencies = contents["dependencies"]
-        pip = dependencies.find { |dep| dep.is_a?(Hash) && dep["pip"]}
+        pip = dependencies.find { |dep| dep.is_a?(Hash) && dep["pip"] }
         return [] unless pip
 
-        Pypi.parse_requirements_txt(pip["pip"].join("\n"), options: options)
+        Pypi.parse_requirements_txt(pip["pip"].join("\n"), options:)
       end
 
-      def self.map_dependencies(packages, type, source=nil)
+      def self.map_dependencies(packages, type, source = nil)
         return [] unless packages
+
         packages.map do |name, info|
           Dependency.new(
-            name: name,
+            name:,
             requirement: map_requirements(info),
-            type: type,
-            source: source,
+            type:,
+            source:
           )
         end
       end
@@ -154,7 +157,7 @@ module Bibliothecary
           if info["version"]
             info["version"]
           elsif info["git"]
-            info["git"] + "#" + info["ref"]
+            "#{info['git']}##{info['ref']}"
           else
             "*"
           end
@@ -163,25 +166,26 @@ module Bibliothecary
         end
       end
 
-      def self.parse_pipfile_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_pipfile_lock(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         deps = []
         manifest.each do |group, dependencies|
           next if group == "_meta"
+
           group = "runtime" if group == "default"
           dependencies.each do |name, info|
             deps << Dependency.new(
-              name: name,
+              name:,
               requirement: map_requirements(info),
               type: group,
-              source: options.fetch(:filename, nil),
+              source: options.fetch(:filename, nil)
             )
           end
         end
         deps
       end
 
-      def self.parse_poetry_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_poetry_lock(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
         deps = []
         manifest["package"].each do |package|
@@ -197,25 +201,28 @@ module Bibliothecary
             name: package["name"],
             requirement: map_requirements(package),
             type: group,
-            source: options.fetch(:filename, nil),
+            source: options.fetch(:filename, nil)
           )
         end
         deps
       end
 
-      def self.parse_setup_py(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_setup_py(file_contents, options: {})
         match = file_contents.match(INSTALL_REGEXP)
         return [] unless match
+
         deps = []
         match[1].gsub(/',(\s)?'/, "\n").split("\n").each do |line|
           next if line.match(/^#/)
+
           match = line.match(REQUIRE_REGEXP)
           next unless match
+
           deps << Dependency.new(
             name: match[1],
             requirement: match[-1],
             type: "runtime",
-            source: options.fetch(:filename, nil),
+            source: options.fetch(:filename, nil)
           )
         end
         deps
@@ -231,10 +238,10 @@ module Bibliothecary
         JSON.parse(file_contents)
           .map do |pkg|
             Dependency.new(
-                name: pkg.dig("package", "package_name"),
-                requirement: pkg.dig("package", "installed_version"),
-                type: "runtime",
-                source: options.fetch(:filename, nil),
+              name: pkg.dig("package", "package_name"),
+              requirement: pkg.dig("package", "installed_version"),
+              type: "runtime",
+              source: options.fetch(:filename, nil)
             )
           end
           .uniq
@@ -244,7 +251,7 @@ module Bibliothecary
       # https://pip.pypa.io/en/stable/cli/pip_install/#requirement-specifiers
       # and https://pip.pypa.io/en/stable/topics/vcs-support/#git.
       # Invalid lines in requirements.txt are skipped.
-      def self.parse_requirements_txt(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_requirements_txt(file_contents, options: {})
         deps = []
         type = case options[:filename]
                when /dev/ || /docs/ || /tools/
@@ -268,8 +275,8 @@ module Bibliothecary
             deps << Dependency.new(
               name: match[1],
               requirement: match[-1],
-              type: type,
-              source: options.fetch(:filename, nil),
+              type:,
+              source: options.fetch(:filename, nil)
             )
           end
         end
@@ -277,7 +284,7 @@ module Bibliothecary
         deps.uniq
       end
 
-      def self.parse_requirements_txt_url(url, type=nil, source=nil)
+      def self.parse_requirements_txt_url(url, type = nil, source = nil)
         uri = URI.parse(url)
         raise NoEggSpecified, "No egg specified in #{url}" unless uri.fragment
 
@@ -286,11 +293,11 @@ module Bibliothecary
 
         requirement = uri.path[/@(.+)$/, 1]
 
-        Dependency.new(name: name, requirement: requirement, type: type, source: source)
+        Dependency.new(name:, requirement:, type:, source:)
       end
 
       def self.pip_compile?(file_contents)
-        return file_contents.include?("This file is autogenerated by pip-compile")
+        file_contents.include?("This file is autogenerated by pip-compile")
       rescue Exception # rubocop:disable Lint/RescueException
         # We rescue exception here since native libs can throw a non-StandardError
         # We don't want to throw errors during the matching phase, only during
@@ -304,7 +311,7 @@ module Bibliothecary
         name, requirement = dep.split(PEP_508_NAME_REGEXP, 2).last(2).map(&:strip)
         requirement = requirement.sub(/^[\s;]*/, "")
         requirement = "*" if requirement == ""
-        return name, requirement
+        [name, requirement]
       end
     end
   end

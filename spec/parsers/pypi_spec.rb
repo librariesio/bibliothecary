@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::Parsers::Pypi do
@@ -7,9 +9,9 @@ describe Bibliothecary::Parsers::Pypi do
 
   it "parses dependencies from setup.py" do
     expect(described_class.analyse_contents("setup.py", load_fixture("setup.py"))).to eq({
-      platform: "pypi",
-      path: "setup.py",
-      dependencies: [
+                                                                                           platform: "pypi",
+                                                                                           path: "setup.py",
+                                                                                           dependencies: [
         Bibliothecary::Dependency.new(name: "Install", requirement: "*", type: "runtime", source: "setup.py"),
         Bibliothecary::Dependency.new(name: "django-bootstrap3", requirement: ">=6.2,<6.3", type: "runtime", source: "setup.py"),
         Bibliothecary::Dependency.new(name: "lesscpy", requirement: "*", type: "runtime", source: "setup.py"),
@@ -30,16 +32,16 @@ describe Bibliothecary::Parsers::Pypi do
         Bibliothecary::Dependency.new(name: "django-suit", requirement: "*", type: "runtime", source: "setup.py"),
         Bibliothecary::Dependency.new(name: "dummy", requirement: "==2.0beta1", type: "runtime", source: "setup.py"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                           kind: "manifest",
+                                                                                           success: true,
+                                                                                         })
   end
 
   it "parses dependencies from requirements.txt" do
     expect(described_class.analyse_contents("requirements.txt", load_fixture("requirements.txt"))).to eq({
-      platform: "pypi",
-      path: "requirements.txt",
-      dependencies: [
+                                                                                                           platform: "pypi",
+                                                                                                           path: "requirements.txt",
+                                                                                                           dependencies: [
         Bibliothecary::Dependency.new(name: "Flask", requirement: "==0.8", type: "runtime", source: "requirements.txt"),
         Bibliothecary::Dependency.new(name: "zope.component", requirement: "==4.2.2", type: "runtime", source: "requirements.txt"),
         Bibliothecary::Dependency.new(name: "scikit-learn", requirement: "==0.16.1", type: "runtime", source: "requirements.txt"),
@@ -51,16 +53,16 @@ describe Bibliothecary::Parsers::Pypi do
         Bibliothecary::Dependency.new(name: "requests", requirement: "==0.11.1", type: "runtime", source: "requirements.txt"),
         Bibliothecary::Dependency.new(name: "Django", requirement: "==2.0beta1", type: "runtime", source: "requirements.txt"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                           kind: "manifest",
+                                                                                                           success: true,
+                                                                                                         })
   end
 
   it "parses dependencies from requirements-dev.txt" do
     expect(described_class.analyse_contents("requirements-dev.txt", load_fixture("requirements-dev.txt"))).to eq({
-      platform: "pypi",
-      path: "requirements-dev.txt",
-      dependencies: [
+                                                                                                                   platform: "pypi",
+                                                                                                                   path: "requirements-dev.txt",
+                                                                                                                   dependencies: [
         Bibliothecary::Dependency.new(name: "astroid", requirement: "==2.9.0", type: "development", source: "requirements-dev.txt"),
         Bibliothecary::Dependency.new(name: "attrs", requirement: "==21.4.0", type: "development", source: "requirements-dev.txt"),
         Bibliothecary::Dependency.new(name: "boto3", requirement: "==1.20.26", type: "development", source: "requirements-dev.txt"),
@@ -113,16 +115,16 @@ describe Bibliothecary::Parsers::Pypi do
         Bibliothecary::Dependency.new(name: "wrapt", requirement: "==1.13.3", type: "development", source: "requirements-dev.txt"),
         Bibliothecary::Dependency.new(name: "zipp", requirement: "==3.6.0", type: "development", source: "requirements-dev.txt"),
     ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                                   kind: "manifest",
+                                                                                                                   success: true,
+                                                                                                                 })
   end
 
   it "parses dependencies from requirements/test.txt" do
     expect(described_class.analyse_contents("requirements/test.txt", load_fixture("requirements/test.txt"))).to eq({
-      platform: "pypi",
-      path: "requirements/test.txt",
-      dependencies: [
+                                                                                                                     platform: "pypi",
+                                                                                                                     path: "requirements/test.txt",
+                                                                                                                     dependencies: [
         Bibliothecary::Dependency.new(name: "attrs", requirement: "==21.4.0", type: "test", source: "requirements/test.txt"),
         Bibliothecary::Dependency.new(name: "exceptiongroup", requirement: "==1.0.0rc8", type: "test", source: "requirements/test.txt"),
         Bibliothecary::Dependency.new(name: "execnet", requirement: "==1.9.0", type: "test", source: "requirements/test.txt"),
@@ -139,28 +141,28 @@ describe Bibliothecary::Parsers::Pypi do
         Bibliothecary::Dependency.new(name: "sortedcontainers", requirement: "==2.4.0", type: "test", source: "requirements/test.txt"),
         Bibliothecary::Dependency.new(name: "tomli", requirement: "==2.0.1", type: "test", source: "requirements/test.txt"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                                     kind: "manifest",
+                                                                                                                     success: true,
+                                                                                                                   })
   end
 
   context "git urls" do
     it "parses dependencies from requirements-git.txt" do
       expect(described_class.analyse_contents("requirements-git.txt", load_fixture("requirements-git.txt"))).to eq({
-        platform: "pypi",
-        path: "requirements-git.txt",
-        dependencies: [
+                                                                                                                     platform: "pypi",
+                                                                                                                     path: "requirements-git.txt",
+                                                                                                                     dependencies: [
           Bibliothecary::Dependency.new(name: "pygame", requirement: "2.1.2", type: "runtime", source: "requirements-git.txt"),
         ],
-        kind: "manifest",
-        success: true,
-      })
+                                                                                                                     kind: "manifest",
+                                                                                                                     success: true,
+                                                                                                                   })
     end
 
     it "skips poorly-formed lines" do
       result = described_class.analyse_contents(
-        "requirements.git.txt", <<-REQ
-git://what@::/:/:/
+        "requirements.git.txt", <<~REQ
+          git://what@::/:/:/
         REQ
       )
 
@@ -171,23 +173,23 @@ git://what@::/:/:/
       result = described_class.parse_requirements_txt_url("git+http://github.com/libraries/test#egg=test")
 
       expect(result).to eq(Bibliothecary::Dependency.new(
-        name: "test",
-        requirement: "*"
-      ))
+                             name: "test",
+                             requirement: "*"
+                           ))
     end
 
     it "fails if there is no egg specified" do
-      expect {
+      expect do
         described_class.parse_requirements_txt_url("git+http://github.com/libraries/test@2.1.3")
-      }.to raise_error(described_class::NoEggSpecified)
+      end.to raise_error(described_class::NoEggSpecified)
     end
   end
 
   it "parses dependencies from requirements.in" do
     expect(described_class.analyse_contents("requirements.in", load_fixture("pip-compile/requirements.in"))).to eq({
-      platform: "pypi",
-      path: "requirements.in",
-      dependencies: [
+                                                                                                                     platform: "pypi",
+                                                                                                                     path: "requirements.in",
+                                                                                                                     dependencies: [
         Bibliothecary::Dependency.new(name: "invoke", requirement: "*", type: "runtime", source: "requirements.in"),
         Bibliothecary::Dependency.new(name: "black", requirement: "*", type: "runtime", source: "requirements.in"),
         Bibliothecary::Dependency.new(name: "google-cloud-storage", requirement: "*", type: "runtime", source: "requirements.in"),
@@ -199,15 +201,15 @@ git://what@::/:/:/
         Bibliothecary::Dependency.new(name: "Jinja2", requirement: "*", type: "runtime", source: "requirements.in"),
         Bibliothecary::Dependency.new(name: "pip-tools", requirement: "*", type: "runtime", source: "requirements.in"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                                     kind: "manifest",
+                                                                                                                     success: true,
+                                                                                                                   })
   end
   it "parses dependencies from requirements.txt as lockfile because of pip-compile" do
     expect(described_class.analyse_contents("requirements.txt", load_fixture("pip-compile/requirements.txt"))).to eq({
-      platform: "pypi",
-      path: "requirements.txt",
-      dependencies: [
+                                                                                                                       platform: "pypi",
+                                                                                                                       path: "requirements.txt",
+                                                                                                                       dependencies: [
         Bibliothecary::Dependency.new(name: "black", requirement: "==21.9b0", type: "runtime", source: "requirements.txt"),
         Bibliothecary::Dependency.new(name: "cachetools", requirement: "==4.2.2", type: "runtime", source: "requirements.txt"),
         Bibliothecary::Dependency.new(name: "certifi", requirement: "==2021.5.30", type: "runtime", source: "requirements.txt"),
@@ -247,30 +249,30 @@ git://what@::/:/:/
         Bibliothecary::Dependency.new(name: "wcwidth", requirement: "==0.2.5", type: "runtime", source: "requirements.txt"),
         Bibliothecary::Dependency.new(name: "wheel", requirement: "==0.37.0", type: "runtime", source: "requirements.txt"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                                       kind: "lockfile",
+                                                                                                                       success: true,
+                                                                                                                     })
   end
 
   it "parses dependencies from pip-resolved-dependencies.txt" do
     expect(described_class.analyse_contents("pip-resolved-dependencies.txt", load_fixture("pip-resolved-dependencies.txt"))).to eq({
-      platform: "pypi",
-      path: "pip-resolved-dependencies.txt",
-      dependencies: [
+                                                                                                                                     platform: "pypi",
+                                                                                                                                     path: "pip-resolved-dependencies.txt",
+                                                                                                                                     dependencies: [
         Bibliothecary::Dependency.new(name: "asgiref", requirement: "==3.2.7", type: "runtime", source: "pip-resolved-dependencies.txt"),
         Bibliothecary::Dependency.new(name: "Django", requirement: "==3.0.6", type: "runtime", source: "pip-resolved-dependencies.txt"),
         Bibliothecary::Dependency.new(name: "sqlparse", requirement: "==0.3.1", type: "runtime", source: "pip-resolved-dependencies.txt"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                                                     kind: "lockfile",
+                                                                                                                                     success: true,
+                                                                                                                                   })
   end
 
   it "parses dependencies from pip-dependency-graph.json" do
     expect(described_class.analyse_contents("pip-dependency-graph.json", load_fixture("pip-dependency-graph.json"))).to eq({
-      platform: "pypi",
-      path: "pip-dependency-graph.json",
-      dependencies: [
+                                                                                                                             platform: "pypi",
+                                                                                                                             path: "pip-dependency-graph.json",
+                                                                                                                             dependencies: [
         Bibliothecary::Dependency.new(name: "aiohttp", requirement: "3.9.5", type: "runtime", source: "pip-dependency-graph.json"),
         Bibliothecary::Dependency.new(name: "aiosignal", requirement: "1.3.1", type: "runtime", source: "pip-dependency-graph.json"),
         Bibliothecary::Dependency.new(name: "async-timeout", requirement: "4.0.3", type: "runtime", source: "pip-dependency-graph.json"),
@@ -289,11 +291,10 @@ git://what@::/:/:/
         Bibliothecary::Dependency.new(name: "typing_extensions", requirement: "4.12.0", type: "runtime", source: "pip-dependency-graph.json"),
         Bibliothecary::Dependency.new(name: "yarl", requirement: "1.9.4", type: "runtime", source: "pip-dependency-graph.json"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                                             kind: "lockfile",
+                                                                                                                             success: true,
+                                                                                                                           })
   end
-
 
   it "handles duplicate dependencies from pip-dependency-graph.json" do
     # It doesn't seem possible that pipdeptree would output duplicate
@@ -319,59 +320,59 @@ git://what@::/:/:/
     ]
     JSON
     expect(described_class.analyse_contents("pip-dependency-graph.json", lockfile)).to eq({
-      platform: "pypi",
-      path: "pip-dependency-graph.json",
-      dependencies: [
+                                                                                            platform: "pypi",
+                                                                                            path: "pip-dependency-graph.json",
+                                                                                            dependencies: [
         Bibliothecary::Dependency.new(name: "aiohttp", requirement: "3.9.5", type: "runtime", source: "pip-dependency-graph.json"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                            kind: "lockfile",
+                                                                                            success: true,
+                                                                                          })
   end
 
   it "parses dependencies from requirements.frozen" do
     expect(described_class.analyse_contents("requirements.frozen", load_fixture("requirements.frozen"))).to eq({
-      platform: "pypi",
-      path: "requirements.frozen",
-      dependencies: [
+                                                                                                                 platform: "pypi",
+                                                                                                                 path: "requirements.frozen",
+                                                                                                                 dependencies: [
         Bibliothecary::Dependency.new(name: "asgiref", requirement: "==3.2.7", type: "runtime", source: "requirements.frozen"),
         Bibliothecary::Dependency.new(name: "Django", requirement: "==3.0.6", type: "runtime", source: "requirements.frozen"),
         Bibliothecary::Dependency.new(name: "sqlparse", requirement: "==0.3.1", type: "runtime", source: "requirements.frozen"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                                 kind: "lockfile",
+                                                                                                                 success: true,
+                                                                                                               })
   end
 
   it "parses dependencies from Pipfile" do
     expect(described_class.analyse_contents("Pipfile", load_fixture("Pipfile"))).to eq({
-      platform: "pypi",
-      path: "Pipfile",
-      dependencies: [
+                                                                                         platform: "pypi",
+                                                                                         path: "Pipfile",
+                                                                                         dependencies: [
         Bibliothecary::Dependency.new(name: "requests", requirement: "*", type: "runtime", source: "Pipfile"),
         Bibliothecary::Dependency.new(name: "Django", requirement: ">1.10", type: "runtime", source: "Pipfile"),
         Bibliothecary::Dependency.new(name: "pinax", requirement: "git://github.com/pinax/pinax.git#1.4", type: "runtime", source: "Pipfile"),
         Bibliothecary::Dependency.new(name: "nose", requirement: "*", type: "develop", source: "Pipfile"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                         kind: "manifest",
+                                                                                         success: true,
+                                                                                       })
   end
 
   it "parses dependencies from Pipfile.lock" do
     expect(described_class.analyse_contents("Pipfile.lock", load_fixture("Pipfile.lock"))).to eq({
-      platform: "pypi",
-      path: "Pipfile.lock",
-      dependencies: [
+                                                                                                   platform: "pypi",
+                                                                                                   path: "Pipfile.lock",
+                                                                                                   dependencies: [
         Bibliothecary::Dependency.new(name: "PySocks", requirement: "==1.6.5", type: "runtime", source: "Pipfile.lock"),
         Bibliothecary::Dependency.new(name: "requests", requirement: "==2.13.0", type: "runtime", source: "Pipfile.lock"),
         Bibliothecary::Dependency.new(name: "Django", requirement: "==1.10.5", type: "runtime", source: "Pipfile.lock"),
         Bibliothecary::Dependency.new(name: "pinax", requirement: "git://github.com/pinax/pinax.git#1.4", type: "runtime", source: "Pipfile.lock"),
         Bibliothecary::Dependency.new(name: "nose", requirement: "==1.3.7", type: "develop", source: "Pipfile.lock"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                   kind: "lockfile",
+                                                                                                   success: true,
+                                                                                                 })
   end
 
   it "parses dependencies from conda environment.yml with pip" do
@@ -380,12 +381,12 @@ git://what@::/:/:/
         platform: "pypi",
         path: "conda_with_pip/environment.yml",
         dependencies: [
-          Bibliothecary::Dependency.new( name: "urllib3", requirement: "*", type: "runtime", source: "conda_with_pip/environment.yml"),
-          Bibliothecary::Dependency.new( name: "Django", requirement: "==2.0.0", type: "runtime", source: "conda_with_pip/environment.yml"),
+          Bibliothecary::Dependency.new(name: "urllib3", requirement: "*", type: "runtime", source: "conda_with_pip/environment.yml"),
+          Bibliothecary::Dependency.new(name: "Django", requirement: "==2.0.0", type: "runtime", source: "conda_with_pip/environment.yml"),
         ],
         kind: "manifest",
         success: true,
-       }
+      }
     )
   end
 
@@ -407,18 +408,18 @@ git://what@::/:/:/
 
   it "parses dependencies from pyproject.toml" do
     expect(described_class.analyse_contents("pyproject.toml", load_fixture("pyproject.toml"))).to eq({
-      platform: "pypi",
-      path: "pyproject.toml",
-      dependencies: [
+                                                                                                       platform: "pypi",
+                                                                                                       path: "pyproject.toml",
+                                                                                                       dependencies: [
         Bibliothecary::Dependency.new(name: "python", requirement: "^3.7", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "django", requirement: "^3.0.7", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "pytest", requirement: "^5.2", type: "develop", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "wcwidth", requirement: "*", type: "develop", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "sqlparse", requirement: "0.3.1", type: "test", source: "pyproject.toml"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                       kind: "manifest",
+                                                                                                       success: true,
+                                                                                                     })
   end
 
   it "handles pyproject.toml with no deps" do
@@ -428,34 +429,34 @@ git://what@::/:/:/
     FILE
 
     expect(described_class.analyse_contents("pyproject.toml", source)).to eq({
-      platform: "pypi",
-      path: "pyproject.toml",
-      dependencies: [],
-      kind: "manifest",
-      success: true,
-    })
+                                                                               platform: "pypi",
+                                                                               path: "pyproject.toml",
+                                                                               dependencies: [],
+                                                                               kind: "manifest",
+                                                                               success: true,
+                                                                             })
   end
 
   # https://packaging.python.org/en/latest/specifications/declaring-project-metadata/#declaring-project-metadata
   it "handles pyproject.toml with pep621-style deps" do
     source = <<~FILE
-[project]
-name = "a_pep621_project"
-version = "0.1.0"
-dependencies = [
-    "black",
-    "isort",
-    "pytest == 7.2.1",
-    "python-gitlab == 3.12.0",
-    "Click~=8.1.0",
-    "marshmallow-dataclass[union]~=8.5.6",
-]
+      [project]
+      name = "a_pep621_project"
+      version = "0.1.0"
+      dependencies = [
+          "black",
+          "isort",
+          "pytest == 7.2.1",
+          "python-gitlab == 3.12.0",
+          "Click~=8.1.0",
+          "marshmallow-dataclass[union]~=8.5.6",
+      ]
     FILE
 
     expect(described_class.analyse_contents("pyproject.toml", source)).to eq({
-      platform: "pypi",
-      path: "pyproject.toml",
-      dependencies: [
+                                                                               platform: "pypi",
+                                                                               path: "pyproject.toml",
+                                                                               dependencies: [
         Bibliothecary::Dependency.new(name: "black", requirement: "*", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "isort", requirement: "*", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "pytest", requirement: "== 7.2.1", type: "runtime", source: "pyproject.toml"),
@@ -463,16 +464,16 @@ dependencies = [
         Bibliothecary::Dependency.new(name: "Click", requirement: "~=8.1.0", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "marshmallow-dataclass", requirement: "[union]~=8.5.6", type: "runtime", source: "pyproject.toml"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                               kind: "manifest",
+                                                                               success: true,
+                                                                             })
   end
 
   it "parses dependencies from Poetry.lock" do
     expect(described_class.analyse_contents("poetry.lock", load_fixture("poetry.lock"))).to eq({
-      platform: "pypi",
-      path: "poetry.lock",
-      dependencies: [
+                                                                                                 platform: "pypi",
+                                                                                                 path: "poetry.lock",
+                                                                                                 dependencies: [
         Bibliothecary::Dependency.new(name: "asgiref", requirement: "3.2.10", type: "runtime", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "atomicwrites", requirement: "1.4.0", type: "develop", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "attrs", requirement: "19.3.0", type: "develop", source: "poetry.lock"),
@@ -491,8 +492,8 @@ dependencies = [
         Bibliothecary::Dependency.new(name: "wcwidth", requirement: "0.2.5", type: "develop", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "zipp", requirement: "3.1.0", type: "develop", source: "poetry.lock"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                 kind: "lockfile",
+                                                                                                 success: true,
+                                                                                               })
   end
 end

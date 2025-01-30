@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "bibliothecary/version"
 require "bibliothecary/dependency"
 require "bibliothecary/analyser"
@@ -10,19 +12,19 @@ require "bibliothecary/purl_util"
 require "find"
 require "tomlrb"
 
-Dir[File.expand_path("../bibliothecary/multi_parsers/*.rb", __FILE__)].each do |file|
+Dir[File.expand_path("bibliothecary/multi_parsers/*.rb", __dir__)].each do |file|
   require file
 end
-Dir[File.expand_path("../bibliothecary/parsers/*.rb", __FILE__)].each do |file|
+Dir[File.expand_path("bibliothecary/parsers/*.rb", __dir__)].each do |file|
   require file
 end
 
 module Bibliothecary
-  VERSION_OPERATORS = /[~^<>*"]/.freeze
-  INVALID_UTF8_ERROR_REGEXP = /invalid byte sequence/.freeze
+  VERSION_OPERATORS = /[~^<>*"]/
+  INVALID_UTF8_ERROR_REGEXP = /invalid byte sequence/
 
   def self.analyse(path, ignore_unparseable_files: true)
-    runner.analyse(path, ignore_unparseable_files: ignore_unparseable_files)
+    runner.analyse(path, ignore_unparseable_files:)
   end
 
   # deprecated; use load_file_info_list.
@@ -86,6 +88,7 @@ module Bibliothecary
   rescue ArgumentError => e
     # Bibliothecary doesn't need to analyze non-UTF8 files like binary files, so just return blank.
     return "" if e.message.match?(INVALID_UTF8_ERROR_REGEXP)
+
     raise e
   end
 

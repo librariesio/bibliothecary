@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::Parsers::Julia do
@@ -7,9 +9,9 @@ describe Bibliothecary::Parsers::Julia do
 
   it "parses dependencies from REQUIRE" do
     expect(described_class.analyse_contents("REQUIRE", load_fixture("REQUIRE"))).to eq({
-      platform: "julia",
-      path: "REQUIRE",
-      dependencies: [
+                                                                                         platform: "julia",
+                                                                                         path: "REQUIRE",
+                                                                                         dependencies: [
         Bibliothecary::Dependency.new(name: "julia", requirement: "0.3", type: "runtime", source: "REQUIRE"),
         Bibliothecary::Dependency.new(name: "Codecs", requirement: "*", type: "runtime", source: "REQUIRE"),
         Bibliothecary::Dependency.new(name: "Colors", requirement: "0.3.4", type: "runtime", source: "REQUIRE"),
@@ -32,9 +34,9 @@ describe Bibliothecary::Parsers::Julia do
         Bibliothecary::Dependency.new(name: "StatsBase", requirement: "*", type: "runtime", source: "REQUIRE"),
         Bibliothecary::Dependency.new(name: "WinReg", requirement: "*", type: "runtime", source: "REQUIRE"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                         kind: "manifest",
+                                                                                         success: true,
+                                                                                       })
   end
 
   it "matches valid manifest filepaths" do

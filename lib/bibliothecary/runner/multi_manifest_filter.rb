@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bibliothecary
   class Runner
     class MultiManifestFilter
@@ -11,8 +13,8 @@ module Bibliothecary
         # @return [Boolean] True if we should skip processing
         def skip?
           !@file_analysis ||
-          !@file_analysis[:dependencies] ||
-          @file_analysis[:dependencies].empty?
+            !@file_analysis[:dependencies] ||
+            @file_analysis[:dependencies].empty?
         end
       end
 
@@ -80,7 +82,7 @@ module Bibliothecary
       end
 
       def partition_file_entries!
-        @single_file_entries, @multiple_file_entries = files_to_check.partition { |_file, count| count == 1  }
+        @single_file_entries, @multiple_file_entries = files_to_check.partition { |_file, count| count == 1 }
 
         @single_file_entries = @single_file_entries.map(&:first)
         @multiple_file_entries = @multiple_file_entries.map(&:first)
@@ -88,4 +90,3 @@ module Bibliothecary
     end
   end
 end
-

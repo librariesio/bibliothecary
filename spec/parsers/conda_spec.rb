@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::Parsers::Conda do
@@ -70,7 +72,7 @@ describe Bibliothecary::Parsers::Conda do
       ]
 
       examples.each do |ex|
-        expect(described_class.parse_name_requirement_from_matchspec(ex[0])).to eq({"name": ex[1], "requirement": ex[2]})
+        expect(described_class.parse_name_requirement_from_matchspec(ex[0])).to eq({ name: ex[1], requirement: ex[2] })
       end
     end
   end

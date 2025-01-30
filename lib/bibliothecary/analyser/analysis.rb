@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bibliothecary
   module Analyser
     module Analysis
@@ -8,7 +10,7 @@ module Bibliothecary
       # @param file_list [Array<String>]
       # @param options [Hash]
       def analyse(folder_path, file_list, options: {})
-        analyse_file_info(file_list.map { |full_path| FileInfo.new(folder_path, full_path) }, options: options)
+        analyse_file_info(file_list.map { |full_path| FileInfo.new(folder_path, full_path) }, options:)
       end
       alias analyze analyse
 
@@ -20,14 +22,14 @@ module Bibliothecary
           .select(&method(:match_info?))
 
         matching_info.flat_map do |info|
-          analyse_contents_from_info(info, options: options)
+          analyse_contents_from_info(info, options:)
             .merge(related_paths: related_paths(info, matching_info))
         end
       end
       alias analyze_file_info analyse_file_info
 
       def analyse_contents(filename, contents, options: {})
-        analyse_contents_from_info(FileInfo.new(nil, filename, contents), options: options)
+        analyse_contents_from_info(FileInfo.new(nil, filename, contents), options:)
       end
       alias analyze_contents analyse_contents
 
@@ -38,29 +40,33 @@ module Bibliothecary
         # If your Parser needs to return multiple responses for one file, please override this method
         # For example see conda.rb
         kind = determine_kind_from_info(info)
-        dependencies = parse_file(info.relative_path, info.contents, options: options)
+        dependencies = parse_file(info.relative_path, info.contents, options:)
 
         dependencies_to_analysis(info, kind, dependencies)
       rescue Bibliothecary::FileParsingError => e
-        Bibliothecary::Analyser::create_error_analysis(platform_name, info.relative_path, kind, e.message, e.location)
+        Bibliothecary::Analyser.create_error_analysis(platform_name, info.relative_path, kind, e.message, e.location)
       end
       alias analyze_contents_from_info analyse_contents_from_info
 
       def dependencies_to_analysis(info, kind, dependencies)
-        dependencies = dependencies || [] # work around any legacy parsers that return nil
+        dependencies ||= [] # work around any legacy parsers that return nil
         if generic?
           grouped = dependencies.group_by { |dep| dep[:platform] }
           all_analyses = grouped.keys.map do |platform|
-            deplatformed_dependencies = grouped[platform].map { |d| d.delete(:platform); d }
-            Bibliothecary::Analyser::create_analysis(platform, info.relative_path, kind, deplatformed_dependencies)
+            deplatformed_dependencies = grouped[platform].map do |d|
+              d.delete(:platform)
+              d
+            end
+            Bibliothecary::Analyser.create_analysis(platform, info.relative_path, kind, deplatformed_dependencies)
           end
           # this is to avoid a larger refactor for the time being. The larger refactor
           # needs to make analyse_contents return multiple analysis, or add another
           # method that can return multiple and deprecate analyse_contents, perhaps.
           raise "File contains zero or multiple platforms, currently must have exactly one" if all_analyses.length != 1
+
           all_analyses.first
         else
-          Bibliothecary::Analyser::create_analysis(platform_name, info.relative_path, kind, dependencies)
+          Bibliothecary::Analyser.create_analysis(platform_name, info.relative_path, kind, dependencies)
         end
       end
 
@@ -80,9 +86,8 @@ module Bibliothecary
         # any dependencies, and should never return nil. At the time of writing
         # this comment, some of the parsers return [] or nil to mean an error
         # which is confusing to users.
-        send(details[:parser], contents, options: options.merge(filename: filename))
-
-      rescue Exception => e # default is StandardError but C bindings throw Exceptions
+        send(details[:parser], contents, options: options.merge(filename:))
+      rescue Exception => e # default is StandardError but C bindings throw Exceptions # rubocop:disable Lint/RescueException
         # the C xml parser also puts a newline at the end of the message
         location = e.backtrace_locations[0]
           .to_s
@@ -97,7 +102,7 @@ module Bibliothecary
 
         kind = determine_kind_from_info(info)
         relate_to_kind = first_matching_mapping_details(info)
-          .fetch(:related_to, %w(manifest lockfile).reject { |k| k == kind })
+          .fetch(:related_to, %w[manifest lockfile].reject { |k| k == kind })
         dirname = File.dirname(info.relative_path)
 
         infos

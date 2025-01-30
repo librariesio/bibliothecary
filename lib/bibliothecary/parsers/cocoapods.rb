@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "gemnasium/parser"
 require "yaml"
 
@@ -7,7 +9,7 @@ module Bibliothecary
       include Bibliothecary::Analyser
       extend Bibliothecary::MultiParsers::BundlerLikeManifest
 
-      NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'.freeze
+      NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
 
       def self.mapping
@@ -35,7 +37,7 @@ module Bibliothecary
 
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_podfile_lock(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_podfile_lock(file_contents, options: {})
         manifest = YAML.load file_contents
         manifest["PODS"].map do |row|
           pod = row.is_a?(String) ? row : row.keys.first
@@ -49,25 +51,25 @@ module Bibliothecary
         end.compact
       end
 
-      def self.parse_podspec(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_podspec(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:podspec, file_contents)
         parse_ruby_manifest(manifest, options.fetch(:filename, nil))
       end
 
-      def self.parse_podfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_podfile(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:podfile, file_contents)
         parse_ruby_manifest(manifest, options.fetch(:filename, nil))
       end
 
-      def self.parse_json_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_json_manifest(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         manifest["dependencies"].inject([]) do |deps, dep|
           deps.push(Dependency.new(
-            name: dep[0],
-            requirement: dep[1],
-            type: "runtime",
-            source: options.fetch(:filename, nil),
-          ))
+                      name: dep[0],
+                      requirement: dep[1],
+                      type: "runtime",
+                      source: options.fetch(:filename, nil)
+                    ))
         end.uniq
       end
     end

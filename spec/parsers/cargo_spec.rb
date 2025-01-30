@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::Parsers::Cargo do
@@ -7,23 +9,23 @@ describe Bibliothecary::Parsers::Cargo do
 
   it "parses dependencies from Cargo.toml" do
     expect(described_class.analyse_contents("Cargo.toml", load_fixture("Cargo.toml"))).to eq({
-      platform: "cargo",
-      path: "Cargo.toml",
-      dependencies:[
+                                                                                               platform: "cargo",
+                                                                                               path: "Cargo.toml",
+                                                                                               dependencies: [
         Bibliothecary::Dependency.new(name: "rustc-serialize", requirement: "*", type: "runtime", source: "Cargo.toml"),
         Bibliothecary::Dependency.new(name: "regex", requirement: "*", type: "runtime", source: "Cargo.toml"),
         Bibliothecary::Dependency.new(name: "tempdir", requirement: "0.3", type: "development", source: "Cargo.toml"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                               kind: "manifest",
+                                                                                               success: true,
+                                                                                             })
   end
 
   it "parses dependencies from Cargo.lock" do
     expect(described_class.analyse_contents("Cargo.lock", load_fixture("Cargo.lock"))).to eq({
-      platform: "cargo",
-      path: "Cargo.lock",
-      dependencies:[
+                                                                                               platform: "cargo",
+                                                                                               path: "Cargo.lock",
+                                                                                               dependencies: [
         Bibliothecary::Dependency.new(name: "aho-corasick", requirement: "0.7.18", type: "runtime", source: "Cargo.lock"),
         Bibliothecary::Dependency.new(name: "fuchsia-cprng", requirement: "0.1.1", type: "runtime", source: "Cargo.lock"),
         Bibliothecary::Dependency.new(name: "libc", requirement: "0.2.126", type: "runtime", source: "Cargo.lock"),
@@ -41,9 +43,9 @@ describe Bibliothecary::Parsers::Cargo do
         Bibliothecary::Dependency.new(name: "winapi-i686-pc-windows-gnu", requirement: "0.4.0", type: "runtime", source: "Cargo.lock"),
         Bibliothecary::Dependency.new(name: "winapi-x86_64-pc-windows-gnu", requirement: "0.4.0", type: "runtime", source: "Cargo.lock"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                               kind: "lockfile",
+                                                                                               success: true,
+                                                                                             })
   end
 
   it "matches valid manifest filepaths" do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "json"
 
 module Bibliothecary
@@ -22,41 +24,47 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
-      def self.parse_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_lockfile(file_contents, options: {})
         manifest = JSON.parse file_contents
-        manifest.fetch("packages",[]).map do |dependency|
+        manifest.fetch("packages", []).map do |dependency|
           requirement = dependency["version"]
 
           # Store Drupal version if Drupal, but include the original manifest version for reference
-          original_requirement, requirement = requirement, dependency.dig("source", "reference") if is_drupal_module(dependency)
+          if drupal_module?(dependency)
+            original_requirement = requirement
+            requirement = dependency.dig("source", "reference")
+          end
 
           Dependency.new(
             name: dependency["name"],
-            requirement: requirement,
+            requirement:,
             type: "runtime",
-            original_requirement: original_requirement,
-            source: options.fetch(:filename, nil),
+            original_requirement:,
+            source: options.fetch(:filename, nil)
           )
-        end + manifest.fetch("packages-dev",[]).map do |dependency|
+        end + manifest.fetch("packages-dev", []).map do |dependency|
           requirement = dependency["version"]
 
           # Store Drupal version if Drupal, but include the original manifest version for reference
-          original_requirement, requirement = requirement, dependency.dig("source", "reference") if is_drupal_module(dependency)
+          if drupal_module?(dependency)
+            original_requirement = requirement
+            requirement = dependency.dig("source", "reference")
+          end
 
           Dependency.new(
             name: dependency["name"],
-            requirement: requirement,
+            requirement:,
             type: "development",
-            original_requirement: original_requirement,
-            source: options.fetch(:filename, nil),
+            original_requirement:,
+            source: options.fetch(:filename, nil)
           )
         end
       end
 
-      def self.parse_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_manifest(file_contents, options: {})
         manifest = JSON.parse file_contents
         map_dependencies(manifest, "require", "runtime", options.fetch(:filename, nil)) +
-        map_dependencies(manifest, "require-dev", "development", options.fetch(:filename, nil))
+          map_dependencies(manifest, "require-dev", "development", options.fetch(:filename, nil))
       end
 
       # Drupal hosts its own Composer repository, where its "modules" are indexed and searchable. The best way to
@@ -67,7 +75,7 @@ module Bibliothecary
       # (https://www.drupal.org/project/project_composer/issues/2622450),
       # so we return the Drupal requirement instead of semver requirement if it's here
       # (https://www.drupal.org/docs/develop/using-composer/using-composer-to-install-drupal-and-manage-dependencies#s-about-semantic-versioning)
-      private_class_method def self.is_drupal_module(dependency)
+      private_class_method def self.drupal_module?(dependency)
         dependency["type"] =~ /drupal/ && dependency.dig("source", "reference")
       end
     end

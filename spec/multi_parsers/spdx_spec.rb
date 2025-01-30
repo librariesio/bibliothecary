@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::MultiParsers::Spdx do
   let!(:parser_class) do
     k = Class.new do
-      def platform_name; "npm"; end
+      def platform_name = "npm"
     end
 
     k.send(:include, described_class)
@@ -19,25 +21,25 @@ describe Bibliothecary::MultiParsers::Spdx do
     end
 
     it "handles an empty file" do
-      expect{ parser.parse_spdx_tag_value("") }.to raise_error(described_class::NoEntries)
+      expect { parser.parse_spdx_tag_value("") }.to raise_error(described_class::NoEntries)
     end
 
     context "with a file containing excessive whitespace" do
       let(:file) do
         <<~SPDX
-        PackageName:     package1   
-        SPDXID:    SPDXRef-pkg-npm-package1-1.0.0    
-        PackageVersion:         1.0.0  
-        PackageSupplier:    Person: someuser  
-        PackageDownloadLocation:             https://registry.npmjs.org/package1/-/package1-1.0.0.tgz
-        PackageLicenseConcluded:      MIT  
-        PackageLicenseDeclared:    MIT  
-        ExternalRef:      PACKAGE-MANAGER purl pkg:npm/package1@1.0.0
+          PackageName:     package1#{'   '}
+          SPDXID:    SPDXRef-pkg-npm-package1-1.0.0#{'    '}
+          PackageVersion:         1.0.0#{'  '}
+          PackageSupplier:    Person: someuser#{'  '}
+          PackageDownloadLocation:             https://registry.npmjs.org/package1/-/package1-1.0.0.tgz
+          PackageLicenseConcluded:      MIT#{'  '}
+          PackageLicenseDeclared:    MIT#{'  '}
+          ExternalRef:      PACKAGE-MANAGER purl pkg:npm/package1@1.0.0
         SPDX
       end
 
       it "parses the file" do
-        expect(parser.parse_spdx_tag_value(file, options: {filename: "sbom.spdx"})).to eq([
+        expect(parser.parse_spdx_tag_value(file, options: { filename: "sbom.spdx" })).to eq([
           Bibliothecary::Dependency.new(name: "package1", requirement: "1.0.0", type: "lockfile", source: "sbom.spdx"),
         ])
       end
@@ -46,48 +48,48 @@ describe Bibliothecary::MultiParsers::Spdx do
     context "with a properly formed file" do
       let(:file) do
         <<~SPDX
-        SPDXVersion: SPDX-2.0
-        SPDXID: SPDXRef-DOCUMENT
-        DataLicense: CC0-1.0
-        DocumentName: some-project
-        DocumentNamespace: https://test.com
-        DocumentComment: <text>some comment</text>
+          SPDXVersion: SPDX-2.0
+          SPDXID: SPDXRef-DOCUMENT
+          DataLicense: CC0-1.0
+          DocumentName: some-project
+          DocumentNamespace: https://test.com
+          DocumentComment: <text>some comment</text>
 
 
-        Creator: Tool: Test tool
-        Creator: Organization: Test tool
-        Created: #{Time.now}
+          Creator: Tool: Test tool
+          Creator: Organization: Test tool
+          Created: #{Time.now}
 
 
-        Relationship: SPDXRef-DOCUMENT CONTAINS SPDXRef-Package
-        Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-Package
+          Relationship: SPDXRef-DOCUMENT CONTAINS SPDXRef-Package
+          Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-Package
 
-        ##### Package: package1
+          ##### Package: package1
 
-        PackageName: package1
-        SPDXID: SPDXRef-pkg-npm-package1-1.0.0
-        PackageVersion: 1.0.0
-        PackageSupplier: Person: someuser
-        PackageDownloadLocation: https://registry.npmjs.org/package1/-/package1-1.0.0.tgz
-        PackageLicenseConcluded: MIT
-        PackageLicenseDeclared: MIT
-        ExternalRef: PACKAGE-MANAGER purl pkg:npm/package1@1.0.0
+          PackageName: package1
+          SPDXID: SPDXRef-pkg-npm-package1-1.0.0
+          PackageVersion: 1.0.0
+          PackageSupplier: Person: someuser
+          PackageDownloadLocation: https://registry.npmjs.org/package1/-/package1-1.0.0.tgz
+          PackageLicenseConcluded: MIT
+          PackageLicenseDeclared: MIT
+          ExternalRef: PACKAGE-MANAGER purl pkg:npm/package1@1.0.0
 
-        ##### Package: package2
+          ##### Package: package2
 
-        PackageName: package2
-        SPDXID: SPDXRef-pkg-npm-package2-1.0.1
-        PackageVersion: 1.0.1
-        PackageSupplier: Person: someuser1
-        PackageDownloadLocation: https://registry.npmjs.org/package2/-/package2-1.0.1.tgz
-        PackageLicenseConcluded: MIT
-        PackageLicenseDeclared: MIT
-        ExternalRef: PACKAGE_MANAGER purl pkg:npm/package2@1.0.1
+          PackageName: package2
+          SPDXID: SPDXRef-pkg-npm-package2-1.0.1
+          PackageVersion: 1.0.1
+          PackageSupplier: Person: someuser1
+          PackageDownloadLocation: https://registry.npmjs.org/package2/-/package2-1.0.1.tgz
+          PackageLicenseConcluded: MIT
+          PackageLicenseDeclared: MIT
+          ExternalRef: PACKAGE_MANAGER purl pkg:npm/package2@1.0.1
         SPDX
       end
 
       it "parses the file" do
-        expect(parser.parse_spdx_tag_value(file, options: {filename: "sbom.spdx"})).to eq([
+        expect(parser.parse_spdx_tag_value(file, options: { filename: "sbom.spdx" })).to eq([
           Bibliothecary::Dependency.new(name: "package1", requirement: "1.0.0", type: "lockfile", source: "sbom.spdx"),
           Bibliothecary::Dependency.new(name: "package2", requirement: "1.0.1", type: "lockfile", source: "sbom.spdx"),
         ])
@@ -97,17 +99,16 @@ describe Bibliothecary::MultiParsers::Spdx do
 
   describe "parse_spdx_json" do
     it "handles an empty file" do
-      expect{ parser.parse_spdx_json("{}") }.to raise_error(described_class::NoEntries)
+      expect { parser.parse_spdx_json("{}") }.to raise_error(described_class::NoEntries)
     end
 
     context "with a properly formed file" do
-
       it "parses the file" do
         contents = load_fixture("spdx2.2.json")
-        result = parser.parse_spdx_json(contents, options: {filename: "sbom.spdx.json"})
+        result = parser.parse_spdx_json(contents, options: { filename: "sbom.spdx.json" })
         expect(result.length).to eq(1221)
-        expect(result[0]).to eq(Bibliothecary::Dependency.new(name:"-", requirement:"0.0.1", type:"lockfile", source: "sbom.spdx.json"))
-        expect(result[1]).to eq(Bibliothecary::Dependency.new(name:"@ampproject/remapping", requirement:"2.2.0", type:"lockfile", source: "sbom.spdx.json"))
+        expect(result[0]).to eq(Bibliothecary::Dependency.new(name: "-", requirement: "0.0.1", type: "lockfile", source: "sbom.spdx.json"))
+        expect(result[1]).to eq(Bibliothecary::Dependency.new(name: "@ampproject/remapping", requirement: "2.2.0", type: "lockfile", source: "sbom.spdx.json"))
       end
     end
   end
@@ -118,10 +119,10 @@ describe Bibliothecary::MultiParsers::Spdx do
       constant = Bibliothecary::Parsers.const_get(constant_symbol)
 
       # only analyzers have platform_name on the class
-      if constant.respond_to?(:platform_name)
-        it "#{constant_symbol} should implement Spdx" do
-          expect(constant.respond_to?(:parse_spdx_tag_value)).to eq(true)
-        end
+      next unless constant.respond_to?(:platform_name)
+
+      it "#{constant_symbol} should implement Spdx" do
+        expect(constant.respond_to?(:parse_spdx_tag_value)).to eq(true)
       end
     end
   end

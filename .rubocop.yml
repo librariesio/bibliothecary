@@ -1,9 +1,10 @@
 ---
 
 AllCops:
-  DisabledByDefault: true
-  TargetRubyVersion: 3.0
-
+  NewCops: enable
+  TargetRubyVersion: 3.2.6
+  Exclude:
+    - spec/fixtures/**/*
 
 Metrics/BlockLength:
   Max: 100

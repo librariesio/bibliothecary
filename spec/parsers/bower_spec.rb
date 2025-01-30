@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::Parsers::Bower do
@@ -7,14 +9,14 @@ describe Bibliothecary::Parsers::Bower do
 
   it "parses dependencies from bower.json" do
     expect(described_class.analyse_contents("bower.json", load_fixture("bower.json"))).to eq({
-      platform: "bower",
-      path: "bower.json",
-      dependencies: [
+                                                                                               platform: "bower",
+                                                                                               path: "bower.json",
+                                                                                               dependencies: [
         Bibliothecary::Dependency.new(name: "jquery", requirement: ">= 1.9.1", type: "runtime", source: "bower.json"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                               kind: "manifest",
+                                                                                               success: true,
+                                                                                             })
   end
 
   it "matches valid manifest filepaths" do

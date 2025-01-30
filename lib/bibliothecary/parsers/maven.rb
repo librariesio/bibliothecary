@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "ox"
 
 # Known shortcomings and unimplemented Maven features:
@@ -26,7 +28,7 @@ module Bibliothecary
 
       # Builtin methods: https://docs.gradle.org/current/userguide/java_plugin.html#tab:configurations
       # Deprecated methods: https://docs.gradle.org/current/userguide/upgrading_version_6.html#sec:configuration_removal
-      GRADLE_DEPENDENCY_METHODS = %w(api compile compileClasspath compileOnly compileOnlyApi implementation runtime runtimeClasspath runtimeOnly testCompile testCompileOnly testImplementation testRuntime testRuntimeOnly)
+      GRADLE_DEPENDENCY_METHODS = %w[api compile compileClasspath compileOnly compileOnlyApi implementation runtime runtimeClasspath runtimeOnly testCompile testCompileOnly testImplementation testRuntime testRuntimeOnly].freeze
 
       # Intentionally overly-simplified regexes to scrape deps from build.gradle (Groovy) and build.gradle.kts (Kotlin) files.
       # To be truly useful bibliothecary would need full Groovy / Kotlin parsers that speaks Gradle,
@@ -34,7 +36,7 @@ module Bibliothecary
       GRADLE_VERSION_REGEXP = /[\w.-]+/ # e.g. '1.2.3'
       GRADLE_VAR_INTERPOLATION_REGEXP = /\$\w+/ # e.g. '$myVersion'
       GRADLE_CODE_INTERPOLATION_REGEXP = /\$\{.*\}/ # e.g. '${my-project-settings["version"]}'
-      GRADLE_GAV_REGEXP = /([\w.-]+)\:([\w.-]+)(?:\:(#{GRADLE_VERSION_REGEXP}|#{GRADLE_VAR_INTERPOLATION_REGEXP}|#{GRADLE_CODE_INTERPOLATION_REGEXP}))?/ # e.g. "group:artifactId:1.2.3"
+      GRADLE_GAV_REGEXP = /([\w.-]+):([\w.-]+)(?::(#{GRADLE_VERSION_REGEXP}|#{GRADLE_VAR_INTERPOLATION_REGEXP}|#{GRADLE_CODE_INTERPOLATION_REGEXP}))?/ # e.g. "group:artifactId:1.2.3"
       GRADLE_GROOVY_SIMPLE_REGEXP = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(?\s*['"]#{GRADLE_GAV_REGEXP}['"]/m
       GRADLE_KOTLIN_SIMPLE_REGEXP = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(\s*"#{GRADLE_GAV_REGEXP}"/m
 
@@ -56,7 +58,6 @@ module Bibliothecary
       # e.g. "[info]  "
       SBT_IGNORE_REGEXP = /^\[info\]\s*$/
 
-
       # Copied from the "strings-ansi" gem, because it seems abandoned: https://github.com/piotrmurach/strings-ansi/pull/2
       # From: https://github.com/piotrmurach/strings-ansi/blob/35d0c9430cf0a8022dc12bdab005bce296cb9f00/lib/strings/ansi.rb#L14-L29
       # License: MIT
@@ -75,8 +76,8 @@ module Bibliothecary
           |
           \]8;[^;]*;.*?(\033\\|\07) # hyperlink
         ))
-      }x.freeze
-      
+      }x
+
       def self.mapping
         {
           match_filename("ivy.xml", case_insensitive: true) => {
@@ -123,7 +124,7 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_ivy_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_ivy_manifest(file_contents, options: {})
         manifest = Ox.parse file_contents
         manifest.dependencies.locate("dependency").map do |dependency|
           attrs = dependency.attributes
@@ -131,7 +132,7 @@ module Bibliothecary
             name: "#{attrs[:org]}:#{attrs[:name]}",
             requirement: attrs[:rev],
             type: "runtime",
-            source: options.fetch(:filename, nil),
+            source: options.fetch(:filename, nil)
           )
         end
       end
@@ -139,7 +140,7 @@ module Bibliothecary
       def self.ivy_report?(file_contents)
         doc = Ox.parse file_contents
         root = doc&.locate("ivy-report")&.first
-        return !root.nil?
+        !root.nil?
       rescue Exception # rubocop:disable Lint/RescueException
         # We rescue exception here since native libs can throw a non-StandardError
         # We don't want to throw errors during the matching phase, only during
@@ -147,12 +148,14 @@ module Bibliothecary
         false
       end
 
-      def self.parse_ivy_report(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_ivy_report(file_contents, options: {})
         doc = Ox.parse file_contents
         root = doc.locate("ivy-report").first
         raise "ivy-report document does not have ivy-report at the root" if root.nil?
+
         info = doc.locate("ivy-report/info").first
         raise "ivy-report document lacks <info> element" if info.nil?
+
         type = info.attributes[:conf]
         type = "unknown" if type.nil?
         modules = doc.locate("ivy-report/dependencies/module")
@@ -160,20 +163,20 @@ module Bibliothecary
           attrs = mod.attributes
           org = attrs[:organisation]
           name = attrs[:name]
-          version = mod.locate("revision").first&.attributes[:name]
+          version = mod.locate("revision").first&.attributes&.[](:name)
 
-          next nil if org.nil? or name.nil? or version.nil?
+          next nil if org.nil? || name.nil? || version.nil?
 
           Dependency.new(
             name: "#{org}:#{name}",
             requirement: version,
-            type: type,
-            source: options.fetch(:filename, nil),
+            type:,
+            source: options.fetch(:filename, nil)
           )
         end.compact
       end
 
-      def self.parse_gradle_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_gradle_resolved(file_contents, options: {})
         current_type = nil
 
         file_contents.split("\n").map do |line|
@@ -192,7 +195,7 @@ module Bibliothecary
             next if project_match[1].nil?
 
             # project names can have colons (e.g. for gradle projects in subfolders), which breaks maven artifact naming assumptions, so just replace them with hyphens.
-            project_name = project_match[1].gsub(/:/, "-")
+            project_name = project_match[1].gsub(":", "-")
             line = line.sub(GRADLE_PROJECT_REGEXP, "internal:#{project_name}:1.0.0")
           end
 
@@ -211,7 +214,7 @@ module Bibliothecary
           if dep.count == 6
             # get name from renamed package resolution "org:name:version -> renamed_org:name:version"
             Dependency.new(
-              original_name: dep[0,2].join(":"),
+              original_name: dep[0, 2].join(":"),
               original_requirement: dep[2],
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
@@ -221,7 +224,7 @@ module Bibliothecary
           elsif dep.count == 5
             # get name from renamed package resolution "org:name -> renamed_org:name:version"
             Dependency.new(
-              original_name: dep[0,2].join(":"),
+              original_name: dep[0, 2].join(":"),
               original_requirement: "*",
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
@@ -242,16 +245,16 @@ module Bibliothecary
           .uniq { |item| [item.name, item.requirement, item.type, item.original_name, item.original_requirement] }
       end
 
-      def self.parse_maven_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_maven_resolved(file_contents, options: {})
         file_contents
           .gsub(ANSI_MATCHER, "")
           .split("\n")
-          .map { |line| parse_resolved_dep_line(line, options: options) }
+          .map { |line| parse_resolved_dep_line(line, options:) }
           .compact
           .uniq
       end
 
-      def self.parse_maven_tree(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_maven_tree(file_contents, options: {})
         captures = file_contents
           .gsub(ANSI_MATCHER, "")
           .gsub(/\r\n?/, "\n")
@@ -271,14 +274,14 @@ module Bibliothecary
           Dependency.new(
             name: parts[0..1].join(":"),
             requirement: version,
-            type: type,
+            type:,
             source: options.fetch(:filename, nil)
           )
         end
 
         # First dep line will be the package itself (unless we're only analyzing a single line)
         package = deps[0]
-        deps.size < 2 ? deps : deps[1..-1].reject { |d| d.name == package.name && d.requirement == package.requirement }
+        deps.size < 2 ? deps : deps[1..].reject { |d| d.name == package.name && d.requirement == package.requirement }
       end
 
       def self.parse_resolved_dep_line(line, options: {})
@@ -288,6 +291,7 @@ module Bibliothecary
 
         dep_parts = line.strip.split(":")
         return unless dep_parts.length == 5
+
         # org.springframework.boot:spring-boot-starter-web:jar:2.0.3.RELEASE:compile[36m -- module spring.boot.starter.web[0;1m [auto][m
         Dependency.new(
           name: dep_parts[0, 2].join(":"),
@@ -298,44 +302,44 @@ module Bibliothecary
       end
 
       def self.parse_standalone_pom_manifest(file_contents, options: {})
-        parse_pom_manifest(file_contents, {}, options: options)
+        parse_pom_manifest(file_contents, {}, options:)
       end
 
-      def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {})
         parse_pom_manifests([file_contents], parent_properties, options.fetch(:filename, nil))
       end
 
       # @param files [Array<String>] Ordered array of strings containing the
       # pom.xml bodies. The first element should be the child file.
       # @param merged_properties [Hash]
-      def self.parse_pom_manifests(files, merged_properties, source=nil)
+      def self.parse_pom_manifests(files, merged_properties, source = nil)
         documents = files.map do |file|
           doc = Ox.parse(file)
           doc.respond_to?("project") ? doc.project : doc
         end
 
-        mergedDependencyManagements = {}
+        merged_dependency_managements = {}
         documents.each do |document|
-           document.locate("dependencyManagement/dependencies/dependency").each do |dep|
-              groupId = extract_pom_dep_info(document, dep, "groupId", merged_properties)
-              artifactId = extract_pom_dep_info(document, dep, "artifactId", merged_properties)
-              key = "#{groupId}:#{artifactId}"
-              mergedDependencyManagements[key] ||=
-                {
-                  groupId: groupId,
-                  artifactId: artifactId,
-                  version: extract_pom_dep_info(document, dep, "version", merged_properties),
-                  scope: extract_pom_dep_info(document, dep, "scope", merged_properties),
-                }
-           end
+          document.locate("dependencyManagement/dependencies/dependency").each do |dep|
+            group_id = extract_pom_dep_info(document, dep, "groupId", merged_properties)
+            artifact_id = extract_pom_dep_info(document, dep, "artifactId", merged_properties)
+            key = "#{group_id}:#{artifact_id}"
+            merged_dependency_managements[key] ||=
+              {
+                groupId: group_id,
+                artifactId: artifact_id,
+                version: extract_pom_dep_info(document, dep, "version", merged_properties),
+                scope: extract_pom_dep_info(document, dep, "scope", merged_properties),
+              }
+          end
         end
 
         dep_hashes = {}
         documents.each do |document|
           document.locate("dependencies/dependency").each do |dep|
-            groupId = extract_pom_dep_info(document, dep, "groupId", merged_properties)
-            artifactId = extract_pom_dep_info(document, dep, "artifactId", merged_properties)
-            key = "#{groupId}:#{artifactId}"
+            group_id = extract_pom_dep_info(document, dep, "groupId", merged_properties)
+            artifact_id = extract_pom_dep_info(document, dep, "artifactId", merged_properties)
+            key = "#{group_id}:#{artifact_id}"
             unless dep_hashes.key?(key)
               dep_hashes[key] = {
                 name: key,
@@ -360,44 +364,44 @@ module Bibliothecary
         # Anything that wasn't covered by a dependency version, get from the
         # dependencyManagements
         dep_hashes.each do |key, dep_hash|
-          if (dependencyManagement = mergedDependencyManagements[key])
-            dep_hash[:requirement] ||= dependencyManagement[:version]
-            dep_hash[:type] ||= dependencyManagement[:scope]
+          if (dependency_management = merged_dependency_managements[key])
+            dep_hash[:requirement] ||= dependency_management[:version]
+            dep_hash[:type] ||= dependency_management[:scope]
           end
 
           dep_hash[:type] ||= "runtime"
           dep_hash[:source] = source
         end
 
-        dep_hashes.map{|key, dep_hash| Dependency.new(**dep_hash)}
+        dep_hashes.map { |_key, dep_hash| Dependency.new(**dep_hash) }
       end
 
-      def self.parse_gradle(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_gradle(file_contents, options: {})
         file_contents
-          .scan(GRADLE_GROOVY_SIMPLE_REGEXP)                                                # match 'implementation "group:artifactId:version"'
-          .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
-          .map { |(type, group, artifactId, version)|
+          .scan(GRADLE_GROOVY_SIMPLE_REGEXP) # match 'implementation "group:artifactId:version"'
+          .reject { |(_type, group, artifact_id, _version)| group.nil? || artifact_id.nil? } # remove any matches with missing group/artifactId
+          .map do |(type, group, artifact_id, version)|
             Dependency.new(
-              name: [group, artifactId].join(":"),
+              name: [group, artifact_id].join(":"),
               requirement: version,
-              type: type,
-              source: options.fetch(:filename, nil),
+              type:,
+              source: options.fetch(:filename, nil)
             )
-          }
+          end
       end
 
-      def self.parse_gradle_kts(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_gradle_kts(file_contents, options: {})
         file_contents
-          .scan(GRADLE_KOTLIN_SIMPLE_REGEXP)                                                # match 'implementation("group:artifactId:version")'
-          .reject { |(_type, group, artifactId, _version)| group.nil? || artifactId.nil? } # remove any matches with missing group/artifactId
-          .map { |(type, group, artifactId, version)|
+          .scan(GRADLE_KOTLIN_SIMPLE_REGEXP) # match 'implementation("group:artifactId:version")'
+          .reject { |(_type, group, artifact_id, _version)| group.nil? || artifact_id.nil? } # remove any matches with missing group/artifactId
+          .map do |(type, group, artifact_id, version)|
             Dependency.new(
-              name: [group, artifactId].join(":"),
+              name: [group, artifact_id].join(":"),
               requirement: version,
-              type: type,
-              source: options.fetch(:filename, nil),
+              type:,
+              source: options.fetch(:filename, nil)
             )
-          }
+          end
       end
 
       def self.gradle_dependency_name(group, name)
@@ -430,11 +434,9 @@ module Bibliothecary
         # whitespace in dependency tags should be ignored
         value = value&.strip
         match = value&.match(MAVEN_PROPERTY_REGEXP)
-        if match
-          return extract_property(xml, match[1], value, parent_properties)
-        else
-          return value
-        end
+        return extract_property(xml, match[1], value, parent_properties) if match
+
+        value
       end
 
       def self.replace_value_with_prop(original_value, property_value, property_name)
@@ -444,17 +446,16 @@ module Bibliothecary
       def self.extract_property(xml, property_name, value, parent_properties = {}, depth = 0)
         prop_value = property_value(xml, property_name, parent_properties)
         return value unless prop_value
+
         # don't resolve more than 5 levels deep to avoid potential circular references
 
         resolved_value = replace_value_with_prop(value, prop_value, property_name)
         # check to see if we just resolved to another property name
         match = resolved_value.match(MAVEN_PROPERTY_REGEXP)
-        if match && depth < MAX_DEPTH
-          depth += 1
-          return extract_property(xml, match[1], resolved_value, parent_properties, depth)
-        else
-          return resolved_value
-        end
+        return resolved_value unless match && depth < MAX_DEPTH
+
+        depth += 1
+        extract_property(xml, match[1], resolved_value, parent_properties, depth)
       end
 
       def self.property_value(xml, property_name, parent_properties)
@@ -463,9 +464,9 @@ module Bibliothecary
         non_prop_name = property_name.gsub(".", "/").gsub("project/", "")
 
         prop_field = xml.properties.locate(property_name).first if xml.respond_to?("properties")
-        parent_prop = parent_properties[property_name] ||                 # e.g. "${foo}"
-          parent_properties[property_name.sub(/^project\./, "")] ||       # e.g. "${project.foo}"
-          parent_properties[property_name.sub(/^project\.parent\./, "")]  # e.g. "${project.parent.foo}"
+        parent_prop = parent_properties[property_name] || # e.g. "${foo}"
+                      parent_properties[property_name.sub(/^project\./, "")] ||       # e.g. "${project.foo}"
+                      parent_properties[property_name.sub(/^project\.parent\./, "")]  # e.g. "${project.parent.foo}"
 
         if prop_field
           prop_field.nodes.first
@@ -482,7 +483,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_sbt_update_full(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_sbt_update_full(file_contents, options: {})
         all_deps = []
         lines = file_contents.split("\n")
         while lines.any?
@@ -490,6 +491,7 @@ module Bibliothecary
 
           type_match = SBT_TYPE_REGEXP.match(line)
           next unless type_match
+
           type = type_match.captures[0]
 
           deps = parse_sbt_deps(type, lines)
@@ -497,8 +499,8 @@ module Bibliothecary
         end
 
         # strip out evicted dependencies
-        all_deps.select! do |dep|
-          dep[:fields]["evicted"] != "true"
+        all_deps.reject! do |dep|
+          dep[:fields]["evicted"] == "true"
         end
 
         # in the future, we could use "callers" in the fields to
@@ -508,23 +510,23 @@ module Bibliothecary
 
         # clean out any duplicates (I'm pretty sure sbt will have done this for
         # us so this is paranoia, basically)
-        squished = all_deps.compact.uniq {|item| [item[:name], item[:requirement], item[:type]]}
+        squished = all_deps.compact.uniq { |item| [item[:name], item[:requirement], item[:type]] }
 
         # get rid of the fields
         squished.each do |dep|
           dep.delete(:fields)
         end
 
-        return squished.map { |dep_kvs|
+        squished.map do |dep_kvs|
           Dependency.new(
             **dep_kvs.merge(source: options.fetch(:filename, nil))
           )
-        }
+        end
       end
 
       def self.parse_sbt_deps(type, lines)
         deps = []
-        while lines.any? and not SBT_TYPE_REGEXP.match(lines[0])
+        while lines.any? && !SBT_TYPE_REGEXP.match(lines[0])
           line = lines.shift
 
           next if SBT_IGNORE_REGEXP.match(line)
@@ -544,7 +546,7 @@ module Bibliothecary
 
       def self.parse_sbt_versions(type, name, lines)
         versions = []
-        while lines.any? and not SBT_TYPE_REGEXP.match(lines[0])
+        while lines.any? && !SBT_TYPE_REGEXP.match(lines[0])
           line = lines.shift
 
           version_match = SBT_VERSION_REGEXP.match(line)
@@ -561,7 +563,7 @@ module Bibliothecary
 
       def self.parse_sbt_version(type, name, version, lines)
         fields = {}
-        while lines.any? and not SBT_TYPE_REGEXP.match(lines[0])
+        while lines.any? && !SBT_TYPE_REGEXP.match(lines[0])
           line = lines.shift
 
           field_match = SBT_FIELD_REGEXP.match(line)
@@ -574,11 +576,11 @@ module Bibliothecary
         end
 
         {
-          name: name,
+          name:,
           requirement: version,
-          type: type,
+          type:,
           # we post-process using some of these fields and then delete them again
-          fields: fields,
+          fields:,
         }
       end
     end

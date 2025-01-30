@@ -1,18 +1,20 @@
+# frozen_string_literal: true
+
 require "simplecov"
 SimpleCov.start
 
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "bibliothecary"
 
-require_relative "./shared_examples/cyclonedx.rb"
-require_relative "./shared_examples/dependencies_csv.rb"
+require_relative "shared_examples/cyclonedx"
+require_relative "shared_examples/dependencies_csv"
 
 def fixture_path(name)
   "spec/fixtures/#{name}"
 end
 
 def load_fixture(name)
-  File.open(fixture_path(name)).read
+  File.read(fixture_path(name))
 end
 
 RSpec.configure do |config|
