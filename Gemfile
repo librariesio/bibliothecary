@@ -7,14 +7,17 @@ gemspec
 
 group :development do
   gem "pry"
+end
+
+group :development, :test do
   gem "rake", "~> 12.0"
-  gem "rspec", "~> 3.0"
   gem "rubocop", "~> 1.71"
   gem "rubocop-rails"
-  gem "webmock"
 end
 
 group :test do
   gem "codeclimate-test-reporter", "~> 1.0.0"
   gem "simplecov"
+  gem "webmock"
+  gem "rspec", "~> 3.0"
 end
