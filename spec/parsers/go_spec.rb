@@ -12,6 +12,8 @@ describe Bibliothecary::Parsers::Go do
   it "parses depenencies from go.mod" do
     expect(described_class.analyse_contents("go.mod", load_fixture("go.mod"))).to eq({ platform: "go",
                                                                                        path: "go.mod",
+                                                                                       kind: "manifest",
+                                                                                       success: true,
                                                                                        dependencies: [
       Bibliothecary::Dependency.new(
         name: "github.com/go-check/check",
@@ -23,6 +25,20 @@ describe Bibliothecary::Parsers::Go do
       Bibliothecary::Dependency.new(
         name: "github.com/gomodule/redigo",
         requirement: "v2.0.0+incompatible",
+        type: "runtime",
+        direct: false,
+        source: "go.mod"
+      ),
+      Bibliothecary::Dependency.new(
+        name: "github.com/jstemmer/go-junit-report",
+        requirement: "v1.0.0",
+        type: "runtime",
+        direct: false,
+        source: "go.mod"
+      ),
+      Bibliothecary::Dependency.new(
+        name: "github.com/jstemmer/go-junit-report/v2",
+        requirement: "v2.1.0",
         type: "runtime",
         direct: false,
         source: "go.mod"
@@ -57,9 +73,7 @@ describe Bibliothecary::Parsers::Go do
         direct: true,
         source: "go.mod"
       ),
-    ],
-                                                                                       kind: "manifest",
-                                                                                       success: true })
+    ] })
   end
 
   it "parses depenencies from go.mod with a single require" do

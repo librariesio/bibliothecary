@@ -48,7 +48,7 @@ module Bibliothecary
       def self.parse_lockfile(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
         manifest.fetch("package", []).map do |dependency|
-          next if !(dependency["source"]) || !dependency["source"].start_with?("registry+")
+          next if !dependency["source"] || !dependency["source"].start_with?("registry+")
 
           Dependency.new(
             name: dependency["name"],
