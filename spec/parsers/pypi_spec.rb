@@ -345,34 +345,35 @@ describe Bibliothecary::Parsers::Pypi do
   end
 
   it "parses dependencies from Pipfile" do
-    expect(described_class.analyse_contents("Pipfile", load_fixture("Pipfile"))).to eq({
-                                                                                         platform: "pypi",
-                                                                                         path: "Pipfile",
-                                                                                         dependencies: [
+    results = described_class.analyse_contents("Pipfile", load_fixture("Pipfile"))
+    expect(results[:platform]).to eq("pypi")
+    expect(results[:path]).to eq("Pipfile")
+    expect(results[:kind]).to eq("manifest")
+    expect(results[:success]).to eq(true)
+    expect(results[:dependencies]).to match_array([
         Bibliothecary::Dependency.new(name: "requests", requirement: "*", type: "runtime", source: "Pipfile"),
         Bibliothecary::Dependency.new(name: "Django", requirement: ">1.10", type: "runtime", source: "Pipfile"),
         Bibliothecary::Dependency.new(name: "pinax", requirement: "git://github.com/pinax/pinax.git#1.4", type: "runtime", source: "Pipfile"),
         Bibliothecary::Dependency.new(name: "nose", requirement: "*", type: "develop", source: "Pipfile"),
-      ],
-                                                                                         kind: "manifest",
-                                                                                         success: true,
-                                                                                       })
+        Bibliothecary::Dependency.new(name: "a-local-dep", requirement: "*", type: "runtime", source: "Pipfile", local: true),
+        Bibliothecary::Dependency.new(name: "another-local-dep", requirement: "*", type: "develop", source: "Pipfile", local: true),
+      ])
   end
 
   it "parses dependencies from Pipfile.lock" do
-    expect(described_class.analyse_contents("Pipfile.lock", load_fixture("Pipfile.lock"))).to eq({
-                                                                                                   platform: "pypi",
-                                                                                                   path: "Pipfile.lock",
-                                                                                                   dependencies: [
+    results = described_class.analyse_contents("Pipfile.lock", load_fixture("Pipfile.lock"))
+    expect(results[:platform]).to eq("pypi")
+    expect(results[:path]).to eq("Pipfile.lock")
+    expect(results[:kind]).to eq("lockfile")
+    expect(results[:success]).to eq(true)
+    expect(results[:dependencies]).to match_array([
         Bibliothecary::Dependency.new(name: "PySocks", requirement: "==1.6.5", type: "runtime", source: "Pipfile.lock"),
         Bibliothecary::Dependency.new(name: "requests", requirement: "==2.13.0", type: "runtime", source: "Pipfile.lock"),
         Bibliothecary::Dependency.new(name: "Django", requirement: "==1.10.5", type: "runtime", source: "Pipfile.lock"),
-        Bibliothecary::Dependency.new(name: "pinax", requirement: "git://github.com/pinax/pinax.git#1.4", type: "runtime", source: "Pipfile.lock"),
+        Bibliothecary::Dependency.new(name: "pinax", requirement: "git://github.com/pinax/pinax.git#1.4", source: "Pipfile.lock", type: "runtime"),
+        Bibliothecary::Dependency.new(name: "a-local-dep", requirement: "*", type: "runtime", source: "Pipfile.lock", local: true),
         Bibliothecary::Dependency.new(name: "nose", requirement: "==1.3.7", type: "develop", source: "Pipfile.lock"),
-      ],
-                                                                                                   kind: "lockfile",
-                                                                                                   success: true,
-                                                                                                 })
+      ])
   end
 
   it "parses dependencies from conda environment.yml with pip" do
@@ -453,20 +454,19 @@ describe Bibliothecary::Parsers::Pypi do
       ]
     FILE
 
-    expect(described_class.analyse_contents("pyproject.toml", source)).to eq({
-                                                                               platform: "pypi",
-                                                                               path: "pyproject.toml",
-                                                                               dependencies: [
+    results = described_class.analyse_contents("pyproject.toml", source)
+    expect(results[:platform]).to eq("pypi")
+    expect(results[:path]).to eq("pyproject.toml")
+    expect(results[:kind]).to eq("manifest")
+    expect(results[:success]).to eq(true)
+    expect(results[:dependencies]).to eq([
         Bibliothecary::Dependency.new(name: "black", requirement: "*", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "isort", requirement: "*", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "pytest", requirement: "== 7.2.1", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "python-gitlab", requirement: "== 3.12.0", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "Click", requirement: "~=8.1.0", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "marshmallow-dataclass", requirement: "[union]~=8.5.6", type: "runtime", source: "pyproject.toml"),
-      ],
-                                                                               kind: "manifest",
-                                                                               success: true,
-                                                                             })
+      ])
   end
 
   it "parses dependencies from Poetry.lock" do

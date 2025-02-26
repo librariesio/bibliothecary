@@ -142,12 +142,15 @@ module Bibliothecary
       def self.map_dependencies(packages, type, source = nil)
         return [] unless packages
 
-        packages.map do |name, info|
+        packages.map do |name, package_info|
+          local = true if package_info.is_a?(Hash) && (package_info.key?("path") || package_info.key?("file"))
+
           Dependency.new(
             name: name,
-            requirement: map_requirements(info),
+            requirement: map_requirements(package_info),
             type: type,
-            source: source
+            source: source,
+            local: local
           )
         end
       end
@@ -173,14 +176,7 @@ module Bibliothecary
           next if group == "_meta"
 
           group = "runtime" if group == "default"
-          dependencies.each do |name, info|
-            deps << Dependency.new(
-              name: name,
-              requirement: map_requirements(info),
-              type: group,
-              source: options.fetch(:filename, nil)
-            )
-          end
+          deps += map_dependencies(dependencies, group, options.fetch(:filename, nil))
         end
         deps
       end

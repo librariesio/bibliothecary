@@ -9,6 +9,8 @@ python_version = '2.7'
 requests = { extras = ['socks'] }
 Django = '>1.10'
 pinax = { git = 'git://github.com/pinax/pinax.git', ref = '1.4', editable = true }
+a-local-dep = {editable = true, path = "."}
 
 [dev-packages]
 nose = '*'
+another-local-dep = {file = ".", editable = true}
