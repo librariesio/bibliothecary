@@ -16,6 +16,10 @@
             "ref": "1.4",
             "git": "git://github.com/pinax/pinax.git",
             "editable": true
+        },
+        "a-local-dep": {
+            "editable": true,
+            "path": "."
         }
     },
     "develop": {
