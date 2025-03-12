@@ -73,7 +73,7 @@ module Bibliothecary
           .select { |name, _dep| name.start_with?("node_modules") }
           .map do |name, dep|
             Dependency.new(
-              name: name.split("node_modules/").last,
+              name: dep.fetch("name", name.split("node_modules/").last), # use the optional "name" property if it exists
               requirement: dep["version"],
               type: dep.fetch("dev", false) || dep.fetch("devOptional", false) ? "development" : "runtime",
               local: dep.fetch("link", false),
@@ -113,6 +113,14 @@ module Bibliothecary
         dependencies = manifest.fetch("dependencies", [])
           .reject { |name, _requirement| name.start_with?("//") } # Omit comment keys. They are valid in package.json: https://groups.google.com/g/nodejs/c/NmL7jdeuw0M/m/yTqI05DRQrIJ
           .map do |name, requirement|
+            # check to see if this is an aliased package name
+            # example: "alias-package-name": "npm:actual-package@^1.1.3"
+            if requirement.include?("npm:")
+              # the name of the real dependency is contained in the requirement with the version
+              requirement.gsub!("npm:", "")
+              name, _, requirement = requirement.rpartition("@")
+            end
+
             Dependency.new(
               name: name,
               requirement: requirement,
@@ -173,6 +181,7 @@ module Bibliothecary
               .strip
               .gsub(/"|:$/, "") # don't need quotes or trailing colon
               .split(",") # split the list of requirements
+              .map { |d| yarn_strip_npm_protocol(d) } # if a package is aliased, strip the alias and return the real package name
               .map { |d| d.strip.split(/(?<!^)@/, 2) } # split each requirement on name/version "@"", not on leading namespace "@"
             version = chunk.match(/version "?([^"]*)"?/)[1]
 
@@ -193,12 +202,17 @@ module Bibliothecary
             # yarn v4+ creates a lockfile entry: "myproject@workspace" with a "use.local" version
             #   this lockfile entry is a reference to the project to which the lockfile belongs
             # skip this self-referential package
-            info["version"].to_s.include?("use.local") && packages.include?("workspace")
+            (info["version"].to_s.include?("use.local") && packages.include?("workspace")) ||
+              # yarn allows users to insert patches to their dependencies from within their project
+              # these patches are marked as a separate entry in the lock file but do not represent a new dependency
+              # and should be skipped here
+              # https://yarnpkg.com/protocol/patch
+              packages.include?("@patch:")
           end
           .map do |packages, info|
             packages = packages.split(", ")
             # use first requirement's name, assuming that deps will always resolve from deps of the same name
-            name = packages.first.rpartition("@").first
+            name = yarn_strip_npm_protocol(packages.first.rpartition("@").first)
             requirements = packages.map { |p| p.rpartition("@").last.gsub(/^.*:/, "") }
 
             {
@@ -239,6 +253,18 @@ module Bibliothecary
             ),
           ] + transform_tree_to_array(metadata.fetch("dependencies", {}), source)
         end.flatten(1)
+      end
+
+      # Yarn package names can be aliased by using the NPM protocol. If a package name includes
+      # the NPM protocol then the name following the @npm: protocol identifier is the name of the
+      # actual package being imported into the project under a different alias.
+      # https://classic.yarnpkg.com/lang/en/docs/cli/add/#toc-yarn-add-alias
+      private_class_method def self.yarn_strip_npm_protocol(dep_name)
+        if dep_name.include?("@npm:")
+          return dep_name.rpartition("@npm:").last
+        end
+
+        dep_name
       end
     end
   end
