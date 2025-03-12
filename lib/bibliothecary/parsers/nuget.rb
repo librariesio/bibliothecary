@@ -87,7 +87,7 @@ module Bibliothecary
           # do that yet so at least pick deterministically.
 
           # Note, frameworks can be empty, so remove empty ones and then return the last sorted item if any
-          frameworks = frameworks.delete_if { |_k, v| v.empty? }
+          frameworks.delete_if { |_k, v| v.empty? }
           return frameworks[frameworks.keys.max] unless frameworks.empty?
         end
         []
@@ -186,7 +186,7 @@ module Bibliothecary
           # do that yet so at least pick deterministically.
 
           # Note, frameworks can be empty, so remove empty ones and then return the last sorted item if any
-          frameworks = frameworks.delete_if { |_k, v| v.empty? }
+          frameworks.delete_if { |_k, v| v.empty? }
           return frameworks[frameworks.keys.max] unless frameworks.empty?
         end
         []
