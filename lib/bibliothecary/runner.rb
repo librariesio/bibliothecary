@@ -5,11 +5,11 @@ module Bibliothecary
   # A runner is created every time a file is targeted to be parsed. Don't call
   # parse methods directory! Use a Runner.
   class Runner
-    def initialize(configuration)
+    def initialize(configuration, parser_options: {})
       @configuration = configuration
       @options = {
         cache: {},
-      }
+      }.merge(parser_options)
     end
 
     def analyse(path, ignore_unparseable_files: true)
