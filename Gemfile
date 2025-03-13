@@ -20,5 +20,6 @@ group :test do
   gem "codeclimate-test-reporter", "~> 1.0.0"
   gem "rspec", "~> 3.0"
   gem "simplecov"
+  gem "super_diff", "~> 0.15.0"
   gem "webmock"
 end
