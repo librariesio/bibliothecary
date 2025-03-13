@@ -759,46 +759,20 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       contents = load_fixture("maven-dependency-tree.txt")
       output = described_class.parse_maven_tree(contents)
       self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
-      expect([self_deps.count, external_deps.count]).to eq([93, 221])
+      expect([self_deps.count, external_deps.count]).to eq([0, 221])
       expect(output.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
       # should have filtered out the root project
       expect(output.find { |item| item.name == "net.sourceforge.pmd:pmd" }).to eq(nil)
-      # this is showing a bug that leaves dups in the result (it's because the uniq-ing is on the
-      # entire line match and not on only the part that matters).
-      # Testing this bug to show that the next commits fix it.
-      expect(output.select do |item|
-        item.name == "net.sourceforge.pmd:pmd-apex-jorje" &&
-                      item.requirement == "6.32.0-SNAPSHOT" &&
-                      item.type == "compile"
-      end.length).to eq(2)
-      expect(output.select do |item|
-        item.name == "net.sourceforge.pmd:pmd-apex-jorje" &&
-                      item.requirement == "6.32.0-SNAPSHOT" &&
-                      item.type == "runtime"
-      end.length).to eq(2)
     end
 
     it "parses dependencies from maven-dependency-tree files with keep subprojects option" do
       contents = load_fixture("maven-dependency-tree.txt")
       output = described_class.parse_maven_tree(contents, options: { keep_subprojects_in_maven_tree: true })
       self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
-      expect([self_deps.count, external_deps.count]).to eq([93, 221])
+      expect([self_deps.count, external_deps.count]).to eq([91, 221])
       expect(output.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
       # should have filtered out the root project
       expect(output.find { |item| item.name == "net.sourceforge.pmd:pmd" }).to eq(nil)
-      # this is showing a bug that leaves dups in the result (it's because the uniq-ing is on the
-      # entire line match and not on only the part that matters).
-      # Testing this bug to show that the next commits fix it.
-      expect(output.select do |item|
-        item.name == "net.sourceforge.pmd:pmd-apex-jorje" &&
-                      item.requirement == "6.32.0-SNAPSHOT" &&
-                      item.type == "compile"
-      end.length).to eq(2)
-      expect(output.select do |item|
-        item.name == "net.sourceforge.pmd:pmd-apex-jorje" &&
-                      item.requirement == "6.32.0-SNAPSHOT" &&
-                      item.type == "runtime"
-      end.length).to eq(2)
     end
 
     it "parses dependencies with windows line endings" do
@@ -806,7 +780,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       contents = contents.gsub("\n", "\r\n")
       output = described_class.parse_maven_tree(contents)
       self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
-      expect([self_deps.count, external_deps.count]).to eq([93, 221])
+      expect([self_deps.count, external_deps.count]).to eq([0, 221])
       expect(output.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
     end
 
