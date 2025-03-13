@@ -13,7 +13,7 @@ module Bibliothecary
       REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)(?:\[.*?\])*([><=\w\.,]+)?/
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
 
-      MANIFEST_REGEXP = /.*require[^\/]*(\/)?[^\/]*\.(txt|pip|in)$/
+      MANIFEST_REGEXP = /.*require[^\/]*\.(txt|pip|in)$/
       # TODO: can this be a more specific regexp so it doesn't match something like ".yarn/cache/create-require-npm-1.0.0.zip"?
       PIP_COMPILE_REGEXP = /.*require.*$/
 
