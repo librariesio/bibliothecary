@@ -748,24 +748,70 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         )]
     end
 
+    def is_self_dep?(dep)
+      # the test case project is all in this groupId
+      dep.name.start_with?("net.sourceforge.pmd:") &&
+        # this is in the same groupId but not part of the project
+        !dep.name.start_with?("net.sourceforge.pmd:pmd-ui")
+    end
+
     it "parses dependencies from maven-dependency-tree files" do
       contents = load_fixture("maven-dependency-tree.txt")
       output = described_class.parse_maven_tree(contents)
-      expect(output.count).to eq 314
+      self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
+      expect([self_deps.count, external_deps.count]).to eq([93, 221])
       expect(output.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
+      # should have filtered out the root project
       expect(output.find { |item| item.name == "net.sourceforge.pmd:pmd" }).to eq(nil)
+      # this is showing a bug that leaves dups in the result (it's because the uniq-ing is on the
+      # entire line match and not on only the part that matters).
+      # Testing this bug to show that the next commits fix it.
+      expect(output.select do |item|
+        item.name == "net.sourceforge.pmd:pmd-apex-jorje" &&
+                      item.requirement == "6.32.0-SNAPSHOT" &&
+                      item.type == "compile"
+      end.length).to eq(2)
+      expect(output.select do |item|
+        item.name == "net.sourceforge.pmd:pmd-apex-jorje" &&
+                      item.requirement == "6.32.0-SNAPSHOT" &&
+                      item.type == "runtime"
+      end.length).to eq(2)
+    end
+
+    it "parses dependencies from maven-dependency-tree files with keep subprojects option" do
+      contents = load_fixture("maven-dependency-tree.txt")
+      output = described_class.parse_maven_tree(contents, options: { keep_subprojects_in_maven_tree: true })
+      self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
+      expect([self_deps.count, external_deps.count]).to eq([93, 221])
+      expect(output.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
+      # should have filtered out the root project
+      expect(output.find { |item| item.name == "net.sourceforge.pmd:pmd" }).to eq(nil)
+      # this is showing a bug that leaves dups in the result (it's because the uniq-ing is on the
+      # entire line match and not on only the part that matters).
+      # Testing this bug to show that the next commits fix it.
+      expect(output.select do |item|
+        item.name == "net.sourceforge.pmd:pmd-apex-jorje" &&
+                      item.requirement == "6.32.0-SNAPSHOT" &&
+                      item.type == "compile"
+      end.length).to eq(2)
+      expect(output.select do |item|
+        item.name == "net.sourceforge.pmd:pmd-apex-jorje" &&
+                      item.requirement == "6.32.0-SNAPSHOT" &&
+                      item.type == "runtime"
+      end.length).to eq(2)
     end
 
     it "parses dependencies with windows line endings" do
       contents = load_fixture("maven-dependency-tree.txt")
       contents = contents.gsub("\n", "\r\n")
       output = described_class.parse_maven_tree(contents)
-      expect(output.count).to eq 314
+      self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
+      expect([self_deps.count, external_deps.count]).to eq([93, 221])
       expect(output.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
     end
 
     it "parses dependencies with variables in version position" do
-      output = described_class.parse_maven_tree("[INFO] net.sourceforge.pmd:pmd-scala_2.12:jar:${someVariable}\n")
+      output = described_class.parse_maven_tree("[INFO] +- net.sourceforge.pmd:pmd-scala_2.12:jar:${someVariable}\n")
       expect(output).to eq [Bibliothecary::Dependency.new(name: "net.sourceforge.pmd:pmd-scala_2.12", requirement: "${someVariable}", type: "jar")]
     end
 
