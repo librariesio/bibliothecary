@@ -72,9 +72,22 @@ module Bibliothecary
           #      * The other occurrence's name is the path to the local dependency (which has less information, and is duplicative, so we discard)
           .select { |name, _dep| name.start_with?("node_modules") }
           .map do |name, dep|
+            # check if the name property is available and differs from the node modules location
+            # this indicates that the package has been aliased
+            node_module_name = name.split("node_modules/").last
+            name_property = dep["name"]
+            if !name_property.nil? && node_module_name != name_property
+              name = name_property
+              original_name = node_module_name
+            else
+              name = node_module_name
+            end
+
             Dependency.new(
-              name: dep.fetch("name", name.split("node_modules/").last), # use the optional "name" property if it exists
+              name: name,
+              original_name: original_name,
               requirement: dep["version"],
+              original_requirement: original_name.nil? ? nil : dep["version"],
               type: dep.fetch("dev", false) || dep.fetch("devOptional", false) ? "development" : "runtime",
               local: dep.fetch("link", false),
               source: source
@@ -118,12 +131,15 @@ module Bibliothecary
             if requirement.include?("npm:")
               # the name of the real dependency is contained in the requirement with the version
               requirement.gsub!("npm:", "")
+              original_name = name
               name, _, requirement = requirement.rpartition("@")
             end
 
             Dependency.new(
               name: name,
+              original_name: original_name,
               requirement: requirement,
+              original_requirement: original_name.nil? ? nil : requirement,
               type: "runtime",
               local: requirement.start_with?("file:"),
               source: options.fetch(:filename, nil)
@@ -155,7 +171,9 @@ module Bibliothecary
         dep_hash.map do |dep|
           Dependency.new(
             name: dep[:name],
+            original_name: dep[:original_name],
             requirement: dep[:version],
+            original_requirement: dep[:original_requirement],
             type: "runtime", # lockfile doesn't tell us more about the type of dep
             local: dep[:requirements]&.first&.start_with?("file:"),
             source: options.fetch(:filename, nil)
@@ -181,13 +199,17 @@ module Bibliothecary
               .strip
               .gsub(/"|:$/, "") # don't need quotes or trailing colon
               .split(",") # split the list of requirements
-              .map { |d| yarn_strip_npm_protocol(d) } # if a package is aliased, strip the alias and return the real package name
-              .map { |d| d.strip.split(/(?<!^)@/, 2) } # split each requirement on name/version "@"", not on leading namespace "@"
+
+            name, alias_name = yarn_strip_npm_protocol(requirements.first) # if a package is aliased, strip the alias and return the real package name
+            name = name.strip.split(/(?<!^)@/).first
+            requirements = requirements.map { |d| d.strip.split(/(?<!^)@/, 2) } # split each requirement on name/version "@"", not on leading namespace "@"
             version = chunk.match(/version "?([^"]*)"?/)[1]
 
             {
-              name: requirements.first.first,
+              name: name,
+              original_name: alias_name,
               requirements: requirements.map { |x| x[1] },
+              original_requirement: alias_name.nil? ? nil : version,
               version: version,
               source: source,
             }
@@ -212,12 +234,14 @@ module Bibliothecary
           .map do |packages, info|
             packages = packages.split(", ")
             # use first requirement's name, assuming that deps will always resolve from deps of the same name
-            name = yarn_strip_npm_protocol(packages.first.rpartition("@").first)
+            name, alias_name = yarn_strip_npm_protocol(packages.first.rpartition("@").first)
             requirements = packages.map { |p| p.rpartition("@").last.gsub(/^.*:/, "") }
 
             {
               name: name,
+              original_name: alias_name,
               requirements: requirements,
+              original_requirement: alias_name.nil? ? nil : info["version"].to_s,
               version: info["version"].to_s,
               source: source,
             }
@@ -261,10 +285,12 @@ module Bibliothecary
       # https://classic.yarnpkg.com/lang/en/docs/cli/add/#toc-yarn-add-alias
       private_class_method def self.yarn_strip_npm_protocol(dep_name)
         if dep_name.include?("@npm:")
-          return dep_name.rpartition("@npm:").last
+          partitions = dep_name.rpartition("@npm:")
+          alias_name = partitions.first
+          dep_name = partitions.last
         end
 
-        dep_name
+        [dep_name, alias_name]
       end
     end
   end
