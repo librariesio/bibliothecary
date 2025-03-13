@@ -9,6 +9,8 @@ require "bibliothecary"
 require_relative "shared_examples/cyclonedx"
 require_relative "shared_examples/dependencies_csv"
 
+require "super_diff/rspec"
+
 def fixture_path(name)
   "spec/fixtures/#{name}"
 end
