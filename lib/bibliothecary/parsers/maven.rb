@@ -254,34 +254,89 @@ module Bibliothecary
           .uniq
       end
 
-      def self.parse_maven_tree(file_contents, options: {})
-        captures = file_contents
+      # Return each item in the ascii art tree with a depth of that item,
+      # like [[0, "groupId:artifactId:jar:version:scope"], [1, "..."], ...]
+      # The depth-0 items are the (sub)project names
+      # These are in the original order, with no de-duplication.
+      def self.parse_maven_tree_items_with_depths(file_contents)
+        file_contents
           .gsub(ANSI_MATCHER, "")
           .gsub(/\r\n?/, "\n")
-          .scan(/^\[INFO\](?:(?:\+-)|\||(?:\\-)|\s)+((?:[\w\.-]+:)+[\w\.\-${}]+)/)
-          .flatten
-          .uniq
-
-        deps = captures.map do |item|
-          parts = item.split(":")
-          case parts.count
-          when 4
-            version = parts[-1]
-            type = parts[-2]
-          when 5..6
-            version, type = parts[-2..]
+          # capture two groups; one is the ASCII art telling us the tree depth,
+          # and two is the actual dependency
+          .scan(/^\[INFO\]\s((?:[-+|\\]|\s)*)((?:[\w\.-]+:)+[\w\.\-${}]+)/)
+          # lines that start with "-" aren't part of the tree, example: "[INFO] --- dependency:3.8.1:tree"
+          .reject { |(tree_ascii_art, _dep_info)| tree_ascii_art.start_with?("-") }
+          .map do |(tree_ascii_art, dep_info)|
+            child_marker_index = tree_ascii_art.index(/(\+-)|(\\-)/)
+            depth = if child_marker_index.nil?
+                      0
+                    else
+                      # There are three characters present in the line for each level of depth
+                      (child_marker_index / 3) + 1
+                    end
+            [depth, dep_info]
           end
-          Dependency.new(
-            name: parts[0..1].join(":"),
-            requirement: version,
-            type: type,
-            source: options.fetch(:filename, nil)
-          )
+      end
+
+      # split "org.yaml:snakeyaml:jar:2.2:compile" into
+      # ["org.yaml:snakeyaml", "2.2", "compile"]
+      def self.parse_maven_tree_dependency(item)
+        parts = item.split(":")
+        case parts.count
+        when 4
+          version = parts[-1]
+          type = parts[-2]
+        when 5..6
+          version, type = parts[-2..]
         end
 
-        # First dep line will be the package itself (unless we're only analyzing a single line)
-        package = deps[0]
-        deps.size < 2 ? deps : deps[1..].reject { |d| d.name == package.name && d.requirement == package.requirement }
+        name = parts[0..1].join(":")
+
+        [name, version, type]
+      end
+
+      def self.parse_maven_tree(file_contents, options: {})
+        keep_subprojects = options.fetch(:keep_subprojects_in_maven_tree, false)
+
+        items = parse_maven_tree_items_with_depths(file_contents)
+
+        raise "found no lines with deps in maven-dependency-tree.txt" if items.empty?
+
+        projects = {}
+
+        if keep_subprojects
+          # traditional behavior: we only exclude the root project, and only if we parsed multiple lines
+          (root_name, root_version, _root_type) = parse_maven_tree_dependency(items.shift[1])
+          unless items.empty?
+            projects[root_name] = Set.new
+            projects[root_name].add(root_version)
+          end
+        end
+
+        unique_items = items.map do |(depth, item)|
+          (name, version, type) = parse_maven_tree_dependency(item)
+          if depth == 0 && !keep_subprojects
+            # record and then remove the depth 0
+            projects[name] ||= Set.new
+            projects[name].add(version)
+            nil
+          else
+            [name, version, type]
+          end
+        end.compact.uniq
+
+        unique_items
+          # drop the projects and subprojects
+          .reject { |(name, version, _type)| projects[name]&.include?(version) }
+          .map do |(name, version, type)|
+            Bibliothecary::Dependency.new(
+              name: name,
+              requirement: version,
+              type: type,
+              source: options.fetch(:filename, nil)
+            )
+          end
       end
 
       def self.parse_resolved_dep_line(line, options: {})
