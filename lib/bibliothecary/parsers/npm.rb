@@ -270,21 +270,23 @@ module Bibliothecary
             name, version = case lockfile_version
                             when 5
                               # e.g. '/debug/2.6.9:'
-                              n, v = *name_version.sub(/^\//, "").split("/", 2)
+                              n, v = name_version.sub(/^\//, "").split("/", 2)
                               # e.g. '/debug/2.2.0_supports-color@1.2.0:'
                               v = v.split("_", 2)[0]
+                              [n, v] # rubocop:disable Style/IdenticalConditionalBranches
                             when 6
                               # e.g. '/debug@2.6.9:'
                               n, v = name_version.sub(/^\//, "").split("@", 2)
                               # e.g. "debug@2.2.0(supports-color@1.2.0)"
                               v = v.split("(", 2).first
+                              [n, v] # rubocop:disable Style/IdenticalConditionalBranches
                             else
                               # e.g. 'debug@2.6.9:'
                               n, v = name_version.split("@", 2)
                               # e.g. "debug@2.2.0(supports-color@1.2.0)"
                               v = v.split("(", 2).first
+                              [n, v] # rubocop:disable Style/IdenticalConditionalBranches
                             end
-            [n, v]
 
             # TODO: the "dev" field was removed in v9 lockfiles (https://github.com/pnpm/pnpm/pull/7808)
             # so this will only exist in v6 and below and might be unreliable.
