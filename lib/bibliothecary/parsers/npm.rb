@@ -16,10 +16,6 @@ module Bibliothecary
             kind: "manifest",
             parser: :parse_manifest,
           },
-          match_filename("npm-shrinkwrap.json") => {
-            kind: "lockfile",
-            parser: :parse_shrinkwrap,
-          },
           match_filename("yarn.lock") => {
             kind: "lockfile",
             parser: :parse_yarn_lock,
@@ -28,9 +24,17 @@ module Bibliothecary
             kind: "lockfile",
             parser: :parse_package_lock,
           },
+          match_filename("pnpm-lock.yaml") => {
+            kind: "lockfile",
+            parser: :parse_pnpm_lock,
+          },
           match_filename("npm-ls.json") => {
             kind: "lockfile",
             parser: :parse_ls,
+          },
+          match_filename("npm-shrinkwrap.json") => {
+            kind: "lockfile",
+            parser: :parse_shrinkwrap,
           },
         }
       end
@@ -245,6 +249,65 @@ module Bibliothecary
               version: info["version"].to_s,
               source: source,
             }
+          end
+      end
+
+      # This method currently has been tested to support:
+      #   lockfileVersion: '9.0'
+      #   lockfileVersion: '6.0'
+      #   lockfileVersion: '5.4'
+      def self.parse_pnpm_lock(contents, _source = nil)
+        parsed = YAML.load(contents)
+        lockfile_version = parsed["lockfileVersion"].to_i
+
+        dev_dependencies = parsed.dig("importers", ".", "devDependencies") # <= v9
+        dev_dependencies ||= parsed["devDependencies"] # <v9
+
+        # "dependencies" is in "packages" for < v9 and in "snapshots" for >= v9
+        # as of https://github.com/pnpm/pnpm/pull/7700.
+        (parsed["snapshots"] || parsed["packages"])
+          .map do |name_version, details|
+            name, version = case lockfile_version
+                            when 5
+                              # e.g. '/debug/2.6.9:'
+                              n, v = name_version.sub(/^\//, "").split("/", 2)
+                              # e.g. '/debug/2.2.0_supports-color@1.2.0:'
+                              v = v.split("_", 2)[0]
+                              [n, v] # rubocop:disable Style/IdenticalConditionalBranches
+                            when 6
+                              # e.g. '/debug@2.6.9:'
+                              n, v = name_version.sub(/^\//, "").split("@", 2)
+                              # e.g. "debug@2.2.0(supports-color@1.2.0)"
+                              v = v.split("(", 2).first
+                              [n, v] # rubocop:disable Style/IdenticalConditionalBranches
+                            else
+                              # e.g. 'debug@2.6.9:'
+                              n, v = name_version.split("@", 2)
+                              # e.g. "debug@2.2.0(supports-color@1.2.0)"
+                              v = v.split("(", 2).first
+                              [n, v] # rubocop:disable Style/IdenticalConditionalBranches
+                            end
+
+            # TODO: the "dev" field was removed in v9 lockfiles (https://github.com/pnpm/pnpm/pull/7808)
+            # so this will only exist in v6 and below and might be unreliable.
+            # The proper way to set this for v9+ is to build a lookup of deps to
+            # their "dependencies", and then recurse through each package's
+            # parents. If the direct dep(s) that required them are all
+            # "devDependencies" then we can consider them "dev == true". This
+            # should be done using a DAG data structure, though, to be efficient
+            # and avoid cycles.
+            is_dev = details["dev"] == true
+
+            # Fallback for v9+: this only detects dev deps that are direct.
+            is_dev ||= dev_dependencies.any? do |dev_name, dev_details|
+              dev_name == name && dev_details["version"] == version
+            end
+
+            Dependency.new(
+              name: name,
+              requirement: version,
+              type: is_dev ? "development" : "runtime"
+            )
           end
       end
 
