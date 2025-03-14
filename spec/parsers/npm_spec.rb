@@ -961,4 +961,27 @@ describe Bibliothecary::Parsers::NPM do
                              })
     end
   end
+
+  it "parses bun.lock dependency file" do
+    expect(described_class.analyse_contents("bun.lock", load_fixture("bun.lock"))).to eq({
+                                                                                           platform: "npm",
+                                                                                           path: "bun.lock",
+                                                                                           dependencies: [
+
+       Bibliothecary::Dependency.new(name: "@types/bun", requirement: "1.2.5", type: "development", local: false, source: "bun.lock"),
+       Bibliothecary::Dependency.new(name: "@types/node", requirement: "22.13.10", type: "runtime", local: false, source: "bun.lock"),
+       Bibliothecary::Dependency.new(name: "@types/ws", requirement: "8.5.14", type: "runtime", local: false, source: "bun.lock"),
+       Bibliothecary::Dependency.new(name: "zod", requirement: "3.24.2", original_name: "alias-package", original_requirement: "3.24.2", type: "runtime", local: false, source: "bun.lock"),
+       Bibliothecary::Dependency.new(name: "babel", requirement: "6.23.0", type: "runtime", local: false, source: "bun.lock"),
+       Bibliothecary::Dependency.new(name: "bun-types", requirement: "1.2.5", type: "runtime", local: false, source: "bun.lock"),
+       Bibliothecary::Dependency.new(name: "isarray", requirement: "file:../isarray", type: "runtime", local: true, source: "bun.lock"),
+       Bibliothecary::Dependency.new(name: "lodash", requirement: "4.17.21", type: "runtime", local: false, source: "bun.lock"),
+       Bibliothecary::Dependency.new(name: "prettier", requirement: "3.5.3", type: "development", local: false, source: "bun.lock"),
+       Bibliothecary::Dependency.new(name: "typescript", requirement: "5.8.2", type: "runtime", local: false, source: "bun.lock"),
+       Bibliothecary::Dependency.new(name: "undici-types", requirement: "6.20.0", type: "runtime", local: false, source: "bun.lock"),
+     ],
+                                                                                           kind: "lockfile",
+                                                                                           success: true,
+                                                                                         })
+  end
 end

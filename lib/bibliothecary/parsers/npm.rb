@@ -36,6 +36,10 @@ module Bibliothecary
             kind: "lockfile",
             parser: :parse_shrinkwrap,
           },
+          match_filename("bun.lock") => {
+            kind: "lockfile",
+            parser: :parse_bun_lock,
+          },
         }
       end
 
@@ -315,6 +319,29 @@ module Bibliothecary
         manifest = JSON.parse(file_contents)
 
         transform_tree_to_array(manifest.fetch("dependencies", {}), options.fetch(:filename, nil))
+      end
+
+      def self.parse_bun_lock(file_contents, options: {})
+        manifest = JSON.parse(file_contents, allow_trailing_comma: true)
+        source = options.fetch(:filename, nil)
+
+        dev_deps = manifest.dig("workspaces", "", "devDependencies")&.keys&.to_set
+
+        manifest.fetch("packages", []).map do |name, info|
+          info_name, _, version = info.first.rpartition("@")
+          is_local = version&.start_with?("file:")
+          is_alias = info_name != name
+
+          Dependency.new(
+            name: info_name,
+            original_name: is_alias ? name : nil,
+            requirement: version,
+            original_requirement: is_alias ? version : nil,
+            type: dev_deps&.include?(name) ? "development" : "runtime",
+            local: is_local,
+            source: source
+          )
+        end
       end
 
       def self.lockfile_preference_order(file_infos)
