@@ -13,6 +13,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [12.1.4] - 2025-03-14
+
+### Added
+
+- Add support for PNPM lockfiles (lockfile versions 5, 6, and 9).
+- Add 'parser_options' arg to Bilbiothecary::Runner constructor.
+
+### Changed
+
+### Removed
+
+## [12.1.3] - 2025-02-26
+
+### Added
+
+- Add 'local' property to dependencies from Pipfile and Pipfile.lock
+
+### Changed
+
+- Handle aliases and NPM and Yarn, and ignore patched dependencies.
+- Fix a PyPI parser's regex to exclude false positive "require" names.
+- Drop all sub-projects from list of deps in a Maven maven-dependency-tree.txt.
+
+### Removed
+
+## [12.1.2] - 2025-02-26
+
+### Added
+
+- Add 'local' property to dependencies from Pipfile and Pipfile.lock
+
+### Changed
+
+### Removed
+
+## [12.1.1] - 2025-02-21
+
+### Added
+
+- Add test coverage for Go 1.24's new "tool" directive.
+
+### Changed
+
+### Removed
+
 ## [12.1.0] - 2025-01-30
 
 ### Added
