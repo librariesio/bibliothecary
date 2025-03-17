@@ -10,11 +10,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "// my comment": [
-      "This is a valid",
-      "comment in NPM."
-    ],
-    "babel": "^4.6.6"
+    "babel": "^4.6.6",
+    "alias-package": "npm:zod"
   },
   "devDependencies": {
     "mocha": "^2.2.1"

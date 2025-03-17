@@ -256,6 +256,120 @@ module Bibliothecary
           end
       end
 
+      def self.parse_v5_pnpm_lock(parsed_contents, _source = nil)
+        dependency_mapping = parsed_contents.fetch("dependencies", {})
+          .merge(parsed_contents.fetch("devDependencies", {}))
+
+        parsed_contents["packages"]
+          .map do |name_version, details|
+            # e.g. "/debug/2.6.9:"
+            name, version = name_version.sub(/^\//, "").split("/", 2)
+
+            # e.g. "/debug/2.2.0_supports-color@1.2.0:"
+            version = version.split("_", 2)[0]
+
+            # e.g. "alias-package: /zod/3.24.2"
+            original_name = nil
+            original_requirement = nil
+            if (alias_dep = dependency_mapping.find { |_n, v| v.start_with?("/#{name}/") })
+              original_name = alias_dep[0]
+              original_requirement = alias_dep[1].split("/", 3)[2] # e.g. "/zod/3.24.2"
+            end
+
+            is_dev = details["dev"] == true
+
+            Dependency.new(
+              name: name,
+              requirement: version,
+              original_name: original_name,
+              original_requirement: original_requirement,
+              type: is_dev ? "development" : "runtime"
+            )
+          end
+      end
+
+      def self.parse_v6_pnpm_lock(parsed_contents, _source = nil)
+        dependency_mapping = parsed_contents.fetch("dependencies", {})
+          .merge(parsed_contents.fetch("devDependencies", {}))
+
+        parsed_contents["packages"]
+          .map do |name_version, details|
+            # e.g. "/debug@2.6.9:"
+            name, version = name_version.sub(/^\//, "").split("@", 2)
+
+            # e.g. "debug@2.2.0(supports-color@1.2.0)"
+            version = version.split("(", 2).first
+
+            # e.g.
+            #  alias-package:
+            #    specifier: npm:zod
+            #    version: /zod@3.24.2
+            original_name = nil
+            original_requirement = nil
+            if (alias_dep = dependency_mapping.find { |_n, info| info["specifier"] == "npm:#{name}" })
+              original_name = alias_dep[0]
+              original_requirement = alias_dep[1]["version"].sub(/^\//, "").split("@", 2)[1]
+            end
+
+            is_dev = details["dev"] == true
+
+            Dependency.new(
+              name: name,
+              requirement: version,
+              original_name: original_name,
+              original_requirement: original_requirement,
+              type: is_dev ? "development" : "runtime"
+            )
+          end
+      end
+
+      def self.parse_v9_pnpm_lock(parsed_contents, _source = nil)
+        dependencies = parsed_contents.fetch("importers", {}).fetch(".", {}).fetch("dependencies")
+        dev_dependencies = parsed_contents.fetch("importers", {}).fetch(".", {}).fetch("devDependencies")
+        dependency_mapping = dependencies.merge(dev_dependencies)
+
+        # "dependencies" is in "packages" for < v9 and in "snapshots" for >= v9
+        # as of https://github.com/pnpm/pnpm/pull/7700.
+        parsed_contents["snapshots"]
+          .map do |name_version, _details|
+            # e.g. "debug@2.6.9:"
+            name, version = name_version.split("@", 2)
+
+            # e.g. "debug@2.2.0(supports-color@1.2.0)"
+            version = version.split("(", 2).first
+
+            # e.g.
+            #  alias-package:
+            #    specifier: npm:zod
+            #    version: zod@3.24.2
+            original_name = nil
+            original_requirement = nil
+            if (alias_dep = dependency_mapping.find { |_n, info| info["specifier"] == "npm:#{name}" })
+              original_name = alias_dep[0]
+              original_requirement = alias_dep[1]["version"].split("@", 2)[1]
+            end
+
+            # TODO: the "dev" field was removed in v9 lockfiles (https://github.com/pnpm/pnpm/pull/7808)
+            # The proper way to set this for v9+ is to build a lookup of deps to
+            # their "dependencies", and then recurse through each package's
+            # parents. If the direct dep(s) that required them are all
+            # "devDependencies" then we can consider them "dev == true". This
+            # should be done using a DAG data structure, though, to be efficient
+            # and avoid cycles.
+            is_dev ||= dev_dependencies.any? do |dev_name, dev_details|
+              dev_name == name && dev_details["version"] == version
+            end
+
+            Dependency.new(
+              name: name,
+              requirement: version,
+              original_name: original_name,
+              original_requirement: original_requirement,
+              type: is_dev ? "development" : "runtime"
+            )
+          end
+      end
+
       # This method currently has been tested to support:
       #   lockfileVersion: '9.0'
       #   lockfileVersion: '6.0'
@@ -264,55 +378,14 @@ module Bibliothecary
         parsed = YAML.load(contents)
         lockfile_version = parsed["lockfileVersion"].to_i
 
-        dev_dependencies = parsed.dig("importers", ".", "devDependencies") # <= v9
-        dev_dependencies ||= parsed["devDependencies"] # <v9
-
-        # "dependencies" is in "packages" for < v9 and in "snapshots" for >= v9
-        # as of https://github.com/pnpm/pnpm/pull/7700.
-        (parsed["snapshots"] || parsed["packages"])
-          .map do |name_version, details|
-            name, version = case lockfile_version
-                            when 5
-                              # e.g. '/debug/2.6.9:'
-                              n, v = name_version.sub(/^\//, "").split("/", 2)
-                              # e.g. '/debug/2.2.0_supports-color@1.2.0:'
-                              v = v.split("_", 2)[0]
-                              [n, v] # rubocop:disable Style/IdenticalConditionalBranches
-                            when 6
-                              # e.g. '/debug@2.6.9:'
-                              n, v = name_version.sub(/^\//, "").split("@", 2)
-                              # e.g. "debug@2.2.0(supports-color@1.2.0)"
-                              v = v.split("(", 2).first
-                              [n, v] # rubocop:disable Style/IdenticalConditionalBranches
-                            else
-                              # e.g. 'debug@2.6.9:'
-                              n, v = name_version.split("@", 2)
-                              # e.g. "debug@2.2.0(supports-color@1.2.0)"
-                              v = v.split("(", 2).first
-                              [n, v] # rubocop:disable Style/IdenticalConditionalBranches
-                            end
-
-            # TODO: the "dev" field was removed in v9 lockfiles (https://github.com/pnpm/pnpm/pull/7808)
-            # so this will only exist in v6 and below and might be unreliable.
-            # The proper way to set this for v9+ is to build a lookup of deps to
-            # their "dependencies", and then recurse through each package's
-            # parents. If the direct dep(s) that required them are all
-            # "devDependencies" then we can consider them "dev == true". This
-            # should be done using a DAG data structure, though, to be efficient
-            # and avoid cycles.
-            is_dev = details["dev"] == true
-
-            # Fallback for v9+: this only detects dev deps that are direct.
-            is_dev ||= dev_dependencies.any? do |dev_name, dev_details|
-              dev_name == name && dev_details["version"] == version
-            end
-
-            Dependency.new(
-              name: name,
-              requirement: version,
-              type: is_dev ? "development" : "runtime"
-            )
-          end
+        case lockfile_version
+        when 5
+          parse_v5_pnpm_lock(parsed)
+        when 6
+          parse_v6_pnpm_lock(parsed)
+        else # v9+
+          parse_v9_pnpm_lock(parsed)
+        end
       end
 
       def self.parse_ls(file_contents, options: {})

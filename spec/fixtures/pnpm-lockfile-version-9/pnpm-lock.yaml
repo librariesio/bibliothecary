@@ -9,6 +9,9 @@ importers:
 
   .:
     dependencies:
+      alias-package:
+        specifier: npm:zod
+        version: zod@3.24.2
       babel:
         specifier: ^4.6.6
         version: 4.7.16
@@ -428,6 +431,9 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
+  zod@3.24.2:
+    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
+
 snapshots:
 
   acorn-babel@0.11.1-38: {}
@@ -805,3 +811,5 @@ snapshots:
   trim-right@1.0.1: {}
 
   wrappy@1.0.2: {}
+
+  zod@3.24.2: {}

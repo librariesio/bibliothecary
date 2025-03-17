@@ -2,10 +2,12 @@
 lockfileVersion: 5.4
 
 specifiers:
+  alias-package: npm:zod
   babel: ^4.6.6
   mocha: ^2.2.1
 
 dependencies:
+  alias-package: /zod/3.24.2
   babel: 4.7.16
 
 devDependencies:
@@ -689,4 +691,8 @@ packages:
 
   /wrappy/1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
+    dev: false
+
+  /zod/3.24.2:
+    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
     dev: false
