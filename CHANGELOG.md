@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Removed
+
+## [12.1.5] - 2025-03-17
+
+### Added
+
+- Adds alias support for PNPM lockfiles.
 - Add support for bun.lock files
 
 ### Changed
