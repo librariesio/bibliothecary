@@ -10,7 +10,8 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "babel": "^4.6.6"
+    "babel": "^4.6.6",
+    "alias-package": "npm:zod"
   },
   "devDependencies": {
     "mocha": "^2.2.1"

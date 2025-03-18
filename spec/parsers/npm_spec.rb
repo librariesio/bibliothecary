@@ -244,6 +244,7 @@ describe Bibliothecary::Parsers::NPM do
       Bibliothecary::Dependency.new(name: "to-iso-string", requirement: "0.0.2", type: "development"),
       Bibliothecary::Dependency.new(name: "trim-right", requirement: "1.0.1", type: "runtime"),
       Bibliothecary::Dependency.new(name: "wrappy", requirement: "1.0.2", type: "runtime"),
+      Bibliothecary::Dependency.new(name: "zod", requirement: "3.24.2", original_name: "alias-package", original_requirement: "3.24.2", type: "runtime"),
 ]
     result = described_class.analyse_contents("pnpm-lock.yaml", load_fixture("pnpm-lockfile-version-5/pnpm-lock.yaml"))
 
@@ -362,6 +363,7 @@ describe Bibliothecary::Parsers::NPM do
       Bibliothecary::Dependency.new(name: "to-iso-string", requirement: "0.0.2", type: "development"),
       Bibliothecary::Dependency.new(name: "trim-right", requirement: "1.0.1", type: "runtime"),
       Bibliothecary::Dependency.new(name: "wrappy", requirement: "1.0.2", type: "runtime"),
+      Bibliothecary::Dependency.new(name: "zod", requirement: "3.24.2", original_name: "alias-package", original_requirement: "3.24.2", type: "runtime"),
 ]
     result = described_class.analyse_contents("pnpm-lock.yaml", load_fixture("pnpm-lockfile-version-6/pnpm-lock.yaml"))
 
@@ -480,6 +482,7 @@ describe Bibliothecary::Parsers::NPM do
       Bibliothecary::Dependency.new(name: "to-iso-string", requirement: "0.0.2", type: "runtime"),
       Bibliothecary::Dependency.new(name: "trim-right", requirement: "1.0.1", type: "runtime"),
       Bibliothecary::Dependency.new(name: "wrappy", requirement: "1.0.2", type: "runtime"),
+      Bibliothecary::Dependency.new(name: "zod", requirement: "3.24.2", original_name: "alias-package", original_requirement: "3.24.2", type: "runtime"),
 ]
     result = described_class.analyse_contents("pnpm-lock.yaml", load_fixture("pnpm-lockfile-version-9/pnpm-lock.yaml"))
 
