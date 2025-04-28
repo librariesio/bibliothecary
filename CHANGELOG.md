@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Use JSON.parser.parse() in bun.lock parser to work around overriden JSON.parse() method.
+
 ### Removed
 
 ## [12.1.5] - 2025-03-17
