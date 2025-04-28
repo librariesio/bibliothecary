@@ -395,7 +395,11 @@ module Bibliothecary
       end
 
       def self.parse_bun_lock(file_contents, options: {})
-        manifest = JSON.parse(file_contents, allow_trailing_comma: true)
+        # The stdlib JSON gem 2.8+ supports trailing commas.
+        # The Oj gem does not support them as of writing, and will override
+        # JSON.parse() if Oj.mimic_json/optimize_rails has been called. Luckily
+        # JSON.parser is not overridden by Oj, so use it to call parse directly.
+        manifest = JSON.parser.parse(file_contents, allow_trailing_comma: true)
         source = options.fetch(:filename, nil)
 
         dev_deps = manifest.dig("workspaces", "", "devDependencies")&.keys&.to_set
