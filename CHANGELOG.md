@@ -11,7 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+### Removed
+
+## [12.1.6] - 2025-04-29
+
+### Added
+
+### Changed
+
 - Use JSON.parser.parse() in bun.lock parser to work around overriden JSON.parse() method.
+- Don't raise an error in pnpm-lock.yaml v9 parser if devDependencies isn't found.
 
 ### Removed
 
