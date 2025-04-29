@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [12.1.7] - 2025-04-29
+
+### Added
+
+### Changed
+
+- Include "source" field in Dependency objects from pub files.
+- Include "source" field in Dependency objects from pnpm-lock.yaml files.
+
+### Removed
+
 ## [12.1.6] - 2025-04-29
 
 ### Added
