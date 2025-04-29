@@ -324,8 +324,8 @@ module Bibliothecary
       end
 
       def self.parse_v9_pnpm_lock(parsed_contents, _source = nil)
-        dependencies = parsed_contents.fetch("importers", {}).fetch(".", {}).fetch("dependencies")
-        dev_dependencies = parsed_contents.fetch("importers", {}).fetch(".", {}).fetch("devDependencies")
+        dependencies = parsed_contents.fetch("importers", {}).fetch(".", {}).fetch("dependencies", {})
+        dev_dependencies = parsed_contents.fetch("importers", {}).fetch(".", {}).fetch("devDependencies", {})
         dependency_mapping = dependencies.merge(dev_dependencies)
 
         # "dependencies" is in "packages" for < v9 and in "snapshots" for >= v9
