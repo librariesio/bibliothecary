@@ -256,7 +256,7 @@ module Bibliothecary
           end
       end
 
-      def self.parse_v5_pnpm_lock(parsed_contents, _source = nil)
+      def self.parse_v5_pnpm_lock(parsed_contents, source = nil)
         dependency_mapping = parsed_contents.fetch("dependencies", {})
           .merge(parsed_contents.fetch("devDependencies", {}))
 
@@ -283,12 +283,13 @@ module Bibliothecary
               requirement: version,
               original_name: original_name,
               original_requirement: original_requirement,
-              type: is_dev ? "development" : "runtime"
+              type: is_dev ? "development" : "runtime",
+              source: source
             )
           end
       end
 
-      def self.parse_v6_pnpm_lock(parsed_contents, _source = nil)
+      def self.parse_v6_pnpm_lock(parsed_contents, source = nil)
         dependency_mapping = parsed_contents.fetch("dependencies", {})
           .merge(parsed_contents.fetch("devDependencies", {}))
 
@@ -318,12 +319,13 @@ module Bibliothecary
               requirement: version,
               original_name: original_name,
               original_requirement: original_requirement,
-              type: is_dev ? "development" : "runtime"
+              type: is_dev ? "development" : "runtime",
+              source: source
             )
           end
       end
 
-      def self.parse_v9_pnpm_lock(parsed_contents, _source = nil)
+      def self.parse_v9_pnpm_lock(parsed_contents, source = nil)
         dependencies = parsed_contents.fetch("importers", {}).fetch(".", {}).fetch("dependencies", {})
         dev_dependencies = parsed_contents.fetch("importers", {}).fetch(".", {}).fetch("devDependencies", {})
         dependency_mapping = dependencies.merge(dev_dependencies)
@@ -365,7 +367,8 @@ module Bibliothecary
               requirement: version,
               original_name: original_name,
               original_requirement: original_requirement,
-              type: is_dev ? "development" : "runtime"
+              type: is_dev ? "development" : "runtime",
+              source: source
             )
           end
       end
@@ -374,17 +377,17 @@ module Bibliothecary
       #   lockfileVersion: '9.0'
       #   lockfileVersion: '6.0'
       #   lockfileVersion: '5.4'
-      def self.parse_pnpm_lock(contents, _source = nil)
+      def self.parse_pnpm_lock(contents, options: {})
         parsed = YAML.load(contents)
         lockfile_version = parsed["lockfileVersion"].to_i
 
         case lockfile_version
         when 5
-          parse_v5_pnpm_lock(parsed)
+          parse_v5_pnpm_lock(parsed, options.fetch(:filename, nil))
         when 6
-          parse_v6_pnpm_lock(parsed)
+          parse_v6_pnpm_lock(parsed, options.fetch(:filename, nil))
         else # v9+
-          parse_v9_pnpm_lock(parsed)
+          parse_v9_pnpm_lock(parsed, options.fetch(:filename, nil))
         end
       end
 
