@@ -409,19 +409,22 @@ describe Bibliothecary::Parsers::Pypi do
   end
 
   it "parses dependencies from pyproject.toml" do
-    expect(described_class.analyse_contents("pyproject.toml", load_fixture("pyproject.toml"))).to eq({
-                                                                                                       platform: "pypi",
-                                                                                                       path: "pyproject.toml",
-                                                                                                       dependencies: [
-        Bibliothecary::Dependency.new(name: "python", requirement: "^3.7", type: "runtime", source: "pyproject.toml"),
-        Bibliothecary::Dependency.new(name: "django", requirement: "^3.0.7", type: "runtime", source: "pyproject.toml"),
-        Bibliothecary::Dependency.new(name: "pytest", requirement: "^5.2", type: "develop", source: "pyproject.toml"),
-        Bibliothecary::Dependency.new(name: "wcwidth", requirement: "*", type: "develop", source: "pyproject.toml"),
-        Bibliothecary::Dependency.new(name: "sqlparse", requirement: "0.3.1", type: "test", source: "pyproject.toml"),
-      ],
-                                                                                                       kind: "manifest",
-                                                                                                       success: true,
-                                                                                                     })
+    results = described_class.analyse_contents("pyproject.toml", load_fixture("pyproject.toml"))
+    expect(results[:platform]).to eq("pypi")
+    expect(results[:path]).to eq("pyproject.toml")
+    expect(results[:kind]).to eq("manifest")
+    expect(results[:success]).to eq(true)
+    expect(results[:dependencies]).to match_array([
+      Bibliothecary::Dependency.new(name: "python", requirement: "^3.7", type: "runtime", source: "pyproject.toml"),
+      Bibliothecary::Dependency.new(name: "django", requirement: "^3.0.7", type: "runtime", source: "pyproject.toml"),
+      Bibliothecary::Dependency.new(name: "pytest", requirement: "^5.2", type: "develop", source: "pyproject.toml"),
+      Bibliothecary::Dependency.new(name: "wcwidth", requirement: "*", type: "develop", source: "pyproject.toml"),
+      Bibliothecary::Dependency.new(name: "sqlparse", requirement: "0.4.4", type: "test", source: "pyproject.toml"),
+      Bibliothecary::Dependency.new(name: "pathlib2", requirement: "2.3.7.post1", type: "runtime", source: "pyproject.toml"),
+      Bibliothecary::Dependency.new(name: "pathlib2", requirement: "2.3.6", type: "runtime", source: "pyproject.toml"),
+      Bibliothecary::Dependency.new(name: "pathlib2", requirement: "2.3.5", type: "runtime", source: "pyproject.toml"),
+      Bibliothecary::Dependency.new(name: "pathlib2", requirement: "https://github.com/jazzband/pathlib2.git#2.3.5", type: "runtime", source: "pyproject.toml"),
+    ])
   end
 
   it "handles pyproject.toml with no deps" do
@@ -475,23 +478,26 @@ describe Bibliothecary::Parsers::Pypi do
                                                                                                  platform: "pypi",
                                                                                                  path: "poetry.lock",
                                                                                                  dependencies: [
-        Bibliothecary::Dependency.new(name: "asgiref", requirement: "3.2.10", type: "runtime", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "atomicwrites", requirement: "1.4.0", type: "develop", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "attrs", requirement: "19.3.0", type: "develop", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "colorama", requirement: "0.4.3", type: "develop", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "django", requirement: "3.0.7", type: "runtime", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "importlib-metadata", requirement: "1.7.0", type: "develop", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "more-itertools", requirement: "8.4.0", type: "develop", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "packaging", requirement: "20.4", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "asgiref", requirement: "3.7.2", type: "runtime", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "atomicwrites", requirement: "1.4.1", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "attrs", requirement: "24.2.0", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "colorama", requirement: "0.4.6", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "django", requirement: "3.2.25", type: "runtime", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "importlib-metadata", requirement: "6.7.0", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "more-itertools", requirement: "9.1.0", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "packaging", requirement: "24.0", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "pathlib2", requirement: "2.3.7.post1", type: "runtime", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "pluggy", requirement: "0.13.1", type: "develop", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "py", requirement: "1.9.0", type: "develop", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "pyparsing", requirement: "2.4.7", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "py", requirement: "1.11.0", type: "develop", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "pytest", requirement: "5.4.3", type: "develop", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "pytz", requirement: "2020.1", type: "runtime", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "six", requirement: "1.15.0", type: "develop", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "sqlparse", requirement: "0.3.1", type: "runtime", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "wcwidth", requirement: "0.2.5", type: "develop", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "zipp", requirement: "3.1.0", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "pytz", requirement: "2025.2", type: "runtime", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "six", requirement: "1.17.0", type: "runtime", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "sqlparse", requirement: "0.4.4", type: "runtime", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "sqlparse", requirement: "0.4.4", type: "test", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "typing-extensions", requirement: "4.7.1", type: "runtime", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "typing-extensions", requirement: "4.7.1", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "wcwidth", requirement: "0.2.13", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "zipp", requirement: "3.15.0", type: "develop", source: "poetry.lock"),
       ],
                                                                                                  kind: "lockfile",
                                                                                                  success: true,
