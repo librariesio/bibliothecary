@@ -142,16 +142,31 @@ module Bibliothecary
       def self.map_dependencies(packages, type, source = nil)
         return [] unless packages
 
-        packages.map do |name, package_info|
+        packages.flat_map do |name, package_info|
           local = true if package_info.is_a?(Hash) && (package_info.key?("path") || package_info.key?("file"))
 
-          Dependency.new(
-            name: name,
-            requirement: map_requirements(package_info),
-            type: type,
-            source: source,
-            local: local
-          )
+          if package_info.is_a?(Array)
+            # Poetry supports multiple requirements with differing specifiers for the same
+            # package. Break these out into a separate dep per requirement.
+            # https://python-poetry.org/docs/dependency-specification/#multiple-constraints-dependencies
+            package_info.map do |info|
+              Dependency.new(
+                name: name,
+                requirement: map_requirements(info),
+                type: type,
+                source: source,
+                local: local
+              )
+            end
+          else
+            Dependency.new(
+              name: name,
+              requirement: map_requirements(package_info),
+              type: type,
+              source: source,
+              local: local
+            )
+          end
         end
       end
 
@@ -160,7 +175,7 @@ module Bibliothecary
           if info["version"]
             info["version"]
           elsif info["git"]
-            "#{info['git']}##{info['ref']}"
+            "#{info['git']}##{info['ref'] || info['tag']}"
           else
             "*"
           end
@@ -186,19 +201,25 @@ module Bibliothecary
         deps = []
         manifest["package"].each do |package|
           # next if group == "_meta"
-          group = case package["category"]
-                  when "dev"
-                    "develop"
-                  else
-                    "runtime"
-                  end
 
-          deps << Dependency.new(
-            name: package["name"],
-            requirement: map_requirements(package),
-            type: group,
-            source: options.fetch(:filename, nil)
-          )
+          # Poetry <1.2.0 used singular "category" for kind
+          # Poetry >=1.2.0 uses plural "groups" field for kind(s)
+          package.values_at("category", "groups").flatten.compact
+            .map do |g|
+              if g == "dev"
+                "develop"
+              else
+                (g == "main" ? "runtime" : g)
+              end
+            end
+            .each do |group|
+              deps << Dependency.new(
+                name: package["name"],
+                requirement: map_requirements(package),
+                type: group,
+                source: options.fetch(:filename, nil)
+              )
+            end
         end
         deps
       end

@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [12.1.8] - 2025-05-16
+
+### Added
+
+- Support multiple requirements for a single package in poetry.lock.
+
+### Changed
+
+### Removed
+
 ## [12.1.7] - 2025-04-29
 
 ### Added
@@ -95,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Populate Bibliothecary::Dependency#source field in all parsers. This makes the source field useful when consuming 
+- Populate Bibliothecary::Dependency#source field in all parsers. This makes the source field useful when consuming
   from Bibliothecary, and removes a step from consumers having to populate this field themselves.
 
 ### Changed
@@ -138,9 +148,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Support parsing *.spdx.json files
+- Support parsing \*.spdx.json files
 
 ### Changed
+
 - `Bibliothecary::PURL_TYPE_MAPPING` has changed to `Bibliothecary::PurlUtil::PURL_TYPE_MAPPING`
 - `Bibliothecary::MultiParsers::CycloneDX::ManifestEntries.full_name_for_purl` has changed to `Bibliothecary::PurlUtil.full_name`
 

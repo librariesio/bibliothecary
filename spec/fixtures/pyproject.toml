@@ -7,6 +7,13 @@ authors = ["Tyrel Souza <tyrel@tidelift.com>"]
 [tool.poetry.dependencies]
 python = "^3.7"
 django = "^3.0.7"
+pathlib2 = [
+  { version = "2.3.7.post1", python = ">=3.7" },
+  { version = "2.3.6", markers = "python_version < '3.7' and sys_platform == 'win32'" },
+  { version = "2.3.5", python = "<3.7", platform = "linux" },
+  # same version but from different source -- SHALL be treated as non-identical
+  { git = "https://github.com/jazzband/pathlib2.git", tag = "2.3.5", python = "<3.7", platform = "darwin" },
+]
 
 # Old way to define development deps (<1.2.0)
 [tool.poetry.dev-dependencies]
@@ -17,7 +24,7 @@ pytest = "^5.2"
 wcwidth = "*"
 
 [tool.poetry.group.test.dependencies]
-sqlparse = "0.3.1"
+sqlparse = "0.4.4"
 
 [build-system]
 requires = ["poetry>=0.12"]
