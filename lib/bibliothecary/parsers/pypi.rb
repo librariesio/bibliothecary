@@ -142,17 +142,34 @@ module Bibliothecary
       def self.map_dependencies(packages, type, source = nil)
         return [] unless packages
 
-        packages.map do |name, package_info|
+        deps = packages.flat_map do |name, package_info|
           local = true if package_info.is_a?(Hash) && (package_info.key?("path") || package_info.key?("file"))
 
-          Dependency.new(
-            name: name,
-            requirement: map_requirements(package_info),
-            type: type,
-            source: source,
-            local: local
-          )
+          if package_info.is_a?(Array)
+            # Poetry supports multiple requirements with differing specifiers for the same
+            # package. Break these out into a separate dep per requirement.
+            # https://python-poetry.org/docs/dependency-specification/#multiple-constraints-dependencies
+            package_info.map do |info|
+              Dependency.new(
+                name: name,
+                requirement: map_requirements(info),
+                type: type,
+                source: source,
+                local: local
+              )
+            end
+          else
+            Dependency.new(
+              name: name,
+              requirement: map_requirements(package_info),
+              type: type,
+              source: source,
+              local: local
+            )
+          end
         end
+
+        deps
       end
 
       def self.map_requirements(info)
@@ -160,7 +177,7 @@ module Bibliothecary
           if info["version"]
             info["version"]
           elsif info["git"]
-            "#{info['git']}##{info['ref']}"
+            "#{info['git']}##{info['ref'] || info['tag']}"
           else
             "*"
           end
