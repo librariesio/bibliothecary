@@ -204,7 +204,7 @@ module Bibliothecary
 
           # Poetry <1.2.0 used singular "category" for kind
           # Poetry >=1.2.0 uses plural "groups" field for kind(s)
-          package.values_at("category", "groups").flatten.compact
+          groups = package.values_at("category", "groups").flatten.compact
             .map do |g|
               if g == "dev"
                 "develop"
@@ -212,14 +212,17 @@ module Bibliothecary
                 (g == "main" ? "runtime" : g)
               end
             end
-            .each do |group|
-              deps << Dependency.new(
-                name: package["name"],
-                requirement: map_requirements(package),
-                type: group,
-                source: options.fetch(:filename, nil)
-              )
-            end
+
+          groups = ["runtime"] if groups.empty?
+
+          groups.each do |group|
+            deps << Dependency.new(
+              name: package["name"],
+              requirement: map_requirements(package),
+              type: group,
+              source: options.fetch(:filename, nil)
+            )
+          end
         end
         deps
       end
