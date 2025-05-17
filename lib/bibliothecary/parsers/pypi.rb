@@ -122,12 +122,6 @@ module Bibliothecary
         deps.uniq
       end
 
-      # TODO: this was deprecated in 8.6.0. Remove this in any major version bump >= 9.*
-      def self.parse_poetry(file_contents, options: {})
-        puts "Warning: parse_poetry() is deprecated, use parse_pyproject() instead."
-        parse_pyproject(file_contents, options)
-      end
-
       def self.parse_conda(file_contents, options: {})
         contents = YAML.safe_load(file_contents)
         return [] unless contents
@@ -204,7 +198,7 @@ module Bibliothecary
 
           # Poetry <1.2.0 used singular "category" for kind
           # Poetry >=1.2.0 uses plural "groups" field for kind(s)
-          package.values_at("category", "groups").flatten.compact
+          groups = package.values_at("category", "groups").flatten.compact
             .map do |g|
               if g == "dev"
                 "develop"
@@ -212,14 +206,17 @@ module Bibliothecary
                 (g == "main" ? "runtime" : g)
               end
             end
-            .each do |group|
-              deps << Dependency.new(
-                name: package["name"],
-                requirement: map_requirements(package),
-                type: group,
-                source: options.fetch(:filename, nil)
-              )
-            end
+
+          groups = ["runtime"] if groups.empty?
+
+          groups.each do |group|
+            deps << Dependency.new(
+              name: package["name"],
+              requirement: map_requirements(package),
+              type: group,
+              source: options.fetch(:filename, nil)
+            )
+          end
         end
         deps
       end

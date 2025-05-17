@@ -487,7 +487,7 @@ describe Bibliothecary::Parsers::Pypi do
         Bibliothecary::Dependency.new(name: "more-itertools", requirement: "9.1.0", type: "develop", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "packaging", requirement: "24.0", type: "develop", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "pathlib2", requirement: "2.3.7.post1", type: "runtime", source: "poetry.lock"),
-        Bibliothecary::Dependency.new(name: "pluggy", requirement: "0.13.1", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "pluggy", requirement: "0.13.1", type: "runtime", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "py", requirement: "1.11.0", type: "develop", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "pytest", requirement: "5.4.3", type: "develop", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "pytz", requirement: "2025.2", type: "runtime", source: "poetry.lock"),
