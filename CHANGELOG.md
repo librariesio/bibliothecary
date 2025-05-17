@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [12.1.9] - 2025-05-16
+
+### Added
+
+### Changed
+
+- Fix 12.1.8 Poetry regression that ignored deps with no category or group.
+
+### Removed
+
 ## [12.1.8] - 2025-05-16
 
 ### Added
