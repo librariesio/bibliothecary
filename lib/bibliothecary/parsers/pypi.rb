@@ -122,12 +122,6 @@ module Bibliothecary
         deps.uniq
       end
 
-      # TODO: this was deprecated in 8.6.0. Remove this in any major version bump >= 9.*
-      def self.parse_poetry(file_contents, options: {})
-        puts "Warning: parse_poetry() is deprecated, use parse_pyproject() instead."
-        parse_pyproject(file_contents, options)
-      end
-
       def self.parse_conda(file_contents, options: {})
         contents = YAML.safe_load(file_contents)
         return [] unless contents
