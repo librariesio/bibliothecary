@@ -13,6 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [12.1.10] - 2025-05-23
+
+### Added
+
+### Changed
+
+- Normalize package names in Poetry manifests, storing the original in
+  Dependency#original_name if it differs. This is because Poetry normalizes/canoncalizes
+  names in its lockfile according to PyPa's rules, but doesn't provide the original name.
+  Storing the original_name will provide a connection from manifest to lockfile.
+
+### Removed
+
 ## [12.1.9] - 2025-05-16
 
 ### Added
