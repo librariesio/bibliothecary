@@ -101,21 +101,21 @@ module Bibliothecary
 
         # Parse poetry [tool.poetry] deps
         poetry_manifest = file_contents.fetch("tool", {}).fetch("poetry", {})
-        deps += map_dependencies(poetry_manifest["dependencies"], "runtime", options.fetch(:filename, nil))
+        deps += map_dependencies(poetry_manifest["dependencies"], "runtime", options.fetch(:filename, nil), normalize_name: true)
         # Poetry 1.0.0-1.2.0 way of defining dev deps
-        deps += map_dependencies(poetry_manifest["dev-dependencies"], "develop", options.fetch(:filename, nil))
+        deps += map_dependencies(poetry_manifest["dev-dependencies"], "develop", options.fetch(:filename, nil), normalize_name: true)
         # Poetry's 1.2.0+ of defining dev deps
         poetry_manifest
           .fetch("group", {})
           .each_pair do |group_name, obj|
             group_name = "develop" if group_name == "dev"
-            deps += map_dependencies(obj.fetch("dependencies", {}), group_name, options.fetch(:filename, nil))
+            deps += map_dependencies(obj.fetch("dependencies", {}), group_name, options.fetch(:filename, nil), normalize_name: true)
           end
 
         # Parse PEP621 [project] deps
         pep621_manifest = file_contents.fetch("project", {})
         pep621_deps = pep621_manifest.fetch("dependencies", []).map { |d| parse_pep_508_dep_spec(d) }
-        deps += map_dependencies(pep621_deps, "runtime", options.fetch(:filename, nil))
+        deps += map_dependencies(pep621_deps, "runtime", options.fetch(:filename, nil), normalize_name: true)
 
         # We're combining both poetry+PEP621 deps instead of making them mutually exclusive, until we
         # find a reason not to ingest them both.
@@ -133,7 +133,7 @@ module Bibliothecary
         Pypi.parse_requirements_txt(pip["pip"].join("\n"), options:)
       end
 
-      def self.map_dependencies(packages, type, source = nil)
+      def self.map_dependencies(packages, type, source = nil, normalize_name: false)
         return [] unless packages
 
         packages.flat_map do |name, package_info|
@@ -144,8 +144,12 @@ module Bibliothecary
             # package. Break these out into a separate dep per requirement.
             # https://python-poetry.org/docs/dependency-specification/#multiple-constraints-dependencies
             package_info.map do |info|
+              # Poetry normalizes names in lockfiles but doesn't provide the original, so we need to keep
+              # track of the original name so the dep is connected between manifest+lockfile.
+              normalized_name = normalize_name(name)
               Dependency.new(
-                name: name,
+                name: normalize_name ? normalized_name : name,
+                original_name: normalize_name && name != normalized_name ? name : nil,
                 requirement: map_requirements(info),
                 type: type,
                 source: source,
@@ -153,8 +157,12 @@ module Bibliothecary
               )
             end
           else
+            # Poetry normalizes names in lockfiles but doesn't provide the original, so we need to keep
+            # track of the original name so the dep is connected between manifest+lockfile.
+            normalized_name = normalize_name(name)
             Dependency.new(
-              name: name,
+              name: normalize_name ? normalized_name : name,
+              original_name: normalize_name && name != normalized_name ? name : nil,
               requirement: map_requirements(package_info),
               type: type,
               source: source,
@@ -210,8 +218,12 @@ module Bibliothecary
           groups = ["runtime"] if groups.empty?
 
           groups.each do |group|
+            # Poetry lockfiles should already contain normalizated names, but we'll
+            # apply it here as well just to be consistent with pyproject.toml parsing.
+            normalized_name = normalize_name(package["name"])
             deps << Dependency.new(
-              name: package["name"],
+              name: normalized_name,
+              original_name: normalized_name == package["name"] ? nil : package["name"],
               requirement: map_requirements(package),
               type: group,
               source: options.fetch(:filename, nil)
@@ -331,6 +343,12 @@ module Bibliothecary
         requirement = requirement.sub(/^[\s;]*/, "")
         requirement = "*" if requirement == ""
         [name, requirement]
+      end
+
+      # Apply PyPa's name normalization rules to the package name
+      # https://packaging.python.org/en/latest/specifications/name-normalization/#name-normalization
+      def self.normalize_name(name)
+        name.downcase.gsub(/[-_.]+/, "-")
       end
     end
   end

@@ -424,6 +424,7 @@ describe Bibliothecary::Parsers::Pypi do
       Bibliothecary::Dependency.new(name: "pathlib2", requirement: "2.3.6", type: "runtime", source: "pyproject.toml"),
       Bibliothecary::Dependency.new(name: "pathlib2", requirement: "2.3.5", type: "runtime", source: "pyproject.toml"),
       Bibliothecary::Dependency.new(name: "pathlib2", requirement: "https://github.com/jazzband/pathlib2.git#2.3.5", type: "runtime", source: "pyproject.toml"),
+      Bibliothecary::Dependency.new(name: "zope-interface", original_name: "Zope_interface", requirement: "6.3", type: "runtime", source: "pyproject.toml"),
     ])
   end
 
@@ -468,7 +469,7 @@ describe Bibliothecary::Parsers::Pypi do
         Bibliothecary::Dependency.new(name: "isort", requirement: "*", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "pytest", requirement: "== 7.2.1", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "python-gitlab", requirement: "== 3.12.0", type: "runtime", source: "pyproject.toml"),
-        Bibliothecary::Dependency.new(name: "Click", requirement: "~=8.1.0", type: "runtime", source: "pyproject.toml"),
+        Bibliothecary::Dependency.new(name: "click", original_name: "Click", requirement: "~=8.1.0", type: "runtime", source: "pyproject.toml"),
         Bibliothecary::Dependency.new(name: "marshmallow-dataclass", requirement: "[union]~=8.5.6", type: "runtime", source: "pyproject.toml"),
       ])
   end
@@ -491,6 +492,7 @@ describe Bibliothecary::Parsers::Pypi do
         Bibliothecary::Dependency.new(name: "py", requirement: "1.11.0", type: "develop", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "pytest", requirement: "5.4.3", type: "develop", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "pytz", requirement: "2025.2", type: "runtime", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "setuptools", requirement: "68.0.0", type: "runtime", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "six", requirement: "1.17.0", type: "runtime", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "sqlparse", requirement: "0.4.4", type: "runtime", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "sqlparse", requirement: "0.4.4", type: "test", source: "poetry.lock"),
@@ -498,6 +500,7 @@ describe Bibliothecary::Parsers::Pypi do
         Bibliothecary::Dependency.new(name: "typing-extensions", requirement: "4.7.1", type: "develop", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "wcwidth", requirement: "0.2.13", type: "develop", source: "poetry.lock"),
         Bibliothecary::Dependency.new(name: "zipp", requirement: "3.15.0", type: "develop", source: "poetry.lock"),
+        Bibliothecary::Dependency.new(name: "zope-interface", requirement: "6.3", type: "runtime", source: "poetry.lock"),
       ],
                                                                                                  kind: "lockfile",
                                                                                                  success: true,
