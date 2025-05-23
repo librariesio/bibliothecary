@@ -119,7 +119,15 @@ module Bibliothecary
 
         # We're combining both poetry+PEP621 deps instead of making them mutually exclusive, until we
         # find a reason not to ingest them both.
-        deps.uniq
+        deps = deps.uniq
+
+        # Poetry normalizes names in lockfiles but doesn't provide the original, so we need to keep
+        # track of the original name so the dep is connected between manifest+lockfile.
+        deps.map do |dep|
+          normalized_name = normalize_name(dep.name)
+          Dependency.new(**dep.to_h, name: normalized_name,
+                                     original_name: normalized_name == dep.name ? nil : dep.name)
+        end
       end
 
       def self.parse_conda(file_contents, options: {})
@@ -210,8 +218,12 @@ module Bibliothecary
           groups = ["runtime"] if groups.empty?
 
           groups.each do |group|
+            # Poetry lockfiles should already contain normalizated names, but we'll
+            # apply it here as well just to be consistent with pyproject.toml parsing.
+            normalized_name = normalize_name(package["name"])
             deps << Dependency.new(
-              name: package["name"],
+              name: normalized_name,
+              original_name: normalized_name == package["name"] ? nil : package["name"],
               requirement: map_requirements(package),
               type: group,
               source: options.fetch(:filename, nil)
@@ -331,6 +343,12 @@ module Bibliothecary
         requirement = requirement.sub(/^[\s;]*/, "")
         requirement = "*" if requirement == ""
         [name, requirement]
+      end
+
+      # Apply PyPa's name normalization rules to the package name
+      # https://packaging.python.org/en/latest/specifications/name-normalization/#name-normalization
+      def self.normalize_name(name)
+        name.downcase.gsub(/[-_.]+/, "-")
       end
     end
   end
