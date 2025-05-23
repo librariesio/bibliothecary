@@ -101,25 +101,33 @@ module Bibliothecary
 
         # Parse poetry [tool.poetry] deps
         poetry_manifest = file_contents.fetch("tool", {}).fetch("poetry", {})
-        deps += map_dependencies(poetry_manifest["dependencies"], "runtime", options.fetch(:filename, nil), normalize_name: true)
+        deps += map_dependencies(poetry_manifest["dependencies"], "runtime", options.fetch(:filename, nil))
         # Poetry 1.0.0-1.2.0 way of defining dev deps
-        deps += map_dependencies(poetry_manifest["dev-dependencies"], "develop", options.fetch(:filename, nil), normalize_name: true)
+        deps += map_dependencies(poetry_manifest["dev-dependencies"], "develop", options.fetch(:filename, nil))
         # Poetry's 1.2.0+ of defining dev deps
         poetry_manifest
           .fetch("group", {})
           .each_pair do |group_name, obj|
             group_name = "develop" if group_name == "dev"
-            deps += map_dependencies(obj.fetch("dependencies", {}), group_name, options.fetch(:filename, nil), normalize_name: true)
+            deps += map_dependencies(obj.fetch("dependencies", {}), group_name, options.fetch(:filename, nil))
           end
 
         # Parse PEP621 [project] deps
         pep621_manifest = file_contents.fetch("project", {})
         pep621_deps = pep621_manifest.fetch("dependencies", []).map { |d| parse_pep_508_dep_spec(d) }
-        deps += map_dependencies(pep621_deps, "runtime", options.fetch(:filename, nil), normalize_name: true)
+        deps += map_dependencies(pep621_deps, "runtime", options.fetch(:filename, nil))
 
         # We're combining both poetry+PEP621 deps instead of making them mutually exclusive, until we
         # find a reason not to ingest them both.
-        deps.uniq
+        deps = deps.uniq
+
+        # Poetry normalizes names in lockfiles but doesn't provide the original, so we need to keep
+        # track of the original name so the dep is connected between manifest+lockfile.
+        deps.map do |dep|
+          normalized_name = normalize_name(dep.name)
+          Dependency.new(**dep.to_h, name: normalized_name,
+                                     original_name: normalized_name == dep.name ? nil : dep.name)
+        end
       end
 
       def self.parse_conda(file_contents, options: {})
@@ -133,7 +141,7 @@ module Bibliothecary
         Pypi.parse_requirements_txt(pip["pip"].join("\n"), options:)
       end
 
-      def self.map_dependencies(packages, type, source = nil, normalize_name: false)
+      def self.map_dependencies(packages, type, source = nil)
         return [] unless packages
 
         packages.flat_map do |name, package_info|
@@ -144,12 +152,8 @@ module Bibliothecary
             # package. Break these out into a separate dep per requirement.
             # https://python-poetry.org/docs/dependency-specification/#multiple-constraints-dependencies
             package_info.map do |info|
-              # Poetry normalizes names in lockfiles but doesn't provide the original, so we need to keep
-              # track of the original name so the dep is connected between manifest+lockfile.
-              normalized_name = normalize_name(name)
               Dependency.new(
-                name: normalize_name ? normalized_name : name,
-                original_name: normalize_name && name != normalized_name ? name : nil,
+                name: name,
                 requirement: map_requirements(info),
                 type: type,
                 source: source,
@@ -157,12 +161,8 @@ module Bibliothecary
               )
             end
           else
-            # Poetry normalizes names in lockfiles but doesn't provide the original, so we need to keep
-            # track of the original name so the dep is connected between manifest+lockfile.
-            normalized_name = normalize_name(name)
             Dependency.new(
-              name: normalize_name ? normalized_name : name,
-              original_name: normalize_name && name != normalized_name ? name : nil,
+              name: name,
               requirement: map_requirements(package_info),
               type: type,
               source: source,
