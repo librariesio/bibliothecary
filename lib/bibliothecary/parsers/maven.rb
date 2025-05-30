@@ -11,6 +11,10 @@ module Bibliothecary
     class Maven
       include Bibliothecary::Analyser
 
+      # Matches digraph contents from the Maven dependency tree .dot file format.
+      MAVEN_DOT_PROJECT_REGEXP = /digraph\s+"([^\"]+)"\s+{/
+      MAVEN_DOT_RELATIONSHIP_REGEXP = /"([^\"]+)"\s+->\s+"([^\"]+)"/
+
       # e.g. "annotationProcessor - Annotation processors and their dependencies for source set 'main'."
       GRADLE_TYPE_REGEXP = /^(\w+)/
 
@@ -113,9 +117,18 @@ module Bibliothecary
             kind: "lockfile",
             parser: :parse_sbt_update_full,
           },
+          # maven-dependency-tree.txt is the output of `mvn dependency:tree` as a single command.
+          # The tree lines contain "[INFO]" prefix and uses 2-space indentation.
           match_filename("maven-dependency-tree.txt", case_insensitive: true) => {
             kind: "lockfile",
             parser: :parse_maven_tree,
+          },
+          # maven-dependency-tree.dot is the output of this command:
+          # `mvn dependency:tree -DoutputType=dot -DoutputFile=maven-dependency-tree.dot`
+          # It doesn't have the "[INFO]" prefix, and is in graphviz .dot format.
+          match_filename("maven-dependency-tree.dot", case_insensitive: true) => {
+            kind: "lockfile",
+            parser: :parse_maven_tree_dot,
           },
         }
       end
@@ -303,23 +316,24 @@ module Bibliothecary
 
         raise "found no lines with deps in maven-dependency-tree.txt" if items.empty?
 
-        projects = {}
+        projects_to_exclude = {}
 
         if keep_subprojects
           # traditional behavior: we only exclude the root project, and only if we parsed multiple lines
           (root_name, root_version, _root_type) = parse_maven_tree_dependency(items.shift[1])
           unless items.empty?
-            projects[root_name] = Set.new
-            projects[root_name].add(root_version)
+            projects_to_exclude[root_name] = Set.new
+            projects_to_exclude[root_name].add(root_version)
           end
         end
 
         unique_items = items.map do |(depth, item)|
+          # new behavior: we exclude root and subprojects (depth 0 items)
           (name, version, type) = parse_maven_tree_dependency(item)
           if depth == 0 && !keep_subprojects
             # record and then remove the depth 0
-            projects[name] ||= Set.new
-            projects[name].add(version)
+            projects_to_exclude[name] ||= Set.new
+            projects_to_exclude[name].add(version)
             nil
           else
             [name, version, type]
@@ -328,7 +342,7 @@ module Bibliothecary
 
         unique_items
           # drop the projects and subprojects
-          .reject { |(name, version, _type)| projects[name]&.include?(version) }
+          .reject { |(name, version, _type)| projects_to_exclude[name]&.include?(version) }
           .map do |(name, version, type)|
             Bibliothecary::Dependency.new(
               name: name,
@@ -337,6 +351,32 @@ module Bibliothecary
               source: options.fetch(:filename, nil)
             )
           end
+      end
+
+      def self.parse_maven_tree_dot(file_contents, options: {})
+        # Project could be either the root project or a sub-module.
+        project = file_contents.match(MAVEN_DOT_PROJECT_REGEXP)[1]
+        relationships = file_contents.scan(MAVEN_DOT_RELATIONSHIP_REGEXP)
+
+        direct_names_to_versions = relationships.each.with_object({}) do |(parent, child), obj|
+          next unless parent == project
+
+          name, version, _type = parse_maven_tree_dependency(child)
+          obj[name] ||= Set.new
+          obj[name].add(version)
+        end
+
+        relationships.map do |(_parent, child)|
+          child_name, child_version, child_type = parse_maven_tree_dependency(child)
+
+          Dependency.new(
+            name: child_name,
+            requirement: child_version,
+            type: child_type,
+            direct: direct_names_to_versions[child_name]&.include?(child_version) || false,
+            source: options.fetch(:filename, nil)
+          )
+        end.uniq
       end
 
       def self.parse_resolved_dep_line(line, options: {})

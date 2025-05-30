@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [12.2.0] - 2025-05-30
+
+### Added
+
+- Maven parser support for maven-dependency-tree.dot file.
+
+### Changed
+
+### Removed
+
 ## [12.1.10] - 2025-05-23
 
 ### Added
