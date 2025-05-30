@@ -755,7 +755,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         !dep.name.start_with?("net.sourceforge.pmd:pmd-ui")
     end
 
-    it "parses dependencies from maven-dependency-tree files" do
+    it "parses dependencies from maven-dependency-tree.txt files" do
       contents = load_fixture("maven-dependency-tree.txt")
       output = described_class.parse_maven_tree(contents)
       self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
@@ -765,7 +765,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(output.find { |item| item.name == "net.sourceforge.pmd:pmd" }).to eq(nil)
     end
 
-    it "parses dependencies from maven-dependency-tree files with keep subprojects option" do
+    it "parses dependencies from maven-dependency-tree.txt files with keep subprojects option" do
       contents = load_fixture("maven-dependency-tree.txt")
       output = described_class.parse_maven_tree(contents, options: { keep_subprojects_in_maven_tree: true })
       self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
@@ -773,6 +773,22 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(output.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
       # should have filtered out the root project
       expect(output.find { |item| item.name == "net.sourceforge.pmd:pmd" }).to eq(nil)
+    end
+
+    it "parses dependencies from maven-dependency-tree.dot files" do
+      contents = load_fixture("maven-dependency-tree.dot")
+      output = described_class.parse_maven_tree_dot(contents)
+
+      expect(output.size).to eq(75)
+
+      # Exclude parent project
+      expect(output.none? { |dep| dep.name == "net.sourceforge.pmd:pmd-scala_2.12" }).to be(true)
+
+      direct_example = output.find { |d| d.name == "com.github.oowekyala.treeutils:tree-printers" && d.requirement == "2.1.0" }
+      expect(direct_example.direct).to be(true)
+
+      transitive_example = output.find { |d| d.name == "org.scalameta:common_2.12" && d.requirement == "4.13.6" }
+      expect(transitive_example.direct).to be(false)
     end
 
     it "parses dependencies with windows line endings" do

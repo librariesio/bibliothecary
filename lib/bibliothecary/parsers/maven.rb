@@ -11,6 +11,10 @@ module Bibliothecary
     class Maven
       include Bibliothecary::Analyser
 
+      # Matches digraph contents from the Maven dependency tree .dot file format.
+      MAVEN_DOT_PROJECT_REGEXP = /digraph\s+"([^\"]+)"\s+{/
+      MAVEN_DOT_RELATIONSHIP_REGEXP = /"([^\"]+)"\s+->\s+"([^\"]+)"/
+
       # e.g. "annotationProcessor - Annotation processors and their dependencies for source set 'main'."
       GRADLE_TYPE_REGEXP = /^(\w+)/
 
@@ -113,9 +117,18 @@ module Bibliothecary
             kind: "lockfile",
             parser: :parse_sbt_update_full,
           },
+          # maven-dependency-tree.txt is the output of `mvn dependency:tree` as a single command.
+          # The tree lines contain "[INFO]" prefix and uses 2-space indentation.
           match_filename("maven-dependency-tree.txt", case_insensitive: true) => {
             kind: "lockfile",
             parser: :parse_maven_tree,
+          },
+          # maven-dependency-tree.dot is the output of this command:
+          # `mvn dependency:tree -DoutputType=dot -DoutputFile=maven-dependency-tree.dot`
+          # It doesn't have the "[INFO]" prefix, and is in graphviz .dot format.
+          match_filename("maven-dependency-tree.dot", case_insensitive: true) => {
+            kind: "lockfile",
+            parser: :parse_maven_tree_dot,
           },
         }
       end
@@ -337,6 +350,32 @@ module Bibliothecary
               source: options.fetch(:filename, nil)
             )
           end
+      end
+
+      def self.parse_maven_tree_dot(file_contents, options: {})
+        # Project could be either the root project or a sub-module.
+        project = file_contents.match(MAVEN_DOT_PROJECT_REGEXP)[1]
+        relationships = file_contents.scan(MAVEN_DOT_RELATIONSHIP_REGEXP)
+
+        direct_names_to_versions = relationships.each.with_object({}) do |(parent, child), obj|
+          next unless parent == project
+
+          name, version, _type = parse_maven_tree_dependency(child)
+          obj[name] ||= Set.new
+          obj[name].add(version)
+        end
+
+        relationships.map do |(_parent, child)|
+          child_name, child_version, child_type = parse_maven_tree_dependency(child)
+
+          Dependency.new(
+            name: child_name,
+            requirement: child_version,
+            type: child_type,
+            direct: direct_names_to_versions[child_name]&.include?(child_version) || false,
+            source: options.fetch(:filename, nil)
+          )
+        end.uniq
       end
 
       def self.parse_resolved_dep_line(line, options: {})
