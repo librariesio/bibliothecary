@@ -316,23 +316,24 @@ module Bibliothecary
 
         raise "found no lines with deps in maven-dependency-tree.txt" if items.empty?
 
-        projects = {}
+        projects_to_exclude = {}
 
         if keep_subprojects
           # traditional behavior: we only exclude the root project, and only if we parsed multiple lines
           (root_name, root_version, _root_type) = parse_maven_tree_dependency(items.shift[1])
           unless items.empty?
-            projects[root_name] = Set.new
-            projects[root_name].add(root_version)
+            projects_to_exclude[root_name] = Set.new
+            projects_to_exclude[root_name].add(root_version)
           end
         end
 
         unique_items = items.map do |(depth, item)|
+          # new behavior: we exclude root and subprojects (depth 0 items)
           (name, version, type) = parse_maven_tree_dependency(item)
           if depth == 0 && !keep_subprojects
             # record and then remove the depth 0
-            projects[name] ||= Set.new
-            projects[name].add(version)
+            projects_to_exclude[name] ||= Set.new
+            projects_to_exclude[name].add(version)
             nil
           else
             [name, version, type]
@@ -341,7 +342,7 @@ module Bibliothecary
 
         unique_items
           # drop the projects and subprojects
-          .reject { |(name, version, _type)| projects[name]&.include?(version) }
+          .reject { |(name, version, _type)| projects_to_exclude[name]&.include?(version) }
           .map do |(name, version, type)|
             Bibliothecary::Dependency.new(
               name: name,
