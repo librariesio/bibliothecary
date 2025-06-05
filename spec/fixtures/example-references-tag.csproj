@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <Reference
+            Include="FluentCommandLineParser, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL">
+            <HintPath>
+                ..\packages\Pingo.FluentCommandLineParser.1.0.25\lib\net45\FluentCommandLineParser.dll</HintPath>
+        </Reference>
+        <Reference
+            Include="log4net, Version=2.0.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+            <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
+        </Reference>
+        <Reference
+            Include="Sequel.Core.Cryptography, Version=1.0.0.0, Culture=neutral, PublicKeyToken=a63a4222cb07bcbe, processorArchitecture=MSIL">
+            <HintPath>
+                ..\packages\Sequel.Core.Cryptography.1.0.20211.01\lib\net461\Sequel.Core.Cryptography.dll</HintPath>
+        </Reference>
+        <Reference Include="System" />
+        <Reference Include="System.ComponentModel.Composition" />
+        <Reference Include="System.ComponentModel.DataAnnotations" />
+        <Reference Include="System.configuration" />
+        <Reference Include="System.Data" />
+        <Reference
+            Include="System.Runtime.SomethingInternal, Version=1.0.0, Culture=neutral, PublicKeyToken=1234abcd1234abcd, processorArchitecture=MSIL">
+            <HintPath>
+                ..\packages\System.Runtime.SomethingInternal\lib\System.Runtime.SomethingInternal.dll</HintPath>
+            <Private>True</Private>
+        </Reference>
+        <Reference Include="System.Web" />
+        <Reference Include="System.Web.Extensions" />
+        <Reference Include="System.Xml" />
+        <Reference Include="Microsoft.CSharp" />
+        <Reference Include="System.Core" />
+        <Reference Include="System.Xml.Linq" />
+        <Reference Include="System.Data.DataSetExtensions" />
+        <Reference Include="System.Net.Http" />
+        <Reference Include="System.Xaml">
+            <RequiredTargetFramework>4.0</RequiredTargetFramework>
+        </Reference>
+        <Reference Include="WindowsBase" />
+        <Reference Include="PresentationCore" />
+        <Reference Include="PresentationFramework" />
+    </ItemGroup>
+</Project>
