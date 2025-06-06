@@ -109,7 +109,17 @@ module Bibliothecary
 
       def self.parse_csproj(file_contents, options: {})
         manifest = Ox.parse file_contents
-        packages = manifest
+
+        # The dotnet samples repo has examples with both of these cases, so both need to be handled:
+        project = if manifest.locate("Project").any?
+                    # 1) If there's an <?xml> tag, we need to pick out the "Project" element
+                    manifest.locate("Project").first
+                  else
+                    # 2) If there's no <?xml> tag, the root element is "Project"
+                    manifest
+                  end
+
+        packages = project
           .locate("ItemGroup/PackageReference")
           .select { |dep| dep.respond_to? "Include" }
           .map do |dependency|
@@ -132,7 +142,7 @@ module Bibliothecary
             )
           end
 
-        packages += manifest
+        packages += project
           .locate("ItemGroup/Reference")
           .select { |dep| dep.respond_to? "Include" }
           .map do |dependency|
