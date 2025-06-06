@@ -109,26 +109,45 @@ module Bibliothecary
 
       def self.parse_csproj(file_contents, options: {})
         manifest = Ox.parse file_contents
+        packages = manifest
+          .locate("ItemGroup/PackageReference")
+          .select { |dep| dep.respond_to? "Include" }
+          .map do |dependency|
+            requirement = (dependency.Version if dependency.respond_to? "Version")
+            if requirement.is_a?(Ox::Element)
+              requirement = dependency.nodes.detect { |n| n.value == "Version" }&.text
+            end
 
-        packages = manifest.locate("ItemGroup/PackageReference").select { |dep| dep.respond_to? "Include" }.map do |dependency|
-          requirement = (dependency.Version if dependency.respond_to? "Version")
-          if requirement.is_a?(Ox::Element)
-            requirement = dependency.nodes.detect { |n| n.value == "Version" }&.text
+            type = if (dependency.nodes.first&.nodes&.include?("all") && dependency.nodes.first.value.include?("PrivateAssets")) || dependency.attributes[:PrivateAssets] == "All"
+                     "development"
+                   else
+                     "runtime"
+                   end
+
+            Dependency.new(
+              name: dependency.Include,
+              requirement: requirement,
+              type: type,
+              source: options.fetch(:filename, nil)
+            )
           end
 
-          type = if (dependency.nodes.first&.nodes&.include?("all") && dependency.nodes.first.value.include?("PrivateAssets")) || dependency.attributes[:PrivateAssets] == "All"
-                   "development"
-                 else
-                   "runtime"
-                 end
+        packages += manifest
+          .locate("ItemGroup/Reference")
+          .select { |dep| dep.respond_to? "Include" }
+          .map do |dependency|
+            vals = *dependency.Include.split(",").map(&:strip)
+            name = vals.shift
+            vals = vals.to_h { |r| r.split("=", 2) }
 
-          Dependency.new(
-            name: dependency.Include,
-            requirement: requirement,
-            type: type,
-            source: options.fetch(:filename, nil)
-          )
-        end
+            Dependency.new(
+              name: name,
+              requirement: vals["Version"] || "*",
+              type: "runtime",
+              source: options.fetch(:filename, nil)
+            )
+          end
+
         packages.uniq(&:name)
       rescue StandardError
         []

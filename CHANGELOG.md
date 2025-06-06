@@ -13,19 +13,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [12.3.0] - 2025-06-06
+
+### Added
+
+- Nuget support for <Reference> tag in \*.csproj manifests.
+
 ## [12.2.0] - 2025-05-30
 
 ### Added
 
 - Maven parser support for maven-dependency-tree.dot file.
 
-### Changed
-
-### Removed
-
 ## [12.1.10] - 2025-05-23
-
-### Added
 
 ### Changed
 
@@ -34,17 +34,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   names in its lockfile according to PyPa's rules, but doesn't provide the original name.
   Storing the original_name will provide a connection from manifest to lockfile.
 
-### Removed
-
 ## [12.1.9] - 2025-05-16
-
-### Added
 
 ### Changed
 
 - Fix 12.1.8 Poetry regression that ignored deps with no category or group.
-
-### Removed
 
 ## [12.1.8] - 2025-05-16
 
@@ -52,31 +46,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support multiple requirements for a single package in poetry.lock.
 
-### Changed
-
-### Removed
-
 ## [12.1.7] - 2025-04-29
-
-### Added
 
 ### Changed
 
 - Include "source" field in Dependency objects from pub files.
 - Include "source" field in Dependency objects from pnpm-lock.yaml files.
 
-### Removed
-
 ## [12.1.6] - 2025-04-29
-
-### Added
 
 ### Changed
 
 - Use JSON.parser.parse() in bun.lock parser to work around overriden JSON.parse() method.
 - Don't raise an error in pnpm-lock.yaml v9 parser if devDependencies isn't found.
-
-### Removed
 
 ## [12.1.5] - 2025-03-17
 
@@ -85,20 +67,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adds alias support for PNPM lockfiles.
 - Add support for bun.lock files
 
-### Changed
-
-### Removed
-
 ## [12.1.4] - 2025-03-14
 
 ### Added
 
 - Add support for PNPM lockfiles (lockfile versions 5, 6, and 9).
 - Add 'parser_options' arg to Bilbiothecary::Runner constructor.
-
-### Changed
-
-### Removed
 
 ## [12.1.3] - 2025-02-26
 
@@ -112,27 +86,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix a PyPI parser's regex to exclude false positive "require" names.
 - Drop all sub-projects from list of deps in a Maven maven-dependency-tree.txt.
 
-### Removed
-
 ## [12.1.2] - 2025-02-26
 
 ### Added
 
 - Add 'local' property to dependencies from Pipfile and Pipfile.lock
 
-### Changed
-
-### Removed
-
 ## [12.1.1] - 2025-02-21
 
 ### Added
 
 - Add test coverage for Go 1.24's new "tool" directive.
-
-### Changed
-
-### Removed
 
 ## [12.1.0] - 2025-01-30
 
@@ -144,8 +108,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Improved Rubocop rules to make future spec changes easier via Rubocop auto-correcting formatting violations.
-
-### Removed
 
 ## [12.0.0] - 2025-01-27
 

@@ -563,6 +563,40 @@ describe Bibliothecary::Parsers::Nuget do
                                                                                                                    })
   end
 
+  it "parses dependencies from example-references-tag.csproj" do
+    result = described_class.analyse_contents("example-references-tag.csproj", load_fixture("example-references-tag.csproj"))
+
+    expect(result[:platform]).to eq("nuget")
+    expect(result[:path]).to eq("example-references-tag.csproj")
+    expect(result[:kind]).to eq("manifest")
+    expect(result[:success]).to eq(true)
+    expect(result[:error_message]).to eq(nil)
+    expect(result[:error_location]).to eq(nil)
+    expect(result[:dependencies]).to eq([
+      Bibliothecary::Dependency.new(name: "FluentCommandLineParser", requirement: "1.0.25.0", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "log4net", requirement: "2.0.15.0", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "Sequel.Core.Cryptography", requirement: "1.0.0.0", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.ComponentModel.Composition", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.ComponentModel.DataAnnotations", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.configuration", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.Data", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.Runtime.SomethingInternal", requirement: "1.0.0", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.Web", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.Web.Extensions", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.Xml", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "Microsoft.CSharp", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.Core", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.Xml.Linq", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.Data.DataSetExtensions", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.Net.Http", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "System.Xaml", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "WindowsBase", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "PresentationCore", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+      Bibliothecary::Dependency.new(name: "PresentationFramework", requirement: "*", type: "runtime", source: "example-references-tag.csproj"),
+    ])
+  end
+
   it "parses dependencies from example.nuspec" do
     expect(described_class.analyse_contents("example.nuspec", load_fixture("example.nuspec"))).to eq({
                                                                                                        platform: "nuget",
