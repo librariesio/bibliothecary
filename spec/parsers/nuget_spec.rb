@@ -597,6 +597,29 @@ describe Bibliothecary::Parsers::Nuget do
     ])
   end
 
+  it "parses dependencies from .csproj with an xml tag" do
+    source = <<~FILE
+      <?xml version="1.0" encoding="utf-8"?>
+      <Project Sdk="Microsoft.NET.Sdk.Web">
+        <ItemGroup>
+          <Reference Include="FluentCommandLineParser, Version=1.0.25.0, Culture=neutral, processorArchitecture=MSIL" />
+        </ItemGroup>
+      </Project>
+    FILE
+
+    result = described_class.analyse_contents("example-with-xml-tag.csproj", source)
+
+    expect(result[:platform]).to eq("nuget")
+    expect(result[:path]).to eq("example-with-xml-tag.csproj")
+    expect(result[:kind]).to eq("manifest")
+    expect(result[:success]).to eq(true)
+    expect(result[:error_message]).to eq(nil)
+    expect(result[:error_location]).to eq(nil)
+    expect(result[:dependencies]).to eq([
+      Bibliothecary::Dependency.new(name: "FluentCommandLineParser", requirement: "1.0.25.0", type: "runtime", source: "example-with-xml-tag.csproj"),
+    ])
+  end
+
   it "parses dependencies from example.nuspec" do
     expect(described_class.analyse_contents("example.nuspec", load_fixture("example.nuspec"))).to eq({
                                                                                                        platform: "nuget",
