@@ -72,15 +72,6 @@ module Bibliothecary
             kind: "lockfile",
             parser: :parse_poetry_lock,
           },
-          # Pip dependencies can be embedded in conda environment files
-          match_filename("environment.yml") => {
-            parser: :parse_conda,
-            kind: "manifest",
-          },
-          match_filename("environment.yaml") => {
-            parser: :parse_conda,
-            kind: "manifest",
-          },
         }
       end
 
@@ -128,17 +119,6 @@ module Bibliothecary
           Dependency.new(**dep.to_h, name: normalized_name,
                                      original_name: normalized_name == dep.name ? nil : dep.name)
         end
-      end
-
-      def self.parse_conda(file_contents, options: {})
-        contents = YAML.safe_load(file_contents)
-        return [] unless contents
-
-        dependencies = contents["dependencies"]
-        pip = dependencies.find { |dep| dep.is_a?(Hash) && dep["pip"] }
-        return [] unless pip
-
-        Pypi.parse_requirements_txt(pip["pip"].join("\n"), options:)
       end
 
       def self.map_dependencies(packages, type, source = nil)

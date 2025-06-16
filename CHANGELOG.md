@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [13.0.0] - 2025-06-17
+
+### Removed
+
+- Removed parsing of environment.yml from Pypi parsing
+
 ## [12.3.1] - 2025-06-06
 
 ### Changed
