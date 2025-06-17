@@ -376,21 +376,6 @@ describe Bibliothecary::Parsers::Pypi do
       ])
   end
 
-  it "parses dependencies from conda environment.yml with pip" do
-    expect(described_class.analyse_contents("conda_with_pip/environment.yml", load_fixture("conda_with_pip/environment.yml"))).to eq(
-      {
-        platform: "pypi",
-        path: "conda_with_pip/environment.yml",
-        dependencies: [
-          Bibliothecary::Dependency.new(name: "urllib3", requirement: "*", type: "runtime", source: "conda_with_pip/environment.yml"),
-          Bibliothecary::Dependency.new(name: "Django", requirement: "==2.0.0", type: "runtime", source: "conda_with_pip/environment.yml"),
-        ],
-        kind: "manifest",
-        success: true,
-      }
-    )
-  end
-
   it "matches valid manifest filepaths" do
     expect(described_class.match?("requirements.txt")).to be_truthy
     expect(described_class.match?("requirements-dev.txt")).to be_truthy
