@@ -2,6 +2,7 @@
 
 require "ox"
 require "json"
+require "bibliothecary/parsers/nuget/nuget_requirement"
 
 module Bibliothecary
   module Parsers
@@ -96,9 +97,15 @@ module Bibliothecary
       def self.parse_packages_config(file_contents, options: {})
         manifest = Ox.parse file_contents
         manifest.packages.locate("package").map do |dependency|
+          requirement = if dependency.respond_to? "version"
+                          NugetRequirement.convert_to_semver_requirement(dependency.version)
+                        else
+                          "*"
+                        end
+
           Dependency.new(
             name: dependency.id,
-            requirement: (dependency.version if dependency.respond_to? "version"),
+            requirement: requirement,
             type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime",
             source: options.fetch(:filename, nil)
           )
@@ -136,7 +143,7 @@ module Bibliothecary
 
             Dependency.new(
               name: dependency.Include,
-              requirement: requirement,
+              requirement: NugetRequirement.convert_to_semver_requirement(requirement),
               type: type,
               source: options.fetch(:filename, nil)
             )
@@ -168,7 +175,7 @@ module Bibliothecary
         manifest.package.metadata.dependencies.locate("dependency").map do |dependency|
           Dependency.new(
             name: dependency.id,
-            requirement: dependency.attributes[:version],
+            requirement: NugetRequirement.convert_to_semver_requirement(dependency.attributes[:version]),
             type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime",
             source: options.fetch(:filename, nil)
           )

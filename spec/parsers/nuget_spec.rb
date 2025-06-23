@@ -505,13 +505,13 @@ describe Bibliothecary::Parsers::Nuget do
                                                                                                          platform: "nuget",
                                                                                                          path: "packages.config",
                                                                                                          dependencies: [
-        Bibliothecary::Dependency.new(name: "AutoMapper", requirement: "2.1.267", type: "runtime", source: "packages.config"),
-        Bibliothecary::Dependency.new(name: "Microsoft.Web.Infrastructure", requirement: "1.0.0.0", type: "runtime", source: "packages.config"),
-        Bibliothecary::Dependency.new(name: "Mvc3Futures", requirement: "3.0.20105.0", type: "runtime", source: "packages.config"),
-        Bibliothecary::Dependency.new(name: "Ninject", requirement: "3.0.1.10", type: "runtime", source: "packages.config"),
-        Bibliothecary::Dependency.new(name: "Ninject.Web.Common", requirement: "3.0.0.7", type: "runtime", source: "packages.config"),
-        Bibliothecary::Dependency.new(name: "WebActivator", requirement: "1.5", type: "runtime", source: "packages.config"),
-        Bibliothecary::Dependency.new(name: "Microsoft.Net.Compilers", requirement: "1.0.0", type: "development", source: "packages.config"),
+        Bibliothecary::Dependency.new(name: "AutoMapper", requirement: ">= 2.1.267", type: "runtime", source: "packages.config"),
+        Bibliothecary::Dependency.new(name: "Microsoft.Web.Infrastructure", requirement: ">= 1.0.0.0", type: "runtime", source: "packages.config"),
+        Bibliothecary::Dependency.new(name: "Mvc3Futures", requirement: ">= 3.0.20105.0", type: "runtime", source: "packages.config"),
+        Bibliothecary::Dependency.new(name: "Ninject", requirement: ">= 3.0.1.10", type: "runtime", source: "packages.config"),
+        Bibliothecary::Dependency.new(name: "Ninject.Web.Common", requirement: ">= 3.0.0.7", type: "runtime", source: "packages.config"),
+        Bibliothecary::Dependency.new(name: "WebActivator", requirement: ">= 1.5", type: "runtime", source: "packages.config"),
+        Bibliothecary::Dependency.new(name: "Microsoft.Net.Compilers", requirement: ">= 1.0.0", type: "development", source: "packages.config"),
       ],
                                                                                                          kind: "manifest",
                                                                                                          success: true,
@@ -523,14 +523,14 @@ describe Bibliothecary::Parsers::Nuget do
                                                                                                        platform: "nuget",
                                                                                                        path: "example.csproj",
                                                                                                        dependencies: [
-        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore", requirement: "1.1.1", type: "runtime", source: "example.csproj"),
-        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore.Mvc", requirement: "1.1.2", type: "runtime", source: "example.csproj"),
-        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore.StaticFiles", requirement: "1.1.1", type: "runtime", source: "example.csproj"),
-        Bibliothecary::Dependency.new(name: "Microsoft.Extensions.Logging.Debug", requirement: "1.1.1", type: "runtime", source: "example.csproj"),
-        Bibliothecary::Dependency.new(name: "Microsoft.Extensions.DependencyInjection", requirement: "1.1.1", type: "runtime", source: "example.csproj"),
-        Bibliothecary::Dependency.new(name: "Microsoft.VisualStudio.Web.BrowserLink", requirement: "1.1.0", type: "runtime", source: "example.csproj"),
-        Bibliothecary::Dependency.new(name: "System.Resources.Extensions", requirement: "4.7.0", type: "runtime", source: "example.csproj"),
-        Bibliothecary::Dependency.new(name: "Contoso.Utility.UsefulStuff", requirement: "3.6.0", type: "development", source: "example.csproj"),
+        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore", requirement: ">= 1.1.1", type: "runtime", source: "example.csproj"),
+        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore.Mvc", requirement: ">= 1.1.2", type: "runtime", source: "example.csproj"),
+        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore.StaticFiles", requirement: ">= 1.1.1", type: "runtime", source: "example.csproj"),
+        Bibliothecary::Dependency.new(name: "Microsoft.Extensions.Logging.Debug", requirement: ">= 1.1.1", type: "runtime", source: "example.csproj"),
+        Bibliothecary::Dependency.new(name: "Microsoft.Extensions.DependencyInjection", requirement: ">= 1.1.1", type: "runtime", source: "example.csproj"),
+        Bibliothecary::Dependency.new(name: "Microsoft.VisualStudio.Web.BrowserLink", requirement: ">= 1.1.0", type: "runtime", source: "example.csproj"),
+        Bibliothecary::Dependency.new(name: "System.Resources.Extensions", requirement: ">= 4.7.0", type: "runtime", source: "example.csproj"),
+        Bibliothecary::Dependency.new(name: "Contoso.Utility.UsefulStuff", requirement: ">= 3.6.0", type: "development", source: "example.csproj"),
       ],
                                                                                                        kind: "manifest",
                                                                                                        success: true,
@@ -542,8 +542,8 @@ describe Bibliothecary::Parsers::Nuget do
                                                                                                                   platform: "nuget",
                                                                                                                   path: "example.csproj",
                                                                                                                   dependencies: [
-        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore.App", requirement: "*", type: "runtime", source: "example.csproj"),
-        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "development", source: "example.csproj"),
+        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore.App", requirement: ">= 0", type: "runtime", source: "example.csproj"),
+        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore.Razor.Design", requirement: ">= 2.2.0", type: "development", source: "example.csproj"),
       ],
                                                                                                                   kind: "manifest",
                                                                                                                   success: true,
@@ -555,8 +555,8 @@ describe Bibliothecary::Parsers::Nuget do
                                                                                                                      platform: "nuget",
                                                                                                                      path: "example-update.csproj",
                                                                                                                      dependencies: [
-        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore", requirement: "1.1.1", type: "runtime", source: "example-update.csproj"),
-        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore.StaticFiles", requirement: "2.2.0", type: "runtime", source: "example-update.csproj"),
+        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore", requirement: ">= 1.1.1", type: "runtime", source: "example-update.csproj"),
+        Bibliothecary::Dependency.new(name: "Microsoft.AspNetCore.StaticFiles", requirement: ">= 2.2.0", type: "runtime", source: "example-update.csproj"),
       ],
                                                                                                                      kind: "manifest",
                                                                                                                      success: true,
@@ -620,15 +620,64 @@ describe Bibliothecary::Parsers::Nuget do
     ])
   end
 
+  it "parses dependencies from .csproj with various ranges" do
+    csproj_content = <<~XML
+      <Project Sdk="Microsoft.NET.Sdk">
+        <PropertyGroup>
+          <TargetFramework>net6.0</TargetFramework>
+        </PropertyGroup>
+        <ItemGroup>
+          <PackageReference Include="SimpleVersion" Version="1.0" />
+          <PackageReference Include="InclusiveLowerBound" Version="[1.0,)" />
+          <PackageReference Include="ExclusiveLowerBound" Version="(1.0,)" />
+          <PackageReference Include="ExactVersion" Version="[1.0]" />
+          <PackageReference Include="InclusiveUpperBound" Version="(,1.0]" />
+          <PackageReference Include="ExclusiveUpperBound" Version="(,1.0)" />
+          <PackageReference Include="InclusiveRange" Version="[1.0,2.0]" />
+          <PackageReference Include="ExclusiveRange" Version="(1.0,2.0)" />
+          <PackageReference Include="InclusiveLowerExclusiveUpper" Version="[1.0,2.0)" />
+          <PackageReference Include="ExclusiveLowerInclusiveUpper" Version="(1.0,2.0]" />
+          <PackageReference Include="MinorWildcard" Version="1.*" />
+          <PackageReference Include="PatchWildcard" Version="1.2.*" />
+          <PackageReference Include="FullWildcard" Version="*" />
+          <PackageReference Include="NoVersion" />
+        </ItemGroup>
+      </Project>
+    XML
+
+    expect(described_class.analyse_contents("test.csproj", csproj_content)).to eq({
+                                                                                    platform: "nuget",
+                                                                                    path: "test.csproj",
+                                                                                    dependencies: [
+        Bibliothecary::Dependency.new(name: "SimpleVersion", requirement: ">= 1.0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "InclusiveLowerBound", requirement: ">= 1.0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "ExclusiveLowerBound", requirement: "> 1.0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "ExactVersion", requirement: "1.0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "InclusiveUpperBound", requirement: "<= 1.0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "ExclusiveUpperBound", requirement: "< 1.0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "InclusiveRange", requirement: ">= 1.0 <= 2.0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "ExclusiveRange", requirement: "> 1.0 < 2.0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "InclusiveLowerExclusiveUpper", requirement: ">= 1.0 < 2.0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "ExclusiveLowerInclusiveUpper", requirement: "> 1.0 <= 2.0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "MinorWildcard", requirement: "~> 1.0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "PatchWildcard", requirement: ">= 1.0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "FullWildcard", requirement: ">= 0", type: "runtime", source: "test.csproj"),
+        Bibliothecary::Dependency.new(name: "NoVersion", requirement: ">= 0", type: "runtime", source: "test.csproj"),
+      ],
+                                                                                    kind: "manifest",
+                                                                                    success: true,
+                                                                                  })
+  end
+
   it "parses dependencies from example.nuspec" do
     expect(described_class.analyse_contents("example.nuspec", load_fixture("example.nuspec"))).to eq({
                                                                                                        platform: "nuget",
                                                                                                        path: "example.nuspec",
                                                                                                        dependencies: [
-        Bibliothecary::Dependency.new(name: "FubuCore", requirement: "3.2.0.3001", type: "runtime", source: "example.nuspec"),
-        Bibliothecary::Dependency.new(name: "HtmlTags", requirement: "[3.2.0.3001]", type: "runtime", source: "example.nuspec"),
-        Bibliothecary::Dependency.new(name: "DotNetZip", requirement: "*", type: "runtime", source: "example.nuspec"),
-        Bibliothecary::Dependency.new(name: "DevelopmentOnlyPackage", requirement: "1.2.3", type: "development", source: "example.nuspec"),
+        Bibliothecary::Dependency.new(name: "FubuCore", requirement: ">= 3.2.0.3001", type: "runtime", source: "example.nuspec"),
+        Bibliothecary::Dependency.new(name: "HtmlTags", requirement: "3.2.0.3001", type: "runtime", source: "example.nuspec"),
+        Bibliothecary::Dependency.new(name: "DotNetZip", requirement: ">= 0", type: "runtime", source: "example.nuspec"),
+        Bibliothecary::Dependency.new(name: "DevelopmentOnlyPackage", requirement: ">= 1.2.3", type: "development", source: "example.nuspec"),
       ],
                                                                                                        kind: "manifest",
                                                                                                        success: true,
