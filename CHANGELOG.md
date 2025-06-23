@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [13.1.0] - 2025-06-23
+
+### Changed
+
+- Fix any parsed nuget requirements by translating them from Nuget requirements to unofficial SemVer requirements (i.e. basically NPM-style ranges).
+
 ## [13.0.0] - 2025-06-17
 
 ### Removed
