@@ -197,6 +197,7 @@ module Bibliothecary
       # }, ...]
       def self.parse_v1_yarn_lock(contents, source = nil)
         contents
+          .encode(universal_newline: true)
           .gsub(/^#.*/, "")
           .strip
           .split("\n\n")

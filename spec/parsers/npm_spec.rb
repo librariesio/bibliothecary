@@ -93,12 +93,9 @@ describe Bibliothecary::Parsers::NPM do
     )
   end
 
-  it "parses dependencies from yarn.lock" do
-    expect(described_class.analyse_contents("yarn.lock", load_fixture("yarn.lock"))).to eq({
-                                                                                             platform: "npm",
-                                                                                             path: "yarn.lock",
-                                                                                             dependencies: [
-
+  context "with a yarn.lock" do
+    let(:expected_deps) do
+      [
         Bibliothecary::Dependency.new(name: "body-parser", requirement: "1.16.1", type: "runtime", local: false, source: "yarn.lock"),
         Bibliothecary::Dependency.new(name: "bytes", requirement: "2.4.0", type: "runtime", local: false, source: "yarn.lock"),
         Bibliothecary::Dependency.new(name: "content-type", requirement: "1.0.2", type: "runtime", local: false, source: "yarn.lock"),
@@ -120,10 +117,33 @@ describe Bibliothecary::Parsers::NPM do
         Bibliothecary::Dependency.new(name: "@some-scope/actual-package", requirement: "1.1.3", original_name: "alias-package-name", original_requirement: "1.1.3", type: "runtime", local: false, source: "yarn.lock"),
         Bibliothecary::Dependency.new(name: "type-is", requirement: "1.6.14", type: "runtime", local: false, source: "yarn.lock"),
         Bibliothecary::Dependency.new(name: "unpipe", requirement: "1.0.0", type: "runtime", local: false, source: "yarn.lock"),
-      ],
-                                                                                             kind: "lockfile",
-                                                                                             success: true,
-                                                                                           })
+      ]
+    end
+
+    it "parses dependencies" do
+      result = described_class.analyse_contents("yarn.lock", load_fixture("yarn.lock"))
+      expect(result).to eq({
+                             platform: "npm",
+                             path: "yarn.lock",
+                             dependencies: expected_deps,
+                             kind: "lockfile",
+                             success: true,
+                           })
+    end
+
+    it "parses dependencies with windows line endings" do
+      result = described_class.analyse_contents(
+        "yarn.lock",
+        load_fixture("yarn.lock").gsub("\n", "\r\n")
+      )
+      expect(result).to eq({
+                             platform: "npm",
+                             path: "yarn.lock",
+                             dependencies: expected_deps,
+                             kind: "lockfile",
+                             success: true,
+                           })
+    end
   end
 
   it "parses git dependencies from yarn.lock" do
@@ -131,8 +151,8 @@ describe Bibliothecary::Parsers::NPM do
                                                                                                                 platform: "npm",
                                                                                                                 path: "yarn.lock",
                                                                                                                 dependencies: [
-        Bibliothecary::Dependency.new(name: "vue", requirement: "2.6.12", type: "runtime", local: false, source: "yarn.lock"),
-      ],
+          Bibliothecary::Dependency.new(name: "vue", requirement: "2.6.12", type: "runtime", local: false, source: "yarn.lock"),
+        ],
                                                                                                                 kind: "lockfile",
                                                                                                                 success: true,
                                                                                                               })

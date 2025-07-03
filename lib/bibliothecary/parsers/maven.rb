@@ -274,7 +274,7 @@ module Bibliothecary
       def self.parse_maven_tree_items_with_depths(file_contents)
         file_contents
           .gsub(ANSI_MATCHER, "")
-          .gsub(/\r\n?/, "\n")
+          .encode(universal_newline: true)
           # capture two groups; one is the ASCII art telling us the tree depth,
           # and two is the actual dependency
           .scan(/^\[INFO\]\s((?:[-+|\\]|\s)*)((?:[\w\.-]+:)+[\w\.\-${}]+)/)
