@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [13.0.1] - 2025-07-03
+
+### Changed
+
+- Handle windows-style newlines in v1 yarn lockfiles.
+
 ## [13.0.0] - 2025-06-17
 
 ### Removed
