@@ -779,10 +779,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       contents = load_fixture("maven-dependency-tree.dot")
       output = described_class.parse_maven_tree_dot(contents)
 
-      expect(output.size).to eq(75)
+      expect(output.size).to eq(76)
 
-      # Exclude parent project
-      expect(output.none? { |dep| dep.name == "net.sourceforge.pmd:pmd-scala_2.12" }).to be(true)
+      # Include project dep with a "project: true" flag
+      project_dep = output.find { |dep| dep.name == "net.sourceforge.pmd:pmd-scala_2.12" }
+      expect(project_dep).to_not be_nil
+      expect(project_dep.project).to be(true)
+      expect(output.partition { |dep| dep.project }.map(&:size)).to eq([1, 75])
 
       direct_example = output.find { |d| d.name == "com.github.oowekyala.treeutils:tree-printers" && d.requirement == "2.1.0" }
       expect(direct_example.direct).to be(true)

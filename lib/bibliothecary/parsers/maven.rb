@@ -366,7 +366,20 @@ module Bibliothecary
           obj[name].add(version)
         end
 
-        relationships.map do |(_parent, child)|
+        # We return the project itself as a Dependency, denoted with "is_project: true" so it can be filtered.
+        parent_name, parent_version, parent_type = parse_maven_tree_dependency(project)
+        deps = [
+          Dependency.new(
+            name: parent_name,
+            requirement: parent_version,
+            type: parent_type,
+            direct: true,
+            source: options.fetch(:filename, nil),
+            project: true
+          ),
+        ]
+
+        deps += relationships.map do |(_parent, child)|
           child_name, child_version, child_type = parse_maven_tree_dependency(child)
 
           Dependency.new(
@@ -376,7 +389,9 @@ module Bibliothecary
             direct: direct_names_to_versions[child_name]&.include?(child_version) || false,
             source: options.fetch(:filename, nil)
           )
-        end.uniq
+        end
+
+        deps.uniq
       end
 
       def self.parse_resolved_dep_line(line, options: {})
