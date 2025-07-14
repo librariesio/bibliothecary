@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [13.1.0] - 2025-07-15
+
+### Added
+
+- New Dependency#project field to denote that the dependency is the project itself.
+
+### Changed
+
+- Return the project dependency with dependencies from maven-dependency-tree.dot lockfiles.
+
 ## [13.0.1] - 2025-07-03
 
 ### Changed
