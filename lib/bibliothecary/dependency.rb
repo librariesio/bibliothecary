@@ -14,6 +14,7 @@ module Bibliothecary
   # @attr_reader [Boolean] deprecated Is this dependency deprecated? (default: nil)
   # @attr_reader [Boolean] local Is this dependency local? (default: nil)
   # @attr_reader [Boolean] optional Is this dependency optional? (default: nil)
+  # @attr_reader [Boolean] project Is this dependency the project itself? (default: nil)
   # @attr_reader [String] original_name The original name used to require the dependency, for cases
   #   where it did not match the resolved name. This can be used for features like aliasing.
   # @attr_reader [String] original_requirement The original requirement used to require the dependency,
@@ -31,6 +32,7 @@ module Bibliothecary
       deprecated
       local
       optional
+      project
       original_name
       source
     ].freeze
@@ -47,6 +49,7 @@ module Bibliothecary
       deprecated: nil,
       local: nil,
       optional: nil,
+      project: nil,
       original_name: nil,
       source: nil
     )
@@ -59,6 +62,7 @@ module Bibliothecary
       @deprecated = deprecated
       @local = local
       @optional = optional
+      @project = project
       @original_name = original_name
       @source = source
     end

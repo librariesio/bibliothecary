@@ -14,6 +14,7 @@ describe Bibliothecary::Dependency do
         deprecated: true,
         local: true,
         optional: true,
+        project: false,
         original_name: "foo-alias",
         original_requirement: "1.0.0.rc1",
         source: "package.json"
@@ -27,6 +28,7 @@ describe Bibliothecary::Dependency do
       expect(dep.deprecated).to eq(true)
       expect(dep.local).to eq(true)
       expect(dep.optional).to eq(true)
+      expect(dep.project).to eq(false)
       expect(dep.original_name).to eq("foo-alias")
       expect(dep.original_requirement).to eq("1.0.0.rc1")
       expect(dep.source).to eq("package.json")
@@ -61,6 +63,7 @@ describe Bibliothecary::Dependency do
         deprecated: true,
         local: true,
         optional: true,
+        project: false,
         original_name: "foo-alias",
         original_requirement: "1.0.0.rc1",
         source: "package.json",
