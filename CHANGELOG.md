@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [13.0.2] - 2025-07-21
+
+### Changed
+
+- Handle scoped dependencies in PNPM lockfiles.
+
 ## [13.0.1] - 2025-07-03
 
 ### Changed
