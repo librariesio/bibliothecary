@@ -335,8 +335,8 @@ module Bibliothecary
         # as of https://github.com/pnpm/pnpm/pull/7700.
         parsed_contents["snapshots"]
           .map do |name_version, _details|
-            # e.g. "debug@2.6.9:"
-            name, version = name_version.split("@", 2)
+            # e.g. "debug@2.6.9" or "@babel/types@7.28.1"
+            name, version = name_version.split(/(?<!^)@/, 2)
 
             # e.g. "debug@2.2.0(supports-color@1.2.0)"
             version = version.split("(", 2).first

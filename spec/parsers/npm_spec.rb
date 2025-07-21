@@ -398,6 +398,9 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses dependencies from pnpm-lock.yaml with lockfile version 9" do
     expected_deps = [
+      Bibliothecary::Dependency.new(name: "@babel/helper-string-parser", requirement: "7.27.1", type: "runtime", source: "pnpm-lock.yaml"),
+      Bibliothecary::Dependency.new(name: "@babel/helper-validator-identifier", requirement: "7.27.1", type: "runtime", source: "pnpm-lock.yaml"),
+      Bibliothecary::Dependency.new(name: "@babel/types", requirement: "7.28.1", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "acorn-babel", requirement: "0.11.1-38", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "acorn", requirement: "5.7.4", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "amdefine", requirement: "1.0.1", type: "runtime", source: "pnpm-lock.yaml"),
