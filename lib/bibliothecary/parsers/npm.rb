@@ -263,8 +263,8 @@ module Bibliothecary
 
         parsed_contents["packages"]
           .map do |name_version, details|
-            # e.g. "/debug/2.6.9:"
-            name, version = name_version.sub(/^\//, "").split("/", 2)
+            # e.g. "/debug/2.6.9" or "/@babel/types/7.28.1"
+            name, _slash, version = name_version.sub(/^\//, "").rpartition("/")
 
             # e.g. "/debug/2.2.0_supports-color@1.2.0:"
             version = version.split("_", 2)[0]

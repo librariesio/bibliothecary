@@ -160,6 +160,9 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses dependencies from pnpm-lock.yaml with lockfile version 5" do
     expected_deps = [
+      Bibliothecary::Dependency.new(name: "@babel/helper-string-parser", requirement: "7.27.1", type: "runtime", source: "pnpm-lock.yaml"),
+      Bibliothecary::Dependency.new(name: "@babel/helper-validator-identifier", requirement: "7.27.1", type: "runtime", source: "pnpm-lock.yaml"),
+      Bibliothecary::Dependency.new(name: "@babel/types", requirement: "7.28.1", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "acorn-babel", requirement: "0.11.1-38", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "acorn", requirement: "5.7.4", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "amdefine", requirement: "1.0.1", type: "runtime", source: "pnpm-lock.yaml"),
@@ -264,7 +267,7 @@ describe Bibliothecary::Parsers::NPM do
       Bibliothecary::Dependency.new(name: "to-iso-string", requirement: "0.0.2", type: "development", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "trim-right", requirement: "1.0.1", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "wrappy", requirement: "1.0.2", type: "runtime", source: "pnpm-lock.yaml"),
-      Bibliothecary::Dependency.new(name: "zod", requirement: "3.24.2", original_name: "alias-package", original_requirement: "3.24.2", type: "runtime", source: "pnpm-lock.yaml"),
+      Bibliothecary::Dependency.new(name: "zod", requirement: "4.0.5", original_name: "alias-package", original_requirement: "4.0.5", type: "runtime", source: "pnpm-lock.yaml"),
 ]
     result = described_class.analyse_contents("pnpm-lock.yaml", load_fixture("pnpm-lockfile-version-5/pnpm-lock.yaml"))
 
