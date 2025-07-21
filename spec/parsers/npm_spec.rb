@@ -279,6 +279,9 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses dependencies from pnpm-lock.yaml with lockfile version 6" do
     expected_deps = [
+      Bibliothecary::Dependency.new(name: "@babel/helper-string-parser", requirement: "7.27.1", type: "runtime", source: "pnpm-lock.yaml"),
+      Bibliothecary::Dependency.new(name: "@babel/helper-validator-identifier", requirement: "7.27.1", type: "runtime", source: "pnpm-lock.yaml"),
+      Bibliothecary::Dependency.new(name: "@babel/types", requirement: "7.28.1", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "acorn-babel", requirement: "0.11.1-38", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "acorn", requirement: "5.7.4", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "amdefine", requirement: "1.0.1", type: "runtime", source: "pnpm-lock.yaml"),
@@ -290,7 +293,7 @@ describe Bibliothecary::Parsers::NPM do
       Bibliothecary::Dependency.new(name: "async-each", requirement: "0.1.6", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "babel", requirement: "4.7.16", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "balanced-match", requirement: "1.0.2", type: "runtime", source: "pnpm-lock.yaml"),
-      Bibliothecary::Dependency.new(name: "brace-expansion", requirement: "1.1.11", type: "runtime", source: "pnpm-lock.yaml"),
+      Bibliothecary::Dependency.new(name: "brace-expansion", requirement: "1.1.12", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "chalk", requirement: "1.1.3", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "chokidar", requirement: "0.12.6", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "commander", requirement: "0.6.1", type: "development", source: "pnpm-lock.yaml"),
@@ -349,7 +352,7 @@ describe Bibliothecary::Parsers::NPM do
       Bibliothecary::Dependency.new(name: "mocha", requirement: "2.5.3", type: "development", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "ms", requirement: "0.7.1", type: "development", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "ms", requirement: "2.0.0", type: "runtime", source: "pnpm-lock.yaml"),
-      Bibliothecary::Dependency.new(name: "nan", requirement: "2.22.2", type: "runtime", source: "pnpm-lock.yaml"),
+      Bibliothecary::Dependency.new(name: "nan", requirement: "2.23.0", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "object-assign", requirement: "4.1.1", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "once", requirement: "1.4.0", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "output-file-sync", requirement: "1.1.2", type: "runtime", source: "pnpm-lock.yaml"),
@@ -383,7 +386,7 @@ describe Bibliothecary::Parsers::NPM do
       Bibliothecary::Dependency.new(name: "to-iso-string", requirement: "0.0.2", type: "development", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "trim-right", requirement: "1.0.1", type: "runtime", source: "pnpm-lock.yaml"),
       Bibliothecary::Dependency.new(name: "wrappy", requirement: "1.0.2", type: "runtime", source: "pnpm-lock.yaml"),
-      Bibliothecary::Dependency.new(name: "zod", requirement: "3.24.2", original_name: "alias-package", original_requirement: "3.24.2", type: "runtime", source: "pnpm-lock.yaml"),
+      Bibliothecary::Dependency.new(name: "zod", requirement: "4.0.5", original_name: "alias-package", original_requirement: "4.0.5", type: "runtime", source: "pnpm-lock.yaml"),
 ]
     result = described_class.analyse_contents("pnpm-lock.yaml", load_fixture("pnpm-lockfile-version-6/pnpm-lock.yaml"))
 

@@ -297,7 +297,7 @@ module Bibliothecary
         parsed_contents["packages"]
           .map do |name_version, details|
             # e.g. "/debug@2.6.9:"
-            name, version = name_version.sub(/^\//, "").split("@", 2)
+            name, version = name_version.sub(/^\//, "").split(/(?<!^)@/, 2)
 
             # e.g. "debug@2.2.0(supports-color@1.2.0)"
             version = version.split("(", 2).first
