@@ -50,24 +50,7 @@ module Bibliothecary
 
       def dependencies_to_analysis(info, kind, dependencies)
         dependencies ||= [] # work around any legacy parsers that return nil
-        if generic?
-          grouped = dependencies.group_by { |dep| dep[:platform] }
-          all_analyses = grouped.keys.map do |platform|
-            deplatformed_dependencies = grouped[platform].map do |d|
-              d.delete(:platform)
-              d
-            end
-            Bibliothecary::Analyser.create_analysis(platform, info.relative_path, kind, deplatformed_dependencies)
-          end
-          # this is to avoid a larger refactor for the time being. The larger refactor
-          # needs to make analyse_contents return multiple analysis, or add another
-          # method that can return multiple and deprecate analyse_contents, perhaps.
-          raise "File contains zero or multiple platforms, currently must have exactly one" if all_analyses.length != 1
-
-          all_analyses.first
-        else
-          Bibliothecary::Analyser.create_analysis(platform_name, info.relative_path, kind, dependencies)
-        end
+        Bibliothecary::Analyser.create_analysis(platform_name, info.relative_path, kind, dependencies)
       end
 
       # Call the matching parse class method for this file with
