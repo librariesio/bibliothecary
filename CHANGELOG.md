@@ -15,6 +15,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [14.0.0] - 2025-07-22
+
+### Added
+
+- Added Bibliothecary::DependenciesResult class, to wrap dependencies with the project name and version.
+
+### Changed
+
+- Parser methods now return Bibliothecary::DependenciesResult instead of an Array of Bibliothecary::Dependency
+
+### Removed
+
 - Removed unused generic parser code.
 
 ## [13.0.2] - 2025-07-21
