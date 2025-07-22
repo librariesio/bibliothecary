@@ -50,10 +50,6 @@ module Bibliothecary
     end
 
     module ClassMethods
-      def generic?
-        platform_name == "generic"
-      end
-
       def platform_name
         name.to_s.split("::").last.downcase
       end
