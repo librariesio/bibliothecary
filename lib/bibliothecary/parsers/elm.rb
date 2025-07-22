@@ -25,7 +25,7 @@ module Bibliothecary
 
       def self.parse_json_lock(file_contents, options: {})
         manifest = JSON.parse file_contents
-        manifest.map do |name, requirement|
+        dependencies = manifest.map do |name, requirement|
           Dependency.new(
             name: name,
             requirement: requirement,
@@ -34,6 +34,7 @@ module Bibliothecary
             platform: platform_name
           )
         end
+        DependenciesResult.new(dependencies: dependencies)
       end
     end
   end

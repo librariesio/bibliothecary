@@ -11,6 +11,8 @@ describe Bibliothecary::Parsers::Bower do
     expect(described_class.analyse_contents("bower.json", load_fixture("bower.json"))).to eq({
                                                                                                platform: "bower",
                                                                                                path: "bower.json",
+                                                                                               project_name: nil,
+                                                                                               project_version: nil,
                                                                                                dependencies: [
         Bibliothecary::Dependency.new(platform: "bower", name: "jquery", requirement: ">= 1.9.1", type: "runtime", source: "bower.json"),
       ],

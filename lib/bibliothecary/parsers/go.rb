@@ -78,7 +78,8 @@ module Bibliothecary
 
       def self.parse_godep_json(file_contents, options: {})
         manifest = JSON.parse file_contents
-        map_dependencies(manifest, "Deps", "ImportPath", "Rev", "runtime", options.fetch(:filename, nil))
+        dependencies = map_dependencies(manifest, "Deps", "ImportPath", "Rev", "runtime", options.fetch(:filename, nil))
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_gpm(file_contents, options: {})
@@ -95,45 +96,51 @@ module Bibliothecary
             platform: platform_name
           )
         end
-        deps
+        DependenciesResult.new(dependencies: deps)
       end
 
       def self.parse_govendor(file_contents, options: {})
         manifest = JSON.parse file_contents
-        map_dependencies(manifest, "package", "path", "revision", "runtime", options.fetch(:filename, nil))
+        dependencies = map_dependencies(manifest, "package", "path", "revision", "runtime", options.fetch(:filename, nil))
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_glide_yaml(file_contents, options: {})
         manifest = YAML.load file_contents
-        map_dependencies(manifest, "import", "package", "version", "runtime", options.fetch(:filename, nil)) +
-          map_dependencies(manifest, "devImports", "package", "version", "development", options.fetch(:filename, nil))
+        dependencies = map_dependencies(manifest, "import", "package", "version", "runtime", options.fetch(:filename, nil)) +
+                       map_dependencies(manifest, "devImports", "package", "version", "development", options.fetch(:filename, nil))
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_glide_lockfile(file_contents, options: {})
         # glide.lock files contain an "updated" Time field, but Ruby 3.2+ requires us to safelist that class
         manifest = YAML.load file_contents, permitted_classes: [Time]
-        map_dependencies(manifest, "imports", "name", "version", "runtime", options.fetch(:filename, nil))
+        dependencies = map_dependencies(manifest, "imports", "name", "version", "runtime", options.fetch(:filename, nil))
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_gb_manifest(file_contents, options: {})
         manifest = JSON.parse file_contents
-        map_dependencies(manifest, "dependencies", "importpath", "revision", "runtime", options.fetch(:filename, nil))
+        dependencies = map_dependencies(manifest, "dependencies", "importpath", "revision", "runtime", options.fetch(:filename, nil))
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_dep_toml(file_contents, options: {})
         manifest = Tomlrb.parse file_contents
-        map_dependencies(manifest, "constraint", "name", "version", "runtime", options.fetch(:filename, nil))
+        dependencies = map_dependencies(manifest, "constraint", "name", "version", "runtime", options.fetch(:filename, nil))
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_dep_lockfile(file_contents, options: {})
         manifest = Tomlrb.parse file_contents
-        map_dependencies(manifest, "projects", "name", "revision", "runtime", options.fetch(:filename, nil))
+        dependencies = map_dependencies(manifest, "projects", "name", "revision", "runtime", options.fetch(:filename, nil))
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_go_mod(file_contents, options: {})
         categorized_deps = parse_go_mod_categorized_deps(file_contents, options.fetch(:filename, nil))
 
-        categorized_deps["require"]
+        dependencies = categorized_deps["require"]
           .map do |dep|
             # NOTE: A "replace" directive doesn't add the dep to the module graph unless the original dep is also in a "require" directive,
             # so we need to track down replacements here and use those instead of the originals, if present.
@@ -149,6 +156,7 @@ module Bibliothecary
 
             replaced_dep || dep
           end
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_go_mod_categorized_deps(file_contents, source)
@@ -191,11 +199,12 @@ module Bibliothecary
             platform: platform_name
           )
         end
-        deps.uniq
+        dependencies = deps.uniq
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_go_resolved(file_contents, options: {})
-        JSON.parse(file_contents)
+        dependencies = JSON.parse(file_contents)
           .reject { |dep| dep["Main"] == "true" }
           .map do |dep|
             if dep["Replace"].is_a?(String) && dep["Replace"] != "<nil>" && dep["Replace"] != ""
@@ -213,6 +222,7 @@ module Bibliothecary
               )
             end
           end
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.map_dependencies(manifest, attr_name, dep_attr_name, version_attr_name, type, source = nil)

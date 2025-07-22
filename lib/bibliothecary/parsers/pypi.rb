@@ -81,8 +81,9 @@ module Bibliothecary
 
       def self.parse_pipfile(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
-        map_dependencies(manifest["packages"], "runtime", options.fetch(:filename, nil)) +
-          map_dependencies(manifest["dev-packages"], "develop", options.fetch(:filename, nil))
+        dependencies = map_dependencies(manifest["packages"], "runtime", options.fetch(:filename, nil)) +
+                       map_dependencies(manifest["dev-packages"], "develop", options.fetch(:filename, nil))
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_pyproject(file_contents, options: {})
@@ -114,7 +115,7 @@ module Bibliothecary
 
         # Poetry normalizes names in lockfiles but doesn't provide the original, so we need to keep
         # track of the original name so the dep is connected between manifest+lockfile.
-        deps.map do |dep|
+        dependencies = deps.map do |dep|
           normalized_name = normalize_name(dep.name)
           Dependency.new(
             **dep.to_h,
@@ -122,6 +123,7 @@ module Bibliothecary
             original_name: normalized_name == dep.name ? nil : dep.name
           )
         end
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.map_dependencies(packages, type, source = nil)
@@ -180,7 +182,7 @@ module Bibliothecary
           group = "runtime" if group == "default"
           deps += map_dependencies(dependencies, group, options.fetch(:filename, nil))
         end
-        deps
+        DependenciesResult.new(dependencies: deps)
       end
 
       def self.parse_poetry_lock(file_contents, options: {})
@@ -216,12 +218,12 @@ module Bibliothecary
             )
           end
         end
-        deps
+        DependenciesResult.new(dependencies: deps)
       end
 
       def self.parse_setup_py(file_contents, options: {})
         match = file_contents.match(INSTALL_REGEXP)
-        return [] unless match
+        return DependenciesResult.new(dependencies: []) unless match
 
         deps = []
         match[1].gsub(/',(\s)?'/, "\n").split("\n").each do |line|
@@ -238,7 +240,7 @@ module Bibliothecary
             platform: platform_name
           )
         end
-        deps
+        DependenciesResult.new(dependencies: deps)
       end
 
       # While the thing in the repo that PyPI is using might be either in
@@ -248,7 +250,7 @@ module Bibliothecary
       NoEggSpecified = Class.new(ArgumentError)
 
       def self.parse_dependency_tree_json(file_contents, options: {})
-        JSON.parse(file_contents)
+        dependencies = JSON.parse(file_contents)
           .map do |pkg|
             Dependency.new(
               name: pkg.dig("package", "package_name"),
@@ -259,6 +261,7 @@ module Bibliothecary
             )
           end
           .uniq
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       # Parses a requirements.txt file, following the
@@ -296,7 +299,8 @@ module Bibliothecary
           end
         end
 
-        deps.uniq
+        dependencies = deps.uniq
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_requirements_txt_url(url, type = nil, source = nil)

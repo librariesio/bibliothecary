@@ -11,6 +11,8 @@ describe Bibliothecary::Parsers::Julia do
     expect(described_class.analyse_contents("REQUIRE", load_fixture("REQUIRE"))).to eq({
                                                                                          platform: "julia",
                                                                                          path: "REQUIRE",
+                                                                                         project_name: nil,
+                                                                                         project_version: nil,
                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "julia", name: "julia", requirement: "0.3", type: "runtime", source: "REQUIRE"),
         Bibliothecary::Dependency.new(platform: "julia", name: "Codecs", requirement: "*", type: "runtime", source: "REQUIRE"),

@@ -11,6 +11,8 @@ describe Bibliothecary::Parsers::Meteor do
     expect(described_class.analyse_contents("versions.json", load_fixture("versions.json"))).to eq({
                                                                                                      platform: "meteor",
                                                                                                      path: "versions.json",
+                                                                                                     project_name: nil,
+                                                                                                     project_version: nil,
                                                                                                      dependencies: [
         Bibliothecary::Dependency.new(platform: "meteor", name: "accounts-base", requirement: "1.1.2", type: "runtime", source: "versions.json"),
         Bibliothecary::Dependency.new(platform: "meteor", name: "application-configuration", requirement: "1.0.3", type: "runtime", source: "versions.json"),

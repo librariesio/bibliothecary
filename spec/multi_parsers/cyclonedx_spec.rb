@@ -25,23 +25,23 @@ describe Bibliothecary::MultiParsers::CycloneDX do
   end
 
   it "handles empty json components" do
-    expect(parser.parse_cyclonedx_json('{ "components": [] }')).to eq(nil)
+    expect(parser.parse_cyclonedx_json('{ "components": [] }')).to eq(Bibliothecary::DependenciesResult.new(dependencies: nil))
   end
 
   it "handles empty xml components" do
-    expect(parser.parse_cyclonedx_xml('<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components></components></bom>')).to eq(nil)
+    expect(parser.parse_cyclonedx_xml('<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components></components></bom>')).to eq(Bibliothecary::DependenciesResult.new(dependencies: nil))
   end
 
   it "handles unmapped json component" do
-    expect(parser.parse_cyclonedx_json(%({ "components": [{ "purl": "#{unmapped_component}" }] }))).to eq(nil)
+    expect(parser.parse_cyclonedx_json(%({ "components": [{ "purl": "#{unmapped_component}" }] }))).to eq(Bibliothecary::DependenciesResult.new(dependencies: nil))
   end
 
   it "handles unmapped xml component" do
-    expect(parser.parse_cyclonedx_xml(%(<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>))).to eq(nil)
+    expect(parser.parse_cyclonedx_xml(%(<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>))).to eq(Bibliothecary::DependenciesResult.new(dependencies: nil))
   end
 
   it "handles no xml pragma" do
-    expect(parser.parse_cyclonedx_xml(%(<bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>))).to eq(nil)
+    expect(parser.parse_cyclonedx_xml(%(<bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>))).to eq(Bibliothecary::DependenciesResult.new(dependencies: nil))
   end
 
   describe "ManifestEntries#parse!" do

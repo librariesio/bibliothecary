@@ -11,6 +11,8 @@ describe Bibliothecary::Parsers::CRAN do
     expect(described_class.analyse_contents("DESCRIPTION", load_fixture("DESCRIPTION"))).to eq({
                                                                                                  platform: "cran",
                                                                                                  path: "DESCRIPTION",
+                                                                                                 project_name: nil,
+                                                                                                 project_version: nil,
                                                                                                  dependencies: [
         Bibliothecary::Dependency.new(platform: "cran", name: "R", requirement: ">= 3.1", type: "depends", source: "DESCRIPTION"),
         Bibliothecary::Dependency.new(platform: "cran", name: "digest", requirement: "*", type: "imports", source: "DESCRIPTION"),
@@ -49,6 +51,8 @@ describe Bibliothecary::Parsers::CRAN do
     expect(described_class.analyse_contents("DESCRIPTION", load_fixture("DESCRIPTION2"))).to eq({
                                                                                                   platform: "cran",
                                                                                                   path: "DESCRIPTION",
+                                                                                                  project_name: nil,
+                                                                                                  project_version: nil,
                                                                                                   dependencies: [
         Bibliothecary::Dependency.new(platform: "cran", name: "R", requirement: ">= 2.14.1", type: "depends", source: "DESCRIPTION"),
         Bibliothecary::Dependency.new(platform: "cran", name: "methods", requirement: "*", type: "imports", source: "DESCRIPTION"),

@@ -26,7 +26,7 @@ module Bibliothecary
 
       def self.parse_lockfile(file_contents, options: {})
         manifest = JSON.parse file_contents
-        manifest.fetch("packages", []).map do |dependency|
+        dependencies = manifest.fetch("packages", []).map do |dependency|
           requirement = dependency["version"]
 
           # Store Drupal version if Drupal, but include the original manifest version for reference
@@ -61,12 +61,14 @@ module Bibliothecary
             platform: platform_name
           )
         end
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_manifest(file_contents, options: {})
         manifest = JSON.parse file_contents
-        map_dependencies(manifest, "require", "runtime", options.fetch(:filename, nil)) +
-          map_dependencies(manifest, "require-dev", "development", options.fetch(:filename, nil))
+        dependencies = map_dependencies(manifest, "require", "runtime", options.fetch(:filename, nil)) +
+                       map_dependencies(manifest, "require-dev", "development", options.fetch(:filename, nil))
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       # Drupal hosts its own Composer repository, where its "modules" are indexed and searchable. The best way to

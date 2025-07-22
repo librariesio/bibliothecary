@@ -17,6 +17,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(described_class.analyse_contents("pom.xml", load_fixture("pom.xml"))).to eq({
                                                                                          platform: "maven",
                                                                                          path: "pom.xml",
+                                                                                         project_name: nil,
+                                                                                         project_version: nil,
                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "maven",
                                       name: "org.accidia:echo-parent",
@@ -212,6 +214,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(described_class.analyse_contents("pom.xml", load_fixture("pom2.xml"))).to eq({
                                                                                           platform: "maven",
                                                                                           path: "pom.xml",
+                                                                                          project_name: nil,
+                                                                                          project_version: nil,
                                                                                           dependencies: [
         Bibliothecary::Dependency.new(platform: "maven",
                                       name: "org.apache.maven:maven-plugin-api",
@@ -263,6 +267,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(described_class.analyse_contents("pom.xml", load_fixture("pom-spaces-in-artifact-and-group.xml"))).to eq({
                                                                                                                       platform: "maven",
                                                                                                                       path: "pom.xml",
+                                                                                                                      project_name: nil,
+                                                                                                                      project_version: nil,
                                                                                                                       dependencies: [
         Bibliothecary::Dependency.new(platform: "maven", name: "org.apache.maven:maven-plugin-api",
                                       requirement: "3.3.9",
@@ -307,6 +313,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(described_class.analyse_contents("ivy.xml", load_fixture("ivy.xml"))).to eq({
                                                                                          platform: "maven",
                                                                                          path: "ivy.xml",
+                                                                                         project_name: nil,
+                                                                                         project_version: nil,
                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "maven", name: "org.htmlparser:htmlparser", requirement: "2.1", type: "runtime", source: "ivy.xml"),
         Bibliothecary::Dependency.new(platform: "maven", name: "org.apache.velocity:velocity", requirement: "1.7", type: "runtime", source: "ivy.xml"),
@@ -360,6 +368,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(described_class.analyse_contents("build.gradle", load_fixture("build.gradle"))).to eq({
                                                                                                      platform: "maven",
                                                                                                      path: "build.gradle",
+                                                                                                     project_name: nil,
+                                                                                                     project_version: nil,
                                                                                                      dependencies: [
           Bibliothecary::Dependency.new(platform: "maven", name: "com.squareup.okhttp:okhttp", requirement: "2.1.0", type: "compile", source: "build.gradle"),
           Bibliothecary::Dependency.new(platform: "maven", name: "com.squareup.okhttp:okhttp-urlconnection", requirement: "2.1.0", type: "compile", source: "build.gradle"),
@@ -381,6 +391,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(described_class.analyse_contents("build.gradle.kts", load_fixture("build.gradle.kts"))).to eq({
                                                                                                              platform: "maven",
                                                                                                              path: "build.gradle.kts",
+                                                                                                             project_name: nil,
+                                                                                                             project_version: nil,
                                                                                                              dependencies: [
           Bibliothecary::Dependency.new(platform: "maven", name: "org.jetbrains.kotlin:kotlin-stdlib-jdk8", requirement: "*", type: "implementation", source: "build.gradle.kts"),
           Bibliothecary::Dependency.new(platform: "maven", name: "com.google.guava:guava", requirement: "30.1.1-jre", type: "implementation", source: "build.gradle.kts"),
@@ -398,6 +410,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(described_class.analyse_contents("com.example-hello_2.12-compile.xml", load_fixture("ivy_reports/com.example-hello_2.12-compile.xml"))).to eq({
                                                                                                                                                            platform: "maven",
                                                                                                                                                            path: "com.example-hello_2.12-compile.xml",
+                                                                                                                                                           project_name: nil,
+                                                                                                                                                           project_version: nil,
                                                                                                                                                            dependencies: [
         Bibliothecary::Dependency.new(platform: "maven", name: "org.scala-lang:scala-library", requirement: "2.12.5", type: "compile", source: "com.example-hello_2.12-compile.xml"),
       ],
@@ -410,6 +424,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(described_class.analyse_contents("com.example-subproject_2.12-test.xml", load_fixture("ivy_reports/com.example-subproject_2.12-test.xml"))).to eq({
                                                                                                                                                                platform: "maven",
                                                                                                                                                                path: "com.example-subproject_2.12-test.xml",
+                                                                                                                                                               project_name: nil,
+                                                                                                                                                               project_version: nil,
                                                                                                                                                                dependencies: [
         Bibliothecary::Dependency.new(platform: "maven", name: "com.typesafe.akka:akka-stream_2.12", requirement: "2.5.6", type: "test", source: "com.example-subproject_2.12-test.xml"),
         Bibliothecary::Dependency.new(platform: "maven", name: "com.typesafe:ssl-config-core_2.12", requirement: "0.2.2", type: "test", source: "com.example-subproject_2.12-test.xml"),
@@ -638,42 +654,66 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     end
 
     it "excludes items in resolved deps file with no version" do
-      expect(described_class.parse_gradle_resolved("\\--- org.springframework.security:spring-security-test (n)")).to eq []
+      expect(described_class.parse_gradle_resolved("\\--- org.springframework.security:spring-security-test (n)"))
+        .to eq(Bibliothecary::DependenciesResult.new(dependencies: []))
     end
 
     it "excludes failed items with no version" do
-      expect(described_class.parse_gradle_resolved("+--- org.projectlombok:lombok FAILED")).to eq []
+      expect(described_class.parse_gradle_resolved("+--- org.projectlombok:lombok FAILED"))
+        .to eq(Bibliothecary::DependenciesResult.new(dependencies: []))
     end
 
     it "includes local projects as deps with 'internal' group and '1.0.0' requirement" do
-      expect(described_class.parse_gradle_resolved("+--- project :api:my-internal-project")).to eq [Bibliothecary::Dependency.new(platform: "maven",
-                                                                                                                                  name: "internal:api-my-internal-project",
-                                                                                                                                  requirement: "1.0.0",
-                                                                                                                                  type: nil)]
+      expect(described_class.parse_gradle_resolved("+--- project :api:my-internal-project"))
+        .to eq(Bibliothecary::DependenciesResult.new(dependencies: [
+          Bibliothecary::Dependency.new(
+            platform: "maven",
+            name: "internal:api-my-internal-project",
+            requirement: "1.0.0",
+            type: nil
+          ),
+]))
     end
 
     it "includes aliases to local projects" do
-      expect(described_class.parse_gradle_resolved("|    +--- my-group:common-job-update-gateway-compress:5.0.2 -> project :client (*)")).to eq [Bibliothecary::Dependency.new(platform: "maven",
-                                                                                                                                                                               name: "internal:client",
-                                                                                                                                                                               requirement: "1.0.0",
-                                                                                                                                                                               original_name: "my-group:common-job-update-gateway-compress",
-                                                                                                                                                                               original_requirement: "5.0.2",
-                                                                                                                                                                               type: nil)]
+      expect(described_class.parse_gradle_resolved("|    +--- my-group:common-job-update-gateway-compress:5.0.2 -> project :client (*)"))
+        .to eq(Bibliothecary::DependenciesResult.new(dependencies: [
+          Bibliothecary::Dependency.new(
+                                        platform: "maven",
+            name: "internal:client",
+            requirement: "1.0.0",
+            original_name: "my-group:common-job-update-gateway-compress",
+            original_requirement: "5.0.2",
+            type: nil
+          ),
+]))
     end
 
     it "includes failed items with a version" do
-      expect(described_class.parse_gradle_resolved("+--- org.apiguardian:apiguardian-api:1.1.0 FAILED")).to eq [Bibliothecary::Dependency.new(platform: "maven",
-                                                                                                                                              name: "org.apiguardian:apiguardian-api",
-                                                                                                                                              requirement: "1.1.0",
-                                                                                                                                              type: nil)]
+      expect(described_class.parse_gradle_resolved("+--- org.apiguardian:apiguardian-api:1.1.0 FAILED"))
+        .to eq(Bibliothecary::DependenciesResult.new(
+                 dependencies: [Bibliothecary::Dependency.new(
+                    platform: "maven",
+                   name: "org.apiguardian:apiguardian-api",
+                   requirement: "1.1.0",
+                   type: nil
+                 )]
+               ))
     end
 
     it "properly resolves versions with -> syntax" do
       arrow_syntax = "+--- org.springframework:spring-core:5.2.3.RELEASE -> 5.2.5.RELEASE (*)"
-      expect(described_class.parse_gradle_resolved(arrow_syntax)).to eq [Bibliothecary::Dependency.new(platform: "maven",
-                                                                                                       name: "org.springframework:spring-core",
-                                                                                                       requirement: "5.2.5.RELEASE",
-                                                                                                       type: nil)]
+      expect(described_class.parse_gradle_resolved(arrow_syntax))
+        .to eq(Bibliothecary::DependenciesResult.new(
+                 dependencies: [
+                   Bibliothecary::Dependency.new(
+                                                 platform: "maven",
+                     name: "org.springframework:spring-core",
+                     requirement: "5.2.5.RELEASE",
+                     type: nil
+                   ),
+]
+               ))
     end
 
     it "skips self-referential project lines" do
@@ -686,17 +726,20 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         +--- project : (*)
       GRADLE
 
-      expect(described_class.parse_gradle_resolved(gradle_dependencies_out)).to eq []
+      expect(described_class.parse_gradle_resolved(gradle_dependencies_out)).to eq Bibliothecary::DependenciesResult.new(dependencies: [])
     end
 
     it "properly handles no version to resolved version syntax" do
       no_version_to_version = "\\--- org.springframework.security:spring-security-test -> 5.2.2.RELEASE"
-      expect(described_class
-               .parse_gradle_resolved(no_version_to_version))
-        .to eq [Bibliothecary::Dependency.new(platform: "maven",
-                                              name: "org.springframework.security:spring-security-test",
-                                              requirement: "5.2.2.RELEASE",
-                                              type: nil)]
+      expect(described_class.parse_gradle_resolved(no_version_to_version))
+        .to eq(Bibliothecary::DependenciesResult.new(
+                 dependencies: [Bibliothecary::Dependency.new(
+                                                              platform: "maven",
+                   name: "org.springframework.security:spring-security-test",
+                   requirement: "5.2.2.RELEASE",
+                   type: nil
+                 )]
+               ))
     end
 
     def is_self_dep?(dep)
@@ -708,7 +751,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "parses dependencies from maven-dependency-tree.txt files" do
       contents = load_fixture("maven-dependency-tree.txt")
-      output = described_class.parse_maven_tree(contents)
+      output = described_class.parse_maven_tree(contents).dependencies
       self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
       expect([self_deps.count, external_deps.count]).to eq([0, 221])
       expect(output.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
@@ -718,7 +761,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "parses dependencies from maven-dependency-tree.txt files with keep subprojects option" do
       contents = load_fixture("maven-dependency-tree.txt")
-      output = described_class.parse_maven_tree(contents, options: { keep_subprojects_in_maven_tree: true })
+      output = described_class.parse_maven_tree(contents, options: { keep_subprojects_in_maven_tree: true }).dependencies
       self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
       expect([self_deps.count, external_deps.count]).to eq([91, 221])
       expect(output.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
@@ -728,24 +771,27 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "parses dependencies from maven-dependency-tree.dot files" do
       contents = load_fixture("maven-dependency-tree.dot")
-      output = described_class.parse_maven_tree_dot(contents)
+      result = described_class.parse_maven_tree_dot(contents)
 
-      expect(output.size).to eq(75)
+      expect(result).to be_a(Bibliothecary::DependenciesResult)
+
+      dependencies = result.dependencies
+      expect(dependencies.size).to eq(75)
 
       # Exclude parent project
-      expect(output.none? { |dep| dep.name == "net.sourceforge.pmd:pmd-scala_2.12" }).to be(true)
+      expect(dependencies.none? { |dep| dep.name == "net.sourceforge.pmd:pmd-scala_2.12" }).to be(true)
 
-      direct_example = output.find { |d| d.name == "com.github.oowekyala.treeutils:tree-printers" && d.requirement == "2.1.0" }
+      direct_example = dependencies.find { |d| d.name == "com.github.oowekyala.treeutils:tree-printers" && d.requirement == "2.1.0" }
       expect(direct_example.direct).to be(true)
 
-      transitive_example = output.find { |d| d.name == "org.scalameta:common_2.12" && d.requirement == "4.13.6" }
+      transitive_example = dependencies.find { |d| d.name == "org.scalameta:common_2.12" && d.requirement == "4.13.6" }
       expect(transitive_example.direct).to be(false)
     end
 
     it "parses dependencies with windows line endings" do
       contents = load_fixture("maven-dependency-tree.txt")
       contents = contents.gsub("\n", "\r\n")
-      output = described_class.parse_maven_tree(contents)
+      output = described_class.parse_maven_tree(contents).dependencies
       self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
       expect([self_deps.count, external_deps.count]).to eq([0, 221])
       expect(output.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
@@ -753,7 +799,9 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "parses dependencies with variables in version position" do
       output = described_class.parse_maven_tree("[INFO] +- net.sourceforge.pmd:pmd-scala_2.12:jar:${someVariable}\n")
-      expect(output).to eq [Bibliothecary::Dependency.new(platform: "maven", name: "net.sourceforge.pmd:pmd-scala_2.12", requirement: "${someVariable}", type: "jar")]
+      expect(output).to eq(Bibliothecary::DependenciesResult.new(
+                             dependencies: [Bibliothecary::Dependency.new(platform: "maven", name: "net.sourceforge.pmd:pmd-scala_2.12", requirement: "${someVariable}", type: "jar")]
+                           ))
     end
 
     it "parses dependencies with ansi color codes by stripping the codes" do
@@ -763,11 +811,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 [\e[1;34mINFO\e[m] |  +- net.sourceforge.pmd:pmd:pom:6.32.0-SNAPSHOT:provided
 [\e[1;34mINFO\e[m] +- net.java.dev.javacc:javacc:jar:5.0:provided))
 
-      expect(output).to eq [
-        Bibliothecary::Dependency.new(platform: "maven", name: "org.apache.ant:ant", requirement: "1.10.9", type: "provided"),
-        Bibliothecary::Dependency.new(platform: "maven", name: "net.sourceforge.pmd:pmd", requirement: "6.32.0-SNAPSHOT", type: "provided"),
-        Bibliothecary::Dependency.new(platform: "maven", name: "net.java.dev.javacc:javacc", requirement: "5.0", type: "provided"),
-      ]
+      expect(output).to eq(Bibliothecary::DependenciesResult.new(
+                             dependencies: [
+                               Bibliothecary::Dependency.new(platform: "maven",name: "org.apache.ant:ant", requirement: "1.10.9", type: "provided"),
+                               Bibliothecary::Dependency.new(platform: "maven",name: "net.sourceforge.pmd:pmd", requirement: "6.32.0-SNAPSHOT", type: "provided"),
+                               Bibliothecary::Dependency.new(platform: "maven",name: "net.java.dev.javacc:javacc", requirement: "5.0", type: "provided"),
+                             ]
+                           ))
     end
 
     it "parses dependencies from gradle-dependencies-q.txt, generated from build.gradle.kts" do

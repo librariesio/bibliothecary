@@ -40,7 +40,7 @@ module Bibliothecary
             platform: platform_name
           )
         end
-        deps
+        DependenciesResult.new(dependencies: deps)
       end
     end
   end

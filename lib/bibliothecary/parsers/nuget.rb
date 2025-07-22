@@ -52,7 +52,7 @@ module Bibliothecary
 
       def self.parse_project_lock_json(file_contents, options: {})
         manifest = JSON.parse file_contents
-        manifest.fetch("libraries", []).map do |name, _requirement|
+        dependencies = manifest.fetch("libraries", []).map do |name, _requirement|
           dep = name.split("/")
           Dependency.new(
             name: dep[0],
@@ -62,6 +62,7 @@ module Bibliothecary
             platform: platform_name
           )
         end
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_packages_lock_json(file_contents, options: {})
@@ -90,14 +91,14 @@ module Bibliothecary
 
           # Note, frameworks can be empty, so remove empty ones and then return the last sorted item if any
           frameworks.delete_if { |_k, v| v.empty? }
-          return frameworks[frameworks.keys.max] unless frameworks.empty?
+          return DependenciesResult.new(dependencies: frameworks[frameworks.keys.max]) unless frameworks.empty?
         end
-        []
+        DependenciesResult.new(dependencies: [])
       end
 
       def self.parse_packages_config(file_contents, options: {})
         manifest = Ox.parse file_contents
-        manifest.packages.locate("package").map do |dependency|
+        dependencies = manifest.packages.locate("package").map do |dependency|
           Dependency.new(
             name: dependency.id,
             requirement: (dependency.version if dependency.respond_to? "version"),
@@ -106,8 +107,9 @@ module Bibliothecary
             platform: platform_name
           )
         end
+        DependenciesResult.new(dependencies: dependencies)
       rescue StandardError
-        []
+        DependenciesResult.new(dependencies: [])
       end
 
       def self.parse_csproj(file_contents, options: {})
@@ -163,14 +165,15 @@ module Bibliothecary
             )
           end
 
-        packages.uniq(&:name)
+        dependencies = packages.uniq(&:name)
+        DependenciesResult.new(dependencies: dependencies)
       rescue StandardError
-        []
+        DependenciesResult.new(dependencies: [])
       end
 
       def self.parse_nuspec(file_contents, options: {})
         manifest = Ox.parse file_contents
-        manifest.package.metadata.dependencies.locate("dependency").map do |dependency|
+        dependencies = manifest.package.metadata.dependencies.locate("dependency").map do |dependency|
           Dependency.new(
             name: dependency.id,
             requirement: dependency.attributes[:version],
@@ -179,8 +182,9 @@ module Bibliothecary
             platform: platform_name
           )
         end
+        DependenciesResult.new(dependencies: dependencies)
       rescue StandardError
-        []
+        DependenciesResult.new(dependencies: [])
       end
 
       def self.parse_paket_lock(file_contents, options: {})
@@ -196,7 +200,8 @@ module Bibliothecary
           )
         end
         # we only have to enforce uniqueness by name because paket ensures that there is only the single version globally in the project
-        packages.uniq(&:name)
+        dependencies = packages.uniq(&:name)
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_project_assets_json(file_contents, options: {})
@@ -224,9 +229,9 @@ module Bibliothecary
 
           # Note, frameworks can be empty, so remove empty ones and then return the last sorted item if any
           frameworks.delete_if { |_k, v| v.empty? }
-          return frameworks[frameworks.keys.max] unless frameworks.empty?
+          return DependenciesResult.new(dependencies: frameworks[frameworks.keys.max]) unless frameworks.empty?
         end
-        []
+        DependenciesResult.new(dependencies: [])
       end
     end
   end

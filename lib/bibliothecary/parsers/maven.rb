@@ -139,7 +139,7 @@ module Bibliothecary
 
       def self.parse_ivy_manifest(file_contents, options: {})
         manifest = Ox.parse file_contents
-        manifest.dependencies.locate("dependency").map do |dependency|
+        dependencies = manifest.dependencies.locate("dependency").map do |dependency|
           attrs = dependency.attributes
           Dependency.new(
             name: "#{attrs[:org]}:#{attrs[:name]}",
@@ -149,6 +149,7 @@ module Bibliothecary
             platform: platform_name
           )
         end
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.ivy_report?(file_contents)
@@ -173,7 +174,7 @@ module Bibliothecary
         type = info.attributes[:conf]
         type = "unknown" if type.nil?
         modules = doc.locate("ivy-report/dependencies/module")
-        modules.map do |mod|
+        dependencies = modules.map do |mod|
           attrs = mod.attributes
           org = attrs[:organisation]
           name = attrs[:name]
@@ -189,12 +190,13 @@ module Bibliothecary
             platform: platform_name
           )
         end.compact
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_gradle_resolved(file_contents, options: {})
         current_type = nil
 
-        file_contents.split("\n").map do |line|
+        dependencies = file_contents.split("\n").map do |line|
           current_type_match = GRADLE_TYPE_REGEXP.match(line)
           current_type = current_type_match.captures[0] if current_type_match
 
@@ -261,15 +263,17 @@ module Bibliothecary
         end
           .compact
           .uniq { |item| [item.name, item.requirement, item.type, item.original_name, item.original_requirement] }
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_maven_resolved(file_contents, options: {})
-        file_contents
+        dependencies = file_contents
           .gsub(ANSI_MATCHER, "")
           .split("\n")
           .map { |line| parse_resolved_dep_line(line, options: options) }
           .compact
           .uniq
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       # Return each item in the ascii art tree with a depth of that item,
@@ -345,7 +349,7 @@ module Bibliothecary
           end
         end.compact.uniq
 
-        unique_items
+        dependencies = unique_items
           # drop the projects and subprojects
           .reject { |(name, version, _type)| projects_to_exclude[name]&.include?(version) }
           .map do |(name, version, type)|
@@ -357,11 +361,13 @@ module Bibliothecary
               platform: platform_name
             )
           end
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_maven_tree_dot(file_contents, options: {})
         # Project could be either the root project or a sub-module.
         project = file_contents.match(MAVEN_DOT_PROJECT_REGEXP)[1]
+        project_name, project_version, _project_type = parse_maven_tree_dependency(project)
         relationships = file_contents.scan(MAVEN_DOT_RELATIONSHIP_REGEXP)
 
         direct_names_to_versions = relationships.each.with_object({}) do |(parent, child), obj|
@@ -372,7 +378,7 @@ module Bibliothecary
           obj[name].add(version)
         end
 
-        relationships.map do |(_parent, child)|
+        deps = relationships.map do |(_parent, child)|
           child_name, child_version, child_type = parse_maven_tree_dependency(child)
 
           Dependency.new(
@@ -384,6 +390,14 @@ module Bibliothecary
             source: options.fetch(:filename, nil)
           )
         end.uniq
+
+        # TODO: should we change every method to return this, or just allow both to be
+        # returned to an analysis? (I'm leaning towards former)
+        DependenciesResult.new(
+          dependencies: deps,
+          project_name: project_name,
+          project_version: project_version
+        )
       end
 
       def self.parse_resolved_dep_line(line, options: {})
@@ -405,7 +419,8 @@ module Bibliothecary
       end
 
       def self.parse_standalone_pom_manifest(file_contents, options: {})
-        parse_pom_manifest(file_contents, {}, options:)
+        dependencies = parse_pom_manifest(file_contents, {}, options:)
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {})
@@ -481,7 +496,7 @@ module Bibliothecary
       end
 
       def self.parse_gradle(file_contents, options: {})
-        file_contents
+        dependencies = file_contents
           .scan(GRADLE_GROOVY_SIMPLE_REGEXP) # match 'implementation "group:artifactId:version"'
           .reject { |(_type, group, artifact_id, _version)| group.nil? || artifact_id.nil? } # remove any matches with missing group/artifactId
           .map do |(type, group, artifact_id, version)|
@@ -493,10 +508,11 @@ module Bibliothecary
               platform: platform_name
             )
           end
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_gradle_kts(file_contents, options: {})
-        file_contents
+        dependencies = file_contents
           .scan(GRADLE_KOTLIN_SIMPLE_REGEXP) # match 'implementation("group:artifactId:version")'
           .reject { |(_type, group, artifact_id, _version)| group.nil? || artifact_id.nil? } # remove any matches with missing group/artifactId
           .map do |(type, group, artifact_id, version)|
@@ -508,6 +524,7 @@ module Bibliothecary
               platform: platform_name
             )
           end
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.gradle_dependency_name(group, name)
@@ -623,13 +640,14 @@ module Bibliothecary
           dep.delete(:fields)
         end
 
-        squished.map do |dep_kvs|
+        dependencies = squished.map do |dep_kvs|
           Dependency.new(
             **dep_kvs,
             source: options.fetch(:filename, nil),
             platform: platform_name
           )
         end
+        DependenciesResult.new(dependencies: dependencies)
       end
 
       def self.parse_sbt_deps(type, lines)

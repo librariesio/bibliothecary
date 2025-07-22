@@ -12,6 +12,8 @@ describe Bibliothecary::Parsers::Go do
   it "parses depenencies from go.mod" do
     expect(described_class.analyse_contents("go.mod", load_fixture("go.mod"))).to eq({ platform: "go",
                                                                                        path: "go.mod",
+                                                                                       project_name: nil,
+                                                                                       project_version: nil,
                                                                                        kind: "manifest",
                                                                                        success: true,
                                                                                        dependencies: [
@@ -80,6 +82,8 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.analyse_contents("go.mod", load_fixture("go.single-require.mod"))).to eq({
                                                                                                       platform: "go",
                                                                                                       path: "go.mod",
+                                                                                                      project_name: nil,
+                                                                                                      project_version: nil,
                                                                                                       dependencies: [
         Bibliothecary::Dependency.new(platform: "go",
                                       name: "github.com/go-check/check",
@@ -97,6 +101,8 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.analyse_contents("go.sum", load_fixture("go.sum"))).to eq({
                                                                                        platform: "go",
                                                                                        path: "go.sum",
+                                                                                       project_name: nil,
+                                                                                       project_version: nil,
                                                                                        dependencies: [
         Bibliothecary::Dependency.new(platform: "go",
                                       name: "github.com/go-check/check",
@@ -143,6 +149,8 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.analyse_contents("glide.yaml", load_fixture("glide.yaml"))).to eq({
                                                                                                platform: "go",
                                                                                                path: "glide.yaml",
+                                                                                               project_name: nil,
+                                                                                               project_version: nil,
                                                                                                dependencies: [
         Bibliothecary::Dependency.new(platform: "go",
                                       name: "gopkg.in/yaml.v2",
@@ -174,6 +182,8 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.analyse_contents("glide.lock", load_fixture("glide.lock"))).to eq({
                                                                                                platform: "go",
                                                                                                path: "glide.lock",
+                                                                                               project_name: nil,
+                                                                                               project_version: nil,
                                                                                                dependencies: [
         Bibliothecary::Dependency.new(platform: "go",
                                       name: "github.com/codegangsta/cli",
@@ -205,6 +215,8 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.analyse_contents("Godeps/Godeps.json", load_fixture("Godeps.json"))).to eq({
                                                                                                         platform: "go",
                                                                                                         path: "Godeps/Godeps.json",
+                                                                                                        project_name: nil,
+                                                                                                        project_version: nil,
                                                                                                         dependencies: [
         Bibliothecary::Dependency.new(platform: "go",
                                       name: "github.com/BurntSushi/toml",
@@ -286,6 +298,8 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.analyse_contents("vendor/manifest", load_fixture("gb_manifest"))).to eq({
                                                                                                      platform: "go",
                                                                                                      path: "vendor/manifest",
+                                                                                                     project_name: nil,
+                                                                                                     project_version: nil,
                                                                                                      dependencies: [
         Bibliothecary::Dependency.new(platform: "go",
                                       name: "github.com/gorilla/mux",
@@ -302,6 +316,8 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.analyse_contents("Godeps", load_fixture("Godeps"))).to eq({
                                                                                        platform: "go",
                                                                                        path: "Godeps",
+                                                                                       project_name: nil,
+                                                                                       project_version: nil,
                                                                                        dependencies: [
         Bibliothecary::Dependency.new(platform: "go",
                                       name: "github.com/nu7hatch/gotrail",
@@ -338,6 +354,8 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.analyse_contents("vendor/vendor.json", load_fixture("vendor.json"))).to eq({
                                                                                                         platform: "go",
                                                                                                         path: "vendor/vendor.json",
+                                                                                                        project_name: nil,
+                                                                                                        project_version: nil,
                                                                                                         dependencies: [
         Bibliothecary::Dependency.new(platform: "go",
                                       name: "github.com/Bowery/prompt",
@@ -374,6 +392,8 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.analyse_contents("Gopkg.toml", load_fixture("Gopkg.toml"))).to eq({
                                                                                                platform: "go",
                                                                                                path: "Gopkg.toml",
+                                                                                               project_name: nil,
+                                                                                               project_version: nil,
                                                                                                dependencies: [
         Bibliothecary::Dependency.new(platform: "go",
                                       name: "github.com/Masterminds/semver",
@@ -425,6 +445,8 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.analyse_contents("Gopkg.lock", load_fixture("Gopkg.lock"))).to eq({
                                                                                                platform: "go",
                                                                                                path: "Gopkg.lock",
+                                                                                               project_name: nil,
+                                                                                               project_version: nil,
                                                                                                dependencies: [
         Bibliothecary::Dependency.new(platform: "go",
                                       name: "github.com/Masterminds/semver",
@@ -506,6 +528,8 @@ describe Bibliothecary::Parsers::Go do
     expect(described_class.analyse_contents("go-resolved-dependencies.json", load_fixture("go-resolved-dependencies.json"))).to eq({
                                                                                                                                      platform: "go",
                                                                                                                                      path: "go-resolved-dependencies.json",
+                                                                                                                                     project_name: nil,
+                                                                                                                                     project_version: nil,
                                                                                                                                      dependencies: [
         Bibliothecary::Dependency.new(platform: "go",
                                       name: "cloud.google.com/go",

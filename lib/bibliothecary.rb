@@ -2,6 +2,7 @@
 
 require "bibliothecary/version"
 require "bibliothecary/dependency"
+require "bibliothecary/dependencies_result"
 require "bibliothecary/analyser"
 require "bibliothecary/configuration"
 require "bibliothecary/runner"

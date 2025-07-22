@@ -11,6 +11,8 @@ describe Bibliothecary::Parsers::Elm do
     expect(described_class.analyse_contents("elm-package.json", load_fixture("elm-package.json"))).to eq({
                                                                                                            platform: "elm",
                                                                                                            path: "elm-package.json",
+                                                                                                           project_name: nil,
+                                                                                                           project_version: nil,
                                                                                                            dependencies: [
         Bibliothecary::Dependency.new(platform: "elm", name: "evancz/elm-markdown", requirement: "1.1.0 <= v < 2.0.0", type: "runtime", source: "elm-package.json"),
         Bibliothecary::Dependency.new(platform: "elm", name: "evancz/elm-html", requirement: "1.0.0 <= v < 2.0.0", type: "runtime", source: "elm-package.json"),
@@ -26,6 +28,8 @@ describe Bibliothecary::Parsers::Elm do
     expect(described_class.analyse_contents("elm_dependencies.json", load_fixture("elm_dependencies.json"))).to eq({
                                                                                                                      platform: "elm",
                                                                                                                      path: "elm_dependencies.json",
+                                                                                                                     project_name: nil,
+                                                                                                                     project_version: nil,
                                                                                                                      dependencies: [
         Bibliothecary::Dependency.new(platform: "elm", name: "johnpmayer/elm-webgl", requirement: "0.1.1", type: "runtime", source: "elm_dependencies.json"),
         Bibliothecary::Dependency.new(platform: "elm", name: "johnpmayer/elm-linear-algebra", requirement: "1.0.1", type: "runtime", source: "elm_dependencies.json"),
@@ -39,6 +43,8 @@ describe Bibliothecary::Parsers::Elm do
     expect(described_class.analyse_contents("elm-stuff/exact-dependencies.json", load_fixture("exact-dependencies.json"))).to eq({
                                                                                                                                    platform: "elm",
                                                                                                                                    path: "elm-stuff/exact-dependencies.json",
+                                                                                                                                   project_name: nil,
+                                                                                                                                   project_version: nil,
                                                                                                                                    dependencies: [
         Bibliothecary::Dependency.new(platform: "elm", name: "jvoigtlaender/elm-drag-and-drop", requirement: "1.0.1", type: "runtime", source: "elm-stuff/exact-dependencies.json"),
         Bibliothecary::Dependency.new(platform: "elm", name: "evancz/elm-html", requirement: "2.0.0", type: "runtime", source: "elm-stuff/exact-dependencies.json"),
