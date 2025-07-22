@@ -327,19 +327,20 @@ module Bibliothecary
 
         projects_to_exclude = {}
 
-        if keep_subprojects
-          # traditional behavior: we only exclude the root project, and only if we parsed multiple lines
-          (root_name, root_version, _root_type) = parse_maven_tree_dependency(items.shift[1])
-          unless items.empty?
-            projects_to_exclude[root_name] = Set.new
-            projects_to_exclude[root_name].add(root_version)
-          end
+        (root_name, root_version, _root_type) = parse_maven_tree_dependency(items[0][1])
+
+        # traditional behavior: we only exclude the root project, and only if we parsed multiple lines
+        if keep_subprojects && !items.empty?
+          items.shift
+          projects_to_exclude[root_name] = Set.new
+          projects_to_exclude[root_name].add(root_version)
         end
 
         unique_items = items.map do |(depth, item)|
           # new behavior: we exclude root and subprojects (depth 0 items)
           (name, version, type) = parse_maven_tree_dependency(item)
           if depth == 0 && !keep_subprojects
+
             # record and then remove the depth 0
             projects_to_exclude[name] ||= Set.new
             projects_to_exclude[name].add(version)
@@ -361,7 +362,11 @@ module Bibliothecary
               platform: platform_name
             )
           end
-        DependenciesResult.new(dependencies: dependencies)
+        DependenciesResult.new(
+          project_name: root_name,
+          project_version: root_version,
+          dependencies: dependencies
+        )
       end
 
       def self.parse_maven_tree_dot(file_contents, options: {})

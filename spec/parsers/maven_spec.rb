@@ -751,22 +751,33 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "parses dependencies from maven-dependency-tree.txt files" do
       contents = load_fixture("maven-dependency-tree.txt")
-      output = described_class.parse_maven_tree(contents).dependencies
-      self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
+      result = described_class.parse_maven_tree(contents)
+
+      expect(result.project_name).to eq("net.sourceforge.pmd:pmd")
+      expect(result.project_version).to eq("6.32.0-SNAPSHOT")
+
+      deps = result.dependencies
+      self_deps, external_deps = deps.partition { |item| is_self_dep?(item) }
       expect([self_deps.count, external_deps.count]).to eq([0, 221])
-      expect(output.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
+      expect(deps.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
       # should have filtered out the root project
-      expect(output.find { |item| item.name == "net.sourceforge.pmd:pmd" }).to eq(nil)
+      expect(deps.find { |item| item.name == "net.sourceforge.pmd:pmd" }).to eq(nil)
     end
 
     it "parses dependencies from maven-dependency-tree.txt files with keep subprojects option" do
       contents = load_fixture("maven-dependency-tree.txt")
-      output = described_class.parse_maven_tree(contents, options: { keep_subprojects_in_maven_tree: true }).dependencies
-      self_deps, external_deps = output.partition { |item| is_self_dep?(item) }
+      result = described_class.parse_maven_tree(contents, options: { keep_subprojects_in_maven_tree: true })
+
+      expect(result.project_name).to eq("net.sourceforge.pmd:pmd")
+      expect(result.project_version).to eq("6.32.0-SNAPSHOT")
+
+      deps = result.dependencies
+
+      self_deps, external_deps = deps.partition { |item| is_self_dep?(item) }
       expect([self_deps.count, external_deps.count]).to eq([91, 221])
-      expect(output.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
+      expect(deps.find { |item| item.name == "org.apache.commons:commons-lang3" }.requirement).to eq "3.8.1"
       # should have filtered out the root project
-      expect(output.find { |item| item.name == "net.sourceforge.pmd:pmd" }).to eq(nil)
+      expect(deps.find { |item| item.name == "net.sourceforge.pmd:pmd" }).to eq(nil)
     end
 
     it "parses dependencies from maven-dependency-tree.dot files" do
@@ -800,7 +811,9 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     it "parses dependencies with variables in version position" do
       output = described_class.parse_maven_tree("[INFO] +- net.sourceforge.pmd:pmd-scala_2.12:jar:${someVariable}\n")
       expect(output).to eq(Bibliothecary::DependenciesResult.new(
-                             dependencies: [Bibliothecary::Dependency.new(platform: "maven", name: "net.sourceforge.pmd:pmd-scala_2.12", requirement: "${someVariable}", type: "jar")]
+                                                                 platform: "maven",
+                             project_name: "net.sourceforge.pmd:pmd-scala_2.12",
+                             dependencies: [Bibliothecary::Dependency.new(name: "net.sourceforge.pmd:pmd-scala_2.12", requirement: "${someVariable}", type: "jar")]
                            ))
     end
 
@@ -812,6 +825,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 [\e[1;34mINFO\e[m] +- net.java.dev.javacc:javacc:jar:5.0:provided))
 
       expect(output).to eq(Bibliothecary::DependenciesResult.new(
+                             project_name: "net.sourceforge.pmd:pmd-core",
+                             project_version: "6.32.0-SNAPSHOT",
                              dependencies: [
                                Bibliothecary::Dependency.new(platform: "maven",name: "org.apache.ant:ant", requirement: "1.10.9", type: "provided"),
                                Bibliothecary::Dependency.new(platform: "maven",name: "net.sourceforge.pmd:pmd", requirement: "6.32.0-SNAPSHOT", type: "provided"),
