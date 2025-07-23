@@ -51,7 +51,7 @@ module Bibliothecary
 
     module ClassMethods
       def platform_name
-        name.to_s.split("::").last.downcase
+        @platform_name ||= name.to_s.split("::").last.downcase.freeze
       end
 
       def map_dependencies(hash, key, type, source = nil)
