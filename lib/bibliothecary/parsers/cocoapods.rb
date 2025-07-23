@@ -54,7 +54,7 @@ module Bibliothecary
 
       def self.parse_podspec(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:podspec, file_contents)
-        parse_ruby_manifest(manifest, "cocoapods", options.fetch(:filename, nil))
+        parse_ruby_manifest(manifest, platform_name, options.fetch(:filename, nil))
       end
 
       def self.parse_podfile(file_contents, options: {})
