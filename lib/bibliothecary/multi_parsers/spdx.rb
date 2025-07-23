@@ -137,6 +137,7 @@ module Bibliothecary
 
         entries[platform.to_sym] ||= []
         entries[platform.to_sym] << Dependency.new(
+          platform: platform.to_s,
           name: package_name,
           requirement: package_version,
           type: "lockfile",

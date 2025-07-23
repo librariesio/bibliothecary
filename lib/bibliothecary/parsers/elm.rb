@@ -30,7 +30,8 @@ module Bibliothecary
             name: name,
             requirement: requirement,
             type: "runtime",
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
       end

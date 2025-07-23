@@ -39,7 +39,8 @@ module Bibliothecary
             name: name,
             requirement: requirement["version"],
             type: type,
-            source: source
+            source: source,
+            platform: platform_name
           )
         end
       end

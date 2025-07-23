@@ -43,6 +43,7 @@ module Bibliothecary
           pod = row.is_a?(String) ? row : row.keys.first
           match = pod.match(/(.+?)\s\((.+?)\)/i)
           Dependency.new(
+            platform: platform_name,
             name: match[1].split("/").first,
             requirement: match[2],
             type: "runtime",
@@ -53,18 +54,19 @@ module Bibliothecary
 
       def self.parse_podspec(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:podspec, file_contents)
-        parse_ruby_manifest(manifest, options.fetch(:filename, nil))
+        parse_ruby_manifest(manifest, platform_name, options.fetch(:filename, nil))
       end
 
       def self.parse_podfile(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:podfile, file_contents)
-        parse_ruby_manifest(manifest, options.fetch(:filename, nil))
+        parse_ruby_manifest(manifest, "cocoapods", options.fetch(:filename, nil))
       end
 
       def self.parse_json_manifest(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         manifest["dependencies"].inject([]) do |deps, dep|
           deps.push(Dependency.new(
+                      platform: platform_name,
                       name: dep[0],
                       requirement: dep[1],
                       type: "runtime",

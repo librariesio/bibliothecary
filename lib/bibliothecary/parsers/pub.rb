@@ -35,7 +35,8 @@ module Bibliothecary
             name: name,
             requirement: dep["version"],
             type: "runtime",
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
       end

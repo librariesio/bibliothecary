@@ -51,12 +51,13 @@ module Bibliothecary
 
     module ClassMethods
       def platform_name
-        name.to_s.split("::").last.downcase
+        @platform_name ||= name.to_s.split("::").last.downcase.freeze
       end
 
       def map_dependencies(hash, key, type, source = nil)
         hash.fetch(key, []).map do |name, requirement|
           Dependency.new(
+            platform: platform_name,
             name: name,
             requirement: requirement,
             type: type,

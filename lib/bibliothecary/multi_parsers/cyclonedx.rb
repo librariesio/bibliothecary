@@ -38,6 +38,7 @@ module Bibliothecary
           @manifests[mapping] << Dependency.new(
             name: PurlUtil.full_name(purl),
             requirement: purl.version,
+            platform: mapping.to_s,
             type: "lockfile",
             source: source
           )

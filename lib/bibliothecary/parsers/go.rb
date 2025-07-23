@@ -91,7 +91,8 @@ module Bibliothecary
             name: match[1].strip,
             requirement: match[2].strip,
             type: "runtime",
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
         deps
@@ -186,7 +187,8 @@ module Bibliothecary
             name: match[1].strip,
             requirement: match[2].strip.split("/").first,
             type: "runtime",
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
         deps.uniq
@@ -203,11 +205,11 @@ module Bibliothecary
               name, requirement = dep["Replace"].split(" ", 2)
               requirement = "*" if requirement.to_s.strip == ""
               Dependency.new(
-                name: name, requirement: requirement, original_name: dep["Path"], original_requirement: dep["Version"], type: dep.fetch("Scope", "runtime"), source: options.fetch(:filename, nil)
+                platform: platform_name, name: name, requirement: requirement, original_name: dep["Path"], original_requirement: dep["Version"], type: dep.fetch("Scope", "runtime"), source: options.fetch(:filename, nil)
               )
             else
               Dependency.new(
-                name: dep["Path"], requirement: dep["Version"], type: dep.fetch("Scope", "runtime"), source: options.fetch(:filename, nil)
+                platform: platform_name, name: dep["Path"], requirement: dep["Version"], type: dep.fetch("Scope", "runtime"), source: options.fetch(:filename, nil)
               )
             end
           end
@@ -216,6 +218,7 @@ module Bibliothecary
       def self.map_dependencies(manifest, attr_name, dep_attr_name, version_attr_name, type, source = nil)
         manifest.fetch(attr_name, []).map do |dependency|
           Dependency.new(
+            platform: platform_name,
             name: dependency[dep_attr_name],
             requirement: dependency[version_attr_name],
             type: type,
@@ -231,6 +234,7 @@ module Bibliothecary
           replacement_dep = line.split(GOMOD_REPLACEMENT_SEPARATOR_REGEXP, 2).last
           replacement_match = replacement_dep.match(GOMOD_DEP_REGEXP)
           Dependency.new(
+            platform: platform_name,
             original_name: match[:name],
             original_requirement: match[:requirement],
             name: replacement_match[:name],
@@ -241,6 +245,7 @@ module Bibliothecary
           )
         when "retract"
           Dependency.new(
+            platform: platform_name,
             name: match[:name],
             requirement: match[:requirement],
             type: "runtime",
@@ -250,6 +255,7 @@ module Bibliothecary
           )
         else
           Dependency.new(
+            platform: platform_name,
             name: match[:name],
             requirement: match[:requirement],
             type: "runtime",

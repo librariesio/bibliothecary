@@ -98,7 +98,8 @@ module Bibliothecary
               original_requirement: original_name.nil? ? nil : dep["version"],
               type: dep.fetch("dev", false) || dep.fetch("devOptional", false) ? "development" : "runtime",
               local: dep.fetch("link", false),
-              source: source
+              source: source,
+              platform: platform_name
             )
           end
       end
@@ -118,7 +119,8 @@ module Bibliothecary
             name: name,
             requirement: version,
             type: type,
-            source: source
+            source: source,
+            platform: platform_name
           )] + child_dependencies
         end
       end
@@ -150,7 +152,8 @@ module Bibliothecary
               original_requirement: original_name.nil? ? nil : requirement,
               type: "runtime",
               local: requirement.start_with?("file:"),
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           end
 
@@ -162,7 +165,8 @@ module Bibliothecary
               requirement: requirement,
               type: "development",
               local: requirement.start_with?("file:"),
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           end
 
@@ -184,7 +188,8 @@ module Bibliothecary
             original_requirement: dep[:original_requirement],
             type: "runtime", # lockfile doesn't tell us more about the type of dep
             local: dep[:requirements]&.first&.start_with?("file:"),
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
       end
@@ -285,7 +290,8 @@ module Bibliothecary
               original_name: original_name,
               original_requirement: original_requirement,
               type: is_dev ? "development" : "runtime",
-              source: source
+              source: source,
+              platform: platform_name
             )
           end
       end
@@ -321,7 +327,8 @@ module Bibliothecary
               original_name: original_name,
               original_requirement: original_requirement,
               type: is_dev ? "development" : "runtime",
-              source: source
+              source: source,
+              platform: platform_name
             )
           end
       end
@@ -369,7 +376,8 @@ module Bibliothecary
               original_name: original_name,
               original_requirement: original_requirement,
               type: is_dev ? "development" : "runtime",
-              source: source
+              source: source,
+              platform: platform_name
             )
           end
       end
@@ -420,7 +428,8 @@ module Bibliothecary
             original_requirement: is_alias ? version : nil,
             type: dev_deps&.include?(name) ? "development" : "runtime",
             local: is_local,
-            source: source
+            source: source,
+            platform: platform_name
           )
         end
       end
@@ -444,7 +453,8 @@ module Bibliothecary
               name: name,
               requirement: metadata["version"],
               type: "runtime",
-              source: source
+              source: source,
+              platform: platform_name
             ),
           ] + transform_tree_to_array(metadata.fetch("dependencies", {}), source)
         end.flatten(1)

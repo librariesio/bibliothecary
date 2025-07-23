@@ -12,14 +12,14 @@ describe Bibliothecary::Parsers::Rubygems do
                                                                                          platform: "rubygems",
                                                                                          path: "Gemfile",
                                                                                          dependencies: [
-        Bibliothecary::Dependency.new(name: "oj", requirement: ">= 0", type: "runtime", source: "Gemfile"),
-        Bibliothecary::Dependency.new(name: "rails", requirement: "= 4.2.0", type: "runtime", source: "Gemfile"),
-        Bibliothecary::Dependency.new(name: "leveldb-ruby", requirement: "= 0.15", type: "runtime", source: "Gemfile"),
-        Bibliothecary::Dependency.new(name: "spring", requirement: ">= 0", type: "development", source: "Gemfile"),
-        Bibliothecary::Dependency.new(name: "thin", requirement: ">= 0", type: "development", source: "Gemfile"),
-        Bibliothecary::Dependency.new(name: "puma", requirement: ">= 0", type: "runtime", source: "Gemfile"),
-        Bibliothecary::Dependency.new(name: "rails_12factor", requirement: ">= 0", type: "runtime", source: "Gemfile"),
-        Bibliothecary::Dependency.new(name: "bugsnag", requirement: ">= 0", type: "runtime", source: "Gemfile"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "oj", requirement: ">= 0", type: "runtime", source: "Gemfile"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "rails", requirement: "= 4.2.0", type: "runtime", source: "Gemfile"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "leveldb-ruby", requirement: "= 0.15", type: "runtime", source: "Gemfile"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "spring", requirement: ">= 0", type: "development", source: "Gemfile"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "thin", requirement: ">= 0", type: "development", source: "Gemfile"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "puma", requirement: ">= 0", type: "runtime", source: "Gemfile"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "rails_12factor", requirement: ">= 0", type: "runtime", source: "Gemfile"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "bugsnag", requirement: ">= 0", type: "runtime", source: "Gemfile"),
       ],
                                                                                          kind: "manifest",
                                                                                          success: true,
@@ -31,14 +31,14 @@ describe Bibliothecary::Parsers::Rubygems do
                                                                                          platform: "rubygems",
                                                                                          path: "gems.rb",
                                                                                          dependencies: [
-        Bibliothecary::Dependency.new(name: "oj", requirement: ">= 0", type: "runtime", source: "gems.rb"),
-        Bibliothecary::Dependency.new(name: "rails", requirement: "= 4.2.0", type: "runtime", source: "gems.rb"),
-        Bibliothecary::Dependency.new(name: "leveldb-ruby", requirement: "= 0.15", type: "runtime", source: "gems.rb"),
-        Bibliothecary::Dependency.new(name: "spring", requirement: ">= 0", type: "development", source: "gems.rb"),
-        Bibliothecary::Dependency.new(name: "thin", requirement: ">= 0", type: "development", source: "gems.rb"),
-        Bibliothecary::Dependency.new(name: "puma", requirement: ">= 0", type: "runtime", source: "gems.rb"),
-        Bibliothecary::Dependency.new(name: "rails_12factor", requirement: ">= 0", type: "runtime", source: "gems.rb"),
-        Bibliothecary::Dependency.new(name: "bugsnag", requirement: ">= 0", type: "runtime", source: "gems.rb"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "oj", requirement: ">= 0", type: "runtime", source: "gems.rb"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "rails", requirement: "= 4.2.0", type: "runtime", source: "gems.rb"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "leveldb-ruby", requirement: "= 0.15", type: "runtime", source: "gems.rb"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "spring", requirement: ">= 0", type: "development", source: "gems.rb"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "thin", requirement: ">= 0", type: "development", source: "gems.rb"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "puma", requirement: ">= 0", type: "runtime", source: "gems.rb"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "rails_12factor", requirement: ">= 0", type: "runtime", source: "gems.rb"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "bugsnag", requirement: ">= 0", type: "runtime", source: "gems.rb"),
       ],
                                                                                          kind: "manifest",
                                                                                          success: true,
@@ -50,12 +50,12 @@ describe Bibliothecary::Parsers::Rubygems do
                                                                                                        platform: "rubygems",
                                                                                                        path: "devise.gemspec",
                                                                                                        dependencies: [
-        Bibliothecary::Dependency.new(name: "warden", requirement: "~> 1.2.3", type: "runtime", source: "devise.gemspec"),
-        Bibliothecary::Dependency.new(name: "orm_adapter", requirement: "~> 0.1", type: "development", source: "devise.gemspec"),
-        Bibliothecary::Dependency.new(name: "bcrypt", requirement: "~> 3.0", type: "runtime", source: "devise.gemspec"),
-        Bibliothecary::Dependency.new(name: "thread_safe", requirement: "~> 0.1", type: "runtime", source: "devise.gemspec"),
-        Bibliothecary::Dependency.new(name: "railties", requirement: ">= 3.2.6, < 5", type: "runtime", source: "devise.gemspec"),
-        Bibliothecary::Dependency.new(name: "responders", requirement: ">= 0", type: "runtime", source: "devise.gemspec"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "warden", requirement: "~> 1.2.3", type: "runtime", source: "devise.gemspec"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "orm_adapter", requirement: "~> 0.1", type: "development", source: "devise.gemspec"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "bcrypt", requirement: "~> 3.0", type: "runtime", source: "devise.gemspec"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "thread_safe", requirement: "~> 0.1", type: "runtime", source: "devise.gemspec"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "railties", requirement: ">= 3.2.6, < 5", type: "runtime", source: "devise.gemspec"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "responders", requirement: ">= 0", type: "runtime", source: "devise.gemspec"),
       ],
                                                                                                        kind: "manifest",
                                                                                                        success: true,
@@ -67,10 +67,10 @@ describe Bibliothecary::Parsers::Rubygems do
                                                                                                    platform: "rubygems",
                                                                                                    path: "Gemfile.lock",
                                                                                                    dependencies: [
-        Bibliothecary::Dependency.new(name: "CFPropertyList", requirement: "2.3.1", type: "runtime", source: "Gemfile.lock"),
-        Bibliothecary::Dependency.new(name: "actionmailer", requirement: "4.2.3", type: "runtime", source: "Gemfile.lock"),
-        Bibliothecary::Dependency.new(name: "googleauth", requirement: "0.4.1", type: "runtime", source: "Gemfile.lock"),
-        Bibliothecary::Dependency.new(name: "hashie", requirement: "3.4.2", type: "runtime", source: "Gemfile.lock"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "CFPropertyList", requirement: "2.3.1", type: "runtime", source: "Gemfile.lock"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "actionmailer", requirement: "4.2.3", type: "runtime", source: "Gemfile.lock"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "googleauth", requirement: "0.4.1", type: "runtime", source: "Gemfile.lock"),
+        Bibliothecary::Dependency.new(platform: "rubygems", name: "hashie", requirement: "3.4.2", type: "runtime", source: "Gemfile.lock"),
       ],
                                                                                                    kind: "lockfile",
                                                                                                    success: true,
@@ -86,7 +86,7 @@ describe Bibliothecary::Parsers::Rubygems do
       success: true
     )
 
-    expect(result[:dependencies]).to include(Bibliothecary::Dependency.new(name: "bundler", requirement: "2.3.19", type: "runtime", source: "Gemfile.lock"))
+    expect(result[:dependencies]).to include(Bibliothecary::Dependency.new(platform: "rubygems", name: "bundler", requirement: "2.3.19", type: "runtime", source: "Gemfile.lock"))
   end
 
   it "parses dependencies from Gemfile.lock with windows line endings" do
@@ -101,7 +101,7 @@ describe Bibliothecary::Parsers::Rubygems do
               platform: "rubygems",
               path: "Gemfile.lock",
               dependencies: [
-          Bibliothecary::Dependency.new(name: "rails", requirement: "5.2.3", type: "runtime", source: "Gemfile.lock"),
+          Bibliothecary::Dependency.new(platform: "rubygems", name: "rails", requirement: "5.2.3", type: "runtime", source: "Gemfile.lock"),
         ],
               kind: "lockfile",
               success: true,

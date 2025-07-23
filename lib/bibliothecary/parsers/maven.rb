@@ -145,7 +145,8 @@ module Bibliothecary
             name: "#{attrs[:org]}:#{attrs[:name]}",
             requirement: attrs[:rev],
             type: "runtime",
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
       end
@@ -184,7 +185,8 @@ module Bibliothecary
             name: "#{org}:#{name}",
             requirement: version,
             type: type,
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end.compact
       end
@@ -232,7 +234,8 @@ module Bibliothecary
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
               type: current_type,
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           elsif dep.count == 5
             # get name from renamed package resolution "org:name -> renamed_org:name:version"
@@ -242,7 +245,8 @@ module Bibliothecary
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
               type: current_type,
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           else
             # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
@@ -250,7 +254,8 @@ module Bibliothecary
               name: dep[0..1].join(":"),
               requirement: dep[-1],
               type: current_type,
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           end
         end
@@ -348,7 +353,8 @@ module Bibliothecary
               name: name,
               requirement: version,
               type: type,
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           end
       end
@@ -372,6 +378,7 @@ module Bibliothecary
           Dependency.new(
             name: child_name,
             requirement: child_version,
+            platform: platform_name,
             type: child_type,
             direct: direct_names_to_versions[child_name]&.include?(child_version) || false,
             source: options.fetch(:filename, nil)
@@ -392,7 +399,8 @@ module Bibliothecary
           name: dep_parts[0, 2].join(":"),
           requirement: dep_parts[3],
           type: dep_parts[4].split("--").first.strip,
-          source: options.fetch(:filename, nil)
+          source: options.fetch(:filename, nil),
+          platform: platform_name
         )
       end
 
@@ -438,6 +446,7 @@ module Bibliothecary
             unless dep_hashes.key?(key)
               dep_hashes[key] = {
                 name: key,
+                platform: platform_name,
                 requirement: nil,
                 type: nil,
                 optional: nil,
@@ -480,7 +489,8 @@ module Bibliothecary
               name: [group, artifact_id].join(":"),
               requirement: version,
               type: type,
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           end
       end
@@ -494,7 +504,8 @@ module Bibliothecary
               name: [group, artifact_id].join(":"),
               requirement: version,
               type: type,
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           end
       end
@@ -614,7 +625,9 @@ module Bibliothecary
 
         squished.map do |dep_kvs|
           Dependency.new(
-            **dep_kvs, source: options.fetch(:filename, nil)
+            **dep_kvs,
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
       end

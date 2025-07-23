@@ -49,7 +49,8 @@ module Bibliothecary
               name: name,
               requirement: version,
               type: "runtime",
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           else
             parse_bundler(file_contents, options.fetch(:filename, nil))
@@ -59,12 +60,12 @@ module Bibliothecary
 
       def self.parse_gemfile(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:gemfile, file_contents)
-        parse_ruby_manifest(manifest, options.fetch(:filename, nil))
+        parse_ruby_manifest(manifest, platform_name, options.fetch(:filename, nil))
       end
 
       def self.parse_gemspec(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:gemspec, file_contents)
-        parse_ruby_manifest(manifest, options.fetch(:filename, nil))
+        parse_ruby_manifest(manifest, platform_name, options.fetch(:filename, nil))
       end
 
       def self.parse_bundler(file_contents, source = nil)
@@ -77,7 +78,8 @@ module Bibliothecary
           name: "bundler",
           requirement: version,
           type: "runtime",
-          source: source
+          source: source,
+          platform: platform_name
         )
       end
     end

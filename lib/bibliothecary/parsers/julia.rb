@@ -36,7 +36,8 @@ module Bibliothecary
             name: name,
             requirement: reqs,
             type: "runtime",
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
         deps

@@ -116,8 +116,11 @@ module Bibliothecary
         # track of the original name so the dep is connected between manifest+lockfile.
         deps.map do |dep|
           normalized_name = normalize_name(dep.name)
-          Dependency.new(**dep.to_h, name: normalized_name,
-                                     original_name: normalized_name == dep.name ? nil : dep.name)
+          Dependency.new(
+            **dep.to_h,
+            name: normalized_name,
+            original_name: normalized_name == dep.name ? nil : dep.name
+          )
         end
       end
 
@@ -133,6 +136,7 @@ module Bibliothecary
             # https://python-poetry.org/docs/dependency-specification/#multiple-constraints-dependencies
             package_info.map do |info|
               Dependency.new(
+                platform: platform_name,
                 name: name,
                 requirement: map_requirements(info),
                 type: type,
@@ -142,6 +146,7 @@ module Bibliothecary
             end
           else
             Dependency.new(
+              platform: platform_name,
               name: name,
               requirement: map_requirements(package_info),
               type: type,
@@ -206,7 +211,8 @@ module Bibliothecary
               original_name: normalized_name == package["name"] ? nil : package["name"],
               requirement: map_requirements(package),
               type: group,
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           end
         end
@@ -228,7 +234,8 @@ module Bibliothecary
             name: match[1],
             requirement: match[-1],
             type: "runtime",
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
         deps
@@ -247,7 +254,8 @@ module Bibliothecary
               name: pkg.dig("package", "package_name"),
               requirement: pkg.dig("package", "installed_version"),
               type: "runtime",
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           end
           .uniq
@@ -282,7 +290,8 @@ module Bibliothecary
               name: match[1],
               requirement: match[-1],
               type: type,
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           end
         end
@@ -303,7 +312,8 @@ module Bibliothecary
           name: name,
           requirement: requirement,
           type: type,
-          source: source
+          source: source,
+          platform: platform_name
         )
       end
 

@@ -40,8 +40,8 @@ module Bibliothecary
     def initialize(
       name:,
       requirement:,
+      platform:,
       original_requirement: nil,
-      platform: nil,
       type: nil,
       direct: nil,
       deprecated: nil,

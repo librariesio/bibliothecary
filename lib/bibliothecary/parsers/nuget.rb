@@ -58,7 +58,8 @@ module Bibliothecary
             name: dep[0],
             requirement: dep[1],
             type: "runtime",
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
       end
@@ -77,7 +78,8 @@ module Bibliothecary
                 # so fallback to requested is pure paranoia
                 requirement: details.fetch("resolved", details.fetch("requested", "*")),
                 type: "runtime",
-                source: options.fetch(:filename, nil)
+                source: options.fetch(:filename, nil),
+                platform: platform_name
               )
             end
         end
@@ -100,7 +102,8 @@ module Bibliothecary
             name: dependency.id,
             requirement: (dependency.version if dependency.respond_to? "version"),
             type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime",
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
       rescue StandardError
@@ -138,7 +141,8 @@ module Bibliothecary
               name: dependency.Include,
               requirement: requirement,
               type: type,
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           end
 
@@ -154,7 +158,8 @@ module Bibliothecary
               name: name,
               requirement: vals["Version"] || "*",
               type: "runtime",
-              source: options.fetch(:filename, nil)
+              source: options.fetch(:filename, nil),
+              platform: platform_name
             )
           end
 
@@ -170,7 +175,8 @@ module Bibliothecary
             name: dependency.id,
             requirement: dependency.attributes[:version],
             type: dependency.respond_to?("developmentDependency") && dependency.developmentDependency == "true" ? "development" : "runtime",
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
       rescue StandardError
@@ -185,7 +191,8 @@ module Bibliothecary
             name: match[:name].strip,
             requirement: match[:version],
             type: "runtime",
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
         # we only have to enforce uniqueness by name because paket ensures that there is only the single version globally in the project
@@ -205,7 +212,8 @@ module Bibliothecary
                 name: name_split[0],
                 requirement: name_split[1],
                 type: "runtime",
-                source: options.fetch(:filename, nil)
+                source: options.fetch(:filename, nil),
+                platform: platform_name
               )
             end
         end
