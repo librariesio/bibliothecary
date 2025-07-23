@@ -60,7 +60,7 @@ module Bibliothecary
 
       def self.parse_gemfile(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:gemfile, file_contents)
-        parse_ruby_manifest(manifest, "rubygems", options.fetch(:filename, nil))
+        parse_ruby_manifest(manifest, platform_name, options.fetch(:filename, nil))
       end
 
       def self.parse_gemspec(file_contents, options: {})
