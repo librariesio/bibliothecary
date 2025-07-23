@@ -5,24 +5,20 @@ module Bibliothecary
   #
   # @attr_reader [Array<Dependency>] dependencies The list of Dependency objects
   # @attr_reader [String,nil] project_name The name of the project
-  # @attr_reader [String,nil] project_name The version of the project
   class DependenciesResult
     FIELDS = %i[
       dependencies
       project_name
-      project_version
     ].freeze
 
     attr_reader(*FIELDS)
 
     def initialize(
       dependencies: [],
-      project_name: nil,
-      project_version: nil
+      project_name: nil
     )
       @dependencies = dependencies
       @project_name = project_name
-      @project_version = project_version
     end
 
     def eql?(other)

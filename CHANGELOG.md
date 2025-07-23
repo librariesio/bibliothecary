@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added Bibliothecary::DependenciesResult class, to wrap dependencies with the project name and version.
+- Added Bibliothecary::DependenciesResult class, to wrap dependencies with the project name.
 
 ### Changed
 

@@ -12,7 +12,6 @@ describe Bibliothecary::Parsers::Shard do
                                                                                              platform: "shard",
                                                                                              path: "shard.yml",
                                                                                              project_name: nil,
-                                                                                             project_version: nil,
                                                                                              dependencies: [
         Bibliothecary::Dependency.new(platform: "shard", name: "frost", requirement: "*", type: "runtime", source: "shard.yml"),
         Bibliothecary::Dependency.new(platform: "shard", name: "shards", requirement: "*", type: "runtime", source: "shard.yml"),
@@ -30,7 +29,6 @@ describe Bibliothecary::Parsers::Shard do
                                                                                                platform: "shard",
                                                                                                path: "shard.lock",
                                                                                                project_name: nil,
-                                                                                               project_version: nil,
                                                                                                dependencies: [
         Bibliothecary::Dependency.new(platform: "shard", name: "common_mark", requirement: "0.1.0", type: "runtime", source: "shard.lock"),
         Bibliothecary::Dependency.new(platform: "shard", name: "frost", requirement: "*", type: "runtime", source: "shard.lock"),

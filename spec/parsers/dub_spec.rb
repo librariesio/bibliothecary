@@ -12,7 +12,6 @@ describe Bibliothecary::Parsers::Dub do
                                                                                            platform: "dub",
                                                                                            path: "dub.json",
                                                                                            project_name: nil,
-                                                                                           project_version: nil,
                                                                                            dependencies: [
         Bibliothecary::Dependency.new(platform: "dub", name: "vibe-d", requirement: "~>0.7.22", type: "runtime", source: "dub.json"),
         Bibliothecary::Dependency.new(platform: "dub", name: "libdparse", requirement: { "optional" => true, "version" => "~>0.2.0" }, type: "runtime", source: "dub.json"),
@@ -27,7 +26,6 @@ describe Bibliothecary::Parsers::Dub do
                                                                                          platform: "dub",
                                                                                          path: "dub.sdl",
                                                                                          project_name: nil,
-                                                                                         project_version: nil,
                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "dub", name: "vibe-d", requirement: "~>0.7.23", type: :runtime, source: "dub.sdl"),
       ],

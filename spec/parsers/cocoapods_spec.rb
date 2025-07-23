@@ -12,7 +12,6 @@ describe Bibliothecary::Parsers::CocoaPods do
                                                                                          platform: "cocoapods",
                                                                                          path: "Podfile",
                                                                                          project_name: nil,
-                                                                                         project_version: nil,
                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "cocoapods", name: "Artsy-UIButtons", requirement: ">= 0", type: "runtime", source: "Podfile"),
         Bibliothecary::Dependency.new(platform: "cocoapods", name: "ORStackView", requirement: ">= 0", type: "runtime", source: "Podfile"),
@@ -46,7 +45,6 @@ describe Bibliothecary::Parsers::CocoaPods do
                                                                                                    platform: "cocoapods",
                                                                                                    path: "Podfile.lock",
                                                                                                    project_name: nil,
-                                                                                                   project_version: nil,
                                                                                                    dependencies: [
         Bibliothecary::Dependency.new(platform: "cocoapods", name: "Alamofire", requirement: "2.0.1", type: "runtime", source: "Podfile.lock"),
         Bibliothecary::Dependency.new(platform: "cocoapods", name: "ARAnalytics", requirement: "3.8.0", type: "runtime", source: "Podfile.lock"),
@@ -109,7 +107,6 @@ describe Bibliothecary::Parsers::CocoaPods do
                                                                                                          platform: "cocoapods",
                                                                                                          path: "example.podspec",
                                                                                                          project_name: nil,
-                                                                                                         project_version: nil,
                                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "cocoapods", name: "CocoaLumberjack", requirement: ">= 0", type: "runtime", source: "example.podspec"),
       ],
@@ -123,7 +120,6 @@ describe Bibliothecary::Parsers::CocoaPods do
                                                                                                                    platform: "cocoapods",
                                                                                                                    path: "example.podspec.json",
                                                                                                                    project_name: nil,
-                                                                                                                   project_version: nil,
                                                                                                                    dependencies: [
         Bibliothecary::Dependency.new(platform: "cocoapods", name: "OpenSSL", requirement: ["~> 1.0"], type: "runtime", source: "example.podspec.json"),
       ],

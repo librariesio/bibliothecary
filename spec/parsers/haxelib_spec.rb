@@ -12,7 +12,6 @@ describe Bibliothecary::Parsers::Haxelib do
                                                                                                    platform: "haxelib",
                                                                                                    path: "haxelib.json",
                                                                                                    project_name: nil,
-                                                                                                   project_version: nil,
                                                                                                    dependencies: [
         Bibliothecary::Dependency.new(platform: "haxelib", name: "lime", requirement: "2.9.1", type: "runtime", source: "haxelib.json"),
         Bibliothecary::Dependency.new(platform: "haxelib", name: "openfl", requirement: "3.6.1", type: "runtime", source: "haxelib.json"),

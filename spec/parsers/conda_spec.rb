@@ -13,7 +13,6 @@ describe Bibliothecary::Parsers::Conda do
         platform: "conda",
         path: "environment.yml",
         project_name: nil,
-        project_version: nil,
         dependencies: [
           Bibliothecary::Dependency.new(platform: "conda", name: "beautifulsoup4", requirement: "4.7.1", type: "runtime", source: "environment.yml"),
           Bibliothecary::Dependency.new(platform: "conda", name: "biopython", requirement: "1.74", type: "runtime", source: "environment.yml"),
@@ -39,7 +38,6 @@ describe Bibliothecary::Parsers::Conda do
         platform: "conda",
         path: "conda_with_pip/environment.yml",
         project_name: nil,
-        project_version: nil,
         dependencies: [
           Bibliothecary::Dependency.new(platform: "conda", name: "pip", requirement: "", type: "runtime", source: "conda_with_pip/environment.yml"),
           Bibliothecary::Dependency.new(platform: "conda", name: "sqlite", requirement: "3.29.0", type: "runtime", source: "conda_with_pip/environment.yml"),

@@ -12,7 +12,6 @@ describe Bibliothecary::Parsers::Cargo do
                                                                                                platform: "cargo",
                                                                                                path: "Cargo.toml",
                                                                                                project_name: nil,
-                                                                                               project_version: nil,
                                                                                                dependencies: [
         Bibliothecary::Dependency.new(platform: "cargo", name: "rustc-serialize", requirement: "*", type: "runtime", source: "Cargo.toml"),
         Bibliothecary::Dependency.new(platform: "cargo", name: "regex", requirement: "*", type: "runtime", source: "Cargo.toml"),
@@ -28,7 +27,6 @@ describe Bibliothecary::Parsers::Cargo do
                                                                                                platform: "cargo",
                                                                                                path: "Cargo.lock",
                                                                                                project_name: nil,
-                                                                                               project_version: nil,
                                                                                                dependencies: [
         Bibliothecary::Dependency.new(platform: "cargo", name: "aho-corasick", requirement: "0.7.18", type: "runtime", source: "Cargo.lock"),
         Bibliothecary::Dependency.new(platform: "cargo", name: "fuchsia-cprng", requirement: "0.1.1", type: "runtime", source: "Cargo.lock"),

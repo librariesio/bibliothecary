@@ -364,7 +364,6 @@ module Bibliothecary
           end
         DependenciesResult.new(
           project_name: root_name,
-          project_version: root_version,
           dependencies: dependencies
         )
       end
@@ -372,7 +371,7 @@ module Bibliothecary
       def self.parse_maven_tree_dot(file_contents, options: {})
         # Project could be either the root project or a sub-module.
         project = file_contents.match(MAVEN_DOT_PROJECT_REGEXP)[1]
-        project_name, project_version, _project_type = parse_maven_tree_dependency(project)
+        project_name, _project_version, _project_type = parse_maven_tree_dependency(project)
         relationships = file_contents.scan(MAVEN_DOT_RELATIONSHIP_REGEXP)
 
         direct_names_to_versions = relationships.each.with_object({}) do |(parent, child), obj|
@@ -400,8 +399,7 @@ module Bibliothecary
         # returned to an analysis? (I'm leaning towards former)
         DependenciesResult.new(
           dependencies: deps,
-          project_name: project_name,
-          project_version: project_version
+          project_name: project_name
         )
       end
 

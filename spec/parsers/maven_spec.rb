@@ -18,7 +18,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
                                                                                          platform: "maven",
                                                                                          path: "pom.xml",
                                                                                          project_name: nil,
-                                                                                         project_version: nil,
                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "maven",
                                       name: "org.accidia:echo-parent",
@@ -215,7 +214,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
                                                                                           platform: "maven",
                                                                                           path: "pom.xml",
                                                                                           project_name: nil,
-                                                                                          project_version: nil,
                                                                                           dependencies: [
         Bibliothecary::Dependency.new(platform: "maven",
                                       name: "org.apache.maven:maven-plugin-api",
@@ -268,7 +266,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
                                                                                                                       platform: "maven",
                                                                                                                       path: "pom.xml",
                                                                                                                       project_name: nil,
-                                                                                                                      project_version: nil,
                                                                                                                       dependencies: [
         Bibliothecary::Dependency.new(platform: "maven", name: "org.apache.maven:maven-plugin-api",
                                       requirement: "3.3.9",
@@ -314,7 +311,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
                                                                                          platform: "maven",
                                                                                          path: "ivy.xml",
                                                                                          project_name: nil,
-                                                                                         project_version: nil,
                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "maven", name: "org.htmlparser:htmlparser", requirement: "2.1", type: "runtime", source: "ivy.xml"),
         Bibliothecary::Dependency.new(platform: "maven", name: "org.apache.velocity:velocity", requirement: "1.7", type: "runtime", source: "ivy.xml"),
@@ -369,7 +365,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
                                                                                                      platform: "maven",
                                                                                                      path: "build.gradle",
                                                                                                      project_name: nil,
-                                                                                                     project_version: nil,
                                                                                                      dependencies: [
           Bibliothecary::Dependency.new(platform: "maven", name: "com.squareup.okhttp:okhttp", requirement: "2.1.0", type: "compile", source: "build.gradle"),
           Bibliothecary::Dependency.new(platform: "maven", name: "com.squareup.okhttp:okhttp-urlconnection", requirement: "2.1.0", type: "compile", source: "build.gradle"),
@@ -392,7 +387,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
                                                                                                              platform: "maven",
                                                                                                              path: "build.gradle.kts",
                                                                                                              project_name: nil,
-                                                                                                             project_version: nil,
                                                                                                              dependencies: [
           Bibliothecary::Dependency.new(platform: "maven", name: "org.jetbrains.kotlin:kotlin-stdlib-jdk8", requirement: "*", type: "implementation", source: "build.gradle.kts"),
           Bibliothecary::Dependency.new(platform: "maven", name: "com.google.guava:guava", requirement: "30.1.1-jre", type: "implementation", source: "build.gradle.kts"),
@@ -411,7 +405,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
                                                                                                                                                            platform: "maven",
                                                                                                                                                            path: "com.example-hello_2.12-compile.xml",
                                                                                                                                                            project_name: nil,
-                                                                                                                                                           project_version: nil,
                                                                                                                                                            dependencies: [
         Bibliothecary::Dependency.new(platform: "maven", name: "org.scala-lang:scala-library", requirement: "2.12.5", type: "compile", source: "com.example-hello_2.12-compile.xml"),
       ],
@@ -425,7 +418,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
                                                                                                                                                                platform: "maven",
                                                                                                                                                                path: "com.example-subproject_2.12-test.xml",
                                                                                                                                                                project_name: nil,
-                                                                                                                                                               project_version: nil,
                                                                                                                                                                dependencies: [
         Bibliothecary::Dependency.new(platform: "maven", name: "com.typesafe.akka:akka-stream_2.12", requirement: "2.5.6", type: "test", source: "com.example-subproject_2.12-test.xml"),
         Bibliothecary::Dependency.new(platform: "maven", name: "com.typesafe:ssl-config-core_2.12", requirement: "0.2.2", type: "test", source: "com.example-subproject_2.12-test.xml"),
@@ -754,7 +746,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       result = described_class.parse_maven_tree(contents)
 
       expect(result.project_name).to eq("net.sourceforge.pmd:pmd")
-      expect(result.project_version).to eq("6.32.0-SNAPSHOT")
 
       deps = result.dependencies
       self_deps, external_deps = deps.partition { |item| is_self_dep?(item) }
@@ -769,7 +760,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       result = described_class.parse_maven_tree(contents, options: { keep_subprojects_in_maven_tree: true })
 
       expect(result.project_name).to eq("net.sourceforge.pmd:pmd")
-      expect(result.project_version).to eq("6.32.0-SNAPSHOT")
 
       deps = result.dependencies
 
@@ -826,7 +816,6 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
       expect(output).to eq(Bibliothecary::DependenciesResult.new(
                              project_name: "net.sourceforge.pmd:pmd-core",
-                             project_version: "6.32.0-SNAPSHOT",
                              dependencies: [
                                Bibliothecary::Dependency.new(platform: "maven",name: "org.apache.ant:ant", requirement: "1.10.9", type: "provided"),
                                Bibliothecary::Dependency.new(platform: "maven",name: "net.sourceforge.pmd:pmd", requirement: "6.32.0-SNAPSHOT", type: "provided"),

@@ -12,7 +12,6 @@ describe Bibliothecary::Parsers::Packagist do
                                                                                                      platform: "packagist",
                                                                                                      path: "composer.json",
                                                                                                      project_name: nil,
-                                                                                                     project_version: nil,
                                                                                                      dependencies: [
         Bibliothecary::Dependency.new(platform: "packagist", name: "laravel/framework", requirement: "5.0.*", type: "runtime", source: "composer.json"),
         Bibliothecary::Dependency.new(platform: "packagist", name: "drupal/address", requirement: "^1.0", type: "runtime", source: "composer.json"),
@@ -29,7 +28,6 @@ describe Bibliothecary::Parsers::Packagist do
                                                                                                      platform: "packagist",
                                                                                                      path: "composer.lock",
                                                                                                      project_name: nil,
-                                                                                                     project_version: nil,
                                                                                                      dependencies: [
         Bibliothecary::Dependency.new(platform: "packagist", name: "doctrine/annotations", requirement: "v1.2.1", type: "runtime", source: "composer.lock"),
         Bibliothecary::Dependency.new(platform: "packagist", name: "doctrine/cache", requirement: "v1.3.1", type: "runtime", source: "composer.lock"),

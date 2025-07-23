@@ -12,7 +12,6 @@ describe Bibliothecary::Parsers::Rubygems do
                                                                                          platform: "rubygems",
                                                                                          path: "Gemfile",
                                                                                          project_name: nil,
-                                                                                         project_version: nil,
                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "rubygems", name: "oj", requirement: ">= 0", type: "runtime", source: "Gemfile"),
         Bibliothecary::Dependency.new(platform: "rubygems", name: "rails", requirement: "= 4.2.0", type: "runtime", source: "Gemfile"),
@@ -33,7 +32,6 @@ describe Bibliothecary::Parsers::Rubygems do
                                                                                          platform: "rubygems",
                                                                                          path: "gems.rb",
                                                                                          project_name: nil,
-                                                                                         project_version: nil,
                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "rubygems", name: "oj", requirement: ">= 0", type: "runtime", source: "gems.rb"),
         Bibliothecary::Dependency.new(platform: "rubygems", name: "rails", requirement: "= 4.2.0", type: "runtime", source: "gems.rb"),
@@ -54,7 +52,6 @@ describe Bibliothecary::Parsers::Rubygems do
                                                                                                        platform: "rubygems",
                                                                                                        path: "devise.gemspec",
                                                                                                        project_name: nil,
-                                                                                                       project_version: nil,
                                                                                                        dependencies: [
         Bibliothecary::Dependency.new(platform: "rubygems", name: "warden", requirement: "~> 1.2.3", type: "runtime", source: "devise.gemspec"),
         Bibliothecary::Dependency.new(platform: "rubygems", name: "orm_adapter", requirement: "~> 0.1", type: "development", source: "devise.gemspec"),
@@ -73,7 +70,6 @@ describe Bibliothecary::Parsers::Rubygems do
                                                                                                    platform: "rubygems",
                                                                                                    path: "Gemfile.lock",
                                                                                                    project_name: nil,
-                                                                                                   project_version: nil,
                                                                                                    dependencies: [
         Bibliothecary::Dependency.new(platform: "rubygems", name: "CFPropertyList", requirement: "2.3.1", type: "runtime", source: "Gemfile.lock"),
         Bibliothecary::Dependency.new(platform: "rubygems", name: "actionmailer", requirement: "4.2.3", type: "runtime", source: "Gemfile.lock"),
@@ -92,7 +88,6 @@ describe Bibliothecary::Parsers::Rubygems do
       path: "Gemfile.lock",
       kind: "lockfile",
       project_name: nil,
-      project_version: nil,
       success: true
     )
 
@@ -115,7 +110,6 @@ describe Bibliothecary::Parsers::Rubygems do
         ],
               kind: "lockfile",
               project_name: nil,
-              project_version: nil,
               success: true,
             })
   end

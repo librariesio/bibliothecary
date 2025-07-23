@@ -23,7 +23,6 @@ module Bibliothecary
         platform: platform_name,
         path: relative_path,
         project_name: dependencies_result.project_name,
-        project_version: dependencies_result.project_version,
         dependencies: dependencies_result.dependencies,
         kind: kind,
         success: true,

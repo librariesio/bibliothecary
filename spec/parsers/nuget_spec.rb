@@ -12,7 +12,6 @@ describe Bibliothecary::Parsers::Nuget do
                                                                                                    platform: "nuget",
                                                                                                    path: "Project.json",
                                                                                                    project_name: nil,
-                                                                                                   project_version: nil,
                                                                                                    dependencies: [
         Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNet.Server.Kestrel", requirement: "1.0.0-beta7", type: "runtime", source: "Project.json"),
         Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNet.Server.IIS", requirement: "1.0.0-beta7", type: "runtime", source: "Project.json"),
@@ -203,7 +202,6 @@ describe Bibliothecary::Parsers::Nuget do
       ],
                                                                                                              kind: "lockfile",
                                                                                                              project_name: nil,
-                                                                                                             project_version: nil,
                                                                                                              success: true,
                                                                                                            })
   end
@@ -500,7 +498,6 @@ describe Bibliothecary::Parsers::Nuget do
         ],
         kind: "lockfile",
         project_name: nil,
-        project_version: nil,
         success: true,
       }
     )
@@ -511,7 +508,6 @@ describe Bibliothecary::Parsers::Nuget do
                                                                                                          platform: "nuget",
                                                                                                          path: "packages.config",
                                                                                                          project_name: nil,
-                                                                                                         project_version: nil,
                                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "nuget", name: "AutoMapper", requirement: "2.1.267", type: "runtime", source: "packages.config"),
         Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.Web.Infrastructure", requirement: "1.0.0.0", type: "runtime", source: "packages.config"),
@@ -531,7 +527,6 @@ describe Bibliothecary::Parsers::Nuget do
                                                                                                        platform: "nuget",
                                                                                                        path: "example.csproj",
                                                                                                        project_name: nil,
-                                                                                                       project_version: nil,
                                                                                                        dependencies: [
         Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNetCore", requirement: "1.1.1", type: "runtime", source: "example.csproj"),
         Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNetCore.Mvc", requirement: "1.1.2", type: "runtime", source: "example.csproj"),
@@ -557,7 +552,6 @@ describe Bibliothecary::Parsers::Nuget do
       ],
                                                                                                                   kind: "manifest",
                                                                                                                   project_name: nil,
-                                                                                                                  project_version: nil,
                                                                                                                   success: true,
                                                                                                                 })
   end
@@ -572,7 +566,6 @@ describe Bibliothecary::Parsers::Nuget do
       ],
                                                                                                                      kind: "manifest",
                                                                                                                      project_name: nil,
-                                                                                                                     project_version: nil,
                                                                                                                      success: true,
                                                                                                                    })
   end
@@ -584,7 +577,6 @@ describe Bibliothecary::Parsers::Nuget do
     expect(result[:path]).to eq("example-references-tag.csproj")
     expect(result[:kind]).to eq("manifest")
     expect(result[:project_name]).to eq(nil)
-    expect(result[:project_version]).to eq(nil)
     expect(result[:success]).to eq(true)
     expect(result[:error_message]).to eq(nil)
     expect(result[:error_location]).to eq(nil)
@@ -629,7 +621,6 @@ describe Bibliothecary::Parsers::Nuget do
     expect(result[:path]).to eq("example-with-xml-tag.csproj")
     expect(result[:kind]).to eq("manifest")
     expect(result[:project_name]).to eq(nil)
-    expect(result[:project_version]).to eq(nil)
     expect(result[:success]).to eq(true)
     expect(result[:error_message]).to eq(nil)
     expect(result[:error_location]).to eq(nil)
@@ -643,7 +634,6 @@ describe Bibliothecary::Parsers::Nuget do
                                                                                                        platform: "nuget",
                                                                                                        path: "example.nuspec",
                                                                                                        project_name: nil,
-                                                                                                       project_version: nil,
                                                                                                        dependencies: [
         Bibliothecary::Dependency.new(platform: "nuget", name: "FubuCore", requirement: "3.2.0.3001", type: "runtime", source: "example.nuspec"),
         Bibliothecary::Dependency.new(platform: "nuget", name: "HtmlTags", requirement: "[3.2.0.3001]", type: "runtime", source: "example.nuspec"),
@@ -660,7 +650,6 @@ describe Bibliothecary::Parsers::Nuget do
                                                                                                platform: "nuget",
                                                                                                path: "paket.lock",
                                                                                                project_name: nil,
-                                                                                               project_version: nil,
                                                                                                dependencies: [
         Bibliothecary::Dependency.new(platform: "nuget", name: "Argu", requirement: "2.1", type: "runtime", source: "paket.lock"),
         Bibliothecary::Dependency.new(platform: "nuget", name: "Mono.Cecil", requirement: "0.9.6.1", type: "runtime", source: "paket.lock"),
@@ -683,7 +672,6 @@ describe Bibliothecary::Parsers::Nuget do
       ],
       kind: "lockfile",
       project_name: nil,
-      project_version: nil,
       success: true,
     }
 

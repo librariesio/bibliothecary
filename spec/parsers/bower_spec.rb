@@ -12,7 +12,6 @@ describe Bibliothecary::Parsers::Bower do
                                                                                                platform: "bower",
                                                                                                path: "bower.json",
                                                                                                project_name: nil,
-                                                                                               project_version: nil,
                                                                                                dependencies: [
         Bibliothecary::Dependency.new(platform: "bower", name: "jquery", requirement: ">= 1.9.1", type: "runtime", source: "bower.json"),
       ],
