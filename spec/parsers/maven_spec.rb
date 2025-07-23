@@ -647,17 +647,17 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "excludes items in resolved deps file with no version" do
       expect(described_class.parse_gradle_resolved("\\--- org.springframework.security:spring-security-test (n)"))
-        .to eq(Bibliothecary::DependenciesResult.new(dependencies: []))
+        .to eq(Bibliothecary::ParserResult.new(dependencies: []))
     end
 
     it "excludes failed items with no version" do
       expect(described_class.parse_gradle_resolved("+--- org.projectlombok:lombok FAILED"))
-        .to eq(Bibliothecary::DependenciesResult.new(dependencies: []))
+        .to eq(Bibliothecary::ParserResult.new(dependencies: []))
     end
 
     it "includes local projects as deps with 'internal' group and '1.0.0' requirement" do
       expect(described_class.parse_gradle_resolved("+--- project :api:my-internal-project"))
-        .to eq(Bibliothecary::DependenciesResult.new(dependencies: [
+        .to eq(Bibliothecary::ParserResult.new(dependencies: [
           Bibliothecary::Dependency.new(
             platform: "maven",
             name: "internal:api-my-internal-project",
@@ -669,7 +669,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "includes aliases to local projects" do
       expect(described_class.parse_gradle_resolved("|    +--- my-group:common-job-update-gateway-compress:5.0.2 -> project :client (*)"))
-        .to eq(Bibliothecary::DependenciesResult.new(dependencies: [
+        .to eq(Bibliothecary::ParserResult.new(dependencies: [
           Bibliothecary::Dependency.new(
             platform: "maven",
             name: "internal:client",
@@ -683,7 +683,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "includes failed items with a version" do
       expect(described_class.parse_gradle_resolved("+--- org.apiguardian:apiguardian-api:1.1.0 FAILED"))
-        .to eq(Bibliothecary::DependenciesResult.new(
+        .to eq(Bibliothecary::ParserResult.new(
                  dependencies: [Bibliothecary::Dependency.new(
                    platform: "maven",
                    name: "org.apiguardian:apiguardian-api",
@@ -696,7 +696,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     it "properly resolves versions with -> syntax" do
       arrow_syntax = "+--- org.springframework:spring-core:5.2.3.RELEASE -> 5.2.5.RELEASE (*)"
       expect(described_class.parse_gradle_resolved(arrow_syntax))
-        .to eq(Bibliothecary::DependenciesResult.new(
+        .to eq(Bibliothecary::ParserResult.new(
                  dependencies: [
                    Bibliothecary::Dependency.new(
                      platform: "maven",
@@ -718,13 +718,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         +--- project : (*)
       GRADLE
 
-      expect(described_class.parse_gradle_resolved(gradle_dependencies_out)).to eq Bibliothecary::DependenciesResult.new(dependencies: [])
+      expect(described_class.parse_gradle_resolved(gradle_dependencies_out)).to eq Bibliothecary::ParserResult.new(dependencies: [])
     end
 
     it "properly handles no version to resolved version syntax" do
       no_version_to_version = "\\--- org.springframework.security:spring-security-test -> 5.2.2.RELEASE"
       expect(described_class.parse_gradle_resolved(no_version_to_version))
-        .to eq(Bibliothecary::DependenciesResult.new(
+        .to eq(Bibliothecary::ParserResult.new(
                  dependencies: [Bibliothecary::Dependency.new(
                    platform: "maven",
                    name: "org.springframework.security:spring-security-test",
@@ -774,7 +774,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       contents = load_fixture("maven-dependency-tree.dot")
       result = described_class.parse_maven_tree_dot(contents)
 
-      expect(result).to be_a(Bibliothecary::DependenciesResult)
+      expect(result).to be_a(Bibliothecary::ParserResult)
 
       dependencies = result.dependencies
       expect(dependencies.size).to eq(75)
@@ -800,7 +800,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "parses dependencies with variables in version position" do
       output = described_class.parse_maven_tree("[INFO] +- net.sourceforge.pmd:pmd-scala_2.12:jar:${someVariable}\n")
-      expect(output).to eq(Bibliothecary::DependenciesResult.new(
+      expect(output).to eq(Bibliothecary::ParserResult.new(
                              project_name: "net.sourceforge.pmd:pmd-scala_2.12",
                              dependencies: [Bibliothecary::Dependency.new(platform: "maven", name: "net.sourceforge.pmd:pmd-scala_2.12", requirement: "${someVariable}", type: "jar")]
                            ))
@@ -813,7 +813,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 [\e[1;34mINFO\e[m] |  +- net.sourceforge.pmd:pmd:pom:6.32.0-SNAPSHOT:provided
 [\e[1;34mINFO\e[m] +- net.java.dev.javacc:javacc:jar:5.0:provided))
 
-      expect(output).to eq(Bibliothecary::DependenciesResult.new(
+      expect(output).to eq(Bibliothecary::ParserResult.new(
                              project_name: "net.sourceforge.pmd:pmd-core",
                              dependencies: [
                                Bibliothecary::Dependency.new(platform: "maven", name: "org.apache.ant:ant", requirement: "1.10.9", type: "provided"),

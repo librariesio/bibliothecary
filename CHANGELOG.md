@@ -17,11 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added Bibliothecary::DependenciesResult class, to wrap dependencies with the project name.
+- Added Bibliothecary::ParserResult class, to wrap dependencies with the project name.
 
 ### Changed
 
-- Breaking: parser methods now return Bibliothecary::DependenciesResult instead of an Array of Bibliothecary::Dependency
+- Breaking: parser methods now return Bibliothecary::ParserResult instead of an Array of Bibliothecary::Dependency
+- Return project_name for maven-dependency-tree.txt and maven-dependency-tree.dot results
 - Breaking: require the "platform" argument to be passed to Bibliothecary::Dependency, and update the parsers to do so.
 
 ### Removed

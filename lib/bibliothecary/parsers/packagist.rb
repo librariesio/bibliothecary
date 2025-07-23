@@ -61,14 +61,14 @@ module Bibliothecary
             platform: platform_name
           )
         end
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_manifest(file_contents, options: {})
         manifest = JSON.parse file_contents
         dependencies = map_dependencies(manifest, "require", "runtime", options.fetch(:filename, nil)) +
                        map_dependencies(manifest, "require-dev", "development", options.fetch(:filename, nil))
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       # Drupal hosts its own Composer repository, where its "modules" are indexed and searchable. The best way to

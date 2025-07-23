@@ -50,19 +50,19 @@ module Bibliothecary
             source: options.fetch(:filename, nil)
           )
         end.compact
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_podspec(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:podspec, file_contents)
         dependencies = parse_ruby_manifest(manifest, platform_name, options.fetch(:filename, nil))
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_podfile(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:podfile, file_contents)
         dependencies = parse_ruby_manifest(manifest, platform_name, options.fetch(:filename, nil))
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_json_manifest(file_contents, options: {})
@@ -76,7 +76,7 @@ module Bibliothecary
                       source: options.fetch(:filename, nil)
                     ))
         end.uniq
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
     end
   end

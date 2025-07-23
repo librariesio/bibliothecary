@@ -83,7 +83,7 @@ module Bibliothecary
         manifest = Tomlrb.parse(file_contents)
         dependencies = map_dependencies(manifest["packages"], "runtime", options.fetch(:filename, nil)) +
                        map_dependencies(manifest["dev-packages"], "develop", options.fetch(:filename, nil))
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_pyproject(file_contents, options: {})
@@ -123,7 +123,7 @@ module Bibliothecary
             original_name: normalized_name == dep.name ? nil : dep.name
           )
         end
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.map_dependencies(packages, type, source = nil)
@@ -182,7 +182,7 @@ module Bibliothecary
           group = "runtime" if group == "default"
           deps += map_dependencies(dependencies, group, options.fetch(:filename, nil))
         end
-        DependenciesResult.new(dependencies: deps)
+        ParserResult.new(dependencies: deps)
       end
 
       def self.parse_poetry_lock(file_contents, options: {})
@@ -218,12 +218,12 @@ module Bibliothecary
             )
           end
         end
-        DependenciesResult.new(dependencies: deps)
+        ParserResult.new(dependencies: deps)
       end
 
       def self.parse_setup_py(file_contents, options: {})
         match = file_contents.match(INSTALL_REGEXP)
-        return DependenciesResult.new(dependencies: []) unless match
+        return ParserResult.new(dependencies: []) unless match
 
         deps = []
         match[1].gsub(/',(\s)?'/, "\n").split("\n").each do |line|
@@ -240,7 +240,7 @@ module Bibliothecary
             platform: platform_name
           )
         end
-        DependenciesResult.new(dependencies: deps)
+        ParserResult.new(dependencies: deps)
       end
 
       # While the thing in the repo that PyPI is using might be either in
@@ -261,7 +261,7 @@ module Bibliothecary
             )
           end
           .uniq
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       # Parses a requirements.txt file, following the
@@ -300,7 +300,7 @@ module Bibliothecary
         end
 
         dependencies = deps.uniq
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_requirements_txt_url(url, type = nil, source = nil)

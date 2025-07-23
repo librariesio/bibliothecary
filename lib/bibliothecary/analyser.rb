@@ -18,12 +18,12 @@ module Bibliothecary
       }
     end
 
-    def self.create_analysis(platform_name, relative_path, kind, dependencies_result)
+    def self.create_analysis(platform_name, relative_path, kind, parser_result)
       {
         platform: platform_name,
         path: relative_path,
-        project_name: dependencies_result.project_name,
-        dependencies: dependencies_result.dependencies,
+        project_name: parser_result.project_name,
+        dependencies: parser_result.dependencies,
         kind: kind,
         success: true,
       }

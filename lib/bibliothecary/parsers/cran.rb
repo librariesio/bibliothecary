@@ -28,7 +28,7 @@ module Bibliothecary
                        parse_section(manifest, "Imports", options.fetch(:filename, nil)) +
                        parse_section(manifest, "Suggests", options.fetch(:filename, nil)) +
                        parse_section(manifest, "Enhances", options.fetch(:filename, nil))
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_section(manifest, name, source = nil)

@@ -56,19 +56,19 @@ module Bibliothecary
             parse_bundler(file_contents, options.fetch(:filename, nil))
           end
         end.compact
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_gemfile(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:gemfile, file_contents)
         dependencies = parse_ruby_manifest(manifest, platform_name, options.fetch(:filename, nil))
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_gemspec(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:gemspec, file_contents)
         dependencies = parse_ruby_manifest(manifest, platform_name, options.fetch(:filename, nil))
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_bundler(file_contents, source = nil)

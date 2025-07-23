@@ -58,7 +58,7 @@ module Bibliothecary
                          # lockfileVersion 3 has no backwards-compatibility and only includes the "packages" object
                          parse_package_lock_v2(manifest, options.fetch(:filename, nil))
                        end
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       class << self
@@ -128,7 +128,7 @@ module Bibliothecary
 
       def self.parse_manifest(file_contents, options: {})
         # on ruby 3.2 we suddenly get this JSON error, so detect and return early: "package.json: unexpected token at ''"
-        return DependenciesResult.new(dependencies: []) if file_contents.empty?
+        return ParserResult.new(dependencies: []) if file_contents.empty?
 
         manifest = JSON.parse(file_contents)
 
@@ -171,7 +171,7 @@ module Bibliothecary
             )
           end
 
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_yarn_lock(file_contents, options: {})
@@ -193,7 +193,7 @@ module Bibliothecary
             platform: platform_name
           )
         end
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       # Returns a hash representation of the deps in yarn.lock, eg:
@@ -400,14 +400,14 @@ module Bibliothecary
                        else # v9+
                          parse_v9_pnpm_lock(parsed, options.fetch(:filename, nil))
                        end
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_ls(file_contents, options: {})
         manifest = JSON.parse(file_contents)
 
         dependencies = transform_tree_to_array(manifest.fetch("dependencies", {}), options.fetch(:filename, nil))
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_bun_lock(file_contents, options: {})
@@ -436,7 +436,7 @@ module Bibliothecary
             platform: platform_name
           )
         end
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.lockfile_preference_order(file_infos)

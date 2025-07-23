@@ -38,7 +38,7 @@ module Bibliothecary
             platform: platform_name
           )
         end.compact
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_name_requirement_from_matchspec(matchspec)

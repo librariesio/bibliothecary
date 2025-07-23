@@ -78,7 +78,7 @@ describe Bibliothecary::MultiParsers::DependenciesCSV, :focus do
 
         result = parser.parse_dependencies_csv(csv, options:)
 
-        expect(result).to eq(Bibliothecary::DependenciesResult.new(
+        expect(result).to eq(Bibliothecary::ParserResult.new(
                                dependencies: [
                                Bibliothecary::Dependency.new(platform: "hiss", name: "wow", requirement: "2.2.0", type: "runtime", source: "dependencies.csv"),
                                Bibliothecary::Dependency.new(platform: "hiss", name: "raow", requirement: "2.2.1", type: "bird", source: "dependencies.csv"),
@@ -106,7 +106,7 @@ describe Bibliothecary::MultiParsers::DependenciesCSV, :focus do
 
           result = parser.parse_dependencies_csv(csv, options:)
 
-          expect(result).to eq(Bibliothecary::DependenciesResult.new(
+          expect(result).to eq(Bibliothecary::ParserResult.new(
                                  dependencies: [
                                    Bibliothecary::Dependency.new(platform: "hiss", name: "wow", type: "runtime", requirement: "2.2.0", source: "dependencies.csv"),
                                    Bibliothecary::Dependency.new(platform: "hiss", name: "raow", type: "bird", requirement: "2.2.1", source: "dependencies.csv"),
@@ -133,7 +133,7 @@ describe Bibliothecary::MultiParsers::DependenciesCSV, :focus do
 
           result = parser.parse_dependencies_csv(csv, options:)
 
-          expect(result).to eq(Bibliothecary::DependenciesResult.new(
+          expect(result).to eq(Bibliothecary::ParserResult.new(
                                  dependencies: [
                                  Bibliothecary::Dependency.new(platform: "hiss", name: "wow", type: "runtime", requirement: "2.2.0", source: "dependencies.csv"),
                                  # headers are searched left to right for each field, and the

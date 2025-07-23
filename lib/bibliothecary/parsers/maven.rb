@@ -149,7 +149,7 @@ module Bibliothecary
             platform: platform_name
           )
         end
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.ivy_report?(file_contents)
@@ -190,7 +190,7 @@ module Bibliothecary
             platform: platform_name
           )
         end.compact
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_gradle_resolved(file_contents, options: {})
@@ -263,7 +263,7 @@ module Bibliothecary
         end
           .compact
           .uniq { |item| [item.name, item.requirement, item.type, item.original_name, item.original_requirement] }
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_maven_resolved(file_contents, options: {})
@@ -273,7 +273,7 @@ module Bibliothecary
           .map { |line| parse_resolved_dep_line(line, options: options) }
           .compact
           .uniq
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       # Return each item in the ascii art tree with a depth of that item,
@@ -362,7 +362,7 @@ module Bibliothecary
               platform: platform_name
             )
           end
-        DependenciesResult.new(
+        ParserResult.new(
           project_name: root_name,
           dependencies: dependencies
         )
@@ -397,7 +397,7 @@ module Bibliothecary
 
         # TODO: should we change every method to return this, or just allow both to be
         # returned to an analysis? (I'm leaning towards former)
-        DependenciesResult.new(
+        ParserResult.new(
           dependencies: deps,
           project_name: project_name
         )
@@ -423,7 +423,7 @@ module Bibliothecary
 
       def self.parse_standalone_pom_manifest(file_contents, options: {})
         dependencies = parse_pom_manifest(file_contents, {}, options:)
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_pom_manifest(file_contents, parent_properties = {}, options: {})
@@ -511,7 +511,7 @@ module Bibliothecary
               platform: platform_name
             )
           end
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_gradle_kts(file_contents, options: {})
@@ -527,7 +527,7 @@ module Bibliothecary
               platform: platform_name
             )
           end
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.gradle_dependency_name(group, name)
@@ -650,7 +650,7 @@ module Bibliothecary
             platform: platform_name
           )
         end
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_sbt_deps(type, lines)

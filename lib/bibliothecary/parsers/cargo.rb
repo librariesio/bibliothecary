@@ -44,7 +44,7 @@ module Bibliothecary
         end
 
         dependencies = parsed_dependencies.flatten.compact
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_lockfile(file_contents, options: {})
@@ -61,7 +61,7 @@ module Bibliothecary
           )
         end
           .compact
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
     end
   end

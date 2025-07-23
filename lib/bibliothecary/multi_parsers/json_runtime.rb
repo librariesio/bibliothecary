@@ -15,7 +15,7 @@ module Bibliothecary
           )
         end
 
-        DependenciesResult.new(dependencies: dependencies)
+        ParserResult.new(dependencies: dependencies)
       end
     end
   end
