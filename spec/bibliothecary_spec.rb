@@ -49,7 +49,7 @@ describe Bibliothecary do
                                                                                            platform: "bower",
                                                                                            path: "bower.json",
                                                                                            dependencies: [
-        Bibliothecary::Dependency.new(name: "jquery", requirement: ">= 1.9.1", type: "runtime", source: "bower.json"),
+        Bibliothecary::Dependency.new(platform: "bower", name: "jquery", requirement: ">= 1.9.1", type: "runtime", source: "bower.json"),
       ],
                                                                                            kind: "manifest",
                                                                                            success: true,
@@ -59,8 +59,8 @@ describe Bibliothecary do
   it "analyses contents of a python file with [extras] format" do
     expect(described_class.analyse_file("requirements-extras.in", load_fixture("pip-compile/requirements-extras.in"))).to eq([{
                                                                                                                                dependencies: [
-                                                                                                                                 Bibliothecary::Dependency.new(name: "urllib3", requirement: "==1.0.0", type: "runtime", source: "requirements-extras.in"),
-                                                                                                                                 Bibliothecary::Dependency.new(name: "django-dbfilestorage", requirement: "==1.0.0", type: "runtime", source: "requirements-extras.in"),
+                                                                                                                                 Bibliothecary::Dependency.new(platform: "pypi", name: "urllib3", requirement: "==1.0.0", type: "runtime", source: "requirements-extras.in"),
+                                                                                                                                 Bibliothecary::Dependency.new(platform: "pypi", name: "django-dbfilestorage", requirement: "==1.0.0", type: "runtime", source: "requirements-extras.in"),
                                                                                                                                ],
                                                                                                                                kind: "manifest",
                                                                                                                                path: "requirements-extras.in",

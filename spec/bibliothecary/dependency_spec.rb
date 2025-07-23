@@ -33,20 +33,20 @@ describe Bibliothecary::Dependency do
     end
 
     it "only requires name and requirement" do
-      expect { subject.new }.to raise_error(ArgumentError, "missing keywords: :name, :requirement")
+      expect { subject.new }.to raise_error(ArgumentError, "missing keywords: :name, :requirement, :platform")
     end
 
     it "can check equality" do
-      dep = Bibliothecary::Dependency.new(name: "foo", requirement: "1.0.0")
+      dep = Bibliothecary::Dependency.new(name: "foo", requirement: "1.0.0", platform: "rubygems")
 
-      expect(dep).to eq(Bibliothecary::Dependency.new(name: "foo", requirement: "1.0.0"))
-      expect(dep).to_not eq(Bibliothecary::Dependency.new(name: "foo", requirement: "2.0.0"))
+      expect(dep).to eq(Bibliothecary::Dependency.new(name: "foo", requirement: "1.0.0", platform: "rubygems"))
+      expect(dep).to_not eq(Bibliothecary::Dependency.new(name: "foo", requirement: "2.0.0", platform: "rubygems"))
     end
 
     it "can be deduped" do
-      dep1 = Bibliothecary::Dependency.new(name: "foo", requirement: "1.0.0")
-      dep2 = Bibliothecary::Dependency.new(name: "foo", requirement: "2.0.0")
-      dep3 = Bibliothecary::Dependency.new(name: "foo", requirement: "2.0.0")
+      dep1 = Bibliothecary::Dependency.new(name: "foo", requirement: "1.0.0", platform: "rubygems")
+      dep2 = Bibliothecary::Dependency.new(name: "foo", requirement: "2.0.0", platform: "rubygems")
+      dep3 = Bibliothecary::Dependency.new(name: "foo", requirement: "2.0.0", platform: "rubygems")
 
       expect([dep1, dep2, dep3].uniq).to eq([dep1, dep2])
     end
@@ -72,12 +72,12 @@ describe Bibliothecary::Dependency do
     end
 
     it "sets empty requirement to wildcard" do
-      dependency = described_class.new(name: "foo", requirement: nil)
+      dependency = described_class.new(name: "foo", platform: "rubygems", requirement: nil)
       expect(dependency.requirement).to eq("*")
     end
 
     it "can be read like a hash" do
-      dependency = described_class.new(name: "foo", requirement: nil)
+      dependency = described_class.new(name: "foo", platform: "rubygems", requirement: nil)
       expect(dependency[:name]).to eq("foo")
     end
   end

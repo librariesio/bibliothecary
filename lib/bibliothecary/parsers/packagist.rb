@@ -40,7 +40,8 @@ module Bibliothecary
             requirement: requirement,
             type: "runtime",
             original_requirement: original_requirement,
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end + manifest.fetch("packages-dev", []).map do |dependency|
           requirement = dependency["version"]
@@ -56,7 +57,8 @@ module Bibliothecary
             requirement: requirement,
             type: "development",
             original_requirement: original_requirement,
-            source: options.fetch(:filename, nil)
+            source: options.fetch(:filename, nil),
+            platform: platform_name
           )
         end
       end

@@ -57,6 +57,7 @@ module Bibliothecary
       def map_dependencies(hash, key, type, source = nil)
         hash.fetch(key, []).map do |name, requirement|
           Dependency.new(
+            platform: platform_name,
             name: name,
             requirement: requirement,
             type: type,

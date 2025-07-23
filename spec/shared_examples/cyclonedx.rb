@@ -41,6 +41,7 @@ RSpec.shared_examples "CycloneDX" do
 
       dependencies_for_platform.each do |dependency|
         expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(Bibliothecary::Dependency.new(
+                                                                                       platform: described_class.platform_name,
                                                                                        name: dependency[:name],
                                                                                        requirement: dependency[:version],
                                                                                        type: "lockfile",
@@ -54,6 +55,7 @@ RSpec.shared_examples "CycloneDX" do
 
       dependencies_for_platform.each do |dependency|
         expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(Bibliothecary::Dependency.new(
+                                                                                       platform: described_class.platform_name,
                                                                                        name: dependency[:name],
                                                                                        requirement: dependency[:version],
                                                                                        type: "lockfile",
@@ -67,6 +69,7 @@ RSpec.shared_examples "CycloneDX" do
 
       dependencies_for_platform.each do |dependency|
         expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(Bibliothecary::Dependency.new(
+                                                                                       platform: described_class.platform_name,
                                                                                        name: dependency[:name],
                                                                                        requirement: dependency[:version],
                                                                                        type: "lockfile",
@@ -80,6 +83,7 @@ RSpec.shared_examples "CycloneDX" do
 
       dependencies_for_platform.each do |dependency|
         expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(Bibliothecary::Dependency.new(
+                                                                                       platform: described_class.platform_name,
                                                                                        name: dependency[:name],
                                                                                        requirement: dependency[:version],
                                                                                        type: "lockfile",

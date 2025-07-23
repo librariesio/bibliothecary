@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Breaking: require the "platform" argument to be passed to Bibliothecary::Dependency, and update the parsers to do so.
+
 ### Removed
 
 - Removed unused generic parser code.
