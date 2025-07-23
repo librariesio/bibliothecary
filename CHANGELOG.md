@@ -11,8 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Breaking: require the "platform" argument to be passed to Bibliothecary::Dependency, and update the parsers to do so.
-
 ### Removed
 
 ## [14.0.0] - 2025-07-22
@@ -23,7 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Parser methods now return Bibliothecary::DependenciesResult instead of an Array of Bibliothecary::Dependency
+- Breaking: parser methods now return Bibliothecary::DependenciesResult instead of an Array of Bibliothecary::Dependency
+- Breaking: require the "platform" argument to be passed to Bibliothecary::Dependency, and update the parsers to do so.
 
 ### Removed
 

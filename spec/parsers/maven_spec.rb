@@ -671,7 +671,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(described_class.parse_gradle_resolved("|    +--- my-group:common-job-update-gateway-compress:5.0.2 -> project :client (*)"))
         .to eq(Bibliothecary::DependenciesResult.new(dependencies: [
           Bibliothecary::Dependency.new(
-                                        platform: "maven",
+            platform: "maven",
             name: "internal:client",
             requirement: "1.0.0",
             original_name: "my-group:common-job-update-gateway-compress",
@@ -685,7 +685,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(described_class.parse_gradle_resolved("+--- org.apiguardian:apiguardian-api:1.1.0 FAILED"))
         .to eq(Bibliothecary::DependenciesResult.new(
                  dependencies: [Bibliothecary::Dependency.new(
-                    platform: "maven",
+                   platform: "maven",
                    name: "org.apiguardian:apiguardian-api",
                    requirement: "1.1.0",
                    type: nil
@@ -699,7 +699,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         .to eq(Bibliothecary::DependenciesResult.new(
                  dependencies: [
                    Bibliothecary::Dependency.new(
-                                                 platform: "maven",
+                     platform: "maven",
                      name: "org.springframework:spring-core",
                      requirement: "5.2.5.RELEASE",
                      type: nil
@@ -726,7 +726,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(described_class.parse_gradle_resolved(no_version_to_version))
         .to eq(Bibliothecary::DependenciesResult.new(
                  dependencies: [Bibliothecary::Dependency.new(
-                                                              platform: "maven",
+                   platform: "maven",
                    name: "org.springframework.security:spring-security-test",
                    requirement: "5.2.2.RELEASE",
                    type: nil
@@ -801,9 +801,8 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     it "parses dependencies with variables in version position" do
       output = described_class.parse_maven_tree("[INFO] +- net.sourceforge.pmd:pmd-scala_2.12:jar:${someVariable}\n")
       expect(output).to eq(Bibliothecary::DependenciesResult.new(
-                                                                 platform: "maven",
                              project_name: "net.sourceforge.pmd:pmd-scala_2.12",
-                             dependencies: [Bibliothecary::Dependency.new(name: "net.sourceforge.pmd:pmd-scala_2.12", requirement: "${someVariable}", type: "jar")]
+                             dependencies: [Bibliothecary::Dependency.new(platform: "maven", name: "net.sourceforge.pmd:pmd-scala_2.12", requirement: "${someVariable}", type: "jar")]
                            ))
     end
 
@@ -817,9 +816,9 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(output).to eq(Bibliothecary::DependenciesResult.new(
                              project_name: "net.sourceforge.pmd:pmd-core",
                              dependencies: [
-                               Bibliothecary::Dependency.new(platform: "maven",name: "org.apache.ant:ant", requirement: "1.10.9", type: "provided"),
-                               Bibliothecary::Dependency.new(platform: "maven",name: "net.sourceforge.pmd:pmd", requirement: "6.32.0-SNAPSHOT", type: "provided"),
-                               Bibliothecary::Dependency.new(platform: "maven",name: "net.java.dev.javacc:javacc", requirement: "5.0", type: "provided"),
+                               Bibliothecary::Dependency.new(platform: "maven", name: "org.apache.ant:ant", requirement: "1.10.9", type: "provided"),
+                               Bibliothecary::Dependency.new(platform: "maven", name: "net.sourceforge.pmd:pmd", requirement: "6.32.0-SNAPSHOT", type: "provided"),
+                               Bibliothecary::Dependency.new(platform: "maven", name: "net.java.dev.javacc:javacc", requirement: "5.0", type: "provided"),
                              ]
                            ))
     end
