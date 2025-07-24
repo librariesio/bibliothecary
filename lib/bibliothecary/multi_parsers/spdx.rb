@@ -50,7 +50,7 @@ module Bibliothecary
 
         raise NoEntries if entries.empty?
 
-        entries[platform_name.to_sym]
+        Bibliothecary::ParserResult.new(dependencies: entries[platform_name.to_sym] || [])
       end
 
       def parse_spdx_tag_value_file_contents(file_contents, source = nil)
@@ -104,7 +104,7 @@ module Bibliothecary
 
         raise NoEntries if entries.empty?
 
-        entries[platform_name.to_sym]
+        Bibliothecary::ParserResult.new(dependencies: entries[platform_name.to_sym] || [])
       end
 
       def parse_spdx_json_file_contents(file_contents, source = nil)

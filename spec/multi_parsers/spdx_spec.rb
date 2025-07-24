@@ -39,9 +39,11 @@ describe Bibliothecary::MultiParsers::Spdx do
       end
 
       it "parses the file" do
-        expect(parser.parse_spdx_tag_value(file, options: { filename: "sbom.spdx" })).to eq([
-          Bibliothecary::Dependency.new(platform: "npm", name: "package1", requirement: "1.0.0", type: "lockfile", source: "sbom.spdx"),
-        ])
+        expect(parser.parse_spdx_tag_value(file, options: { filename: "sbom.spdx" })).to eq(
+          Bibliothecary::ParserResult.new(
+            dependencies: [Bibliothecary::Dependency.new(platform: "npm", name: "package1", requirement: "1.0.0", type: "lockfile", source: "sbom.spdx")]
+          )
+        )
       end
     end
 
@@ -89,10 +91,14 @@ describe Bibliothecary::MultiParsers::Spdx do
       end
 
       it "parses the file" do
-        expect(parser.parse_spdx_tag_value(file, options: { filename: "sbom.spdx" })).to eq([
-          Bibliothecary::Dependency.new(platform: "npm", name: "package1", requirement: "1.0.0", type: "lockfile", source: "sbom.spdx"),
-          Bibliothecary::Dependency.new(platform: "npm", name: "package2", requirement: "1.0.1", type: "lockfile", source: "sbom.spdx"),
-        ])
+        expect(parser.parse_spdx_tag_value(file, options: { filename: "sbom.spdx" })).to eq(
+          Bibliothecary::ParserResult.new(
+            dependencies: [
+              Bibliothecary::Dependency.new(platform: "npm", name: "package1", requirement: "1.0.0", type: "lockfile", source: "sbom.spdx"),
+              Bibliothecary::Dependency.new(platform: "npm", name: "package2", requirement: "1.0.1", type: "lockfile", source: "sbom.spdx"),
+            ]
+          )
+        )
       end
     end
   end
@@ -106,9 +112,11 @@ describe Bibliothecary::MultiParsers::Spdx do
       it "parses the file" do
         contents = load_fixture("spdx2.2.json")
         result = parser.parse_spdx_json(contents, options: { filename: "sbom.spdx.json" })
-        expect(result.length).to eq(1221)
-        expect(result[0]).to eq(Bibliothecary::Dependency.new(platform: "npm", name: "-", requirement: "0.0.1", type: "lockfile", source: "sbom.spdx.json"))
-        expect(result[1]).to eq(Bibliothecary::Dependency.new(platform: "npm", name: "@ampproject/remapping", requirement: "2.2.0", type: "lockfile", source: "sbom.spdx.json"))
+        expect(result).to be_a(Bibliothecary::ParserResult)
+        dependencies = result.dependencies
+        expect(dependencies.length).to eq(1221)
+        expect(dependencies[0]).to eq(Bibliothecary::Dependency.new(platform: "npm", name: "-", requirement: "0.0.1", type: "lockfile", source: "sbom.spdx.json"))
+        expect(dependencies[1]).to eq(Bibliothecary::Dependency.new(platform: "npm", name: "@ampproject/remapping", requirement: "2.2.0", type: "lockfile", source: "sbom.spdx.json"))
       end
     end
   end
