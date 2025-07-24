@@ -43,12 +43,13 @@ module Bibliothecary
           end
         end
 
-        parsed_dependencies.flatten.compact
+        dependencies = parsed_dependencies.flatten.compact
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_lockfile(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
-        manifest.fetch("package", []).map do |dependency|
+        dependencies = manifest.fetch("package", []).map do |dependency|
           next if !dependency["source"] || !dependency["source"].start_with?("registry+")
 
           Dependency.new(
@@ -60,6 +61,7 @@ module Bibliothecary
           )
         end
           .compact
+        ParserResult.new(dependencies: dependencies)
       end
     end
   end

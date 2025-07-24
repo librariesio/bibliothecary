@@ -50,14 +50,15 @@ module Bibliothecary
       def self.parse_package_lock(file_contents, options: {})
         manifest = JSON.parse(file_contents)
         # https://docs.npmjs.com/cli/v9/configuring-npm/package-lock-json#lockfileversion
-        if manifest["lockfileVersion"].to_i <= 1
-          # lockfileVersion 1 uses the "dependencies" object
-          parse_package_lock_v1(manifest, options.fetch(:filename, nil))
-        else
-          # lockfileVersion 2 has backwards-compatability by including both "packages" and the legacy "dependencies" object
-          # lockfileVersion 3 has no backwards-compatibility and only includes the "packages" object
-          parse_package_lock_v2(manifest, options.fetch(:filename, nil))
-        end
+        dependencies = if manifest["lockfileVersion"].to_i <= 1
+                         # lockfileVersion 1 uses the "dependencies" object
+                         parse_package_lock_v1(manifest, options.fetch(:filename, nil))
+                       else
+                         # lockfileVersion 2 has backwards-compatability by including both "packages" and the legacy "dependencies" object
+                         # lockfileVersion 3 has no backwards-compatibility and only includes the "packages" object
+                         parse_package_lock_v2(manifest, options.fetch(:filename, nil))
+                       end
+        ParserResult.new(dependencies: dependencies)
       end
 
       class << self
@@ -127,7 +128,7 @@ module Bibliothecary
 
       def self.parse_manifest(file_contents, options: {})
         # on ruby 3.2 we suddenly get this JSON error, so detect and return early: "package.json: unexpected token at ''"
-        return [] if file_contents.empty?
+        return ParserResult.new(dependencies: []) if file_contents.empty?
 
         manifest = JSON.parse(file_contents)
 
@@ -170,7 +171,7 @@ module Bibliothecary
             )
           end
 
-        dependencies
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_yarn_lock(file_contents, options: {})
@@ -180,7 +181,7 @@ module Bibliothecary
                      parse_v1_yarn_lock(file_contents, options.fetch(:filename, nil))
                    end
 
-        dep_hash.map do |dep|
+        dependencies = dep_hash.map do |dep|
           Dependency.new(
             name: dep[:name],
             original_name: dep[:original_name],
@@ -192,6 +193,7 @@ module Bibliothecary
             platform: platform_name
           )
         end
+        ParserResult.new(dependencies: dependencies)
       end
 
       # Returns a hash representation of the deps in yarn.lock, eg:
@@ -390,20 +392,22 @@ module Bibliothecary
         parsed = YAML.load(contents)
         lockfile_version = parsed["lockfileVersion"].to_i
 
-        case lockfile_version
-        when 5
-          parse_v5_pnpm_lock(parsed, options.fetch(:filename, nil))
-        when 6
-          parse_v6_pnpm_lock(parsed, options.fetch(:filename, nil))
-        else # v9+
-          parse_v9_pnpm_lock(parsed, options.fetch(:filename, nil))
-        end
+        dependencies = case lockfile_version
+                       when 5
+                         parse_v5_pnpm_lock(parsed, options.fetch(:filename, nil))
+                       when 6
+                         parse_v6_pnpm_lock(parsed, options.fetch(:filename, nil))
+                       else # v9+
+                         parse_v9_pnpm_lock(parsed, options.fetch(:filename, nil))
+                       end
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_ls(file_contents, options: {})
         manifest = JSON.parse(file_contents)
 
-        transform_tree_to_array(manifest.fetch("dependencies", {}), options.fetch(:filename, nil))
+        dependencies = transform_tree_to_array(manifest.fetch("dependencies", {}), options.fetch(:filename, nil))
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_bun_lock(file_contents, options: {})
@@ -416,7 +420,7 @@ module Bibliothecary
 
         dev_deps = manifest.dig("workspaces", "", "devDependencies")&.keys&.to_set
 
-        manifest.fetch("packages", []).map do |name, info|
+        dependencies = manifest.fetch("packages", []).map do |name, info|
           info_name, _, version = info.first.rpartition("@")
           is_local = version&.start_with?("file:")
           is_alias = info_name != name
@@ -432,6 +436,7 @@ module Bibliothecary
             platform: platform_name
           )
         end
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.lockfile_preference_order(file_infos)

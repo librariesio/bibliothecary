@@ -27,7 +27,7 @@ module Bibliothecary
       def self.parse_conda(file_contents, options: {})
         manifest = YAML.load(file_contents)
         deps = manifest["dependencies"]
-        deps.map do |dep|
+        dependencies = deps.map do |dep|
           next unless dep.is_a? String # only deal with strings to skip parsing pip stuff
 
           parsed = parse_name_requirement_from_matchspec(dep)
@@ -38,6 +38,7 @@ module Bibliothecary
             platform: platform_name
           )
         end.compact
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_name_requirement_from_matchspec(matchspec)

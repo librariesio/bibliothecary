@@ -11,6 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+### Removed
+
+## [14.0.0] - 2025-07-24
+
+### Added
+
+- Added Bibliothecary::ParserResult class, which wraps the parsed dependencies along with the project name, if it was found in the manifest. 
+
+### Changed
+
+- Breaking: parser methods now return Bibliothecary::ParserResult instead of an Array of Bibliothecary::Dependency
+- Return project_name for maven-dependency-tree.txt and maven-dependency-tree.dot results
 - Breaking: require the "platform" argument to be passed to Bibliothecary::Dependency, and update the parsers to do so.
 
 ### Removed

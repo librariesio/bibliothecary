@@ -39,7 +39,7 @@ module Bibliothecary
 
       def self.parse_podfile_lock(file_contents, options: {})
         manifest = YAML.load file_contents
-        manifest["PODS"].map do |row|
+        dependencies = manifest["PODS"].map do |row|
           pod = row.is_a?(String) ? row : row.keys.first
           match = pod.match(/(.+?)\s\((.+?)\)/i)
           Dependency.new(
@@ -50,21 +50,24 @@ module Bibliothecary
             source: options.fetch(:filename, nil)
           )
         end.compact
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_podspec(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:podspec, file_contents)
-        parse_ruby_manifest(manifest, platform_name, options.fetch(:filename, nil))
+        dependencies = parse_ruby_manifest(manifest, platform_name, options.fetch(:filename, nil))
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_podfile(file_contents, options: {})
         manifest = Gemnasium::Parser.send(:podfile, file_contents)
-        parse_ruby_manifest(manifest, "cocoapods", options.fetch(:filename, nil))
+        dependencies = parse_ruby_manifest(manifest, platform_name, options.fetch(:filename, nil))
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_json_manifest(file_contents, options: {})
         manifest = JSON.parse(file_contents)
-        manifest["dependencies"].inject([]) do |deps, dep|
+        dependencies = manifest["dependencies"].inject([]) do |deps, dep|
           deps.push(Dependency.new(
                       platform: platform_name,
                       name: dep[0],
@@ -73,6 +76,7 @@ module Bibliothecary
                       source: options.fetch(:filename, nil)
                     ))
         end.uniq
+        ParserResult.new(dependencies: dependencies)
       end
     end
   end

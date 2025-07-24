@@ -24,13 +24,15 @@ module Bibliothecary
 
       def self.parse_yaml_lockfile(file_contents, options: {})
         manifest = YAML.load file_contents
-        map_dependencies(manifest, "shards", "runtime", options.fetch(:filename, nil))
+        dependencies = map_dependencies(manifest, "shards", "runtime", options.fetch(:filename, nil))
+        Bibliothecary::ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_yaml_manifest(file_contents, options: {})
         manifest = YAML.load file_contents
-        map_dependencies(manifest, "dependencies", "runtime", options.fetch(:filename, nil)) +
-          map_dependencies(manifest, "development_dependencies", "runtime", options.fetch(:filename, nil))
+        dependencies = map_dependencies(manifest, "dependencies", "runtime", options.fetch(:filename, nil)) +
+                       map_dependencies(manifest, "development_dependencies", "runtime", options.fetch(:filename, nil))
+        Bibliothecary::ParserResult.new(dependencies: dependencies)
       end
 
       def self.map_dependencies(hash, key, type, source = nil)

@@ -40,18 +40,14 @@ module Bibliothecary
         # If your Parser needs to return multiple responses for one file, please override this method
         # For example see conda.rb
         kind = determine_kind_from_info(info)
-        dependencies = parse_file(info.relative_path, info.contents, options: options)
+        parser_result = parse_file(info.relative_path, info.contents, options: options)
+        parser_result = ParserResult.new if parser_result.nil? # work around any legacy parsers that return nil
 
-        dependencies_to_analysis(info, kind, dependencies)
+        Bibliothecary::Analyser.create_analysis(platform_name, info.relative_path, kind, parser_result)
       rescue Bibliothecary::FileParsingError => e
         Bibliothecary::Analyser.create_error_analysis(platform_name, info.relative_path, kind, e.message, e.location)
       end
       alias analyze_contents_from_info analyse_contents_from_info
-
-      def dependencies_to_analysis(info, kind, dependencies)
-        dependencies ||= [] # work around any legacy parsers that return nil
-        Bibliothecary::Analyser.create_analysis(platform_name, info.relative_path, kind, dependencies)
-      end
 
       # Call the matching parse class method for this file with
       # these contents

@@ -11,6 +11,7 @@ describe Bibliothecary::Parsers::CPAN do
     expect(described_class.analyse_contents("META.yml", load_fixture("META.yml"))).to eq({
                                                                                            platform: "cpan",
                                                                                            path: "META.yml",
+                                                                                           project_name: nil,
                                                                                            dependencies: [
         Bibliothecary::Dependency.new(platform: "cpan", name: "Digest::MD5", requirement: 0, type: "runtime", source: "META.yml"),
         Bibliothecary::Dependency.new(platform: "cpan", name: "File::Temp", requirement: 0, type: "runtime", source: "META.yml"),
@@ -27,6 +28,7 @@ describe Bibliothecary::Parsers::CPAN do
     expect(described_class.analyse_contents("META.json", load_fixture("META.json"))).to eq({
                                                                                              platform: "cpan",
                                                                                              path: "META.json",
+                                                                                             project_name: nil,
                                                                                              dependencies: [
         Bibliothecary::Dependency.new(platform: "cpan", name: "English", requirement: "1.00", type: "runtime", source: "META.json"),
         Bibliothecary::Dependency.new(platform: "cpan", name: "Test::More", requirement: "0.45", type: "runtime", source: "META.json"),

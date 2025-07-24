@@ -24,10 +24,11 @@ module Bibliothecary
 
       def self.parse_description(file_contents, options: {})
         manifest = DebControl::ControlFileBase.parse(file_contents)
-        parse_section(manifest, "Depends", options.fetch(:filename, nil)) +
-          parse_section(manifest, "Imports", options.fetch(:filename, nil)) +
-          parse_section(manifest, "Suggests", options.fetch(:filename, nil)) +
-          parse_section(manifest, "Enhances", options.fetch(:filename, nil))
+        dependencies = parse_section(manifest, "Depends", options.fetch(:filename, nil)) +
+                       parse_section(manifest, "Imports", options.fetch(:filename, nil)) +
+                       parse_section(manifest, "Suggests", options.fetch(:filename, nil)) +
+                       parse_section(manifest, "Enhances", options.fetch(:filename, nil))
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_section(manifest, name, source = nil)

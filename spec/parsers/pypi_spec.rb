@@ -11,6 +11,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.analyse_contents("setup.py", load_fixture("setup.py"))).to eq({
                                                                                            platform: "pypi",
                                                                                            path: "setup.py",
+                                                                                           project_name: nil,
                                                                                            dependencies: [
         Bibliothecary::Dependency.new(platform: "pypi", name: "Install", requirement: "*", type: "runtime", source: "setup.py"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "django-bootstrap3", requirement: ">=6.2,<6.3", type: "runtime", source: "setup.py"),
@@ -41,6 +42,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.analyse_contents("requirements.txt", load_fixture("requirements.txt"))).to eq({
                                                                                                            platform: "pypi",
                                                                                                            path: "requirements.txt",
+                                                                                                           project_name: nil,
                                                                                                            dependencies: [
         Bibliothecary::Dependency.new(platform: "pypi", name: "Flask", requirement: "==0.8", type: "runtime", source: "requirements.txt"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "zope.component", requirement: "==4.2.2", type: "runtime", source: "requirements.txt"),
@@ -62,6 +64,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.analyse_contents("requirements-dev.txt", load_fixture("requirements-dev.txt"))).to eq({
                                                                                                                    platform: "pypi",
                                                                                                                    path: "requirements-dev.txt",
+                                                                                                                   project_name: nil,
                                                                                                                    dependencies: [
         Bibliothecary::Dependency.new(platform: "pypi", name: "astroid", requirement: "==2.9.0", type: "development", source: "requirements-dev.txt"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "attrs", requirement: "==21.4.0", type: "development", source: "requirements-dev.txt"),
@@ -124,6 +127,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.analyse_contents("requirements/test.txt", load_fixture("requirements/test.txt"))).to eq({
                                                                                                                      platform: "pypi",
                                                                                                                      path: "requirements/test.txt",
+                                                                                                                     project_name: nil,
                                                                                                                      dependencies: [
         Bibliothecary::Dependency.new(platform: "pypi", name: "attrs", requirement: "==21.4.0", type: "test", source: "requirements/test.txt"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "exceptiongroup", requirement: "==1.0.0rc8", type: "test", source: "requirements/test.txt"),
@@ -151,6 +155,7 @@ describe Bibliothecary::Parsers::Pypi do
       expect(described_class.analyse_contents("requirements-git.txt", load_fixture("requirements-git.txt"))).to eq({
                                                                                                                      platform: "pypi",
                                                                                                                      path: "requirements-git.txt",
+                                                                                                                     project_name: nil,
                                                                                                                      dependencies: [
           Bibliothecary::Dependency.new(platform: "pypi", name: "pygame", requirement: "2.1.2", type: "runtime", source: "requirements-git.txt"),
         ],
@@ -188,6 +193,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.analyse_contents("requirements.in", load_fixture("pip-compile/requirements.in"))).to eq({
                                                                                                                      platform: "pypi",
                                                                                                                      path: "requirements.in",
+                                                                                                                     project_name: nil,
                                                                                                                      dependencies: [
         Bibliothecary::Dependency.new(platform: "pypi", name: "invoke", requirement: "*", type: "runtime", source: "requirements.in"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "black", requirement: "*", type: "runtime", source: "requirements.in"),
@@ -208,6 +214,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.analyse_contents("requirements.txt", load_fixture("pip-compile/requirements.txt"))).to eq({
                                                                                                                        platform: "pypi",
                                                                                                                        path: "requirements.txt",
+                                                                                                                       project_name: nil,
                                                                                                                        dependencies: [
         Bibliothecary::Dependency.new(platform: "pypi", name: "black", requirement: "==21.9b0", type: "runtime", source: "requirements.txt"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "cachetools", requirement: "==4.2.2", type: "runtime", source: "requirements.txt"),
@@ -257,6 +264,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.analyse_contents("pip-resolved-dependencies.txt", load_fixture("pip-resolved-dependencies.txt"))).to eq({
                                                                                                                                      platform: "pypi",
                                                                                                                                      path: "pip-resolved-dependencies.txt",
+                                                                                                                                     project_name: nil,
                                                                                                                                      dependencies: [
         Bibliothecary::Dependency.new(platform: "pypi", name: "asgiref", requirement: "==3.2.7", type: "runtime", source: "pip-resolved-dependencies.txt"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "Django", requirement: "==3.0.6", type: "runtime", source: "pip-resolved-dependencies.txt"),
@@ -271,6 +279,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.analyse_contents("pip-dependency-graph.json", load_fixture("pip-dependency-graph.json"))).to eq({
                                                                                                                              platform: "pypi",
                                                                                                                              path: "pip-dependency-graph.json",
+                                                                                                                             project_name: nil,
                                                                                                                              dependencies: [
         Bibliothecary::Dependency.new(platform: "pypi", name: "aiohttp", requirement: "3.9.5", type: "runtime", source: "pip-dependency-graph.json"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "aiosignal", requirement: "1.3.1", type: "runtime", source: "pip-dependency-graph.json"),
@@ -321,6 +330,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.analyse_contents("pip-dependency-graph.json", lockfile)).to eq({
                                                                                             platform: "pypi",
                                                                                             path: "pip-dependency-graph.json",
+                                                                                            project_name: nil,
                                                                                             dependencies: [
         Bibliothecary::Dependency.new(platform: "pypi", name: "aiohttp", requirement: "3.9.5", type: "runtime", source: "pip-dependency-graph.json"),
       ],
@@ -333,6 +343,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.analyse_contents("requirements.frozen", load_fixture("requirements.frozen"))).to eq({
                                                                                                                  platform: "pypi",
                                                                                                                  path: "requirements.frozen",
+                                                                                                                 project_name: nil,
                                                                                                                  dependencies: [
         Bibliothecary::Dependency.new(platform: "pypi", name: "asgiref", requirement: "==3.2.7", type: "runtime", source: "requirements.frozen"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "Django", requirement: "==3.0.6", type: "runtime", source: "requirements.frozen"),
@@ -348,7 +359,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(results[:platform]).to eq("pypi")
     expect(results[:path]).to eq("Pipfile")
     expect(results[:kind]).to eq("manifest")
-    puts "RESUTL: #{results}"
+    expect(results[:project_name]).to eq(nil)
     expect(results[:success]).to eq(true)
     expect(results[:dependencies]).to match_array([
         Bibliothecary::Dependency.new(platform: "pypi", name: "requests", requirement: "*", type: "runtime", source: "Pipfile"),
@@ -365,6 +376,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(results[:platform]).to eq("pypi")
     expect(results[:path]).to eq("Pipfile.lock")
     expect(results[:kind]).to eq("lockfile")
+    expect(results[:project_name]).to eq(nil)
     expect(results[:success]).to eq(true)
     expect(results[:dependencies]).to match_array([
         Bibliothecary::Dependency.new(platform: "pypi", name: "PySocks", requirement: "==1.6.5", type: "runtime", source: "Pipfile.lock"),
@@ -398,6 +410,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(results[:platform]).to eq("pypi")
     expect(results[:path]).to eq("pyproject.toml")
     expect(results[:kind]).to eq("manifest")
+    expect(results[:project_name]).to eq(nil)
     expect(results[:success]).to eq(true)
     expect(results[:dependencies]).to match_array([
       Bibliothecary::Dependency.new(platform: "pypi", name: "python", requirement: "^3.7", type: "runtime", source: "pyproject.toml"),
@@ -422,6 +435,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.analyse_contents("pyproject.toml", source)).to eq({
                                                                                platform: "pypi",
                                                                                path: "pyproject.toml",
+                                                                               project_name: nil,
                                                                                dependencies: [],
                                                                                kind: "manifest",
                                                                                success: true,
@@ -448,6 +462,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(results[:platform]).to eq("pypi")
     expect(results[:path]).to eq("pyproject.toml")
     expect(results[:kind]).to eq("manifest")
+    expect(results[:project_name]).to eq(nil)
     expect(results[:success]).to eq(true)
     expect(results[:dependencies]).to eq([
         Bibliothecary::Dependency.new(platform: "pypi", name: "black", requirement: "*", type: "runtime", source: "pyproject.toml"),
@@ -463,6 +478,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(described_class.analyse_contents("poetry.lock", load_fixture("poetry.lock"))).to eq({
                                                                                                  platform: "pypi",
                                                                                                  path: "poetry.lock",
+                                                                                                 project_name: nil,
                                                                                                  dependencies: [
         Bibliothecary::Dependency.new(platform: "pypi", name: "asgiref", requirement: "3.7.2", type: "runtime", source: "poetry.lock"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "atomicwrites", requirement: "1.4.1", type: "develop", source: "poetry.lock"),

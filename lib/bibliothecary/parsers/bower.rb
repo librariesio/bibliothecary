@@ -20,8 +20,9 @@ module Bibliothecary
 
       def self.parse_manifest(file_contents, options: {})
         json = JSON.parse(file_contents)
-        map_dependencies(json, "dependencies", "runtime", options.fetch(:filename, nil)) +
-          map_dependencies(json, "devDependencies", "development", options.fetch(:filename, nil))
+        dependencies = map_dependencies(json, "dependencies", "runtime", options.fetch(:filename, nil)) +
+                       map_dependencies(json, "devDependencies", "development", options.fetch(:filename, nil))
+        ParserResult.new(dependencies: dependencies)
       end
     end
   end

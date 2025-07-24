@@ -11,6 +11,7 @@ describe Bibliothecary::Parsers::Rubygems do
     expect(described_class.analyse_contents("Gemfile", load_fixture("Gemfile"))).to eq({
                                                                                          platform: "rubygems",
                                                                                          path: "Gemfile",
+                                                                                         project_name: nil,
                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "rubygems", name: "oj", requirement: ">= 0", type: "runtime", source: "Gemfile"),
         Bibliothecary::Dependency.new(platform: "rubygems", name: "rails", requirement: "= 4.2.0", type: "runtime", source: "Gemfile"),
@@ -30,6 +31,7 @@ describe Bibliothecary::Parsers::Rubygems do
     expect(described_class.analyse_contents("gems.rb", load_fixture("gems.rb"))).to eq({
                                                                                          platform: "rubygems",
                                                                                          path: "gems.rb",
+                                                                                         project_name: nil,
                                                                                          dependencies: [
         Bibliothecary::Dependency.new(platform: "rubygems", name: "oj", requirement: ">= 0", type: "runtime", source: "gems.rb"),
         Bibliothecary::Dependency.new(platform: "rubygems", name: "rails", requirement: "= 4.2.0", type: "runtime", source: "gems.rb"),
@@ -49,6 +51,7 @@ describe Bibliothecary::Parsers::Rubygems do
     expect(described_class.analyse_contents("devise.gemspec", load_fixture("devise.gemspec"))).to eq({
                                                                                                        platform: "rubygems",
                                                                                                        path: "devise.gemspec",
+                                                                                                       project_name: nil,
                                                                                                        dependencies: [
         Bibliothecary::Dependency.new(platform: "rubygems", name: "warden", requirement: "~> 1.2.3", type: "runtime", source: "devise.gemspec"),
         Bibliothecary::Dependency.new(platform: "rubygems", name: "orm_adapter", requirement: "~> 0.1", type: "development", source: "devise.gemspec"),
@@ -66,6 +69,7 @@ describe Bibliothecary::Parsers::Rubygems do
     expect(described_class.analyse_contents("Gemfile.lock", load_fixture("Gemfile.lock"))).to eq({
                                                                                                    platform: "rubygems",
                                                                                                    path: "Gemfile.lock",
+                                                                                                   project_name: nil,
                                                                                                    dependencies: [
         Bibliothecary::Dependency.new(platform: "rubygems", name: "CFPropertyList", requirement: "2.3.1", type: "runtime", source: "Gemfile.lock"),
         Bibliothecary::Dependency.new(platform: "rubygems", name: "actionmailer", requirement: "4.2.3", type: "runtime", source: "Gemfile.lock"),
@@ -83,6 +87,7 @@ describe Bibliothecary::Parsers::Rubygems do
       platform: "rubygems",
       path: "Gemfile.lock",
       kind: "lockfile",
+      project_name: nil,
       success: true
     )
 
@@ -104,6 +109,7 @@ describe Bibliothecary::Parsers::Rubygems do
           Bibliothecary::Dependency.new(platform: "rubygems", name: "rails", requirement: "5.2.3", type: "runtime", source: "Gemfile.lock"),
         ],
               kind: "lockfile",
+              project_name: nil,
               success: true,
             })
   end
