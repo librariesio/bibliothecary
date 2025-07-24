@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added Bibliothecary::ParserResult class, to wrap dependencies with the project name.
+- Added Bibliothecary::ParserResult class, which wraps the parsed dependencies along with the project name, if it was found in the manifest. 
 
 ### Changed
 
