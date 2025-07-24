@@ -41,7 +41,7 @@ module Bibliothecary
         # For example see conda.rb
         kind = determine_kind_from_info(info)
         parser_result = parse_file(info.relative_path, info.contents, options: options)
-        parser_result = ParserResult.new if parser_result.nil? # work around any legacy parsers that return nil
+        parser_result = ParserResult.new(dependencies: []) if parser_result.nil? # work around any legacy parsers that return nil
 
         Bibliothecary::Analyser.create_analysis(platform_name, info.relative_path, kind, parser_result)
       rescue Bibliothecary::FileParsingError => e

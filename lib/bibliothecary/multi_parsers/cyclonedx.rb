@@ -106,7 +106,7 @@ module Bibliothecary
           component["purl"]
         end
 
-        ParserResult.new(dependencies: entries[platform_name.to_sym])
+        ParserResult.new(dependencies: entries[platform_name.to_sym] || [])
       end
 
       def parse_cyclonedx_xml(file_contents, options: {})
@@ -131,7 +131,7 @@ module Bibliothecary
           component.locate("purl").first&.text
         end
 
-        ParserResult.new(dependencies: entries[platform_name.to_sym])
+        ParserResult.new(dependencies: entries[platform_name.to_sym] || [])
       end
     end
   end
