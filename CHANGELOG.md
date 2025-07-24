@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [14.0.1] - 2025-07-24
+
+### Changed
+
+- Bugfix: implement Bibliothecary::ParserResult in SPDX parser too, and add an integration test.
+
 ## [14.0.0] - 2025-07-24
 
 ### Added
