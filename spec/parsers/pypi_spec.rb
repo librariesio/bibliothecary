@@ -388,6 +388,38 @@ describe Bibliothecary::Parsers::Pypi do
       ])
   end
 
+  it "parses dependencies from pylock.toml" do
+    result = described_class.analyse_contents("pylock.toml", load_fixture("pylock.toml"))
+
+    expect(result[:platform]).to eq("pypi")
+    expect(result[:path]).to eq("pylock.toml")
+    expect(result[:kind]).to eq("lockfile")
+    expect(result[:project_name]).to eq(nil)
+    expect(result[:success]).to eq(true)
+    expect(result[:dependencies]).to match_array([
+      Bibliothecary::Dependency.new(platform: "pypi", name: "blinker", requirement: "1.9.0", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "certifi", requirement: "2025.7.14", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "chardet", requirement: "5.0.0", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "charset-normalizer", requirement: "3.4.2", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "click", requirement: "8.2.1", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "flask", requirement: "3.1.1", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "gunicorn", requirement: "23.0.0", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "idna", requirement: "3.10", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "itsdangerous", requirement: "2.2.0", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "jinja2", requirement: "3.1.6", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "joblib", requirement: "1.5.1", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "markupsafe", requirement: "3.0.2", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "numpy", requirement: "2.3.2", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "packaging", requirement: "25.0", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "requests", requirement: "2.32.4", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "scikit-learn", requirement: "1.7.1", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "scipy", requirement: "1.16.0", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "threadpoolctl", requirement: "3.6.0", type: "runtime", source: "pylock.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "urllib3", requirement: "*", type: "runtime", source: "pylock.toml", local: true),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "werkzeug", requirement: "3.1.3", type: "runtime", source: "pylock.toml"),
+      ])
+  end
+
   it "matches valid manifest filepaths" do
     expect(described_class.match?("requirements.txt")).to be_truthy
     expect(described_class.match?("requirements-dev.txt")).to be_truthy

@@ -1,0 +1,220 @@
+lock-version = "1.0"
+created-by = "pip"
+
+[[packages]]
+name = "blinker"
+version = "1.9.0"
+
+[[packages.wheels]]
+name = "blinker-1.9.0-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/10/cb/f2ad4230dc2eb1a74edf38f1a38b9b52277f75bef262d8908e60d957e13c/blinker-1.9.0-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "ba0efaa9080b619ff2f3459d1d500c57bddea4a6b424b60a91141db6fd2f08bc"
+
+[[packages]]
+name = "certifi"
+version = "2025.7.14"
+
+[[packages.wheels]]
+name = "certifi-2025.7.14-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/4f/52/34c6cf5bb9285074dc3531c437b3919e825d976fde097a7a73f79e726d03/certifi-2025.7.14-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "6b31f564a415d79ee77df69d757bb49a5bb53bd9f756cbbe24394ffd6fc1f4b2"
+
+[[packages]]
+name = "chardet"
+version = "5.0.0"
+
+[[packages.wheels]]
+name = "chardet-5.0.0-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/4c/d1/1b96dd69fa42f20b70701b5cd42a75dd5f0c7a24dc0abfef35cc146210dc/chardet-5.0.0-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "d3e64f022d254183001eccc5db4040520c0f23b1a3f33d6413e099eb7f126557"
+
+[[packages]]
+name = "charset-normalizer"
+version = "3.4.2"
+
+[[packages.wheels]]
+name = "charset_normalizer-3.4.2-cp313-cp313-macosx_10_13_universal2.whl"
+url = "https://files.pythonhosted.org/packages/ea/12/a93df3366ed32db1d907d7593a94f1fe6293903e3e92967bebd6950ed12c/charset_normalizer-3.4.2-cp313-cp313-macosx_10_13_universal2.whl"
+
+[packages.wheels.hashes]
+sha256 = "926ca93accd5d36ccdabd803392ddc3e03e6d4cd1cf17deff3b989ab8e9dbcf0"
+
+[[packages]]
+name = "click"
+version = "8.2.1"
+
+[[packages.wheels]]
+name = "click-8.2.1-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/85/32/10bb5764d90a8eee674e9dc6f4db6a0ab47c8c4d0d83c27f7c39ac415a4d/click-8.2.1-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "61a3265b914e850b85317d0b3109c7f8cd35a670f963866005d6ef1d5175a12b"
+
+[[packages]]
+name = "flask"
+version = "3.1.1"
+
+[[packages.wheels]]
+name = "flask-3.1.1-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/3d/68/9d4508e893976286d2ead7f8f571314af6c2037af34853a30fd769c02e9d/flask-3.1.1-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "07aae2bb5eaf77993ef57e357491839f5fd9f4dc281593a81a9e4d79a24f295c"
+
+[[packages]]
+name = "gunicorn"
+version = "23.0.0"
+
+[[packages.wheels]]
+name = "gunicorn-23.0.0-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/cb/7d/6dac2a6e1eba33ee43f318edbed4ff29151a49b5d37f080aad1e6469bca4/gunicorn-23.0.0-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "ec400d38950de4dfd418cff8328b2c8faed0edb0d517d3394e457c317908ca4d"
+
+[[packages]]
+name = "idna"
+version = "3.10"
+
+[[packages.wheels]]
+name = "idna-3.10-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/76/c6/c88e154df9c4e1a2a66ccf0005a88dfb2650c1dffb6f5ce603dfbd452ce3/idna-3.10-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3"
+
+[[packages]]
+name = "itsdangerous"
+version = "2.2.0"
+
+[[packages.wheels]]
+name = "itsdangerous-2.2.0-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/04/96/92447566d16df59b2a776c0fb82dbc4d9e07cd95062562af01e408583fc4/itsdangerous-2.2.0-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "c6242fc49e35958c8b15141343aa660db5fc54d4f13a1db01a3f5891b98700ef"
+
+[[packages]]
+name = "jinja2"
+version = "3.1.6"
+
+[[packages.wheels]]
+name = "jinja2-3.1.6-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/62/a1/3d680cbfd5f4b8f15abc1d571870c5fc3e594bb582bc3b64ea099db13e56/jinja2-3.1.6-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67"
+
+[[packages]]
+name = "joblib"
+version = "1.5.1"
+
+[[packages.wheels]]
+name = "joblib-1.5.1-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/7d/4f/1195bbac8e0c2acc5f740661631d8d750dc38d4a32b23ee5df3cde6f4e0d/joblib-1.5.1-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "4719a31f054c7d766948dcd83e9613686b27114f190f717cec7eaa2084f8a74a"
+
+[[packages]]
+name = "markupsafe"
+version = "3.0.2"
+
+[[packages.wheels]]
+name = "MarkupSafe-3.0.2-cp313-cp313-macosx_11_0_arm64.whl"
+url = "https://files.pythonhosted.org/packages/2b/6d/9409f3684d3335375d04e5f05744dfe7e9f120062c9857df4ab490a1031a/MarkupSafe-3.0.2-cp313-cp313-macosx_11_0_arm64.whl"
+
+[packages.wheels.hashes]
+sha256 = "f8b3d067f2e40fe93e1ccdd6b2e1d16c43140e76f02fb1319a05cf2b79d99430"
+
+[[packages]]
+name = "numpy"
+version = "2.3.2"
+
+[[packages.wheels]]
+name = "numpy-2.3.2-cp313-cp313-macosx_14_0_arm64.whl"
+url = "https://files.pythonhosted.org/packages/78/45/d4698c182895af189c463fc91d70805d455a227261d950e4e0f1310c2550/numpy-2.3.2-cp313-cp313-macosx_14_0_arm64.whl"
+
+[packages.wheels.hashes]
+sha256 = "dd937f088a2df683cbb79dda9a772b62a3e5a8a7e76690612c2737f38c6ef1b6"
+
+[[packages]]
+name = "packaging"
+version = "25.0"
+
+[[packages.wheels]]
+name = "packaging-25.0-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/20/12/38679034af332785aac8774540895e234f4d07f7545804097de4b666afd8/packaging-25.0-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484"
+
+[[packages]]
+name = "requests"
+version = "2.32.4"
+
+[[packages.wheels]]
+name = "requests-2.32.4-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/7c/e4/56027c4a6b4ae70ca9de302488c5ca95ad4a39e190093d6c1a8ace08341b/requests-2.32.4-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "27babd3cda2a6d50b30443204ee89830707d396671944c998b5975b031ac2b2c"
+
+[[packages]]
+name = "scikit-learn"
+version = "1.7.1"
+
+[[packages.wheels]]
+name = "scikit_learn-1.7.1-cp313-cp313-macosx_12_0_arm64.whl"
+url = "https://files.pythonhosted.org/packages/71/f3/f1df377d1bdfc3e3e2adc9c119c238b182293e6740df4cbeac6de2cc3e23/scikit_learn-1.7.1-cp313-cp313-macosx_12_0_arm64.whl"
+
+[packages.wheels.hashes]
+sha256 = "a10f276639195a96c86aa572ee0698ad64ee939a7b042060b98bd1930c261d10"
+
+[[packages]]
+name = "scipy"
+version = "1.16.0"
+
+[[packages.wheels]]
+name = "scipy-1.16.0-cp313-cp313-macosx_14_0_arm64.whl"
+url = "https://files.pythonhosted.org/packages/58/46/63477fc1246063855969cbefdcee8c648ba4b17f67370bd542ba56368d0b/scipy-1.16.0-cp313-cp313-macosx_14_0_arm64.whl"
+
+[packages.wheels.hashes]
+sha256 = "58e0d4354eacb6004e7aa1cd350e5514bd0270acaa8d5b36c0627bb3bb486974"
+
+[[packages]]
+name = "threadpoolctl"
+version = "3.6.0"
+
+[[packages.wheels]]
+name = "threadpoolctl-3.6.0-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/32/d5/f9a850d79b0851d1d4ef6456097579a9005b31fea68726a4ae5f2d82ddd9/threadpoolctl-3.6.0-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "43a0b8fd5a2928500110039e43a5eed8480b918967083ea48dc3ab9f13c4a7fb"
+
+[[packages]]
+name = "urllib3"
+
+[packages.archive]
+url = "file:///Users/tieg.zaharia/Code/bibliothecary/spec/fixtures/pylock/urllib3-2.5.0-py3-none-any.whl"
+
+[packages.archive.hashes]
+sha256 = "e6b01673c0fa6a13e374b50871808eb3bf7046c4b125b216f6bf1cc604cff0dc"
+
+[[packages]]
+name = "werkzeug"
+version = "3.1.3"
+
+[[packages.wheels]]
+name = "werkzeug-3.1.3-py3-none-any.whl"
+url = "https://files.pythonhosted.org/packages/52/24/ab44c871b0f07f491e5d2ad12c9bd7358e527510618cb1b803a88e986db1/werkzeug-3.1.3-py3-none-any.whl"
+
+[packages.wheels.hashes]
+sha256 = "54b78bf3716d19a65be4fceccc0d1d7b89e608834989dfae50ea87564639213e"

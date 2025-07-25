@@ -20,6 +20,10 @@ module Bibliothecary
       # Adapted from https://peps.python.org/pep-0508/#names
       PEP_508_NAME_REGEXP = /^([A-Z0-9][A-Z0-9._-]*[A-Z0-9]|[A-Z0-9])/i
 
+      # A modified version of the regexp from the docs, to catch all cases:
+      # https://packaging.python.org/en/latest/specifications/pylock-toml/
+      PEP_751_LOCKFILE_REGEXP = /^pylock(\.[^.]+)?\.toml$/
+
       def self.mapping
         {
           match_filenames("requirements-dev.txt", "requirements/dev.txt",
@@ -72,12 +76,33 @@ module Bibliothecary
             kind: "lockfile",
             parser: :parse_poetry_lock,
           },
+          # PEP-751: official python lockfile format (https://peps.python.org/pep-0751/)
+          ->(p) { PEP_751_LOCKFILE_REGEXP.match(p) } => {
+            kind: "lockfile",
+            parser: :parser_pylock,
+          },
         }
       end
 
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
+
+      def self.parser_pylock(file_contents, options: {})
+        lockfile = Tomlrb.parse(file_contents)
+        dependencies = lockfile["packages"].map do |d|
+          is_local = true if d.key?("archive") || d.key?("directory")
+          Dependency.new(
+            platform: platform_name,
+            name: d["name"],
+            type: "runtime",
+            source: options.fetch(:filename, nil),
+            requirement: d["version"] || "*",
+            local: is_local
+          )
+        end
+        ParserResult.new(dependencies: dependencies)
+      end
 
       def self.parse_pipfile(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
