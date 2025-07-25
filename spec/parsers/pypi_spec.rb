@@ -368,6 +368,7 @@ describe Bibliothecary::Parsers::Pypi do
         Bibliothecary::Dependency.new(platform: "pypi", name: "nose", requirement: "*", type: "develop", source: "Pipfile"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "a-local-dep", requirement: "*", type: "runtime", source: "Pipfile", local: true),
         Bibliothecary::Dependency.new(platform: "pypi", name: "another-local-dep", requirement: "*", type: "develop", source: "Pipfile", local: true),
+        Bibliothecary::Dependency.new(platform: "pypi", name: "urllib3", requirement: "*", type: "runtime", source: "Pipfile", local: true),
       ])
   end
 
@@ -379,12 +380,19 @@ describe Bibliothecary::Parsers::Pypi do
     expect(results[:project_name]).to eq(nil)
     expect(results[:success]).to eq(true)
     expect(results[:dependencies]).to match_array([
-        Bibliothecary::Dependency.new(platform: "pypi", name: "PySocks", requirement: "==1.6.5", type: "runtime", source: "Pipfile.lock"),
-        Bibliothecary::Dependency.new(platform: "pypi", name: "requests", requirement: "==2.13.0", type: "runtime", source: "Pipfile.lock"),
-        Bibliothecary::Dependency.new(platform: "pypi", name: "Django", requirement: "==1.10.5", type: "runtime", source: "Pipfile.lock"),
+        Bibliothecary::Dependency.new(platform: "pypi", name: "requests", requirement: "==2.32.4", type: "runtime", source: "Pipfile.lock"),
+        Bibliothecary::Dependency.new(platform: "pypi", name: "certifi", requirement: "==2025.7.14", type: "runtime", source: "Pipfile.lock"),
+        Bibliothecary::Dependency.new(platform: "pypi", name: "charset-normalizer", requirement: "==3.4.2", type: "runtime", source: "Pipfile.lock"),
+        Bibliothecary::Dependency.new(platform: "pypi", name: "django", requirement: "==5.2.4", type: "runtime", source: "Pipfile.lock"),
+        Bibliothecary::Dependency.new(platform: "pypi", name: "idna", requirement: "==3.10", type: "runtime", source: "Pipfile.lock"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "pinax", requirement: "git://github.com/pinax/pinax.git#1.4", source: "Pipfile.lock", type: "runtime"),
+        Bibliothecary::Dependency.new(platform: "pypi", name: "pysocks", requirement: "==1.7.1", type: "runtime", source: "Pipfile.lock"),
+        Bibliothecary::Dependency.new(platform: "pypi", name: "asgiref", requirement: "==3.9.1", type: "runtime", source: "Pipfile.lock"),
         Bibliothecary::Dependency.new(platform: "pypi", name: "a-local-dep", requirement: "*", type: "runtime", source: "Pipfile.lock", local: true),
+        Bibliothecary::Dependency.new(platform: "pypi", name: "another-local-dep", requirement: "*", type: "runtime", source: "Pipfile.lock", local: true),
         Bibliothecary::Dependency.new(platform: "pypi", name: "nose", requirement: "==1.3.7", type: "develop", source: "Pipfile.lock"),
+        Bibliothecary::Dependency.new(platform: "pypi", name: "sqlparse", requirement: "==0.5.3", type: "runtime", source: "Pipfile.lock"),
+        Bibliothecary::Dependency.new(platform: "pypi", name: "urllib3", requirement: "*", type: "runtime", source: "Pipfile.lock", local: true),
       ])
   end
 

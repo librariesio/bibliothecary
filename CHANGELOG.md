@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Added a regression test to ensure "file" entries in Pipfile/Pipfile.lock are considered local.
+
 ### Removed
 
 ## [14.0.1] - 2025-07-24
