@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Add support in Pypi parser for PEP-751's newly official "pylock.toml" lockfile
+
 ### Changed
 
 - Added a regression test to ensure "file" entries in Pipfile/Pipfile.lock are considered local.
