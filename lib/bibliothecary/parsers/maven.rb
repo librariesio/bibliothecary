@@ -491,7 +491,6 @@ module Bibliothecary
             dep_hash[:type] ||= dependency_management[:scope]
           end
 
-          dep_hash[:type] ||= "runtime"
           dep_hash[:source] = source
         end
 
