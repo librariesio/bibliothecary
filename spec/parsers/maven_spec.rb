@@ -592,7 +592,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(deps.select { |item| item.type == "provided" }).to eq []
 
     # be sure we can parse a type with a hyphen
-    expect((deps.select { |item| item.type == "compile-internal" }).length).to eq 40
+    expect(deps.select { |item| item.type == "compile-internal" }.length).to eq 40
 
     expect(deps.length).to eq 255
   end

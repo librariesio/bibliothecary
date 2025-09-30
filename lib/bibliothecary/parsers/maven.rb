@@ -12,8 +12,8 @@ module Bibliothecary
       include Bibliothecary::Analyser
 
       # Matches digraph contents from the Maven dependency tree .dot file format.
-      MAVEN_DOT_PROJECT_REGEXP = /digraph\s+"([^\"]+)"\s+{/
-      MAVEN_DOT_RELATIONSHIP_REGEXP = /"([^\"]+)"\s+->\s+"([^\"]+)"/
+      MAVEN_DOT_PROJECT_REGEXP = /digraph\s+"([^"]+)"\s+{/
+      MAVEN_DOT_RELATIONSHIP_REGEXP = /"([^"]+)"\s+->\s+"([^"]+)"/
 
       # e.g. "annotationProcessor - Annotation processors and their dependencies for source set 'main'."
       GRADLE_TYPE_REGEXP = /^(\w+)/
@@ -286,7 +286,7 @@ module Bibliothecary
           .encode(universal_newline: true)
           # capture two groups; one is the ASCII art telling us the tree depth,
           # and two is the actual dependency
-          .scan(/^\[INFO\]\s((?:[-+|\\]|\s)*)((?:[\w\.-]+:)+[\w\.\-${}]+)/)
+          .scan(/^\[INFO\]\s((?:[-+|\\]|\s)*)((?:[\w.-]+:)+[\w.\-${}]+)/)
           # lines that start with "-" aren't part of the tree, example: "[INFO] --- dependency:3.8.1:tree"
           .reject { |(tree_ascii_art, _dep_info)| tree_ascii_art.start_with?("-") }
           .map do |(tree_ascii_art, dep_info)|
