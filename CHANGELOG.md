@@ -13,13 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-## [15.0.0]
+## [14.0.3] - 2025-10-01
 
 ### Added
 
 ### Changed
 
-- Breaking change: dependencies from pom.xml without a scope will now return a type of nil instead of falling back to "runtime".
+- Dependencies from pom.xml without a scope will not return a "type" of nil instead of guessing "runtime".
 
 ### Removed
 
