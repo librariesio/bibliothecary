@@ -9,7 +9,8 @@ module Bibliothecary
   #   it's implicit in most parser results, and the analyzer returns the platform name itself. One
   #   exception are multi-parsers like DependenciesCSV, because they may return deps from multiple platforms.
   #   Bibliothecary could start returning this field for *all* deps in future, and make it required. (default: nil)
-  # @attr_reader [String] type The type of dependency, e.g. "runtime" or "test"
+  # @attr_reader [String] type The type or scope of dependency, e.g. "runtime" or "test". In some ecosystems a
+  #   default may be set and in other ecosystems it may make sense to return nil when not found.
   # @attr_reader [Boolean] direct Is this dependency a direct dependency (vs transitive dependency)? (default: nil)
   # @attr_reader [Boolean] deprecated Is this dependency deprecated? (default: nil)
   # @attr_reader [Boolean] local Is this dependency local? (default: nil)

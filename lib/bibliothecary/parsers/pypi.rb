@@ -10,7 +10,7 @@ module Bibliothecary
       # Capture Group 1 is package.
       # Optional Group 2 is [extras].
       # Capture Group 3 is Version
-      REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_\.]+)(?:\[.*?\])*([><=\w\.,]+)?/
+      REQUIRE_REGEXP = /([a-zA-Z0-9]+[a-zA-Z0-9\-_.]+)(?:\[.*?\])*([><=\w.,]+)?/
       REQUIREMENTS_REGEXP = /^#{REQUIRE_REGEXP}/
 
       MANIFEST_REGEXP = /.*require[^\/]*\.(txt|pip|in)$/
@@ -332,7 +332,7 @@ module Bibliothecary
         uri = URI.parse(url)
         raise NoEggSpecified, "No egg specified in #{url}" unless uri.fragment
 
-        name = uri.fragment[/^egg=([^&]+)([&]|$)/, 1]
+        name = uri.fragment[/^egg=([^&]+)(&|$)/, 1]
         raise NoEggSpecified, "No egg specified in #{url}" unless name
 
         requirement = uri.path[/@(.+)$/, 1]
