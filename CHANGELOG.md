@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- In Nuget .csproj files, ignored <Reference> tags that don't have a version.
+
 ### Removed
 
 ## [14.1.0] - 2025-10-01
