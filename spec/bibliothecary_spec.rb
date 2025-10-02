@@ -50,7 +50,7 @@ describe Bibliothecary do
                                                                                            path: "bower.json",
                                                                                            project_name: nil,
                                                                                            dependencies: [
-        Bibliothecary::Dependency.new(platform: "bower", name: "jquery", requirement: ">= 1.9.1", type: "runtime", source: "bower.json"),
+  Bibliothecary::Dependency.new(platform: "bower", name: "jquery", requirement: ">= 1.9.1", type: "runtime", source: "bower.json"),
       ],
                                                                                            kind: "manifest",
                                                                                            success: true,
