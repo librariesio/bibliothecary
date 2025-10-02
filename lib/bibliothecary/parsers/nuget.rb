@@ -153,6 +153,17 @@ module Bibliothecary
           .select { |dep| dep.respond_to? "Include" }
           .map do |dependency|
             vals = *dependency.Include.split(",").map(&:strip)
+
+            # Skip <Reference> dependencies that only have the name value. Reasoning:
+            # Builtin assemblies like "System.Web" or "Microsoft.CSharp" can be required from the framework or by
+            # downloading via Nuget, and we only want to report on packages that are downloaded from Nuget. We are
+            # pretty sure that if they don't have a version in <Reference> then they're likely from the framework
+            # itself, which means they won't show up in the lockfile and we want to omit them.
+            # Note: if we omit a false positive here it should still show up in the lockfile, and it should be
+            # safer guess like this since <Reference> is an older standard.
+            # Note: this strategy could also skip on-disk 3rd-party packages with a <HintPath> but no version in <Reference>
+            next nil if vals.size == 1
+
             name = vals.shift
             vals = vals.to_h { |r| r.split("=", 2) }
 
@@ -164,6 +175,7 @@ module Bibliothecary
               platform: platform_name
             )
           end
+          .compact
 
         dependencies = packages.uniq(&:name)
         ParserResult.new(dependencies: dependencies)
