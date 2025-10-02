@@ -187,7 +187,7 @@ module Bibliothecary
             original_name: dep[:original_name],
             requirement: dep[:version],
             original_requirement: dep[:original_requirement],
-            type: "runtime", # lockfile doesn't tell us more about the type of dep
+            type: nil, # yarn.lock doesn't report on the type of dependency
             local: dep[:requirements]&.first&.start_with?("file:"),
             source: options.fetch(:filename, nil),
             platform: platform_name
