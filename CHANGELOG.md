@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Dependencies from pom.xml without a scope will not return a "type" of nil instead of guessing "runtime".
+- Dependencies from pom.xml without a scope will now return a "type" of nil instead of guessing "runtime".
 
 ### Removed
 
