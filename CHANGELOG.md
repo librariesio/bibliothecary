@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+### Removed
+
+## [14.2.0]
+
+### Added
+
+### Changed
+
 - Dependencies from yarn.lock will return a nil "type" instead of assuming "runtime".
 - In Nuget .csproj files, ignored <Reference> tags that don't have a version.
 
