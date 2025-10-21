@@ -27,20 +27,34 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
       def self.parse_docker_compose(file_contents, options: {})
+        source = options.fetch(:filename, 'docker-compose.yml')
         manifest = YAML.load file_contents
-        manifest['services'].map do |k, v|
+        deps = manifest['services'].map do |k, v|
           next if v['image'].nil?
           image = v['image'].split(':')
-          {
+          Bibliothecary::Dependency.new(
+            platform: platform_name,
             name: image[0],
             requirement: image[1] || 'latest',
-            type: 'runtime'
-          }
+            type: 'runtime',
+            source: source
+          )
         end.compact
+        Bibliothecary::ParserResult.new(dependencies: deps)
       end
 
       def self.parse_dockerfile(file_contents, options: {})
-        DockerfileParser.new(file_contents).parse
+        source = options.fetch(:filename, 'Dockerfile')
+        deps = DockerfileParser.new(file_contents).parse.map do |dep|
+          Bibliothecary::Dependency.new(
+            platform: platform_name,
+            name: dep[:name],
+            requirement: dep[:requirement],
+            type: dep[:type],
+            source: source
+          )
+        end
+        Bibliothecary::ParserResult.new(dependencies: deps)
       end
     end
   end

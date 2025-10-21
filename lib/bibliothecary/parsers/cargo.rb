@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bibliothecary
   module Parsers
     class Cargo
@@ -20,7 +22,7 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_manifest(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_manifest(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
 
         parsed_dependencies = []
@@ -30,28 +32,36 @@ module Bibliothecary
             if requirement.respond_to?(:fetch)
               requirement = requirement["version"] or next
             end
-            {
+
+            Dependency.new(
               name: name,
               requirement: requirement,
               type: index.zero? ? "runtime" : "development",
-            }
+              source: options.fetch(:filename, nil),
+              platform: platform_name
+            )
           end
         end
 
-        parsed_dependencies.flatten.compact
+        dependencies = parsed_dependencies.flatten.compact
+        ParserResult.new(dependencies: dependencies)
       end
 
-      def self.parse_lockfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
+      def self.parse_lockfile(file_contents, options: {})
         manifest = Tomlrb.parse(file_contents)
-        manifest.fetch("package",[]).map do |dependency|
-          next if not dependency["source"] or not dependency["source"].start_with?("registry+")
-          {
+        dependencies = manifest.fetch("package", []).map do |dependency|
+          next if !dependency["source"] || !dependency["source"].start_with?("registry+")
+
+          Dependency.new(
             name: dependency["name"],
             requirement: dependency["version"],
             type: "runtime",
-          }
+            source: options.fetch(:filename, nil),
+            platform: platform_name
+          )
         end
           .compact
+        ParserResult.new(dependencies: dependencies)
       end
     end
   end

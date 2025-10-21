@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bibliothecary
-  VERSION = "9.1.0"
+  VERSION = "14.2.0"
 end

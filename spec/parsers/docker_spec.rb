@@ -10,10 +10,11 @@ describe Bibliothecary::Parsers::Docker do
       :platform=>"docker",
       :path=>"docker-compose.yml",
       :dependencies=>[
-        {:name=>"postgres", :requirement=>"9.6-alpine", :type=>"runtime"},
-        {:name=>"redis", :requirement=>"4.0-alpine", :type=>"runtime"}
+        Bibliothecary::Dependency.new(platform: "docker", name: "postgres", requirement: "9.6-alpine", type: "runtime", source: "docker-compose.yml"),
+        Bibliothecary::Dependency.new(platform: "docker", name: "redis", requirement: "4.0-alpine", type: "runtime", source: "docker-compose.yml")
       ],
       kind: 'manifest',
+      project_name: nil,
       success: true
     })
   end
@@ -23,9 +24,10 @@ describe Bibliothecary::Parsers::Docker do
       :platform=>"docker",
       :path=>"Dockerfile",
       :dependencies=>[
-        {:name=>"ruby", :requirement=>"3.1.2-alpine", :type=>"build"}
+        Bibliothecary::Dependency.new(platform: "docker", name: "ruby", requirement: "3.1.2-alpine", type: "build", source: "Dockerfile")
       ],
       kind: 'manifest',
+      project_name: nil,
       success: true
     })
   end

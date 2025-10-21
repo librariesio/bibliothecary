@@ -1,11 +1,11 @@
 version: 2.1
 orbs:
-  ruby: circleci/ruby@2.1.3
+  ruby: circleci/ruby@2.5.4
 
 executors:
   bibliothecary:
     docker:
-      - image: cimg/ruby:3.0.7
+      - image: cimg/ruby:3.4.7
     working_directory: ~/bibliothecary
 
 
@@ -20,6 +20,7 @@ commands:
             bundle lock --add-platform x86_64-linux
       - ruby/install-deps:
           bundler-version: "2.3"
+          key: gems-v3
 
 
 jobs:

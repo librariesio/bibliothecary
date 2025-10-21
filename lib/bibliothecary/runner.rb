@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 module Bibliothecary
   # A class that allows bibliothecary to run with multiple configurations at once, rather than with one global.
   # A runner is created every time a file is targeted to be parsed. Don't call
   # parse methods directory! Use a Runner.
   class Runner
-    def initialize(configuration)
+    def initialize(configuration, parser_options: {})
       @configuration = configuration
       @options = {
         cache: {},
-      }
+      }.merge(parser_options)
     end
 
     def analyse(path, ignore_unparseable_files: true)
@@ -24,8 +26,8 @@ module Bibliothecary
       analyses = analyses.flatten.compact
 
       info_list.select { |info| info.package_manager.nil? }.each do |info|
-        analyses.push(Bibliothecary::Analyser::create_error_analysis("unknown", info.relative_path, "unknown",
-                                                                     "No parser for this file type"))
+        analyses.push(Bibliothecary::Analyser.create_error_analysis("unknown", info.relative_path, "unknown",
+                                                                    "No parser for this file type"))
       end
 
       analyses
@@ -34,16 +36,16 @@ module Bibliothecary
 
     # deprecated; use load_file_info_list.
     def load_file_list(path)
-      load_file_info_list(path).map { |info| info.full_path }
+      load_file_info_list(path).map(&:full_path)
     end
 
     def applicable_package_managers(info)
       managers = package_managers.select { |pm| pm.match_info?(info) }
-      managers.length > 0 ? managers : [nil]
+      managers.empty? ? [nil] : managers
     end
 
     def package_managers
-      Bibliothecary::Parsers.constants.map{|c| Bibliothecary::Parsers.const_get(c) }.sort_by{|c| c.to_s.downcase }
+      Bibliothecary::Parsers.constants.map { |c| Bibliothecary::Parsers.const_get(c) }.sort_by { |c| c.to_s.downcase }
     end
 
     # Parses an array of format [{file_path: "", contents: ""},] to match
@@ -130,13 +132,14 @@ module Bibliothecary
     # because this API is used by libraries.io and we don't want to
     # download all .xml files from GitHub.
     def identify_manifests(file_list)
-      ignored_dirs_with_slash = ignored_dirs.map { |d| if d.end_with?("/") then d else d + "/" end }
+      ignored_dirs_with_slash = ignored_dirs.map { |d| d.end_with?("/") ? d : "#{d}/" }
       allowed_file_list = file_list.reject do |f|
         ignored_dirs.include?(f) || f.start_with?(*ignored_dirs_with_slash)
       end
-      allowed_file_list = allowed_file_list.reject{|f| ignored_files.include?(f)}
+      allowed_file_list = allowed_file_list.reject { |f| ignored_files.include?(f) }
       package_managers.map do |pm|
-        allowed_file_list.select do |file_path|
+        # (skip rubocop false positive, since match? is a custom method)
+        allowed_file_list.select do |file_path| # rubocop:disable Style/SelectByRegexp
           # this is a call to match? without file contents, which will skip
           # ambiguous filenames that are only possibly a manifest
           pm.match?(file_path)
@@ -159,7 +162,7 @@ module Bibliothecary
     # This means we're likely analyzing these files twice in processing,
     # but we need that accurate package manager information.
     def filter_multi_manifest_entries(path, related_files_info_entries)
-      MultiManifestFilter.new(path: path, related_files_info_entries: related_files_info_entries , runner: self).results
+      MultiManifestFilter.new(path: path, related_files_info_entries: related_files_info_entries, runner: self).results
     end
 
     private
@@ -178,4 +181,4 @@ module Bibliothecary
   end
 end
 
-require_relative "./runner/multi_manifest_filter.rb"
+require_relative "runner/multi_manifest_filter"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::Parsers::Conda do
@@ -5,23 +7,24 @@ describe Bibliothecary::Parsers::Conda do
     expect(described_class.platform_name).to eq("conda")
   end
 
-  it "parses dependencies from environment.yml", :vcr do
+  it "parses dependencies from environment.yml" do
     expect(described_class.analyse_contents("environment.yml", load_fixture("environment.yml"))).to eq(
       {
         platform: "conda",
         path: "environment.yml",
+        project_name: nil,
         dependencies: [
-          { name: "beautifulsoup4", requirement: "4.7.1", type: "runtime" },
-          { name: "biopython", requirement: "1.74", type: "runtime" },
-          { name: "certifi", requirement: "2019.6.16", type: "runtime" },
-          { name: "ncurses", requirement: "6.1", type: "runtime" },
-          { name: "numpy", requirement: "1.16.4", type: "runtime" },
-          { name: "openssl", requirement: "1.1.1c", type: "runtime" },
-          { name: "pip", requirement: "", type: "runtime" },
-          { name: "python", requirement: "3.7.3", type: "runtime" },
-          { name: "readline", requirement: "7.0", type: "runtime" },
-          { name: "setuptools", requirement: "", type: "runtime" },
-          { name: "sqlite", requirement: "3.29.0", type: "runtime" },
+          Bibliothecary::Dependency.new(platform: "conda", name: "beautifulsoup4", requirement: "4.7.1", type: "runtime", source: "environment.yml"),
+          Bibliothecary::Dependency.new(platform: "conda", name: "biopython", requirement: "1.74", type: "runtime", source: "environment.yml"),
+          Bibliothecary::Dependency.new(platform: "conda", name: "certifi", requirement: "2019.6.16", type: "runtime", source: "environment.yml"),
+          Bibliothecary::Dependency.new(platform: "conda", name: "ncurses", requirement: "6.1", type: "runtime", source: "environment.yml"),
+          Bibliothecary::Dependency.new(platform: "conda", name: "numpy", requirement: "1.16.4", type: "runtime", source: "environment.yml"),
+          Bibliothecary::Dependency.new(platform: "conda", name: "openssl", requirement: "1.1.1c", type: "runtime", source: "environment.yml"),
+          Bibliothecary::Dependency.new(platform: "conda", name: "pip", requirement: "", type: "runtime", source: "environment.yml"),
+          Bibliothecary::Dependency.new(platform: "conda", name: "python", requirement: "3.7.3", type: "runtime", source: "environment.yml"),
+          Bibliothecary::Dependency.new(platform: "conda", name: "readline", requirement: "7.0", type: "runtime", source: "environment.yml"),
+          Bibliothecary::Dependency.new(platform: "conda", name: "setuptools", requirement: "", type: "runtime", source: "environment.yml"),
+          Bibliothecary::Dependency.new(platform: "conda", name: "sqlite", requirement: "3.29.0", type: "runtime", source: "environment.yml"),
         ],
         kind: "manifest",
         success: true,
@@ -29,47 +32,19 @@ describe Bibliothecary::Parsers::Conda do
     )
   end
 
-  it "parses dependencies from environment.yml.lock", :vcr do
-    expect(described_class.analyse_contents("environment.yml.lock", load_fixture("environment.yml"))).to eq(
+  it "parses dependencies from environment.yml ignoring pip" do
+    expect(described_class.analyse_contents("conda_with_pip/environment.yml", load_fixture("conda_with_pip/environment.yml"))).to eq(
       {
-       platform: "conda",
-       path: "environment.yml.lock",
-       dependencies: [
-          { name: "_libgcc_mutex", requirement: "0.1", type: "runtime" },
-          { name: "beautifulsoup4", requirement: "4.7.1", type: "runtime" },
-          { name: "biopython", requirement: "1.74", type: "runtime" },
-          { name: "blas", requirement: "1.0", type: "runtime" },
-          { name: "ca-certificates", requirement: "2019.8.28", type: "runtime" },
-          { name: "certifi", requirement: "2019.6.16", type: "runtime" },
-          { name: "intel-openmp", requirement: "2019.4", type: "runtime" },
-          { name: "libedit", requirement: "3.1.20181209", type: "runtime" },
-          { name: "libffi", requirement: "3.2.1", type: "runtime" },
-          { name: "libgcc-ng", requirement: "9.1.0", type: "runtime" },
-          { name: "libgfortran-ng", requirement: "7.3.0", type: "runtime" },
-          { name: "libstdcxx-ng", requirement: "9.1.0", type: "runtime" },
-          { name: "mkl", requirement: "2019.4", type: "runtime" },
-          { name: "mkl-service", requirement: "2.3.0", type: "runtime" },
-          { name: "mkl_fft", requirement: "1.0.14", type: "runtime" },
-          { name: "mkl_random", requirement: "1.1.0", type: "runtime" },
-          { name: "ncurses", requirement: "6.1", type: "runtime" },
-          { name: "numpy", requirement: "1.16.4", type: "runtime" },
-          { name: "numpy-base", requirement: "1.16.4", type: "runtime" },
-          { name: "openssl", requirement: "1.1.1c", type: "runtime" },
-          { name: "pip", requirement: "19.2.3", type: "runtime" },
-          { name: "python", requirement: "3.7.3", type: "runtime" },
-          { name: "readline", requirement: "7.0", type: "runtime" },
-          { name: "setuptools", requirement: "41.2.0", type: "runtime" },
-          { name: "six", requirement: "1.12.0", type: "runtime" },
-          { name: "soupsieve", requirement: "1.9.3", type: "runtime" },
-          { name: "sqlite", requirement: "3.29.0", type: "runtime" },
-          { name: "tk", requirement: "8.6.8", type: "runtime" },
-          { name: "wheel", requirement: "0.33.6", type: "runtime" },
-          { name: "xz", requirement: "5.2.4", type: "runtime" },
-          { name: "zlib", requirement: "1.2.11", type: "runtime" },
-         ],
-         kind: "lockfile",
-         success: true,
-       }
+        platform: "conda",
+        path: "conda_with_pip/environment.yml",
+        project_name: nil,
+        dependencies: [
+          Bibliothecary::Dependency.new(platform: "conda", name: "pip", requirement: "", type: "runtime", source: "conda_with_pip/environment.yml"),
+          Bibliothecary::Dependency.new(platform: "conda", name: "sqlite", requirement: "3.29.0", type: "runtime", source: "conda_with_pip/environment.yml"),
+        ],
+        kind: "manifest",
+        success: true,
+      }
     )
   end
 
@@ -79,5 +54,28 @@ describe Bibliothecary::Parsers::Conda do
 
   it "doesn't match invalid manifest filepaths" do
     expect(described_class.match?("test/foo/aenvironment.yml")).to be_falsey
+  end
+
+  describe "matchspecs" do
+    it "parses name and requirements" do
+      examples = [
+        ["nltk=3.0.0=np18py27_0", "nltk", "3.0.0"],
+        ["nltk=3.0.0", "nltk", "3.0.0"],
+        ["nltk==3.0.0=np18py27_0", "nltk", "3.0.0"],
+        ["nltk==3.0.0", "nltk", "3.0.0"],
+        ["nltk", "nltk", ""],
+        ["yaml>=3.0=py27_0", "yaml", ">=3.0"],
+        ["yaml>=3.0", "yaml", ">=3.0"],
+        ["numpy 1.8", "numpy", "1.8"],
+        ["numpy 1.8*", "numpy", "1.8*"],
+        ["numpy >=1.8,<2", "numpy", ">=1.8,<2"],
+        ["numpy 1.8 ppy27_0", "numpy", "1.8"],
+        ["numpy >=1.8,<2|1.9", "numpy", ">=1.8,<2|1.9"],
+      ]
+
+      examples.each do |ex|
+        expect(described_class.parse_name_requirement_from_matchspec(ex[0])).to eq({ name: ex[1], requirement: ex[2] })
+      end
+    end
   end
 end

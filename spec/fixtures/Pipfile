@@ -1,14 +1,18 @@
 [[source]]
 url = 'https://pypi.python.org/simple'
 verify_ssl = true
+name = 'pypi'
 
 [requires]
-python_version = '2.7'
+python_version = '3.13'
 
 [packages]
 requests = { extras = ['socks'] }
 Django = '>1.10'
 pinax = { git = 'git://github.com/pinax/pinax.git', ref = '1.4', editable = true }
+a-local-dep = {editable = true, path = "."}
+urllib3 = { file = "https://github.com/urllib3/urllib3/releases/download/2.5.0/urllib3-2.5.0-py3-none-any.whl" }
 
 [dev-packages]
 nose = '*'
+another-local-dep = {file = ".", editable = true}

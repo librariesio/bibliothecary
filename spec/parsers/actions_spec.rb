@@ -9,8 +9,11 @@ describe Bibliothecary::Parsers::Actions do
     expect(described_class.analyse_contents('action.yml', load_fixture('action.yml'))).to eq({
       platform: "actions",
       path: "action.yml",
-      dependencies: [{:name=>"dist/index.js", :requirement=>"node16", :type=>"javascript"}],
+      dependencies: [
+        Bibliothecary::Dependency.new(platform: "actions", name: "dist/index.js", requirement: "node16", type: "javascript", source: "action.yml")
+      ],
       kind: 'manifest',
+      project_name: nil,
       success: true
     })
   end
@@ -20,9 +23,10 @@ describe Bibliothecary::Parsers::Actions do
       platform: "actions",
       path: "action.yml",
       dependencies: [
-        {:name=>"Dockerfile", :requirement=>"*", :type=>"docker"}
+        Bibliothecary::Dependency.new(platform: "actions", name: "Dockerfile", requirement: "*", type: "docker", source: "action.yml")
       ],
       kind: 'manifest',
+      project_name: nil,
       success: true
     })
   end
@@ -32,10 +36,11 @@ describe Bibliothecary::Parsers::Actions do
       platform: "actions",
       path: "action.yml",
       dependencies: [
-        {:name=>"aws-actions/configure-aws-credentials", :requirement=>"v1", :type=>"composite"},
-        {:name=>"actions/setup-node", :requirement=>"v2", :type=>"composite"}
+        Bibliothecary::Dependency.new(platform: "actions", name: "aws-actions/configure-aws-credentials", requirement: "v1", type: "composite", source: "action.yml"),
+        Bibliothecary::Dependency.new(platform: "actions", name: "actions/setup-node", requirement: "v2", type: "composite", source: "action.yml")
       ],
       kind: 'manifest',
+      project_name: nil,
       success: true
     })
   end
@@ -45,14 +50,15 @@ describe Bibliothecary::Parsers::Actions do
       platform: "actions",
       path: ".github/workflows/ci.yml",
       dependencies: [
-        {:name=>"actions/bin/shellcheck", :requirement=>"master", :type=>"composite"},
-        {:name=>"docker://replicated/dockerfilelint", :requirement=>"*", :type=>"composite"},
-        {:name=>"actions/docker/cli", :requirement=>"master", :type=>"composite"},
-        {:name=>"docker://node", :requirement=>"6", :type=>"composite"},
-        {:name=>"redis", :requirement=>"5", :type=>"docker"},
-        {:name=>"postgres", :requirement=>"10", :type=>"docker"}
+        Bibliothecary::Dependency.new(platform: "actions", name: "actions/bin/shellcheck", requirement: "master", type: "composite", source: ".github/workflows/ci.yml"),
+        Bibliothecary::Dependency.new(platform: "actions", name: "docker://replicated/dockerfilelint", requirement: "*", type: "composite", source: ".github/workflows/ci.yml"),
+        Bibliothecary::Dependency.new(platform: "actions", name: "actions/docker/cli", requirement: "master", type: "composite", source: ".github/workflows/ci.yml"),
+        Bibliothecary::Dependency.new(platform: "actions", name: "docker://node", requirement: "6", type: "composite", source: ".github/workflows/ci.yml"),
+        Bibliothecary::Dependency.new(platform: "actions", name: "redis", requirement: "5", type: "docker", source: ".github/workflows/ci.yml"),
+        Bibliothecary::Dependency.new(platform: "actions", name: "postgres", requirement: "10", type: "docker", source: ".github/workflows/ci.yml")
       ],
       kind: 'manifest',
+      project_name: nil,
       success: true
     })
   end

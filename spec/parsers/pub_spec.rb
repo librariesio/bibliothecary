@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Bibliothecary::Parsers::Pub do
@@ -7,32 +9,34 @@ describe Bibliothecary::Parsers::Pub do
 
   it "parses dependencies from pubspec.yaml" do
     expect(described_class.analyse_contents("pubspec.yaml", load_fixture("pubspec.yaml"))).to eq({
-      platform: "pub",
-      path: "pubspec.yaml",
-      dependencies: [
-        { name: "analyzer", requirement: ">=0.22.0 <0.25.0", type: "runtime" },
-        { name: "args", requirement: ">=0.12.0 <0.13.0", type: "runtime" },
-        { name: "benchmark_harness", requirement: ">=1.0.0 <2.0.0", type: "development" },
-        { name: "guinness", requirement: ">=0.1.9 <0.2.0", type: "development" },
+                                                                                                   platform: "pub",
+                                                                                                   path: "pubspec.yaml",
+                                                                                                   project_name: nil,
+                                                                                                   dependencies: [
+        Bibliothecary::Dependency.new(platform: "pub", name: "analyzer", requirement: ">=0.22.0 <0.25.0", type: "runtime", source: "pubspec.yaml"),
+        Bibliothecary::Dependency.new(platform: "pub", name: "args", requirement: ">=0.12.0 <0.13.0", type: "runtime", source: "pubspec.yaml"),
+        Bibliothecary::Dependency.new(platform: "pub", name: "benchmark_harness", requirement: ">=1.0.0 <2.0.0", type: "development", source: "pubspec.yaml"),
+        Bibliothecary::Dependency.new(platform: "pub", name: "guinness", requirement: ">=0.1.9 <0.2.0", type: "development", source: "pubspec.yaml"),
       ],
-      kind: "manifest",
-      success: true,
-    })
+                                                                                                   kind: "manifest",
+                                                                                                   success: true,
+                                                                                                 })
   end
 
   it "parses dependencies from pubspec.lock" do
     expect(described_class.analyse_contents("pubspec.lock", load_fixture("pubspec.lock"))).to eq({
-      platform: "pub",
-      path: "pubspec.lock",
-      dependencies: [
-        { name: "analyzer", requirement: "0.24.6", type: "runtime" },
-        { name: "args", requirement: "0.12.2+6", type: "runtime" },
-        { name: "barback", requirement: "0.15.2+7", type: "runtime" },
-        { name: "which", requirement: "0.1.3", type: "runtime" },
+                                                                                                   platform: "pub",
+                                                                                                   path: "pubspec.lock",
+                                                                                                   project_name: nil,
+                                                                                                   dependencies: [
+        Bibliothecary::Dependency.new(platform: "pub", name: "analyzer", requirement: "0.24.6", type: "runtime", source: "pubspec.lock"),
+        Bibliothecary::Dependency.new(platform: "pub", name: "args", requirement: "0.12.2+6", type: "runtime", source: "pubspec.lock"),
+        Bibliothecary::Dependency.new(platform: "pub", name: "barback", requirement: "0.15.2+7", type: "runtime", source: "pubspec.lock"),
+        Bibliothecary::Dependency.new(platform: "pub", name: "which", requirement: "0.1.3", type: "runtime", source: "pubspec.lock"),
       ],
-      kind: "lockfile",
-      success: true,
-    })
+                                                                                                   kind: "lockfile",
+                                                                                                   success: true,
+                                                                                                 })
   end
 
   it "matches valid manifest filepaths" do

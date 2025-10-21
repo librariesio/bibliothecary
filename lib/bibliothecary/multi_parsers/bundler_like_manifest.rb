@@ -1,20 +1,24 @@
+# frozen_string_literal: true
+
 module Bibliothecary
   module MultiParsers
     module BundlerLikeManifest
       # this takes parsed Bundler and Bundler-like (CocoaPods)
       # manifests and turns them into a list of dependencies.
-      def parse_ruby_manifest(manifest)
+      def parse_ruby_manifest(manifest, platform, source = nil)
         manifest.dependencies.inject([]) do |deps, dep|
-          deps.push({
-            name: dep.name,
-            requirement: dep
-              .requirement
-              .requirements
-              .sort_by(&:last)
-              .map { |op, version| "#{op} #{version}" }
-              .join(", "),
-            type: dep.type,
-          })
+          deps.push(Dependency.new(
+                      platform: platform,
+                      name: dep.name,
+                      requirement: dep
+                        .requirement
+                        .requirements
+                        .sort_by(&:last)
+                        .map { |op, version| "#{op} #{version}" }
+                        .join(", "),
+                      type: dep.type.to_s,
+                      source: source
+                    ))
         end.uniq
       end
     end

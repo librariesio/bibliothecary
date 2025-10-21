@@ -24,28 +24,35 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
       def self.parse_brewfile(file_contents, options: {})
+        source = options.fetch(:filename, 'Brewfile')
         deps = []
         file_contents.split("\n").each do |line|
           match = line.gsub(/(\#(.*))/, '').match(HOMEBREW_REGEXP)
           next unless match
-          deps << {
+          deps << Bibliothecary::Dependency.new(
+            platform: platform_name,
             name: match[1].strip.gsub('"', '').gsub("'", ''),
             requirement: '*',
-            type: 'runtime'
-          }
+            type: 'runtime',
+            source: source
+          )
         end
-        deps
+        Bibliothecary::ParserResult.new(dependencies: deps)
       end
 
       def self.parse_brewfile_lock_json(file_contents, options: {})
+        source = options.fetch(:filename, 'Brewfile.lock.json')
         json = JSON.parse file_contents
-        json['entries']['brew'].map do |k,v|
-          {
+        deps = json['entries']['brew'].map do |k,v|
+          Bibliothecary::Dependency.new(
+            platform: platform_name,
             name: k,
             requirement: v['version'],
-            type: 'runtime'
-          }
+            type: 'runtime',
+            source: source
+          )
         end
+        Bibliothecary::ParserResult.new(dependencies: deps)
       end
     end
   end

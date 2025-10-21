@@ -1,9 +1,12 @@
-# coding: utf-8
-lib = File.expand_path("../lib", __FILE__)
+# frozen_string_literal: true
+
+lib = File.expand_path("lib", __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "bibliothecary/version"
 
 Gem::Specification.new do |spec|
+  spec.required_ruby_version = ">= 3.4.0"
+
   spec.name          = "bibliothecary"
   spec.version       = Bibliothecary::VERSION
   spec.authors       = ["Andrew Nesbitt"]
@@ -18,23 +21,16 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "tomlrb"
+  spec.add_dependency "bundler"
+  spec.add_dependency "commander"
+  spec.add_dependency "deb_control"
+  spec.add_dependency "json", "~> 2.8"
   spec.add_dependency "librariesio-gem-parser"
   spec.add_dependency "ox", ">= 2.8.1"
-  spec.add_dependency "typhoeus"
-  spec.add_dependency "deb_control"
-  spec.add_dependency "sdl4r"
-  spec.add_dependency "commander"
-  spec.add_dependency "strings-ansi" # NB this is also pegged to a git sha in Gemfile temporarily.  
-  spec.add_dependency "strings"
   spec.add_dependency "packageurl-ruby"
-  spec.add_dependency "bundler"
+  spec.add_dependency "sdl4r"
+  spec.add_dependency "tomlrb", "~> 2.0"
+  spec.add_dependency "typhoeus"
 
-  spec.add_development_dependency "pry"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "webmock"
-  spec.add_development_dependency "vcr"
-  spec.add_development_dependency "rubocop"
-  spec.add_development_dependency "rubocop-rails"
+  spec.metadata["rubygems_mfa_required"] = "true"
 end

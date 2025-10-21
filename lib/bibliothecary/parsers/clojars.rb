@@ -19,20 +19,27 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
       def self.parse_manifest(file_contents, options: {})
+        source = options.fetch(:filename, "project.clj")
         response = Typhoeus.post("#{Bibliothecary.configuration.clojars_parser_host}/project.clj", body: file_contents, timeout: 60)
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.clojars_parser_host}/project.clj", response.response_code) unless response.success?
         json = JSON.parse response.body
         index = json.index("dependencies")
 
-        return [] unless index;
-        dependencies = json[index + 1]
-        dependencies.map do |dependency|
-          {
-            name: dependency[0],
-            requirement: dependency[1],
-            type: "runtime",
-          }
+        deps = if index
+          dependencies = json[index + 1]
+          dependencies.map do |dependency|
+            Bibliothecary::Dependency.new(
+              platform: platform_name,
+              name: dependency[0],
+              requirement: dependency[1],
+              type: "runtime",
+              source: source
+            )
+          end
+        else
+          []
         end
+        Bibliothecary::ParserResult.new(dependencies: deps)
       end
     end
   end

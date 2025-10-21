@@ -10,12 +10,13 @@ describe Bibliothecary::Parsers::Homebrew do
       platform: "homebrew",
       path: "Brewfile",
       dependencies: [
-        {:name=>"markdownlint-cli", :requirement=>"*", :type=>"runtime"},
-        {:name=>"shellcheck", :requirement=>"*", :type=>"runtime"},
-        {:name=>"shfmt", :requirement=>"*", :type=>"runtime"},
-        {:name=>"swiftformat", :requirement=>"*", :type=>"runtime"}
+        Bibliothecary::Dependency.new(platform: "homebrew", name: "markdownlint-cli", requirement: "*", type: "runtime", source: "Brewfile"),
+        Bibliothecary::Dependency.new(platform: "homebrew", name: "shellcheck", requirement: "*", type: "runtime", source: "Brewfile"),
+        Bibliothecary::Dependency.new(platform: "homebrew", name: "shfmt", requirement: "*", type: "runtime", source: "Brewfile"),
+        Bibliothecary::Dependency.new(platform: "homebrew", name: "swiftformat", requirement: "*", type: "runtime", source: "Brewfile")
       ],
       kind: 'manifest',
+      project_name: nil,
       success: true
     })
   end
@@ -25,12 +26,13 @@ describe Bibliothecary::Parsers::Homebrew do
       platform: "homebrew",
       path: "Brewfile.lock.json",
       dependencies: [
-        {:name=>"markdownlint-cli", :requirement=>"0.32.2", :type=>"runtime"},
-        {:name=>"shellcheck", :requirement=>"0.8.0", :type=>"runtime"},
-        {:name=>"shfmt", :requirement=>"3.5.1", :type=>"runtime"},
-        {:name=>"swiftformat", :requirement=>"0.49.18", :type=>"runtime"}
+        Bibliothecary::Dependency.new(platform: "homebrew", name: "markdownlint-cli", requirement: "0.32.2", type: "runtime", source: "Brewfile.lock.json"),
+        Bibliothecary::Dependency.new(platform: "homebrew", name: "shellcheck", requirement: "0.8.0", type: "runtime", source: "Brewfile.lock.json"),
+        Bibliothecary::Dependency.new(platform: "homebrew", name: "shfmt", requirement: "3.5.1", type: "runtime", source: "Brewfile.lock.json"),
+        Bibliothecary::Dependency.new(platform: "homebrew", name: "swiftformat", requirement: "0.49.18", type: "runtime", source: "Brewfile.lock.json")
       ],
       kind: 'lockfile',
+      project_name: nil,
       success: true
     })
   end

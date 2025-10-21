@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "csv"
 
 module Bibliothecary
@@ -37,13 +39,6 @@ module Bibliothecary
               /^name$/i,
             ],
           },
-          # Lockfiles have exact versions.
-          "lockfile_requirement" => {
-            match: [
-              /^(lockfile |)requirement$/i,
-              /^version$/i,
-            ],
-          },
           # Manifests have versions that can have operators.
           # However, since Bibliothecary only currently supports analyzing a
           # single file as a single thing (either manifest or lockfile)
@@ -62,7 +57,7 @@ module Bibliothecary
               /^(manifest |)type$/i,
             ],
           },
-        }
+        }.freeze
 
         attr_reader :result
 
@@ -86,7 +81,7 @@ module Bibliothecary
               # some column have default data to fall back on
               if row_data
                 obj[header.to_sym] = row_data
-              elsif info.has_key?(:default)
+              elsif info.key?(:default)
                 # if the default is nil, don't even add the key to the hash
                 obj[header.to_sym] = info[:default] if info[:default]
               else
@@ -106,6 +101,7 @@ module Bibliothecary
           unless header_examination_results[:missing].empty?
             raise "Missing required headers #{header_examination_results[:missing].join(', ')} in CSV. Check to make sure header names are all lowercase."
           end
+
           @header_mappings = header_examination_results[:found]
 
           table
@@ -121,7 +117,7 @@ module Bibliothecary
 
             if results.empty?
               # if a header has a default value it's optional
-              obj[:missing] << header unless info.has_key?(:default)
+              obj[:missing] << header unless info.key?(:default)
             else
               # select the highest priority header possible
               obj[:found][header] ||= nil
@@ -143,9 +139,16 @@ module Bibliothecary
           raw_csv_file
         end
 
-        csv_file.result.find_all do |dependency|
-          dependency[:platform] == platform_name.to_s
-        end
+        dependencies = csv_file
+          .result
+          .find_all { |dependency| dependency[:platform] == platform_name.to_s }
+          .map do |dep_kvs|
+            Dependency.new(
+              **dep_kvs, source: options.fetch(:filename, nil)
+            )
+          end
+
+        ParserResult.new(dependencies: dependencies)
       end
     end
   end

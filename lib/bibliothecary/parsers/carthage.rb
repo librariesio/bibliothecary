@@ -23,30 +23,33 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
-      def self.parse_cartfile(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
-        map_dependencies(file_contents, "cartfile")
+      def self.parse_cartfile(file_contents, options: {})
+        map_dependencies(file_contents, "cartfile", options.fetch(:filename, "Cartfile"))
       end
 
-      def self.parse_cartfile_private(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
-        map_dependencies(file_contents, "cartfile.private")
+      def self.parse_cartfile_private(file_contents, options: {})
+        map_dependencies(file_contents, "cartfile.private", options.fetch(:filename, "Cartfile.private"))
       end
 
-      def self.parse_cartfile_resolved(file_contents, options: {}) # rubocop:disable Lint/UnusedMethodArgument
-        map_dependencies(file_contents, "cartfile.resolved")
+      def self.parse_cartfile_resolved(file_contents, options: {})
+        map_dependencies(file_contents, "cartfile.resolved", options.fetch(:filename, "Cartfile.resolved"))
       end
 
-      def self.map_dependencies(manifest, path)
+      def self.map_dependencies(manifest, path, source)
         response = Typhoeus.post("#{Bibliothecary.configuration.carthage_parser_host}/#{path}", params: {body: manifest}, timeout: 60)
         raise Bibliothecary::RemoteParsingError.new("Http Error #{response.response_code} when contacting: #{Bibliothecary.configuration.carthage_parser_host}/#{path}", response.response_code) unless response.success?
         json = JSON.parse(response.body)
 
-        json.map do |dependency|
-          {
+        deps = json.map do |dependency|
+          Bibliothecary::Dependency.new(
+            platform: platform_name,
             name: dependency["name"],
             requirement: dependency["version"],
             type: dependency["type"],
-          }
+            source: source
+          )
         end
+        Bibliothecary::ParserResult.new(dependencies: deps)
       end
     end
   end

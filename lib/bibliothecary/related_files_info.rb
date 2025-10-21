@@ -1,17 +1,16 @@
+# frozen_string_literal: true
+
 module Bibliothecary
   class RelatedFilesInfo
-    attr_reader :path
-    attr_reader :platform
-    attr_reader :manifests
-    attr_reader :lockfiles
+    attr_reader :path, :platform, :manifests, :lockfiles
 
     # Create a set of RelatedFilesInfo for the provided file_infos,
-    # where each RelatedFilesInfo contains all the file_infos 
+    # where each RelatedFilesInfo contains all the file_infos
     def self.create_from_file_infos(file_infos)
       returns = []
 
       file_infos_by_directory = file_infos.group_by { |info| File.dirname(info.relative_path) }
-      file_infos_by_directory.values.each do |file_infos_for_path|
+      file_infos_by_directory.each_value do |file_infos_for_path|
         groupable, ungroupable = file_infos_for_path.partition(&:groupable?)
 
         # add ungroupable ones as separate RFIs
@@ -19,9 +18,9 @@ module Bibliothecary
           returns.append(RelatedFilesInfo.new([file_info]))
         end
 
-        file_infos_by_directory_by_package_manager = groupable.group_by { |info| info.package_manager}
+        file_infos_by_directory_by_package_manager = groupable.group_by(&:package_manager)
 
-        file_infos_by_directory_by_package_manager.values.each do |file_infos_in_directory_for_package_manager|
+        file_infos_by_directory_by_package_manager.each_value do |file_infos_in_directory_for_package_manager|
           returns.append(RelatedFilesInfo.new(file_infos_in_directory_for_package_manager))
         end
       end
