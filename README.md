@@ -8,7 +8,7 @@ This is a maintained fork of the original [Bibliothecary](https://github.com/lib
 
 ## Installation
 
-Requires Ruby 3.2 or above.
+Requires Ruby 3.4 or above.
 
 Add this line to your application's Gemfile:
 
