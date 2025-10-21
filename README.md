@@ -8,7 +8,7 @@ This is a maintained fork of the original [Bibliothecary](https://github.com/lib
 
 ## Installation
 
-Requires Ruby 3.0 or above.
+Requires Ruby 3.2 or above.
 
 Add this line to your application's Gemfile:
 
@@ -58,11 +58,18 @@ All available config options are in: https://github.com/ecosyste-ms/bibliothecar
   - npm-shrinkwrap.json
   - yarn.lock
   - pnpm-lock.yaml
+  - bun.lock
+  - npm-ls.json
 - Maven
   - pom.xml
   - ivy.xml
   - build.gradle
+  - build.gradle.kts
   - gradle-dependencies-q.txt
+  - maven-resolved-dependencies.txt
+  - sbt-update-full.txt
+  - maven-dependency-tree.txt
+  - maven-dependency-tree.dot
 - RubyGems
   - Gemfile
   - Gemfile.lock
@@ -78,13 +85,18 @@ All available config options are in: https://github.com/ecosyste-ms/bibliothecar
   - req*.pip
   - requirements/*.txt
   - requirements/*.pip
+  - requirements.frozen
   - Pipfile
   - Pipfile.lock
   - pyproject.toml
   - poetry.lock
   - uv.lock
+  - pylock.toml
+  - pip-resolved-dependencies.txt
+  - pip-dependency-graph.json
 - Nuget
   - packages.config
+  - packages.lock.json
   - Project.json
   - Project.lock.json
   - *.nuspec
@@ -92,8 +104,10 @@ All available config options are in: https://github.com/ecosyste-ms/bibliothecar
   - *.csproj
   - project.assets.json
 - CycloneDX
-  - XML as cyclonedx.xml
-  - JSON as cyclonedx.json
+  - cyclonedx.xml
+  - cyclonedx.json
+  - *.cdx.xml
+  - *.cdx.json
   - Note that CycloneDX manifests can contain information on multiple
     package manager's packages!
 - SPDX
@@ -110,6 +124,7 @@ All available config options are in: https://github.com/ecosyste-ms/bibliothecar
   - Podfile
   - Podfile.lock
   - *.podspec
+  - *.podspec.json
 - Anaconda
   - environment.yml
   - environment.yaml
@@ -171,7 +186,8 @@ All available config options are in: https://github.com/ecosyste-ms/bibliothecar
   - .github/workflows/*.yaml
 - Docker
   - Dockerfile
-  - docker-compose.yml
+  - docker-compose*.yml
+  - docker-compose*.yaml
 - Vcpkg
   - vcpkg.json
 - Homebrew
