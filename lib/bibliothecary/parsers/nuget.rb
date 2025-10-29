@@ -124,6 +124,11 @@ module Bibliothecary
                     manifest
                   end
 
+        # The assembly name can be overridden in the XML.
+        assembly_name = manifest.locate("PropertyGroup/AssemblyName")&.first&.text
+        # If it hasn't been overridden, use the filename without extension.
+        assembly_name ||= File.basename(options[:filename].to_s, File.extname(options[:filename].to_s))
+
         packages = project
           .locate("ItemGroup/PackageReference")
           .select { |dep| dep.respond_to? "Include" }
@@ -178,7 +183,10 @@ module Bibliothecary
           .compact
 
         dependencies = packages.uniq(&:name)
-        ParserResult.new(dependencies: dependencies)
+        ParserResult.new(
+          dependencies: dependencies,
+          project_name: assembly_name
+        )
       rescue StandardError
         ParserResult.new(dependencies: [])
       end

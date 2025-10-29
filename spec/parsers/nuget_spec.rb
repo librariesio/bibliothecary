@@ -526,7 +526,7 @@ describe Bibliothecary::Parsers::Nuget do
     expect(described_class.analyse_contents("example.csproj", load_fixture("example.csproj"))).to eq({
                                                                                                        platform: "nuget",
                                                                                                        path: "example.csproj",
-                                                                                                       project_name: nil,
+                                                                                                       project_name: "example",
                                                                                                        dependencies: [
         Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNetCore", requirement: "1.1.1", type: "runtime", source: "example.csproj"),
         Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNetCore.Mvc", requirement: "1.1.2", type: "runtime", source: "example.csproj"),
@@ -543,17 +543,17 @@ describe Bibliothecary::Parsers::Nuget do
   end
 
   it "parses dependencies from example-no-version.csproj" do
-    expect(described_class.analyse_contents("example.csproj", load_fixture("example-no-version.csproj"))).to eq({
-                                                                                                                  platform: "nuget",
-                                                                                                                  path: "example.csproj",
-                                                                                                                  dependencies: [
-        Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNetCore.App", requirement: "*", type: "runtime", source: "example.csproj"),
-        Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "development", source: "example.csproj"),
+    expect(described_class.analyse_contents("example-no-version.csproj", load_fixture("example-no-version.csproj"))).to eq({
+                                                                                                                             platform: "nuget",
+                                                                                                                             path: "example-no-version.csproj",
+                                                                                                                             dependencies: [
+        Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNetCore.App", requirement: "*", type: "runtime", source: "example-no-version.csproj"),
+        Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNetCore.Razor.Design", requirement: "2.2.0", type: "development", source: "example-no-version.csproj"),
       ],
-                                                                                                                  kind: "manifest",
-                                                                                                                  project_name: nil,
-                                                                                                                  success: true,
-                                                                                                                })
+                                                                                                                             kind: "manifest",
+                                                                                                                             project_name: "example-no-version",
+                                                                                                                             success: true,
+                                                                                                                           })
   end
 
   it "parses dependencies from example-update.csproj" do
@@ -565,7 +565,7 @@ describe Bibliothecary::Parsers::Nuget do
         Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNetCore.StaticFiles", requirement: "2.2.0", type: "runtime", source: "example-update.csproj"),
       ],
                                                                                                                      kind: "manifest",
-                                                                                                                     project_name: nil,
+                                                                                                                     project_name: "Example.With.Overridden.Assembly.Name",
                                                                                                                      success: true,
                                                                                                                    })
   end
@@ -576,7 +576,7 @@ describe Bibliothecary::Parsers::Nuget do
     expect(result[:platform]).to eq("nuget")
     expect(result[:path]).to eq("example-references-tag.csproj")
     expect(result[:kind]).to eq("manifest")
-    expect(result[:project_name]).to eq(nil)
+    expect(result[:project_name]).to eq("example-references-tag")
     expect(result[:success]).to eq(true)
     expect(result[:error_message]).to eq(nil)
     expect(result[:error_location]).to eq(nil)
@@ -603,7 +603,7 @@ describe Bibliothecary::Parsers::Nuget do
     expect(result[:platform]).to eq("nuget")
     expect(result[:path]).to eq("example-with-xml-tag.csproj")
     expect(result[:kind]).to eq("manifest")
-    expect(result[:project_name]).to eq(nil)
+    expect(result[:project_name]).to eq("example-with-xml-tag")
     expect(result[:success]).to eq(true)
     expect(result[:error_message]).to eq(nil)
     expect(result[:error_location]).to eq(nil)
