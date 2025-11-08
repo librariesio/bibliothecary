@@ -21,17 +21,20 @@ module Bibliothecary
       class ManifestEntries
         attr_reader :manifests
 
-        def initialize(parse_queue:)
+        def initialize(parse_queue:, all_ecosystems: false)
           @manifests = {}
 
           # Instead of recursing, we'll work through a queue of components
           # to process, letting the different parser add components to the
           # queue however they need to  pull them from the source document.
           @parse_queue = parse_queue.dup
+          @all_ecosystems = all_ecosystems
         end
 
         def add(purl, source = nil)
           mapping = PurlUtil::PURL_TYPE_MAPPING[purl.type]
+          mapping ||= purl.type.to_sym if @all_ecosystems == true
+
           return unless mapping
 
           @manifests[mapping] ||= Set.new
@@ -98,7 +101,7 @@ module Bibliothecary
 
         raise NoComponents unless manifest["components"]
 
-        entries = ManifestEntries.new(parse_queue: manifest["components"])
+        entries = ManifestEntries.new(parse_queue: manifest["components"], all_ecosystems: options.fetch(:all_ecosystems, false))
 
         entries.parse!(options.fetch(:filename, nil)) do |component, parse_queue|
           parse_queue.concat(component["components"]) if component["components"]

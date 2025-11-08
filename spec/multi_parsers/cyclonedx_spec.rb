@@ -4,16 +4,14 @@ require "spec_helper"
 
 describe Bibliothecary::MultiParsers::CycloneDX do
   let(:unmapped_component) { "pkg:apt/krita/5.0.5" }
-
+  let(:platform_name) { "whatever" }
   let!(:parser_class) do
-    k = Class.new do
-      def platform_name = "whatever"
-    end
-
+    platform_name_value = platform_name
+    k = Class.new
     k.send(:include, described_class)
+    k.define_method(:platform_name) { platform_name_value }
     k
   end
-
   let!(:parser) { parser_class.new }
 
   it "handles malformed json" do
@@ -69,6 +67,29 @@ describe Bibliothecary::MultiParsers::CycloneDX do
       it "#{constant_symbol} should implement CycloneDX" do
         expect(constant.respond_to?(:parse_cyclonedx_xml)).to eq(true)
       end
+    end
+  end
+
+  context "parsing unsupported dependencies from a real multi-platform SBOM" do
+    let(:platform_name) { "deb" }
+
+    it "ignores the dependencies by default" do
+      result = parser.parse_cyclonedx_json(load_fixture("apache-airflow.cdx.json"))
+
+      expect(result.dependencies).to be_empty
+    end
+
+    it "includes the dependencies with all_ecosystems: true" do
+      result = parser.parse_cyclonedx_json(load_fixture("apache-airflow.cdx.json"), options: { all_ecosystems: true })
+
+      expect(result.dependencies.size).to eq(197)
+      expect(result.dependencies.map(&:platform).uniq).to eq(["deb"])
+
+      dep = result.dependencies[0]
+      expect(dep.name).to eq("debian/adduser")
+      expect(dep.platform).to eq("deb")
+      expect(dep.requirement).to eq("3.134")
+      expect(dep.type).to eq("lockfile")
     end
   end
 end
