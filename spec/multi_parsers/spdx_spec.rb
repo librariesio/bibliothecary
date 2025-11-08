@@ -3,15 +3,14 @@
 require "spec_helper"
 
 describe Bibliothecary::MultiParsers::Spdx do
+  let(:platform_name) { "npm" }
   let!(:parser_class) do
-    k = Class.new do
-      def platform_name = "npm"
-    end
-
+    platform_name_value = platform_name
+    k = Class.new
     k.send(:include, described_class)
+    k.define_method(:platform_name) { platform_name_value }
     k
   end
-
   let!(:parser) { parser_class.new }
 
   describe "parse_spdx_tag_value" do
@@ -132,6 +131,30 @@ describe Bibliothecary::MultiParsers::Spdx do
       it "#{constant_symbol} should implement Spdx" do
         expect(constant.respond_to?(:parse_spdx_tag_value)).to eq(true)
       end
+    end
+  end
+
+  context "parsing unsupported dependencies from a real multi-platform SBOM" do
+    let(:platform_name) { "sbom" }
+
+    it "ignores the dependencies by default" do
+      result = parser.parse_spdx_json(load_fixture("apache-airflow.spdx.json"))
+
+      expect(result.dependencies).to be_empty
+    end
+
+    it "includes the dependencies with full_sbom: true" do
+      result = parser.parse_spdx_json(load_fixture("apache-airflow.spdx.json"), options: { full_sbom: true })
+
+      expect(result.dependencies.map(&:platform).tally).to eq({
+                                                                "pypi" => 456,
+                                                                "deb" => 197,
+                                                                "npm" => 3,
+                                                                "maven" => 32,
+                                                                "go" => 2,
+                                                                "generic" => 1,
+                                                                "oci" => 1,
+                                                              })
     end
   end
 end

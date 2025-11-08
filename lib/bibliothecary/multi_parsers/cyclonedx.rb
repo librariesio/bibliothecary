@@ -18,20 +18,23 @@ module Bibliothecary
 
       NoComponents = Class.new(StandardError)
 
-      class ManifestEntries
+      class ManifestEntriesByPlatform
         attr_reader :manifests
 
-        def initialize(parse_queue:)
+        def initialize(parse_queue:, full_sbom: false)
           @manifests = {}
 
           # Instead of recursing, we'll work through a queue of components
           # to process, letting the different parser add components to the
-          # queue however they need to  pull them from the source document.
+          # queue however they need to pull them from the source document.
           @parse_queue = parse_queue.dup
+          @full_sbom = full_sbom
         end
 
         def add(purl, source = nil)
           mapping = PurlUtil::PURL_TYPE_MAPPING[purl.type]
+          mapping ||= purl.type.to_sym if @full_sbom == true
+
           return unless mapping
 
           @manifests[mapping] ||= Set.new
@@ -64,6 +67,10 @@ module Bibliothecary
         def [](key)
           @manifests[key]&.to_a
         end
+
+        def all
+          @manifests.values.flat_map(&:to_a)
+        end
       end
 
       def self.mapping
@@ -92,13 +99,16 @@ module Bibliothecary
       end
 
       def parse_cyclonedx_json(file_contents, options: {})
+        full_sbom = options.fetch(:full_sbom, false)
+        return ParserResult.new(dependencies: []) if full_sbom && platform_name != "sbom"
+
         manifest = try_cache(options, options[:filename]) do
           JSON.parse(file_contents)
         end
 
         raise NoComponents unless manifest["components"]
 
-        entries = ManifestEntries.new(parse_queue: manifest["components"])
+        entries = ManifestEntriesByPlatform.new(parse_queue: manifest["components"], full_sbom: full_sbom)
 
         entries.parse!(options.fetch(:filename, nil)) do |component, parse_queue|
           parse_queue.concat(component["components"]) if component["components"]
@@ -106,10 +116,19 @@ module Bibliothecary
           component["purl"]
         end
 
-        ParserResult.new(dependencies: entries[platform_name.to_sym] || [])
+        dependencies = if full_sbom
+                         entries.all.uniq
+                       else
+                         entries[platform_name.to_sym] || []
+                       end
+
+        ParserResult.new(dependencies: dependencies)
       end
 
       def parse_cyclonedx_xml(file_contents, options: {})
+        full_sbom = options.fetch(:full_sbom, false)
+        return ParserResult.new(dependencies: []) if full_sbom && platform_name != "sbom"
+
         manifest = try_cache(options, options[:filename]) do
           Ox.parse(file_contents)
         end
@@ -121,17 +140,23 @@ module Bibliothecary
 
         raise NoComponents unless root.locate("components").first
 
-        entries = ManifestEntries.new(parse_queue: root.locate("components/*"))
+        entries = ManifestEntriesByPlatform.new(parse_queue: root.locate("components/*"), full_sbom: full_sbom)
 
         entries.parse!(options.fetch(:filename, nil)) do |component, parse_queue|
           # #locate returns an empty array if nothing is found, so we can
           # always safely concatenate it to the parse queue.
           parse_queue.concat(component.locate("components/*"))
 
-          component.locate("purl").first&.text
+          component.locate("purl").first&.text&.strip
         end
 
-        ParserResult.new(dependencies: entries[platform_name.to_sym] || [])
+        dependencies = if full_sbom
+                         entries.all.uniq
+                       else
+                         entries[platform_name.to_sym] || []
+                       end
+
+        ParserResult.new(dependencies: dependencies)
       end
     end
   end
