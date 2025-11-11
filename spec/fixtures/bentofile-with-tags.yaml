@@ -1,0 +1,10 @@
+service: "service:svc"
+models:
+  - "iris_clf:v1.0"
+  - tag: "bert_model:20230101"
+    alias: "bert"
+  - tag: "resnet50:production"
+    filter: "label:staging"
+python:
+  packages:
+    - transformers==4.30.0

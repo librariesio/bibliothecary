@@ -117,6 +117,8 @@ All available config options are in: https://github.com/ecosyste-ms/bibliothecar
     package manager's packages!
 - Bower
   - bower.json
+- BentoML
+  - bentofile.yaml
 - CPAN
   - META.json
   - META.yml
