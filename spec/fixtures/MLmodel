@@ -1,0 +1,26 @@
+artifact_path: model
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.transformers
+    model_binary: model
+    python_version: 3.11.8
+  transformers:
+    code: null
+    components:
+    - tokenizer
+    framework: pt
+    instance_type: QuestionAnsweringPipeline
+    pipeline_model_type: BertForQuestionAnswering
+    source_model_name: meta-llama/Meta-Llama-3.1-70B-Instruct
+    source_model_revision: 33101ce6ccc08fa6249c10a543ebfcac65173393
+    task: question-answering
+    tokenizer_type: BertTokenizerFast
+    transformers_version: 4.39.3
+mlflow_version: 2.11.3
+model_size_bytes: 1234567890
+model_uuid: abc123def456
+run_id: run123
+utc_time_created: '2024-04-15 10:30:00.123456'

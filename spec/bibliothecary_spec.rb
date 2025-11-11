@@ -30,6 +30,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Julia,
           Bibliothecary::Parsers::Maven,
           Bibliothecary::Parsers::Meteor,
+          Bibliothecary::Parsers::MLflow,
           Bibliothecary::Parsers::NPM,
           Bibliothecary::Parsers::Nuget,
           Bibliothecary::Parsers::Ollama,

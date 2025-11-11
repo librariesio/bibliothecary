@@ -134,6 +134,8 @@ All available config options are in: https://github.com/ecosyste-ms/bibliothecar
   - project.clj
 - Meteor
   - versions.json
+- MLflow
+  - MLmodel
 - CRAN
   - DESCRIPTION
 - Cargo
