@@ -31,6 +31,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Meteor,
           Bibliothecary::Parsers::NPM,
           Bibliothecary::Parsers::Nuget,
+          Bibliothecary::Parsers::Ollama,
           Bibliothecary::Parsers::Packagist,
           Bibliothecary::Parsers::Pub,
           Bibliothecary::Parsers::Pypi,

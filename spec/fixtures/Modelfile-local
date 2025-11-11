@@ -1,0 +1,8 @@
+# Modelfile with local GGUF file
+FROM ./my-custom-model.gguf
+
+PARAMETER temperature 0.5
+
+SYSTEM """
+You are a custom fine-tuned model.
+"""

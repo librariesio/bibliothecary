@@ -193,6 +193,8 @@ All available config options are in: https://github.com/ecosyste-ms/bibliothecar
 - Homebrew
   - Brewfile
   - Brewfile.lock.json
+- Ollama
+  - Modelfile
 
 ## Development
 
