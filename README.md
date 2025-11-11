@@ -192,6 +192,8 @@ All available config options are in: https://github.com/ecosyste-ms/bibliothecar
   - Dockerfile
   - docker-compose*.yml
   - docker-compose*.yaml
+- DVC
+  - dvc.yaml
 - Vcpkg
   - vcpkg.json
 - Homebrew

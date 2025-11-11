@@ -1,0 +1,13 @@
+stages:
+  prepare:
+    cmd: python prepare.py
+    deps:
+      - data/raw.csv
+    outs:
+      - data/prepared.csv
+  analyze:
+    cmd: python analyze.py
+    deps:
+      - data/prepared.csv
+    outs:
+      - results/metrics.json

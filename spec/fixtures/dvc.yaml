@@ -1,0 +1,34 @@
+stages:
+  prepare:
+    cmd: python prepare.py
+    deps:
+      - data/raw
+    outs:
+      - data/prepared
+  train:
+    cmd: python train.py
+    deps:
+      - data/prepared
+    params:
+      - train.epochs
+      - train.lr
+    outs:
+      - models/model.pkl
+
+artifacts:
+  cv-classification:
+    path: models/resnet.pt
+    type: model
+    desc: 'CV classification model, ResNet50'
+    labels:
+      - resnet50
+      - classification
+    meta:
+      framework: pytorch
+      version: '1.0.0'
+  nlp-sentiment:
+    path: models/bert-sentiment.h5
+    type: model
+    desc: 'Sentiment analysis model'
+    meta:
+      framework: tensorflow

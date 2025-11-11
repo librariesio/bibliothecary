@@ -21,6 +21,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::CRAN,
           Bibliothecary::Parsers::Docker,
           Bibliothecary::Parsers::Dub,
+          Bibliothecary::Parsers::DVC,
           Bibliothecary::Parsers::Elm,
           Bibliothecary::Parsers::Go,
           Bibliothecary::Parsers::Hackage,
