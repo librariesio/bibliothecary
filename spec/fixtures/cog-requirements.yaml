@@ -1,0 +1,8 @@
+build:
+  gpu: false
+  python_version: "3.12"
+  python_requirements: "requirements.txt"
+  system_packages:
+    - "libsndfile1"
+
+predict: "predict.py:Predictor"

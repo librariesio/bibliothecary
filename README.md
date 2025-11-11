@@ -132,6 +132,8 @@ All available config options are in: https://github.com/ecosyste-ms/bibliothecar
   - environment.yaml
 - Clojars
   - project.clj
+- Cog
+  - cog.yaml
 - Meteor
   - versions.json
 - MLflow
