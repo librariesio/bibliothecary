@@ -12,6 +12,7 @@ module Bibliothecary
       "npm" => :npm,
       "cargo" => :cargo,
       "composer" => :packagist,
+      "conan" => :conan,
       "conda" => :conda,
       "cran" => :cran,
       "gem" => :rubygems,
