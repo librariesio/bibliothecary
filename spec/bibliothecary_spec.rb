@@ -12,6 +12,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Bower,
           Bibliothecary::Parsers::Cargo,
           Bibliothecary::Parsers::CocoaPods,
+          Bibliothecary::Parsers::Conan,
           Bibliothecary::Parsers::Conda,
           Bibliothecary::Parsers::CPAN,
           Bibliothecary::Parsers::CRAN,

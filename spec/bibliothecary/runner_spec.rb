@@ -22,6 +22,7 @@ describe Bibliothecary::Runner do
 
       expect(result.map { |r| [r[:platform], r[:dependencies].size] }).to eq([
         ["cargo", 0],
+        ["conan", 0],
         ["conda", 0],
         ["cran", 0],
         ["go", 1],
