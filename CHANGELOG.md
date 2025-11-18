@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [14.4.0]
+
+### Added
+
+- Adds `full_sbom: true` option, which returns all dependencies for a CycloneDX/SPDX file in an analysis result with a platform name of "sbom".
+
 ## [14.3.0]
 
 ### Added

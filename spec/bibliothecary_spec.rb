@@ -29,6 +29,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Pub,
           Bibliothecary::Parsers::Pypi,
           Bibliothecary::Parsers::Rubygems,
+          Bibliothecary::Parsers::Sbom, # not a real platform / used in conjuction with "full_sbom" option
           Bibliothecary::Parsers::Shard,
         ])
   end

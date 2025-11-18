@@ -32,7 +32,32 @@ describe Bibliothecary::Runner do
         ["packagist", 0],
         ["pypi", 0],
         ["rubygems", 0],
+        ["sbom", 0],
       ])
+    end
+
+    describe "with full_sbom: true" do
+      let!(:runner) { Bibliothecary::Runner.new(Bibliothecary::Configuration.new, parser_options: { full_sbom: true }) }
+
+      it "analyses contents of an SBOM with full_sbom: true" do
+        results = runner.analyse_file("apache-airflow.cdx.json", load_fixture("apache-airflow.cdx.json"))
+
+        expect(results.size).to eq(12)
+        expect(results.to_h { |r| [r[:platform], r[:dependencies].size] }).to eq({
+                                                                                   "cargo" => 0,
+                                                                                   "conan" => 0,
+                                                                                   "conda" => 0,
+                                                                                   "cran" => 0,
+                                                                                   "go" => 0,
+                                                                                   "maven" => 0,
+                                                                                   "npm" => 0,
+                                                                                   "nuget" => 0,
+                                                                                   "packagist" => 0,
+                                                                                   "pypi" => 0,
+                                                                                   "rubygems" => 0,
+                                                                                   "sbom" => 691,
+                                                                                 })
+      end
     end
   end
 

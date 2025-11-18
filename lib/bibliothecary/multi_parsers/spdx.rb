@@ -40,20 +40,33 @@ module Bibliothecary
             parser: :parse_spdx_json,
             ungroupable: true,
           },
+          match_extension(".spdx.xml") => {
+            kind: "lockfile",
+            parser: :parse_spdx_xml,
+            ungroupable: true,
+          },
         }
       end
 
       def parse_spdx_tag_value(file_contents, options: {})
+        full_sbom = options.fetch(:full_sbom, false)
+
         entries = try_cache(options, options[:filename]) do
-          parse_spdx_tag_value_file_contents(file_contents, options.fetch(:filename, nil))
+          parse_spdx_tag_value_file_contents(file_contents, options.fetch(:filename, nil), full_sbom: full_sbom)
         end
 
         raise NoEntries if entries.empty?
 
-        Bibliothecary::ParserResult.new(dependencies: entries[platform_name.to_sym] || [])
+        dependencies = if full_sbom
+                         entries.values.flatten.uniq
+                       else
+                         entries[platform_name.to_sym] || []
+                       end
+
+        Bibliothecary::ParserResult.new(dependencies: dependencies)
       end
 
-      def parse_spdx_tag_value_file_contents(file_contents, source = nil)
+      def parse_spdx_tag_value_file_contents(file_contents, source = nil, full_sbom: false)
         entries = {}
         spdx_name = spdx_version = platform = purl_name = purl_version = nil
 
@@ -80,6 +93,7 @@ module Bibliothecary
           elsif (match = stripped_line.match(PURL_REGEXP))
             purl = PackageURL.parse(match[1])
             platform ||= PurlUtil::PURL_TYPE_MAPPING[purl.type]
+            platform ||= purl&.type&.to_sym if full_sbom == true
             purl_name ||= PurlUtil.full_name(purl)
             purl_version ||= purl.version
           end
@@ -98,16 +112,24 @@ module Bibliothecary
       end
 
       def parse_spdx_json(file_contents, options: {})
+        full_sbom = options.fetch(:full_sbom, false)
+
         entries = try_cache(options, options[:filename]) do
-          parse_spdx_json_file_contents(file_contents, options.fetch(:filename, nil))
+          parse_spdx_json_file_contents(file_contents, options.fetch(:filename, nil), full_sbom: full_sbom)
         end
 
         raise NoEntries if entries.empty?
 
-        Bibliothecary::ParserResult.new(dependencies: entries[platform_name.to_sym] || [])
+        dependencies = if full_sbom
+                         entries.values.flatten.uniq
+                       else
+                         entries[platform_name.to_sym] || []
+                       end
+
+        Bibliothecary::ParserResult.new(dependencies: dependencies)
       end
 
-      def parse_spdx_json_file_contents(file_contents, source = nil)
+      def parse_spdx_json_file_contents(file_contents, source = nil, full_sbom: false)
         entries = {}
         manifest = JSON.parse(file_contents)
 
@@ -118,6 +140,7 @@ module Bibliothecary
           first_purl_string = package["externalRefs"]&.find { |ref| ref["referenceType"] == "purl" }&.dig("referenceLocator")
           purl = first_purl_string && PackageURL.parse(first_purl_string)
           platform = PurlUtil::PURL_TYPE_MAPPING[purl&.type]
+          platform ||= purl&.type&.to_sym if full_sbom == true
           purl_name = PurlUtil.full_name(purl)
           purl_version = purl&.version
 
@@ -125,6 +148,56 @@ module Bibliothecary
                     spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
                     source: source)
         end
+
+        entries
+      end
+
+      def parse_spdx_xml(file_contents, options: {})
+        full_sbom = options.fetch(:full_sbom, false)
+
+        entries = try_cache(options, options[:filename]) do
+          parse_spdx_xml_file_contents(file_contents, options.fetch(:filename, nil), full_sbom: full_sbom)
+        end
+
+        raise NoEntries if entries.empty?
+
+        dependencies = if full_sbom
+                         entries.values.flatten.uniq
+                       else
+                         entries[platform_name.to_sym] || []
+                       end
+
+        Bibliothecary::ParserResult.new(dependencies: dependencies)
+      end
+
+      def parse_spdx_xml_file_contents(file_contents, source = nil, full_sbom: false)
+        entries = {}
+        manifest = Ox.parse(file_contents)
+
+        manifest.locate("Document/packages")
+          .each do |package|
+            spdx_name = package.locate("name")&.first&.text
+            spdx_version = package.locate("versionInfo")&.first&.text
+
+            first_purl_string = package.locate("externalRefs") # rubocop:disable Style/SafeNavigationChainLength
+              .find { |ref| ref.referenceType.nodes.include?("purl") }
+              &.referenceLocator
+              &.nodes
+              &.first
+              &.strip
+
+            next if first_purl_string.nil? || first_purl_string.empty?
+
+            purl = PackageURL.parse(first_purl_string)
+            platform = PurlUtil::PURL_TYPE_MAPPING[purl&.type]
+            platform ||= purl&.type&.to_sym if full_sbom == true
+            purl_name = PurlUtil.full_name(purl)
+            purl_version = purl&.version
+
+            add_entry(entries: entries, platform: platform, purl_name: purl_name,
+                      spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
+                      source: source)
+          end
 
         entries
       end
@@ -139,7 +212,7 @@ module Bibliothecary
         entries[platform.to_sym] << Dependency.new(
           platform: platform.to_s,
           name: package_name,
-          requirement: package_version,
+          requirement: package_version == "UNKNOWN" ? "*" : package_version,
           type: "lockfile",
           source: source
         )
