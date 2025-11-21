@@ -32,6 +32,7 @@ describe Bibliothecary::Runner do
         ["packagist", 0],
         ["pypi", 0],
         ["rubygems", 0],
+        ["vcpkg", 0],
       ])
     end
   end
