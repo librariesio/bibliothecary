@@ -1,0 +1,28 @@
+{
+  "name": "test-project",
+  "version": "1.0.0",
+  "dependencies": [
+    "boost-system",
+    {
+      "name": "cpprestsdk",
+      "version>=": "2.10.0",
+      "port-version": 0,
+      "default-features": false,
+      "features": ["json"]
+    },
+    {
+      "name": "openssl",
+      "version": "3.0.0",
+      "port-version": 1
+    },
+    "fmt",
+    {
+      "name": "zlib",
+      "version>=": "1.2.11"
+    },
+    {
+      "name": "cmake",
+      "host": true
+    }
+  ]
+}

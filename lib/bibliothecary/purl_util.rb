@@ -18,6 +18,7 @@ module Bibliothecary
       "gem" => :rubygems,
       "nuget" => :nuget,
       "pypi" => :pypi,
+      "vcpkg" => :vcpkg,
     }.freeze
 
     # @param purl [PackageURL]
