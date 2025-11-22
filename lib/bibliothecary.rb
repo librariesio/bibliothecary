@@ -13,9 +13,14 @@ require "bibliothecary/purl_util"
 require "find"
 require "tomlrb"
 
+Dir[File.expand_path("bibliothecary/parser_mixins/*.rb", __dir__)].each do |file|
+  require file
+end
+
 Dir[File.expand_path("bibliothecary/multi_parsers/*.rb", __dir__)].each do |file|
   require file
 end
+
 Dir[File.expand_path("bibliothecary/parsers/*.rb", __dir__)].each do |file|
   require file
 end

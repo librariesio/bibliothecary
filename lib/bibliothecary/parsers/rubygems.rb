@@ -6,7 +6,7 @@ module Bibliothecary
   module Parsers
     class Rubygems
       include Bibliothecary::Analyser
-      extend Bibliothecary::MultiParsers::BundlerLikeManifest
+      extend Bibliothecary::ParserMixins::BundlerLikeManifest
 
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/

@@ -6,7 +6,7 @@ module Bibliothecary
   module Parsers
     class Meteor
       include Bibliothecary::Analyser
-      extend Bibliothecary::MultiParsers::JSONRuntime
+      extend Bibliothecary::ParserMixins::JSONRuntime
 
       def self.mapping
         {

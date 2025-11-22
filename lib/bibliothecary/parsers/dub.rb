@@ -7,7 +7,7 @@ module Bibliothecary
   module Parsers
     class Dub
       include Bibliothecary::Analyser
-      extend Bibliothecary::MultiParsers::JSONRuntime
+      extend Bibliothecary::ParserMixins::JSONRuntime
 
       def self.mapping
         {
