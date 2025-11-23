@@ -7,8 +7,8 @@ describe Bibliothecary do
     expect(described_class::VERSION).not_to be nil
   end
 
-  it "lists supported package managers" do
-    expect(described_class.package_managers).to eq([
+  it "lists supported parsers" do
+    expect(described_class.parsers).to eq([
           Bibliothecary::Parsers::Bower,
           Bibliothecary::Parsers::Cargo,
           Bibliothecary::Parsers::CocoaPods,
@@ -482,7 +482,7 @@ describe Bibliothecary do
       },
     ]
 
-    expect(described_class.load_file_info_list_from_contents(file_path_contents_hash).first.package_manager).to eq(Bibliothecary::Parsers::Pypi)
+    expect(described_class.load_file_info_list_from_contents(file_path_contents_hash).first.parser).to eq(Bibliothecary::Parsers::Pypi)
   end
   it "identifies all detected manifests in a list of manifest files" do
     file_path_contents_hash = [{

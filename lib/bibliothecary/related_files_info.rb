@@ -18,10 +18,10 @@ module Bibliothecary
           returns.append(RelatedFilesInfo.new([file_info]))
         end
 
-        file_infos_by_directory_by_package_manager = groupable.group_by(&:package_manager)
+        file_infos_by_directory_by_parser = groupable.group_by(&:parser)
 
-        file_infos_by_directory_by_package_manager.each_value do |file_infos_in_directory_for_package_manager|
-          returns.append(RelatedFilesInfo.new(file_infos_in_directory_for_package_manager))
+        file_infos_by_directory_by_parser.each_value do |file_infos_in_directory_for_parser|
+          returns.append(RelatedFilesInfo.new(file_infos_in_directory_for_parser))
         end
       end
 
@@ -29,34 +29,34 @@ module Bibliothecary
     end
 
     def initialize(file_infos)
-      package_manager = file_infos.first.package_manager
+      parser = file_infos.first.parser
       ordered_file_infos = file_infos
 
-      if package_manager.respond_to?(:lockfile_preference_order)
-        ordered_file_infos = package_manager.lockfile_preference_order(file_infos)
+      if parser.respond_to?(:lockfile_preference_order)
+        ordered_file_infos = parser.lockfile_preference_order(file_infos)
       end
 
-      @platform = package_manager.platform_name
+      @platform = parser.platform_name
       @path = Pathname.new(File.dirname(file_infos.first.relative_path)).cleanpath.to_path
 
-      @manifests = filter_file_infos_by_package_manager_type(
+      @manifests = filter_file_infos_by_parser_type(
         file_infos: ordered_file_infos,
-        package_manager: package_manager,
+        parser: parser,
         type: "manifest"
       )
 
-      @lockfiles = filter_file_infos_by_package_manager_type(
+      @lockfiles = filter_file_infos_by_parser_type(
         file_infos: ordered_file_infos,
-        package_manager: package_manager,
+        parser: parser,
         type: "lockfile"
       )
     end
 
     private
 
-    def filter_file_infos_by_package_manager_type(file_infos:, package_manager:, type:)
-      # `package_manager.determine_kind_from_info(info)` can be an Array, so use include? which also works for string
-      file_infos.select { |info| package_manager.determine_kind_from_info(info).include?(type) }.map(&:relative_path)
+    def filter_file_infos_by_parser_type(file_infos:, parser:, type:)
+      # `parser.determine_kind_from_info(info)` can be an Array, so use include? which also works for string
+      file_infos.select { |info| parser.determine_kind_from_info(info).include?(type) }.map(&:relative_path)
     end
   end
 end

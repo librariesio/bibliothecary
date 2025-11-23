@@ -7,7 +7,7 @@ def file_info(filename, parser)
     "spec/fixtures",
     "spec/fixtures/#{filename}",
     nil
-  ).tap { |o| o.package_manager = parser }
+  ).tap { |o| o.parser = parser }
 end
 
 def maven_file_info(filename)

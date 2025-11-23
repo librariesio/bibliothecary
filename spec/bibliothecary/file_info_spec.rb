@@ -14,7 +14,7 @@ describe Bibliothecary::FileInfo do
       let(:full_path) { "spec/fixtures/dependencies.csv" }
 
       it "determines if file is groupable" do
-        file_info.package_manager = Bibliothecary::Parsers::NPM
+        file_info.parser = Bibliothecary::Parsers::NPM
         expect(subject).to eq(false)
       end
     end
@@ -23,7 +23,7 @@ describe Bibliothecary::FileInfo do
       let(:full_path) { "spec/fixtures/package.json" }
 
       it "determines if file is groupable" do
-        file_info.package_manager = Bibliothecary::Parsers::NPM
+        file_info.parser = Bibliothecary::Parsers::NPM
         expect(subject).to eq(true)
       end
     end
