@@ -22,8 +22,6 @@ module Bibliothecary
         }
       end
 
-      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
-
       def self.parse_sdl_manifest(file_contents, options: {})
         ParserResult.new(
           dependencies: SdlParser.new(:runtime, file_contents, platform_name, options.fetch(:filename, nil)).dependencies

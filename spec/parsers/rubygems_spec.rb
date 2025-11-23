@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Rubygems do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("rubygems")
+    expect(described_class.parser_name).to eq("rubygems")
   end
 
   it "parses dependencies from Gemfile" do
     expect(described_class.analyse_contents("Gemfile", load_fixture("Gemfile"))).to eq({
-                                                                                         platform: "rubygems",
+                                                                                         parser: "rubygems",
                                                                                          path: "Gemfile",
                                                                                          project_name: nil,
                                                                                          dependencies: [
@@ -29,7 +29,7 @@ describe Bibliothecary::Parsers::Rubygems do
 
   it "parses dependencies from gems.rb" do
     expect(described_class.analyse_contents("gems.rb", load_fixture("gems.rb"))).to eq({
-                                                                                         platform: "rubygems",
+                                                                                         parser: "rubygems",
                                                                                          path: "gems.rb",
                                                                                          project_name: nil,
                                                                                          dependencies: [
@@ -49,7 +49,7 @@ describe Bibliothecary::Parsers::Rubygems do
 
   it "parses dependencies from devise.gemspec" do
     expect(described_class.analyse_contents("devise.gemspec", load_fixture("devise.gemspec"))).to eq({
-                                                                                                       platform: "rubygems",
+                                                                                                       parser: "rubygems",
                                                                                                        path: "devise.gemspec",
                                                                                                        project_name: nil,
                                                                                                        dependencies: [
@@ -67,7 +67,7 @@ describe Bibliothecary::Parsers::Rubygems do
 
   it "parses dependencies from Gemfile.lock" do
     expect(described_class.analyse_contents("Gemfile.lock", load_fixture("Gemfile.lock"))).to eq({
-                                                                                                   platform: "rubygems",
+                                                                                                   parser: "rubygems",
                                                                                                    path: "Gemfile.lock",
                                                                                                    project_name: nil,
                                                                                                    dependencies: [
@@ -84,7 +84,7 @@ describe Bibliothecary::Parsers::Rubygems do
   it "parses bundler version from Gemfile.lock" do
     result = described_class.analyse_contents("Gemfile.lock", load_fixture("GemfileWithBundler.lock"))
     expect(result).to include(
-      platform: "rubygems",
+      parser: "rubygems",
       path: "Gemfile.lock",
       kind: "lockfile",
       project_name: nil,
@@ -103,7 +103,7 @@ describe Bibliothecary::Parsers::Rubygems do
     expect(
       described_class.analyse_contents("Gemfile.lock", fixture)
     ).to eq({
-              platform: "rubygems",
+              parser: "rubygems",
               path: "Gemfile.lock",
               dependencies: [
           Bibliothecary::Dependency.new(platform: "rubygems", name: "rails", requirement: "5.2.3", type: "runtime", source: "Gemfile.lock"),

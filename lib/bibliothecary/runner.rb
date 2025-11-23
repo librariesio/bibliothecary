@@ -39,10 +39,10 @@ module Bibliothecary
       load_file_info_list(path).map(&:full_path)
     end
 
-    def applicable_package_managers(info)
+    def applicable_package_managers(_info)
       raise "Runner#applicable_package_managers() has been removed in bibliothecary 15.0.0. Use applicable_parsers() instead, which now includes MultiParsers."
     end
-    
+
     def applicable_parsers(info)
       managers = parsers.select { |p| p.match_info?(info) }
       managers.empty? ? [nil] : managers
@@ -53,9 +53,12 @@ module Bibliothecary
     end
 
     def parsers
-      Bibliothecary::Parsers.constants
-        .map { |c| Bibliothecary::Parsers.const_get(c) }
-        .sort_by { |c| c.to_s.downcase }
+      [Bibliothecary::Parsers, Bibliothecary::MultiParsers]
+        .flat_map do |mod|
+          mod.constants
+            .map { |c| mod.const_get(c) }
+            .sort_by { |c| c.to_s.downcase }
+        end
     end
 
     # Parses an array of format [{file_path: "", contents: ""},] to match
@@ -171,16 +174,16 @@ module Bibliothecary
     #
     # This means we're likely analyzing these files twice in processing,
     # but we need that accurate package manager information.
-    def filter_multi_manifest_entries(path, related_files_info_entries)
+    def filter_multi_manifest_entries(_path, _related_files_info_entries)
       raise "Bibliothecary::Runner#filter_multi_manifest_entries() has been removed in bibliothecary 15.0.0. Since MultiParsers now act like Parsers, there is no replacement or need for it."
     end
 
     private
 
-    def add_matching_package_managers_for_file_to_list(file_list, file_info)
+    def add_matching_package_managers_for_file_to_list(_file_list, _file_info)
       raise "Runner#add_matching_package_managers_for_file_to_list() has been removed in bibliothecary 15.0.0. Use add_matching_parsers_for_file_to_list() instead, which now includes MultiParsers."
     end
-    
+
     # Get the list of all package managers that apply to the file provided
     # as file_info, and, for each one, duplicate file_info and fill in
     # the appropriate package manager.

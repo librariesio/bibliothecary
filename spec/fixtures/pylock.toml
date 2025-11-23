@@ -203,7 +203,7 @@ sha256 = "43a0b8fd5a2928500110039e43a5eed8480b918967083ea48dc3ab9f13c4a7fb"
 name = "urllib3"
 
 [packages.archive]
-url = "file:///Users/tieg.zaharia/Code/bibliothecary/spec/fixtures/pylock/urllib3-2.5.0-py3-none-any.whl"
+url = "file:///Users/me/Code/bibliothecary/spec/fixtures/pylock/urllib3-2.5.0-py3-none-any.whl"
 
 [packages.archive.hashes]
 sha256 = "e6b01673c0fa6a13e374b50871808eb3bf7046c4b125b216f6bf1cc604cff0dc"

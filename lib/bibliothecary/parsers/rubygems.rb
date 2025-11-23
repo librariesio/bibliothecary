@@ -32,10 +32,6 @@ module Bibliothecary
         }
       end
 
-      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
-      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
-      add_multi_parser(Bibliothecary::MultiParsers::Spdx)
-
       def self.parse_gemfile_lock(file_contents, options: {})
         dependencies = file_contents.lines(chomp: true).map do |line|
           match = line.match(NAME_VERSION_4)

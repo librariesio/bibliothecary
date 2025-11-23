@@ -14,7 +14,7 @@ describe Bibliothecary::FileInfo do
       let(:full_path) { "spec/fixtures/dependencies.csv" }
 
       it "determines if file is groupable" do
-        file_info.parser = Bibliothecary::Parsers::NPM
+        file_info.parser = Bibliothecary::MultiParsers::DependenciesCSV
         expect(subject).to eq(false)
       end
     end

@@ -31,6 +31,9 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Rubygems,
           Bibliothecary::Parsers::Shard,
           Bibliothecary::Parsers::Vcpkg,
+          Bibliothecary::MultiParsers::CycloneDX,
+          Bibliothecary::MultiParsers::DependenciesCSV,
+          Bibliothecary::MultiParsers::Spdx,
         ])
   end
 
@@ -48,7 +51,7 @@ describe Bibliothecary do
 
   it "analyses contents of a file" do
     expect(described_class.analyse_file("bower.json", load_fixture("bower.json"))).to eq([{
-                                                                                           platform: "bower",
+                                                                                           parser: "bower",
                                                                                            path: "bower.json",
                                                                                            project_name: nil,
                                                                                            dependencies: [
@@ -68,7 +71,7 @@ describe Bibliothecary do
                                                                                                                                kind: "manifest",
                                                                                                                                path: "requirements-extras.in",
                                                                                                                                project_name: nil,
-                                                                                                                               platform: "pypi",
+                                                                                                                               parser: "pypi",
                                                                                                                                success: true,
                                                                                                                              }])
   end
@@ -116,21 +119,21 @@ describe Bibliothecary do
       a[:dependencies] = []
     end
     expect(analysis).to eq(
-      [{ platform: "rubygems",
+      [{ parser: "rubygems",
          path: "Gemfile",
          dependencies: [],
          kind: "manifest",
          project_name: nil,
          success: true,
          related_paths: ["Gemfile.lock", "bibliothecary.gemspec"] },
-       { platform: "rubygems",
+       { parser: "rubygems",
          path: "Gemfile.lock",
          dependencies: [],
          kind: "lockfile",
          project_name: nil,
          success: true,
          related_paths: ["Gemfile", "bibliothecary.gemspec"] },
-       { platform: "rubygems",
+       { parser: "rubygems",
          path: "bibliothecary.gemspec",
          dependencies: [],
          kind: "manifest",
@@ -153,70 +156,70 @@ describe Bibliothecary do
       a[:dependencies] = []
     end
     expect(analysis).to eq(
-      [{ platform: "maven",
+      [{ parser: "maven",
          path: "com.example-hello_2.12-compile.xml",
          dependencies: [],
          kind: "lockfile",
          project_name: nil,
          success: true,
          related_paths: ["pom.xml"] },
-       { platform: "maven",
+       { parser: "maven",
          path: "pom.xml",
          dependencies: [],
          kind: "manifest",
          project_name: nil,
          success: true,
          related_paths: ["com.example-hello_2.12-compile.xml"] },
-       { platform: "npm",
+       { parser: "npm",
          path: "package-lock.json",
          dependencies: [],
          kind: "lockfile",
          project_name: nil,
          success: true,
          related_paths: ["package.json"] },
-       { platform: "npm",
+       { parser: "npm",
          path: "package.json",
          dependencies: [],
          kind: "manifest",
          project_name: nil,
          success: true,
          related_paths: ["package-lock.json", "yarn.lock"] },
-       { platform: "npm",
+       { parser: "npm",
          path: "yarn.lock",
          dependencies: [],
          kind: "lockfile",
          project_name: nil,
          success: true,
          related_paths: ["package.json"] },
-       { platform: "pypi",
+       { parser: "pypi",
          path: "setup.py",
          dependencies: [],
          kind: "manifest",
          project_name: nil,
          success: true,
          related_paths: [] },
-       { platform: "rubygems",
+       { parser: "rubygems",
          path: "Gemfile",
          dependencies: [],
          kind: "manifest",
          project_name: nil,
          success: true,
          related_paths: ["Gemfile.lock"] },
-       { platform: "rubygems",
+       { parser: "rubygems",
          path: "Gemfile.lock",
          dependencies: [],
          kind: "lockfile",
          project_name: nil,
          success: true,
          related_paths: ["Gemfile"] },
-       { platform: "rubygems",
+       { parser: "rubygems",
          path: "subdir/Gemfile",
          dependencies: [],
          kind: "manifest",
          project_name: nil,
          success: true,
          related_paths: ["subdir/Gemfile.lock"] },
-       { platform: "rubygems",
+       { parser: "rubygems",
          path: "subdir/Gemfile.lock",
          dependencies: [],
          kind: "lockfile",
@@ -242,77 +245,77 @@ describe Bibliothecary do
     end
 
     expect(analysis).to eq(
-      [{ platform: "maven",
+      [{ parser: "maven",
          path: "com.example-hello_2.12-compile.xml",
          dependencies: [],
          kind: "lockfile",
          project_name: nil,
          success: true,
          related_paths: ["pom.xml"] },
-       { platform: "maven",
+       { parser: "maven",
          path: "pom.xml",
          dependencies: [],
          kind: "manifest",
          project_name: nil,
          success: true,
          related_paths: ["com.example-hello_2.12-compile.xml"] },
-       { platform: "npm",
+       { parser: "npm",
          path: "package-lock.json",
          dependencies: [],
          kind: "lockfile",
          project_name: nil,
          success: true,
          related_paths: ["package.json"] },
-       { platform: "npm",
+       { parser: "npm",
          path: "package.json",
          dependencies: [],
          kind: "manifest",
          project_name: nil,
          success: true,
          related_paths: ["package-lock.json", "yarn.lock"] },
-       { platform: "npm",
+       { parser: "npm",
          path: "yarn.lock",
          dependencies: [],
          kind: "lockfile",
          project_name: nil,
          success: true,
          related_paths: ["package.json"] },
-       { platform: "pypi",
+       { parser: "pypi",
          path: "setup.py",
          dependencies: [],
          kind: "manifest",
          project_name: nil,
          success: true,
          related_paths: [] },
-       { platform: "rubygems",
+       { parser: "rubygems",
          path: "Gemfile",
          dependencies: [],
          kind: "manifest",
          project_name: nil,
          success: true,
          related_paths: ["Gemfile.lock"] },
-       { platform: "rubygems",
+       { parser: "rubygems",
          path: "Gemfile.lock",
          dependencies: [],
          kind: "lockfile",
          project_name: nil,
          success: true,
          related_paths: ["Gemfile"] },
-       { platform: "rubygems",
+       { parser: "rubygems",
          path: "subdir/Gemfile",
          dependencies: [],
          kind: "manifest",
          project_name: nil,
          success: true,
          related_paths: ["subdir/Gemfile.lock"] },
-       { platform: "rubygems",
+       { parser: "rubygems",
          path: "subdir/Gemfile.lock",
          dependencies: [],
          kind: "lockfile",
          project_name: nil,
          success: true,
          related_paths: ["subdir/Gemfile"] },
-       { platform: "unknown",
+       { parser: "unknown",
          path: "unknown_non_manifest.txt",
          dependencies: [],
          kind: "unknown",
@@ -332,14 +335,14 @@ describe Bibliothecary do
       described_class.analyse(File.join(orig_pwd, "spec/fixtures/empty_manifests"), ignore_unparseable_files: false)
     end
     expect(analysis).to eq(
-      [{ platform: "npm",
+      [{ parser: "npm",
          path: "package.json",
          dependencies: [],
          kind: "manifest",
          project_name: nil,
          success: true,
          related_paths: [] },
-       { platform: "rubygems",
+       { parser: "rubygems",
          path: "Gemfile",
          dependencies: [],
          kind: "manifest",
@@ -455,13 +458,13 @@ describe Bibliothecary do
     related_file_infos = Bibliothecary.find_manifests("spec/fixtures/multimanifest_dir/")
     expect(related_file_infos.length).to eq 5
 
-    rubies = related_file_infos.select { |info| info.platform == "rubygems" }
+    rubies = related_file_infos.select { |info| info.parser == "rubygems" }
     expect(rubies.length).to eq 2
     expect(rubies.first.lockfiles).to eq ["Gemfile.lock"]
     expect(rubies.first.manifests).to eq ["Gemfile"]
     expect(rubies.map(&:path)).to match_array [".", "subdir"]
 
-    pythons = related_file_infos.select { |info| info.platform == "pypi" }
+    pythons = related_file_infos.select { |info| info.parser == "pypi" }
     expect(pythons.length).to eq 1
     expect(pythons.first.manifests).to eq ["setup.py"]
     expect(pythons.first.lockfiles).to eq []
@@ -471,7 +474,7 @@ describe Bibliothecary do
   it "identifies all detected manifests in a list of manifest path strings" do
     file_infos = Bibliothecary.find_manifests_from_paths(["Gemfile", "Gemfile.lock", "go.mod", "yarn.lock"])
     expect(file_infos.count).to eq 3
-    expect(file_infos.map(&:platform)).to eq %w[rubygems go npm]
+    expect(file_infos.map(&:parser)).to eq %w[rubygems go npm]
   end
 
   it "matches package manager from names and contents of files." do
@@ -493,6 +496,6 @@ describe Bibliothecary do
     file_infos = Bibliothecary.find_manifests_from_contents(file_path_contents_hash)
     expect(file_infos.count).to eq 1
     expect(file_infos.map(&:lockfiles).flatten).to eq ["requirements.frozen"]
-    expect(file_infos.map(&:platform)).to eq ["pypi"]
+    expect(file_infos.map(&:parser)).to eq ["pypi"]
   end
 end

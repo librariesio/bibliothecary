@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Cargo do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("cargo")
+    expect(described_class.parser_name).to eq("cargo")
   end
 
   it "parses dependencies from Cargo.toml" do
     expect(described_class.analyse_contents("Cargo.toml", load_fixture("Cargo.toml"))).to eq({
-                                                                                               platform: "cargo",
+                                                                                               parser: "cargo",
                                                                                                path: "Cargo.toml",
                                                                                                project_name: nil,
                                                                                                dependencies: [
@@ -24,7 +24,7 @@ describe Bibliothecary::Parsers::Cargo do
 
   it "parses dependencies from Cargo.lock" do
     expect(described_class.analyse_contents("Cargo.lock", load_fixture("Cargo.lock"))).to eq({
-                                                                                               platform: "cargo",
+                                                                                               parser: "cargo",
                                                                                                path: "Cargo.lock",
                                                                                                project_name: nil,
                                                                                                dependencies: [

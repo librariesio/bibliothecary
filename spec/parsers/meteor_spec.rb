@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Meteor do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("meteor")
+    expect(described_class.parser_name).to eq("meteor")
   end
 
   it "parses dependencies from versions.json" do
     expect(described_class.analyse_contents("versions.json", load_fixture("versions.json"))).to eq({
-                                                                                                     platform: "meteor",
+                                                                                                     parser: "meteor",
                                                                                                      path: "versions.json",
                                                                                                      project_name: nil,
                                                                                                      dependencies: [

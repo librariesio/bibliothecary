@@ -4,13 +4,13 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Conan do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("conan")
+    expect(described_class.parser_name).to eq("conan")
   end
 
   it "parses dependencies from v2 lockfile with one package" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/one-package.v2.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -25,7 +25,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v2 lockfile with one dev package" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/one-package-dev.v2.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -40,7 +40,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v2 lockfile with two packages" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/two-packages.v2.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -56,7 +56,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v2 lockfile with nested dependencies" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/nested-dependencies.v2.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -75,7 +75,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses v2 lockfile with no packages" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/empty.v2.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [],
@@ -95,7 +95,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v1 lockfile (v0.4) with one package" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/one-package.v1.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -110,7 +110,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v1 lockfile (v0.4) with one dev package" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/one-package-dev.v1.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -127,7 +127,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v1 lockfile (v0.4) with two packages" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/two-packages.v1.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -143,7 +143,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v1 lockfile (v0.4) with nested dependencies" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/nested-dependencies.v1.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -162,7 +162,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses v1 lockfile (v0.4) with no packages" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/empty.v1.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [],
@@ -182,7 +182,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v1 lockfile with revisions and one package" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/one-package.v1.revisions.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -197,7 +197,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v1 lockfile with revisions and one dev package" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/one-package-dev.v1.revisions.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -213,7 +213,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v1 lockfile with revisions and two packages" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/two-packages.v1.revisions.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -229,7 +229,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v1 lockfile with revisions and nested dependencies" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/nested-dependencies.v1.revisions.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -248,7 +248,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses v1 lockfile with revisions and no packages" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/empty.v1.revisions.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [],
@@ -268,7 +268,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v0.3 lockfile" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/old-format-0.3.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -283,7 +283,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v0.2 lockfile" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/old-format-0.2.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -298,7 +298,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v0.1 lockfile" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/old-format-0.1.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -313,7 +313,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from v0.0 lockfile" do
     expect(described_class.analyse_contents("conan.lock", load_fixture("conan/old-format-0.0.json"))).to eq(
       {
-        platform: "conan",
+        parser: "conan",
         path: "conan.lock",
         project_name: nil,
         dependencies: [
@@ -328,7 +328,7 @@ describe Bibliothecary::Parsers::Conan do
   it "parses dependencies from conanfile.py with multiple packages" do
     result = described_class.analyse_contents("conanfile.py", load_fixture("conan/openstudio.conanfile.py"))
 
-    expect(result[:platform]).to eq("conan")
+    expect(result[:parser]).to eq("conan")
     expect(result[:path]).to eq("conanfile.py")
     expect(result[:kind]).to eq("manifest")
     expect(result[:success]).to be true

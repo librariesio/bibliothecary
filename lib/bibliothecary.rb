@@ -38,7 +38,7 @@ module Bibliothecary
     runner.load_file_list(path)
   end
 
-  def self.applicable_package_managers(info)
+  def self.applicable_package_managers(_info)
     raise "Bibliothecary.applicable_package_managers() has been removed in bibliothecary 15.0.0. Use parsers() instead, which now includes MultiParsers."
   end
 

@@ -35,8 +35,6 @@ module Bibliothecary
         }
       end
 
-      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
-
       def self.parse_podfile_lock(file_contents, options: {})
         manifest = YAML.load file_contents
         dependencies = manifest["PODS"].map do |row|

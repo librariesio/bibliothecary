@@ -20,19 +20,8 @@ describe Bibliothecary::Runner do
     it "should analyze a multi-parser file" do
       result = runner.analyze_file("sbom.spdx.json", load_fixture("sbom.spdx.json"))
 
-      expect(result.map { |r| [r[:platform], r[:dependencies].size] }).to eq([
-        ["cargo", 0],
-        ["conan", 0],
-        ["conda", 0],
-        ["cran", 0],
-        ["go", 1],
-        ["maven", 0],
-        ["npm", 0],
-        ["nuget", 0],
-        ["packagist", 0],
-        ["pypi", 0],
-        ["rubygems", 0],
-        ["vcpkg", 0],
+      expect(result.map { |r| [r[:parser], r[:dependencies].size] }).to eq([
+        ["spdx", 1],
       ])
     end
   end

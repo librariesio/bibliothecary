@@ -2,7 +2,7 @@
 
 module Bibliothecary
   class RelatedFilesInfo
-    attr_reader :path, :platform, :manifests, :lockfiles
+    attr_reader :path, :parser, :manifests, :lockfiles
 
     # Create a set of RelatedFilesInfo for the provided file_infos,
     # where each RelatedFilesInfo contains all the file_infos
@@ -36,7 +36,7 @@ module Bibliothecary
         ordered_file_infos = parser.lockfile_preference_order(file_infos)
       end
 
-      @platform = parser.platform_name
+      @parser = parser.parser_name
       @path = Pathname.new(File.dirname(file_infos.first.relative_path)).cleanpath.to_path
 
       @manifests = filter_file_infos_by_parser_type(
@@ -53,6 +53,10 @@ module Bibliothecary
     end
 
     private
+
+    def platform
+      raise "Bibliothecary::RelatedFileInfo#platform() has been removed in bibliothecary 15.0.0. Use parser() instead, which now includes MultiParsers."
+    end
 
     def filter_file_infos_by_parser_type(file_infos:, parser:, type:)
       # `parser.determine_kind_from_info(info)` can be an Array, so use include? which also works for string
