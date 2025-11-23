@@ -172,7 +172,7 @@ module Bibliothecary
     # This means we're likely analyzing these files twice in processing,
     # but we need that accurate package manager information.
     def filter_multi_manifest_entries(path, related_files_info_entries)
-      MultiManifestFilter.new(path: path, related_files_info_entries: related_files_info_entries, runner: self).results
+      raise "Bibliothecary::Runner#filter_multi_manifest_entries() has been removed in bibliothecary 15.0.0. Since MultiParsers now act like Parsers, there is no replacement or need for it."
     end
 
     private
