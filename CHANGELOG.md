@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [14.4.0]
+
+### Added
+
+- Add suppport for vcpkg parsing
+
 ## [14.3.0]
 
 ### Added

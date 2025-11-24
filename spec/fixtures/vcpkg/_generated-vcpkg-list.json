@@ -1,0 +1,58 @@
+{
+  "fmt:x64-linux": {
+    "package_name": "fmt",
+    "triplet": "x64-linux",
+    "version": "10.1.0",
+    "port_version": 0,
+    "features": [],
+    "desc": [
+      "Formatting library for C++. It can be used as a safe alternative to printf or as a fast alternative to IOStreams."
+    ]
+  },
+  "libpng:x64-linux": {
+    "package_name": "libpng",
+    "triplet": "x64-linux",
+    "version": "1.6.50",
+    "port_version": 0,
+    "features": [],
+    "desc": [
+      "libpng is a library implementing an interface for reading and writing PNG (Portable Network Graphics) format files"
+    ]
+  },
+  "vcpkg-cmake-config:x64-linux": {
+    "package_name": "vcpkg-cmake-config",
+    "triplet": "x64-linux",
+    "version": "2024-05-23",
+    "port_version": 0,
+    "features": [],
+    "desc": []
+  },
+  "vcpkg-cmake:x64-linux": {
+    "package_name": "vcpkg-cmake",
+    "triplet": "x64-linux",
+    "version": "2024-04-23",
+    "port_version": 0,
+    "features": [],
+    "desc": []
+  },
+  "zlib:x64-linux": {
+    "package_name": "zlib",
+    "triplet": "x64-linux",
+    "version": "1.3.1",
+    "port_version": 0,
+    "features": [],
+    "desc": [
+      "A compression library"
+    ]
+  },
+  "openssl:x64-linux": {
+    "package_name": "openssl",
+    "triplet": "x64-linux",
+    "version": "3.0.8",
+    "port_version": 5,
+    "features": [],
+    "desc": [
+      "OpenSSL is an open source project that provides a robust, commercial-grade, and full-featured toolkit for the Transport Layer Security (TLS) and Secure Sockets Layer (SSL) protocols."
+    ]
+  }
+}

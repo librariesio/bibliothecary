@@ -30,6 +30,7 @@ describe Bibliothecary do
           Bibliothecary::Parsers::Pypi,
           Bibliothecary::Parsers::Rubygems,
           Bibliothecary::Parsers::Shard,
+          Bibliothecary::Parsers::Vcpkg,
         ])
   end
 
