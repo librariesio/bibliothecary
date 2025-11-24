@@ -52,11 +52,11 @@ module Bibliothecary
       )
     end
 
-    private
-
     def platform
       raise "Bibliothecary::RelatedFileInfo#platform() has been removed in bibliothecary 15.0.0. Use parser() instead, which now includes MultiParsers."
     end
+
+    private
 
     def filter_file_infos_by_parser_type(file_infos:, parser:, type:)
       # `parser.determine_kind_from_info(info)` can be an Array, so use include? which also works for string
