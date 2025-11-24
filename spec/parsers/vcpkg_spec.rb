@@ -16,7 +16,7 @@ describe Bibliothecary::Parsers::Vcpkg do
         dependencies: [
           Bibliothecary::Dependency.new(platform: "vcpkg", name: "boost-system", requirement: "*", type: "runtime", source: "vcpkg.json"),
           Bibliothecary::Dependency.new(platform: "vcpkg", name: "cpprestsdk", requirement: ">=2.10.0", type: "runtime", source: "vcpkg.json"),
-          Bibliothecary::Dependency.new(platform: "vcpkg", name: "openssl", requirement: "3.0.0#1", type: "runtime", source: "vcpkg.json"),
+          Bibliothecary::Dependency.new(platform: "vcpkg", name: "openssl", requirement: ">=3.0.0", type: "runtime", source: "vcpkg.json"),
           Bibliothecary::Dependency.new(platform: "vcpkg", name: "fmt", requirement: "*", type: "runtime", source: "vcpkg.json"),
           Bibliothecary::Dependency.new(platform: "vcpkg", name: "zlib", requirement: ">=1.2.11", type: "runtime", source: "vcpkg.json"),
           Bibliothecary::Dependency.new(platform: "vcpkg", name: "cmake", requirement: "*", type: "development", source: "vcpkg.json"),
@@ -36,7 +36,7 @@ describe Bibliothecary::Parsers::Vcpkg do
         dependencies: [
           Bibliothecary::Dependency.new(platform: "vcpkg", name: "openssl", requirement: "1.1.1h#3", type: "runtime", source: "vcpkg.json"),
           Bibliothecary::Dependency.new(platform: "vcpkg", name: "zlib", requirement: "1.2.11#9", type: "runtime", source: "vcpkg.json"),
-          Bibliothecary::Dependency.new(platform: "vcpkg", name: "boost-system", requirement: "1.80.0", type: "runtime", source: "vcpkg.json"),
+          Bibliothecary::Dependency.new(platform: "vcpkg", name: "boost-system", requirement: ">=1.80.0", type: "runtime", source: "vcpkg.json"),
         ],
         kind: "manifest",
         success: true,

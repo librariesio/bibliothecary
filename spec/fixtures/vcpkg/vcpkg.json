@@ -6,14 +6,12 @@
     {
       "name": "cpprestsdk",
       "version>=": "2.10.0",
-      "port-version": 0,
       "default-features": false,
       "features": ["json"]
     },
     {
       "name": "openssl",
-      "version": "3.0.0",
-      "port-version": 1
+      "version>=": "3.0.0"
     },
     "fmt",
     {

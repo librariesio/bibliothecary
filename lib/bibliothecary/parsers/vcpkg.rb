@@ -11,6 +11,7 @@ module Bibliothecary
             kind: "manifest",
             parser: :parse_vcpkg_json,
           },
+          # _generated-vcpkg-list.json is the output of `vcpkg list --x-json`.
           match_filename("_generated-vcpkg-list.json") => {
             kind: "lockfile",
             parser: :parse_vcpkg_list_json,
@@ -33,8 +34,9 @@ module Bibliothecary
 
         overrides = {}
         manifest["overrides"]&.each do |override|
-          if override.is_a?(Hash) && override["name"] && override["version"]
-            overrides[override["name"]] = override["version"]
+          if override.is_a?(Hash) && override["name"]
+            override_version = override["version"] || override["version-semver"] || override["version-date"] || override["version-string"]
+            overrides[override["name"]] = format_requirement(override_version, override["port-version"])
           end
         end
 
@@ -47,15 +49,9 @@ module Bibliothecary
           elsif dep.is_a?(Hash)
             # Object format: { "name": "cpprestsdk", "version>=": "2.10.0", ... }
             name = dep["name"]
-
-            version = if dep["version>="]
-                        ">=#{dep['version>=']}"
-                      else
-                        dep["version"] || dep["version-semver"] || dep["version-date"] || dep["version-string"] || nil
-                      end
-            port_version = dep["port-version"]
-            requirement = format_requirement(version, port_version)
-
+            requirement = if dep["version>="]
+                            ">=#{dep['version>=']}"
+                          end
             is_development = dep["host"] == true
           end
 
