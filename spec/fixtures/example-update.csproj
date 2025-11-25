@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+    <AssemblyName>Example.With.Overridden.Assembly.Name</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
