@@ -10,7 +10,7 @@ describe Bibliothecary::Parsers::Vcpkg do
   it "parses dependencies from vcpkg.json" do
     expect(described_class.analyse_contents("vcpkg.json", load_fixture("vcpkg/vcpkg.json"))).to eq(
       {
-        platform: "vcpkg",
+        parser: "vcpkg",
         path: "vcpkg.json",
         project_name: nil,
         dependencies: [
@@ -30,7 +30,7 @@ describe Bibliothecary::Parsers::Vcpkg do
   it "applies overrides to dependencies" do
     expect(described_class.analyse_contents("vcpkg.json", load_fixture("vcpkg/with-overrides.json"))).to eq(
       {
-        platform: "vcpkg",
+        parser: "vcpkg",
         path: "vcpkg.json",
         project_name: nil,
         dependencies: [
@@ -47,7 +47,7 @@ describe Bibliothecary::Parsers::Vcpkg do
   it "parses vcpkg.json with empty dependencies" do
     expect(described_class.analyse_contents("vcpkg.json", load_fixture("vcpkg/empty-deps.json"))).to eq(
       {
-        platform: "vcpkg",
+        parser: "vcpkg",
         path: "vcpkg.json",
         project_name: nil,
         dependencies: [],
@@ -60,7 +60,7 @@ describe Bibliothecary::Parsers::Vcpkg do
   it "parses vcpkg.json with no dependencies field" do
     expect(described_class.analyse_contents("vcpkg.json", load_fixture("vcpkg/no-deps.json"))).to eq(
       {
-        platform: "vcpkg",
+        parser: "vcpkg",
         path: "vcpkg.json",
         project_name: nil,
         dependencies: [],
@@ -81,7 +81,7 @@ describe Bibliothecary::Parsers::Vcpkg do
   it "parses dependencies from _generated-vcpkg-list.json" do
     expect(described_class.analyse_contents("_generated-vcpkg-list.json", load_fixture("vcpkg/_generated-vcpkg-list.json"))).to eq(
       {
-        platform: "vcpkg",
+        parser: "vcpkg",
         path: "_generated-vcpkg-list.json",
         project_name: nil,
         dependencies: [
