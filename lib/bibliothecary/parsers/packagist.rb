@@ -20,10 +20,6 @@ module Bibliothecary
         }
       end
 
-      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
-      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
-      add_multi_parser(Bibliothecary::MultiParsers::Spdx)
-
       def self.parse_lockfile(file_contents, options: {})
         manifest = JSON.parse file_contents
         dependencies = manifest.fetch("packages", []).map do |dependency|

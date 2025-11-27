@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::CPAN do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("cpan")
+    expect(described_class.parser_name).to eq("cpan")
   end
 
   it "parses dependencies from META.yml" do
     expect(described_class.analyse_contents("META.yml", load_fixture("META.yml"))).to eq({
-                                                                                           platform: "cpan",
+                                                                                           parser: "cpan",
                                                                                            path: "META.yml",
                                                                                            project_name: nil,
                                                                                            dependencies: [
@@ -26,7 +26,7 @@ describe Bibliothecary::Parsers::CPAN do
 
   it "parses dependencies from META.json" do
     expect(described_class.analyse_contents("META.json", load_fixture("META.json"))).to eq({
-                                                                                             platform: "cpan",
+                                                                                             parser: "cpan",
                                                                                              path: "META.json",
                                                                                              project_name: nil,
                                                                                              dependencies: [

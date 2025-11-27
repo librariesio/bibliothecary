@@ -10,12 +10,9 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     expect(cdata).to match("this is some CDATA")
   end
 
-  it_behaves_like "CycloneDX"
-  it_behaves_like "dependencies.csv"
-
   it "parses dependencies from pom.xml" do
     expect(described_class.analyse_contents("pom.xml", load_fixture("pom.xml"))).to eq({
-                                                                                         platform: "maven",
+                                                                                         parser: "maven",
                                                                                          path: "pom.xml",
                                                                                          project_name: nil,
                                                                                          dependencies: [
@@ -211,7 +208,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
   it "parses dependencies from pom2.xml" do
     expect(described_class.analyse_contents("pom.xml", load_fixture("pom2.xml"))).to eq({
-                                                                                          platform: "maven",
+                                                                                          parser: "maven",
                                                                                           path: "pom.xml",
                                                                                           project_name: nil,
                                                                                           dependencies: [
@@ -263,7 +260,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
   it "parses dependencies from pom-spaces-in-artifact-and-group.xml" do
     expect(described_class.analyse_contents("pom.xml", load_fixture("pom-spaces-in-artifact-and-group.xml"))).to eq({
-                                                                                                                      platform: "maven",
+                                                                                                                      parser: "maven",
                                                                                                                       path: "pom.xml",
                                                                                                                       project_name: nil,
                                                                                                                       dependencies: [
@@ -308,7 +305,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
   it "parses dependencies from ivy.xml" do
     expect(described_class.analyse_contents("ivy.xml", load_fixture("ivy.xml"))).to eq({
-                                                                                         platform: "maven",
+                                                                                         parser: "maven",
                                                                                          path: "ivy.xml",
                                                                                          project_name: nil,
                                                                                          dependencies: [
@@ -362,7 +359,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "parses dependencies from build.gradle" do
       expect(described_class.analyse_contents("build.gradle", load_fixture("build.gradle"))).to eq({
-                                                                                                     platform: "maven",
+                                                                                                     parser: "maven",
                                                                                                      path: "build.gradle",
                                                                                                      project_name: nil,
                                                                                                      dependencies: [
@@ -384,7 +381,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
     it "parses dependencies from build.gradle.kts" do
       expect(described_class.analyse_contents("build.gradle.kts", load_fixture("build.gradle.kts"))).to eq({
-                                                                                                             platform: "maven",
+                                                                                                             parser: "maven",
                                                                                                              path: "build.gradle.kts",
                                                                                                              project_name: nil,
                                                                                                              dependencies: [
@@ -402,7 +399,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
   it "parses dependencies from an ivy report for a root project / type compile" do
     expect(described_class.analyse_contents("com.example-hello_2.12-compile.xml", load_fixture("ivy_reports/com.example-hello_2.12-compile.xml"))).to eq({
-                                                                                                                                                           platform: "maven",
+                                                                                                                                                           parser: "maven",
                                                                                                                                                            path: "com.example-hello_2.12-compile.xml",
                                                                                                                                                            project_name: nil,
                                                                                                                                                            dependencies: [
@@ -415,7 +412,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
   it "parses dependencies from an ivy report for a subproject / type test" do
     expect(described_class.analyse_contents("com.example-subproject_2.12-test.xml", load_fixture("ivy_reports/com.example-subproject_2.12-test.xml"))).to eq({
-                                                                                                                                                               platform: "maven",
+                                                                                                                                                               parser: "maven",
                                                                                                                                                                path: "com.example-subproject_2.12-test.xml",
                                                                                                                                                                project_name: nil,
                                                                                                                                                                dependencies: [
@@ -435,7 +432,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
   it "reports success: false on a broken ivy report" do
     expect(described_class.analyse_contents("missing_info.xml", load_fixture("ivy_reports/missing_info.xml"))).to match({
-                                                                                                                          platform: "maven",
+                                                                                                                          parser: "maven",
                                                                                                                           path: "missing_info.xml",
                                                                                                                           dependencies: nil,
                                                                                                                           kind: "lockfile",
@@ -571,7 +568,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
   it "parses dependencies from sbt-update-full.txt" do
     analysis = described_class.analyse_contents("sbt-update-full.txt", load_fixture("sbt-update-full.txt"))
-    expect(analysis[:platform]).to eq("maven")
+    expect(analysis[:parser]).to eq("maven")
     expect(analysis[:path]).to eq("sbt-update-full.txt")
     expect(analysis[:kind]).to eq("lockfile")
     expect(analysis[:success]).to be true

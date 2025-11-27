@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Dub do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("dub")
+    expect(described_class.parser_name).to eq("dub")
   end
 
   it "parses dependencies from dub.json" do
     expect(described_class.analyse_contents("dub.json", load_fixture("dub.json"))).to eq({
-                                                                                           platform: "dub",
+                                                                                           parser: "dub",
                                                                                            path: "dub.json",
                                                                                            project_name: nil,
                                                                                            dependencies: [
@@ -23,7 +23,7 @@ describe Bibliothecary::Parsers::Dub do
 
   it "parses dependencies from dub.sdl" do
     expect(described_class.analyse_contents("dub.sdl", load_fixture("dub.sdl"))).to eq({
-                                                                                         platform: "dub",
+                                                                                         parser: "dub",
                                                                                          path: "dub.sdl",
                                                                                          project_name: nil,
                                                                                          dependencies: [

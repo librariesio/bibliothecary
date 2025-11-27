@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Shard do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("shard")
+    expect(described_class.parser_name).to eq("shard")
   end
 
   it "parses dependencies from shard.yml" do
     expect(described_class.analyse_contents("shard.yml", load_fixture("shard.yml"))).to eq({
-                                                                                             platform: "shard",
+                                                                                             parser: "shard",
                                                                                              path: "shard.yml",
                                                                                              project_name: nil,
                                                                                              dependencies: [
@@ -26,7 +26,7 @@ describe Bibliothecary::Parsers::Shard do
 
   it "parses dependencies from shard.lock" do
     expect(described_class.analyse_contents("shard.lock", load_fixture("shard.lock"))).to eq({
-                                                                                               platform: "shard",
+                                                                                               parser: "shard",
                                                                                                path: "shard.lock",
                                                                                                project_name: nil,
                                                                                                dependencies: [

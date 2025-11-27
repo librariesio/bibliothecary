@@ -7,7 +7,7 @@ module Bibliothecary
   module Parsers
     class Nuget
       include Bibliothecary::Analyser
-      extend Bibliothecary::MultiParsers::JSONRuntime
+      extend Bibliothecary::ParserMixins::JSONRuntime
 
       def self.mapping
         {
@@ -45,10 +45,6 @@ module Bibliothecary
           },
         }
       end
-
-      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
-      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
-      add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
       def self.parse_project_lock_json(file_contents, options: {})
         manifest = JSON.parse file_contents

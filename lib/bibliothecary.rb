@@ -13,9 +13,14 @@ require "bibliothecary/purl_util"
 require "find"
 require "tomlrb"
 
+Dir[File.expand_path("bibliothecary/parser_mixins/*.rb", __dir__)].each do |file|
+  require file
+end
+
 Dir[File.expand_path("bibliothecary/multi_parsers/*.rb", __dir__)].each do |file|
   require file
 end
+
 Dir[File.expand_path("bibliothecary/parsers/*.rb", __dir__)].each do |file|
   require file
 end
@@ -33,8 +38,12 @@ module Bibliothecary
     runner.load_file_list(path)
   end
 
-  def self.applicable_package_managers(info)
-    runner.applicable_package_managers(info)
+  def self.applicable_package_managers(_info)
+    raise "Bibliothecary.applicable_package_managers() has been removed in bibliothecary 15.0.0. Use parsers() instead, which now includes MultiParsers."
+  end
+
+  def self.applicable_parsers(info)
+    runner.applicable_parsers(info)
   end
 
   def self.load_file_info_list(path)
@@ -58,7 +67,11 @@ module Bibliothecary
   end
 
   def self.package_managers
-    runner.package_managers
+    raise "Bibliothecary.package_managers() has been removed in bibliothecary 15.0.0. Use parsers() instead, which now includes MultiParsers."
+  end
+
+  def self.parsers
+    runner.parsers
   end
 
   def self.find_manifests(path)

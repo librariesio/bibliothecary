@@ -25,10 +25,6 @@ module Bibliothecary
         }
       end
 
-      add_multi_parser(Bibliothecary::MultiParsers::CycloneDX)
-      add_multi_parser(Bibliothecary::MultiParsers::Spdx)
-      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
-
       def self.parse_conanfile_py(file_contents, options: {})
         dependencies = []
 

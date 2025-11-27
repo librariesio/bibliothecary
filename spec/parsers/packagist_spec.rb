@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Packagist do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("packagist")
+    expect(described_class.parser_name).to eq("packagist")
   end
 
   it "parses dependencies from composer.json" do
     expect(described_class.analyse_contents("composer.json", load_fixture("composer.json"))).to eq({
-                                                                                                     platform: "packagist",
+                                                                                                     parser: "packagist",
                                                                                                      path: "composer.json",
                                                                                                      project_name: nil,
                                                                                                      dependencies: [
@@ -25,7 +25,7 @@ describe Bibliothecary::Parsers::Packagist do
 
   it "parses dependencies from composer.lock" do
     expect(described_class.analyse_contents("composer.lock", load_fixture("composer.lock"))).to eq({
-                                                                                                     platform: "packagist",
+                                                                                                     parser: "packagist",
                                                                                                      path: "composer.lock",
                                                                                                      project_name: nil,
                                                                                                      dependencies: [

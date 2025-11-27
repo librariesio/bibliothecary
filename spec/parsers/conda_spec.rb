@@ -4,13 +4,13 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Conda do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("conda")
+    expect(described_class.parser_name).to eq("conda")
   end
 
   it "parses dependencies from environment.yml" do
     expect(described_class.analyse_contents("environment.yml", load_fixture("environment.yml"))).to eq(
       {
-        platform: "conda",
+        parser: "conda",
         path: "environment.yml",
         project_name: nil,
         dependencies: [
@@ -35,7 +35,7 @@ describe Bibliothecary::Parsers::Conda do
   it "parses dependencies from environment.yml ignoring pip" do
     expect(described_class.analyse_contents("conda_with_pip/environment.yml", load_fixture("conda_with_pip/environment.yml"))).to eq(
       {
-        platform: "conda",
+        parser: "conda",
         path: "conda_with_pip/environment.yml",
         project_name: nil,
         dependencies: [

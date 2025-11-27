@@ -7,7 +7,11 @@ module Bibliothecary
   # and package manager information if needed.
   class FileInfo
     attr_reader :folder_path, :relative_path, :full_path
-    attr_accessor :package_manager
+    attr_accessor :parser
+
+    def package_manager
+      raise "FileInfo#package_manager() has been removed in bibliothecary 15.0.0. Use parser() instead, which now includes MultiParsers."
+    end
 
     def contents
       @contents ||=
@@ -45,11 +49,11 @@ module Bibliothecary
 
       @contents = contents
 
-      @package_manager = nil
+      @parser = nil
     end
 
     def groupable?
-      @package_manager&.groupable?(self)
+      @parser&.groupable?(self)
     end
   end
 end

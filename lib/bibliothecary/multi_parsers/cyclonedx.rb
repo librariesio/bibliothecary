@@ -12,17 +12,18 @@ Warning[:experimental] = true
 
 module Bibliothecary
   module MultiParsers
-    module CycloneDX
+    class CycloneDX
       include Bibliothecary::Analyser
-      include Bibliothecary::Analyser::TryCache
+      extend Bibliothecary::Analyser::TryCache
 
       NoComponents = Class.new(StandardError)
 
       class ManifestEntries
-        attr_reader :manifests
+        attr_reader :entries
 
-        def initialize(parse_queue:)
-          @manifests = {}
+        def initialize(parse_queue:, full_sbom: false)
+          @entries = Set.new
+          @full_sbom = full_sbom
 
           # Instead of recursing, we'll work through a queue of components
           # to process, letting the different parser add components to the
@@ -32,13 +33,12 @@ module Bibliothecary
 
         def add(purl, source = nil)
           mapping = PurlUtil::PURL_TYPE_MAPPING[purl.type]
-          return unless mapping
+          return unless mapping || @full_sbom
 
-          @manifests[mapping] ||= Set.new
-          @manifests[mapping] << Dependency.new(
+          @entries << Dependency.new(
             name: PurlUtil.full_name(purl),
             requirement: purl.version,
-            platform: mapping.to_s,
+            platform: mapping ? mapping.to_s : purl.type,
             type: "lockfile",
             source: source
           )
@@ -59,10 +59,6 @@ module Bibliothecary
 
             add(purl, source)
           end
-        end
-
-        def [](key)
-          @manifests[key]&.to_a
         end
       end
 
@@ -91,25 +87,32 @@ module Bibliothecary
         }
       end
 
-      def parse_cyclonedx_json(file_contents, options: {})
+      def self.platform_name
+        raise "CycloneDX is a multi-parser and does not have a platform name."
+      end
+
+      def self.parse_cyclonedx_json(file_contents, options: {})
         manifest = try_cache(options, options[:filename]) do
           JSON.parse(file_contents)
         end
 
         raise NoComponents unless manifest["components"]
 
-        entries = ManifestEntries.new(parse_queue: manifest["components"])
+        manifest_entries = ManifestEntries.new(
+          parse_queue: manifest["components"],
+          full_sbom: options.fetch(:full_sbom, false)
+        )
 
-        entries.parse!(options.fetch(:filename, nil)) do |component, parse_queue|
+        manifest_entries.parse!(options.fetch(:filename, nil)) do |component, parse_queue|
           parse_queue.concat(component["components"]) if component["components"]
 
           component["purl"]
         end
 
-        ParserResult.new(dependencies: entries[platform_name.to_sym] || [])
+        ParserResult.new(dependencies: manifest_entries.entries.to_a)
       end
 
-      def parse_cyclonedx_xml(file_contents, options: {})
+      def self.parse_cyclonedx_xml(file_contents, options: {})
         manifest = try_cache(options, options[:filename]) do
           Ox.parse(file_contents)
         end
@@ -121,9 +124,12 @@ module Bibliothecary
 
         raise NoComponents unless root.locate("components").first
 
-        entries = ManifestEntries.new(parse_queue: root.locate("components/*"))
+        manifest_entries = ManifestEntries.new(
+          parse_queue: root.locate("components/*"),
+          full_sbom: options.fetch(:full_sbom, false)
+        )
 
-        entries.parse!(options.fetch(:filename, nil)) do |component, parse_queue|
+        manifest_entries.parse!(options.fetch(:filename, nil)) do |component, parse_queue|
           # #locate returns an empty array if nothing is found, so we can
           # always safely concatenate it to the parse queue.
           parse_queue.concat(component.locate("components/*"))
@@ -131,7 +137,7 @@ module Bibliothecary
           component.locate("purl").first&.text
         end
 
-        ParserResult.new(dependencies: entries[platform_name.to_sym] || [])
+        ParserResult.new(dependencies: manifest_entries.entries.to_a)
       end
     end
   end

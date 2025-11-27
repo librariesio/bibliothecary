@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Bower do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("bower")
+    expect(described_class.parser_name).to eq("bower")
   end
 
   it "parses dependencies from bower.json" do
     expect(described_class.analyse_contents("bower.json", load_fixture("bower.json"))).to eq({
-                                                                                               platform: "bower",
+                                                                                               parser: "bower",
                                                                                                path: "bower.json",
                                                                                                project_name: nil,
                                                                                                dependencies: [

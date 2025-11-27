@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Bibliothecary
-  module MultiParsers
+  module ParserMixins
     # Provide JSON Runtime Manifest parsing
     module JSONRuntime
       def parse_json_runtime_manifest(file_contents, options: {})

@@ -4,9 +4,9 @@ require "csv"
 
 module Bibliothecary
   module MultiParsers
-    module DependenciesCSV
+    class DependenciesCSV
       include Bibliothecary::Analyser
-      include Bibliothecary::Analyser::TryCache
+      extend Bibliothecary::Analyser::TryCache
 
       def self.mapping
         {
@@ -16,6 +16,10 @@ module Bibliothecary
             parser: :parse_dependencies_csv,
           },
         }
+      end
+
+      def self.platform_name
+        raise "DependenciesCSV is a multi-parser and does not have a platform name."
       end
 
       # Processing a CSV file isn't as exact as using a real manifest file,
@@ -132,7 +136,7 @@ module Bibliothecary
         end
       end
 
-      def parse_dependencies_csv(file_contents, options: {})
+      def self.parse_dependencies_csv(file_contents, options: {})
         csv_file = try_cache(options, options[:filename]) do
           raw_csv_file = CSVFile.new(file_contents)
           raw_csv_file.parse!
@@ -141,7 +145,6 @@ module Bibliothecary
 
         dependencies = csv_file
           .result
-          .find_all { |dependency| dependency[:platform] == platform_name.to_s }
           .map do |dep_kvs|
             Dependency.new(
               **dep_kvs, source: options.fetch(:filename, nil)

@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::CocoaPods do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("cocoapods")
+    expect(described_class.parser_name).to eq("cocoapods")
   end
 
   it "parses dependencies from Podfile" do
     expect(described_class.analyse_contents("Podfile", load_fixture("Podfile"))).to eq({
-                                                                                         platform: "cocoapods",
+                                                                                         parser: "cocoapods",
                                                                                          path: "Podfile",
                                                                                          project_name: nil,
                                                                                          dependencies: [
@@ -42,7 +42,7 @@ describe Bibliothecary::Parsers::CocoaPods do
 
   it "parses dependencies from Podfile.lock" do
     expect(described_class.analyse_contents("Podfile.lock", load_fixture("Podfile.lock"))).to eq({
-                                                                                                   platform: "cocoapods",
+                                                                                                   parser: "cocoapods",
                                                                                                    path: "Podfile.lock",
                                                                                                    project_name: nil,
                                                                                                    dependencies: [
@@ -104,7 +104,7 @@ describe Bibliothecary::Parsers::CocoaPods do
 
   it "parses dependencies from example.podspec" do
     expect(described_class.analyse_contents("example.podspec", load_fixture("example.podspec"))).to eq({
-                                                                                                         platform: "cocoapods",
+                                                                                                         parser: "cocoapods",
                                                                                                          path: "example.podspec",
                                                                                                          project_name: nil,
                                                                                                          dependencies: [
@@ -117,7 +117,7 @@ describe Bibliothecary::Parsers::CocoaPods do
 
   it "parses dependencies from example.podspec.json" do
     expect(described_class.analyse_contents("example.podspec.json", load_fixture("example.podspec.json"))).to eq({
-                                                                                                                   platform: "cocoapods",
+                                                                                                                   parser: "cocoapods",
                                                                                                                    path: "example.podspec.json",
                                                                                                                    project_name: nil,
                                                                                                                    dependencies: [

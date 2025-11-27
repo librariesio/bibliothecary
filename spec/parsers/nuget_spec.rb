@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Nuget do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("nuget")
+    expect(described_class.parser_name).to eq("nuget")
   end
 
   it "parses dependencies from Project.json" do
     expect(described_class.analyse_contents("Project.json", load_fixture("Project.json"))).to eq({
-                                                                                                   platform: "nuget",
+                                                                                                   parser: "nuget",
                                                                                                    path: "Project.json",
                                                                                                    project_name: nil,
                                                                                                    dependencies: [
@@ -34,7 +34,7 @@ describe Bibliothecary::Parsers::Nuget do
 
   it "parses dependencies from Project.lock.json" do
     expect(described_class.analyse_contents("Project.lock.json", load_fixture("Project.lock.json"))).to eq({
-                                                                                                             platform: "nuget",
+                                                                                                             parser: "nuget",
                                                                                                              path: "Project.lock.json",
                                                                                                              dependencies: [
         Bibliothecary::Dependency.new(platform: "nuget", name: "AutoMapper", requirement: "4.0.0-alpha1", type: "runtime", source: "Project.lock.json"),
@@ -209,7 +209,7 @@ describe Bibliothecary::Parsers::Nuget do
   it "parses dependencies from packages.lock.json" do
     expect(described_class.analyse_contents("packages.lock.json", load_fixture("packages.lock.json"))).to eq(
       {
-        platform: "nuget",
+        parser: "nuget",
         path: "packages.lock.json",
         dependencies: [ # rubocop:disable Metrics/CollectionLiteralLength
           Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNetCore.App", requirement: "2.2.0", type: "runtime", source: "packages.lock.json"),
@@ -505,7 +505,7 @@ describe Bibliothecary::Parsers::Nuget do
 
   it "parses dependencies from packages.config" do
     expect(described_class.analyse_contents("packages.config", load_fixture("packages.config"))).to eq({
-                                                                                                         platform: "nuget",
+                                                                                                         parser: "nuget",
                                                                                                          path: "packages.config",
                                                                                                          project_name: nil,
                                                                                                          dependencies: [
@@ -524,7 +524,7 @@ describe Bibliothecary::Parsers::Nuget do
 
   it "parses dependencies from example.csproj" do
     expect(described_class.analyse_contents("example.csproj", load_fixture("example.csproj"))).to eq({
-                                                                                                       platform: "nuget",
+                                                                                                       parser: "nuget",
                                                                                                        path: "example.csproj",
                                                                                                        project_name: nil,
                                                                                                        dependencies: [
@@ -544,7 +544,7 @@ describe Bibliothecary::Parsers::Nuget do
 
   it "parses dependencies from example-no-version.csproj" do
     expect(described_class.analyse_contents("example.csproj", load_fixture("example-no-version.csproj"))).to eq({
-                                                                                                                  platform: "nuget",
+                                                                                                                  parser: "nuget",
                                                                                                                   path: "example.csproj",
                                                                                                                   dependencies: [
         Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNetCore.App", requirement: "*", type: "runtime", source: "example.csproj"),
@@ -558,7 +558,7 @@ describe Bibliothecary::Parsers::Nuget do
 
   it "parses dependencies from example-update.csproj" do
     expect(described_class.analyse_contents("example-update.csproj", load_fixture("example-update.csproj"))).to eq({
-                                                                                                                     platform: "nuget",
+                                                                                                                     parser: "nuget",
                                                                                                                      path: "example-update.csproj",
                                                                                                                      dependencies: [
         Bibliothecary::Dependency.new(platform: "nuget", name: "Microsoft.AspNetCore", requirement: "1.1.1", type: "runtime", source: "example-update.csproj"),
@@ -573,7 +573,7 @@ describe Bibliothecary::Parsers::Nuget do
   it "parses dependencies from example-references-tag.csproj" do
     result = described_class.analyse_contents("example-references-tag.csproj", load_fixture("example-references-tag.csproj"))
 
-    expect(result[:platform]).to eq("nuget")
+    expect(result[:parser]).to eq("nuget")
     expect(result[:path]).to eq("example-references-tag.csproj")
     expect(result[:kind]).to eq("manifest")
     expect(result[:project_name]).to eq(nil)
@@ -600,7 +600,7 @@ describe Bibliothecary::Parsers::Nuget do
 
     result = described_class.analyse_contents("example-with-xml-tag.csproj", source)
 
-    expect(result[:platform]).to eq("nuget")
+    expect(result[:parser]).to eq("nuget")
     expect(result[:path]).to eq("example-with-xml-tag.csproj")
     expect(result[:kind]).to eq("manifest")
     expect(result[:project_name]).to eq(nil)
@@ -614,7 +614,7 @@ describe Bibliothecary::Parsers::Nuget do
 
   it "parses dependencies from example.nuspec" do
     expect(described_class.analyse_contents("example.nuspec", load_fixture("example.nuspec"))).to eq({
-                                                                                                       platform: "nuget",
+                                                                                                       parser: "nuget",
                                                                                                        path: "example.nuspec",
                                                                                                        project_name: nil,
                                                                                                        dependencies: [
@@ -630,7 +630,7 @@ describe Bibliothecary::Parsers::Nuget do
 
   it "parses dependencies from paket.lock" do
     expect(described_class.analyse_contents("paket.lock", load_fixture("paket.lock"))).to eq({
-                                                                                               platform: "nuget",
+                                                                                               parser: "nuget",
                                                                                                path: "paket.lock",
                                                                                                project_name: nil,
                                                                                                dependencies: [
@@ -647,7 +647,7 @@ describe Bibliothecary::Parsers::Nuget do
 
   it "parses dependencies from project.assets.json" do
     expected = {
-      platform: "nuget",
+      parser: "nuget",
       path: "project.assets.json",
       dependencies: [
         Bibliothecary::Dependency.new(platform: "nuget", name: "a", requirement: "1.0.0", type: "runtime", source: "project.assets.json"),

@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Haxelib do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("haxelib")
+    expect(described_class.parser_name).to eq("haxelib")
   end
 
   it "parses dependencies from haxelib.json" do
     expect(described_class.analyse_contents("haxelib.json", load_fixture("haxelib.json"))).to eq({
-                                                                                                   platform: "haxelib",
+                                                                                                   parser: "haxelib",
                                                                                                    path: "haxelib.json",
                                                                                                    project_name: nil,
                                                                                                    dependencies: [

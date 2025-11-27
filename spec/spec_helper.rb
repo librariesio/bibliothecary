@@ -6,9 +6,6 @@ SimpleCov.start
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 require "bibliothecary"
 
-require_relative "shared_examples/cyclonedx"
-require_relative "shared_examples/dependencies_csv"
-
 require "super_diff/rspec"
 
 def fixture_path(name)

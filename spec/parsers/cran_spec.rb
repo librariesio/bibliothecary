@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::CRAN do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("cran")
+    expect(described_class.parser_name).to eq("cran")
   end
 
   it "parses dependencies from DESCRIPTION" do
     expect(described_class.analyse_contents("DESCRIPTION", load_fixture("DESCRIPTION"))).to eq({
-                                                                                                 platform: "cran",
+                                                                                                 parser: "cran",
                                                                                                  path: "DESCRIPTION",
                                                                                                  project_name: nil,
                                                                                                  dependencies: [
@@ -48,7 +48,7 @@ describe Bibliothecary::Parsers::CRAN do
 
   it "parses dependencies from minimal DESCRIPTION file" do
     expect(described_class.analyse_contents("DESCRIPTION", load_fixture("DESCRIPTION2"))).to eq({
-                                                                                                  platform: "cran",
+                                                                                                  parser: "cran",
                                                                                                   path: "DESCRIPTION",
                                                                                                   project_name: nil,
                                                                                                   dependencies: [

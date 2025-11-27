@@ -4,13 +4,11 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Go do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("go")
+    expect(described_class.parser_name).to eq("go")
   end
 
-  it_behaves_like "CycloneDX"
-
   it "parses depenencies from go.mod" do
-    expect(described_class.analyse_contents("go.mod", load_fixture("go.mod"))).to eq({ platform: "go",
+    expect(described_class.analyse_contents("go.mod", load_fixture("go.mod"))).to eq({ parser: "go",
                                                                                        path: "go.mod",
                                                                                        project_name: nil,
                                                                                        kind: "manifest",
@@ -79,7 +77,7 @@ describe Bibliothecary::Parsers::Go do
 
   it "parses depenencies from go.mod with a single require" do
     expect(described_class.analyse_contents("go.mod", load_fixture("go.single-require.mod"))).to eq({
-                                                                                                      platform: "go",
+                                                                                                      parser: "go",
                                                                                                       path: "go.mod",
                                                                                                       project_name: nil,
                                                                                                       dependencies: [
@@ -97,7 +95,7 @@ describe Bibliothecary::Parsers::Go do
 
   it "parses depenencies from go.sum" do
     expect(described_class.analyse_contents("go.sum", load_fixture("go.sum"))).to eq({
-                                                                                       platform: "go",
+                                                                                       parser: "go",
                                                                                        path: "go.sum",
                                                                                        project_name: nil,
                                                                                        dependencies: [
@@ -144,7 +142,7 @@ describe Bibliothecary::Parsers::Go do
 
   it "parses dependencies from glide.yaml" do
     expect(described_class.analyse_contents("glide.yaml", load_fixture("glide.yaml"))).to eq({
-                                                                                               platform: "go",
+                                                                                               parser: "go",
                                                                                                path: "glide.yaml",
                                                                                                project_name: nil,
                                                                                                dependencies: [
@@ -176,7 +174,7 @@ describe Bibliothecary::Parsers::Go do
 
   it "parses dependencies from glide.lock" do
     expect(described_class.analyse_contents("glide.lock", load_fixture("glide.lock"))).to eq({
-                                                                                               platform: "go",
+                                                                                               parser: "go",
                                                                                                path: "glide.lock",
                                                                                                project_name: nil,
                                                                                                dependencies: [
@@ -208,7 +206,7 @@ describe Bibliothecary::Parsers::Go do
 
   it "parses dependencies from Godeps.json" do
     expect(described_class.analyse_contents("Godeps/Godeps.json", load_fixture("Godeps.json"))).to eq({
-                                                                                                        platform: "go",
+                                                                                                        parser: "go",
                                                                                                         path: "Godeps/Godeps.json",
                                                                                                         project_name: nil,
                                                                                                         dependencies: [
@@ -290,7 +288,7 @@ describe Bibliothecary::Parsers::Go do
 
   it "parses dependencies from gb_manifest" do
     expect(described_class.analyse_contents("vendor/manifest", load_fixture("gb_manifest"))).to eq({
-                                                                                                     platform: "go",
+                                                                                                     parser: "go",
                                                                                                      path: "vendor/manifest",
                                                                                                      project_name: nil,
                                                                                                      dependencies: [
@@ -307,7 +305,7 @@ describe Bibliothecary::Parsers::Go do
 
   it "parses dependencies from gpm Godep file" do
     expect(described_class.analyse_contents("Godeps", load_fixture("Godeps"))).to eq({
-                                                                                       platform: "go",
+                                                                                       parser: "go",
                                                                                        path: "Godeps",
                                                                                        project_name: nil,
                                                                                        dependencies: [
@@ -344,7 +342,7 @@ describe Bibliothecary::Parsers::Go do
 
   it "parses dependencies from govendor vendor.json file" do
     expect(described_class.analyse_contents("vendor/vendor.json", load_fixture("vendor.json"))).to eq({
-                                                                                                        platform: "go",
+                                                                                                        parser: "go",
                                                                                                         path: "vendor/vendor.json",
                                                                                                         project_name: nil,
                                                                                                         dependencies: [
@@ -381,7 +379,7 @@ describe Bibliothecary::Parsers::Go do
 
   it "parses dependencies from dep Gopkg.toml file" do
     expect(described_class.analyse_contents("Gopkg.toml", load_fixture("Gopkg.toml"))).to eq({
-                                                                                               platform: "go",
+                                                                                               parser: "go",
                                                                                                path: "Gopkg.toml",
                                                                                                project_name: nil,
                                                                                                dependencies: [
@@ -433,7 +431,7 @@ describe Bibliothecary::Parsers::Go do
 
   it "parses dependencies from dep Gopkg.lock file" do
     expect(described_class.analyse_contents("Gopkg.lock", load_fixture("Gopkg.lock"))).to eq({
-                                                                                               platform: "go",
+                                                                                               parser: "go",
                                                                                                path: "Gopkg.lock",
                                                                                                project_name: nil,
                                                                                                dependencies: [
@@ -515,7 +513,7 @@ describe Bibliothecary::Parsers::Go do
 
   it "parses dependencies from go-resolved-dependencies.json file" do
     expect(described_class.analyse_contents("go-resolved-dependencies.json", load_fixture("go-resolved-dependencies.json"))).to eq({
-                                                                                                                                     platform: "go",
+                                                                                                                                     parser: "go",
                                                                                                                                      path: "go-resolved-dependencies.json",
                                                                                                                                      project_name: nil,
                                                                                                                                      dependencies: [

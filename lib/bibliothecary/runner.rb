@@ -15,17 +15,17 @@ module Bibliothecary
     def analyse(path, ignore_unparseable_files: true)
       info_list = load_file_info_list(path)
 
-      info_list = info_list.reject { |info| info.package_manager.nil? } if ignore_unparseable_files
+      info_list = info_list.reject { |info| info.parser.nil? } if ignore_unparseable_files
 
       # Each package manager needs to see its entire list so it can
       # associate related manifests and lockfiles for example.
-      analyses = package_managers.map do |pm|
-        matching_infos = info_list.select { |info| info.package_manager == pm }
-        pm.analyse_file_info(matching_infos, options: @options)
+      analyses = parsers.map do |p|
+        matching_infos = info_list.select { |info| info.parser == p }
+        p.analyse_file_info(matching_infos, options: @options)
       end
       analyses = analyses.flatten.compact
 
-      info_list.select { |info| info.package_manager.nil? }.each do |info|
+      info_list.select { |info| info.parser.nil? }.each do |info|
         analyses.push(Bibliothecary::Analyser.create_error_analysis("unknown", info.relative_path, "unknown",
                                                                     "No parser for this file type"))
       end
@@ -39,13 +39,26 @@ module Bibliothecary
       load_file_info_list(path).map(&:full_path)
     end
 
-    def applicable_package_managers(info)
-      managers = package_managers.select { |pm| pm.match_info?(info) }
+    def applicable_package_managers(_info)
+      raise "Runner#applicable_package_managers() has been removed in bibliothecary 15.0.0. Use applicable_parsers() instead, which now includes MultiParsers."
+    end
+
+    def applicable_parsers(info)
+      managers = parsers.select { |p| p.match_info?(info) }
       managers.empty? ? [nil] : managers
     end
 
     def package_managers
-      Bibliothecary::Parsers.constants.map { |c| Bibliothecary::Parsers.const_get(c) }.sort_by { |c| c.to_s.downcase }
+      raise "Runner#applicable_package_managers() has been removed in bibliothecary 15.0.0. Use applicable_parsers() instead, which now includes MultiParsers."
+    end
+
+    def parsers
+      [Bibliothecary::Parsers, Bibliothecary::MultiParsers]
+        .flat_map do |mod|
+          mod.constants
+            .map { |c| mod.const_get(c) }
+            .sort_by { |c| c.to_s.downcase }
+        end
     end
 
     # Parses an array of format [{file_path: "", contents: ""},] to match
@@ -60,7 +73,7 @@ module Bibliothecary
 
         next if ignored_files.include?(info.relative_path)
 
-        add_matching_package_managers_for_file_to_list(file_list, info)
+        add_matching_parsers_for_file_to_list(file_list, info)
       end
 
       file_list
@@ -74,7 +87,7 @@ module Bibliothecary
 
         next if ignored_files.include?(info.relative_path)
 
-        add_matching_package_managers_for_file_to_list(file_list, info)
+        add_matching_parsers_for_file_to_list(file_list, info)
       end
 
       file_list
@@ -90,7 +103,7 @@ module Bibliothecary
         next unless FileTest.file?(subpath)
         next if ignored_files.include?(info.relative_path)
 
-        add_matching_package_managers_for_file_to_list(file_list, info)
+        add_matching_parsers_for_file_to_list(file_list, info)
       end
 
       file_list
@@ -100,11 +113,11 @@ module Bibliothecary
     #
     # @return [Array<Bibliothecary::RelatedFilesInfo>]
     def find_manifests(path)
-      RelatedFilesInfo.create_from_file_infos(load_file_info_list(path).reject { |info| info.package_manager.nil? })
+      RelatedFilesInfo.create_from_file_infos(load_file_info_list(path).reject { |info| info.parser.nil? })
     end
 
     def find_manifests_from_paths(paths)
-      RelatedFilesInfo.create_from_file_infos(load_file_info_list_from_paths(paths).reject { |info| info.package_manager.nil? })
+      RelatedFilesInfo.create_from_file_infos(load_file_info_list_from_paths(paths).reject { |info| info.parser.nil? })
     end
 
     # file_path_contents_hash contains an Array of { file_path, contents }
@@ -112,7 +125,7 @@ module Bibliothecary
       RelatedFilesInfo.create_from_file_infos(
         load_file_info_list_from_contents(
           file_path_contents_hash
-        ).reject { |info| info.package_manager.nil? }
+        ).reject { |info| info.parser.nil? }
       )
     end
 
@@ -120,8 +133,8 @@ module Bibliothecary
     def analyse_file(file_path, contents)
       contents = Bibliothecary.utf8_string(contents)
 
-      package_managers.select { |pm| pm.match?(file_path, contents) }.map do |pm|
-        pm.analyse_contents(file_path, contents, options: @options)
+      parsers.select { |p| p.match?(file_path, contents) }.map do |p|
+        p.analyse_contents(file_path, contents, options: @options)
       end.flatten.uniq.compact
     end
     alias analyze_file analyse_file
@@ -137,12 +150,12 @@ module Bibliothecary
         ignored_dirs.include?(f) || f.start_with?(*ignored_dirs_with_slash)
       end
       allowed_file_list = allowed_file_list.reject { |f| ignored_files.include?(f) }
-      package_managers.map do |pm|
+      parsers.map do |p|
         # (skip rubocop false positive, since match? is a custom method)
         allowed_file_list.select do |file_path| # rubocop:disable Style/SelectByRegexp
           # this is a call to match? without file contents, which will skip
           # ambiguous filenames that are only possibly a manifest
-          pm.match?(file_path)
+          p.match?(file_path)
         end
       end.flatten.uniq.compact
     end
@@ -161,19 +174,23 @@ module Bibliothecary
     #
     # This means we're likely analyzing these files twice in processing,
     # but we need that accurate package manager information.
-    def filter_multi_manifest_entries(path, related_files_info_entries)
-      MultiManifestFilter.new(path: path, related_files_info_entries: related_files_info_entries, runner: self).results
+    def filter_multi_manifest_entries(_path, _related_files_info_entries)
+      raise "Bibliothecary::Runner#filter_multi_manifest_entries() has been removed in bibliothecary 15.0.0. Since MultiParsers now act like Parsers, there is no replacement or need for it."
     end
 
     private
 
+    def add_matching_package_managers_for_file_to_list(_file_list, _file_info)
+      raise "Runner#add_matching_package_managers_for_file_to_list() has been removed in bibliothecary 15.0.0. Use add_matching_parsers_for_file_to_list() instead, which now includes MultiParsers."
+    end
+
     # Get the list of all package managers that apply to the file provided
     # as file_info, and, for each one, duplicate file_info and fill in
     # the appropriate package manager.
-    def add_matching_package_managers_for_file_to_list(file_list, file_info)
-      applicable_package_managers(file_info).each do |package_manager|
+    def add_matching_parsers_for_file_to_list(file_list, file_info)
+      applicable_parsers(file_info).each do |parser|
         new_file_info = file_info.dup
-        new_file_info.package_manager = package_manager
+        new_file_info.parser = parser
 
         file_list.push(new_file_info)
       end
