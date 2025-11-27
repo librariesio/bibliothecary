@@ -207,9 +207,9 @@ Bibliothecary::MultiParsers::CycloneDX.platform_name  # => "cyclonedx"
 ## Summary Checklist
 
 - [ ] Replace `analysis[:platform]` with `analysis[:parser]`
-- [ ] Update SBOM result handling to expect single results instead of multiple platform-specific results
-- [ ] Rename `package_managers` to `parsers` throughout your codebase
-- [ ] Rename `applicable_package_managers` to `applicable_parsers`
+- [ ] Update SBOM result handling to expect a single multiple-platform analysis for an SBOM instead of multiple platform-specific results
+- [ ] Rename `Bibliothecary.package_managers` to `Bibliothecary.parsers` throughout your codebase
+- [ ] Rename `Bibliothecary.applicable_package_managers` to `Bibliothecary.applicable_parsers`
 - [ ] Update `FileInfo#package_manager` to `FileInfo#parser`
 - [ ] Remove references to `MultiManifestFilter` if any
 - [ ] Update module paths for `JSONRuntime` and `BundlerLikeManifest` if referenced
