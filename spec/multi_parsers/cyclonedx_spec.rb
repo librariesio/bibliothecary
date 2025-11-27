@@ -3,7 +3,7 @@
 require "spec_helper"
 
 describe Bibliothecary::MultiParsers::CycloneDX do
-  let(:unmapped_component) { "pkg:apt/krita/5.0.5" }
+  let(:unmapped_component) { "pkg:apt/debian/krita@5.0.5" }
 
   it "handles malformed json" do
     expect { described_class.parse_cyclonedx_json("{}") }.to raise_error(described_class::NoComponents)
@@ -31,6 +31,34 @@ describe Bibliothecary::MultiParsers::CycloneDX do
 
   it "handles no xml pragma" do
     expect(described_class.parse_cyclonedx_xml(%(<bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>))).to eq(Bibliothecary::ParserResult.new(dependencies: []))
+  end
+
+  context "with full_sbom option" do
+    it "includes unmapped json components" do
+      purl_string = "pkg:apt/debian/krita@5.0.5"
+      result = described_class.parse_cyclonedx_json(%({ "components": [{ "purl": "#{purl_string}" }] }), options: { full_sbom: true, filename: "test-full-sbom.json" })
+      expect(result.dependencies.length).to eq(1)
+      expect(result.dependencies.first.platform).to eq("apt")
+      expect(result.dependencies.first.name).to eq("debian/krita")
+      expect(result.dependencies.first.requirement).to eq("5.0.5")
+    end
+
+    it "includes unmapped xml components" do
+      purl_string = "pkg:apt/debian/krita@5.0.5"
+      result = described_class.parse_cyclonedx_xml(%(<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{purl_string}</purl></component></components></bom>), options: { full_sbom: true, filename: "test-full-sbom.xml" })
+      expect(result.dependencies.length).to eq(1)
+      expect(result.dependencies.first.platform).to eq("apt")
+      expect(result.dependencies.first.name).to eq("debian/krita")
+      expect(result.dependencies.first.requirement).to eq("5.0.5")
+    end
+
+    it "still includes mapped components" do
+      result = described_class.parse_cyclonedx_json('{ "components": [{ "purl": "pkg:npm/express@4.17.1" }] }', options: { full_sbom: true, filename: "test-mapped-full-sbom.json" })
+      expect(result.dependencies.length).to eq(1)
+      expect(result.dependencies.first.platform).to eq("npm")
+      expect(result.dependencies.first.name).to eq("express")
+      expect(result.dependencies.first.requirement).to eq("4.17.1")
+    end
   end
 
   describe "ManifestEntries#parse!" do

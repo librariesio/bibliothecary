@@ -21,8 +21,9 @@ module Bibliothecary
       class ManifestEntries
         attr_reader :entries
 
-        def initialize(parse_queue:)
+        def initialize(parse_queue:, full_sbom: false)
           @entries = Set.new
+          @full_sbom = full_sbom
 
           # Instead of recursing, we'll work through a queue of components
           # to process, letting the different parser add components to the
@@ -32,12 +33,12 @@ module Bibliothecary
 
         def add(purl, source = nil)
           mapping = PurlUtil::PURL_TYPE_MAPPING[purl.type]
-          return unless mapping
+          return unless mapping || @full_sbom
 
           @entries << Dependency.new(
             name: PurlUtil.full_name(purl),
             requirement: purl.version,
-            platform: mapping.to_s,
+            platform: mapping ? mapping.to_s : purl.type,
             type: "lockfile",
             source: source
           )
@@ -97,7 +98,10 @@ module Bibliothecary
 
         raise NoComponents unless manifest["components"]
 
-        manifest_entries = ManifestEntries.new(parse_queue: manifest["components"])
+        manifest_entries = ManifestEntries.new(
+          parse_queue: manifest["components"],
+          full_sbom: options.fetch(:full_sbom, false)
+        )
 
         manifest_entries.parse!(options.fetch(:filename, nil)) do |component, parse_queue|
           parse_queue.concat(component["components"]) if component["components"]
@@ -120,7 +124,10 @@ module Bibliothecary
 
         raise NoComponents unless root.locate("components").first
 
-        manifest_entries = ManifestEntries.new(parse_queue: root.locate("components/*"))
+        manifest_entries = ManifestEntries.new(
+          parse_queue: root.locate("components/*"),
+          full_sbom: options.fetch(:full_sbom, false)
+        )
 
         manifest_entries.parse!(options.fetch(:filename, nil)) do |component, parse_queue|
           # #locate returns an empty array if nothing is found, so we can
