@@ -98,7 +98,66 @@ dependencies.last.platform   # => "maven"
 - `spdx` (*.spdx, *.spdx.json)
 - `dependenciescsv` (dependencies.csv)
 
-### 3. API Method Renames
+### 3. SBOM Files Now Return ALL Dependencies Regardless of Platform
+
+**What Changed:**
+- CycloneDX and SPDX parsers now return ALL dependencies from SBOM files
+- Previously, only dependencies with PURL types mapped in `PURL_TYPE_MAPPING` were returned
+- Now, unmapped PURL types (e.g., `alpine`, `apk`, `deb`, `rpm`) are included with the PURL type used as the platform name
+
+**Before (14.x):**
+```ruby
+# An SBOM with npm, maven, and alpine packages would only return npm and maven
+result = Bibliothecary.analyse('cyclonedx.json')
+# => [{
+#   parser: "cyclonedx",
+#   dependencies: [
+#     { name: "express", platform: "npm", ... },      # included
+#     { name: "junit", platform: "maven", ... },      # included
+#     # alpine packages were silently filtered out
+#   ]
+# }]
+```
+
+**After (15.0):**
+```ruby
+# The same SBOM now returns ALL packages
+result = Bibliothecary.analyse('cyclonedx.json')
+# => [{
+#   parser: "cyclonedx",
+#   dependencies: [
+#     { name: "express", platform: "npm", ... },           # included (mapped)
+#     { name: "junit", platform: "maven", ... },           # included (mapped)
+#     { name: "alpine-base", platform: "alpine", ... },    # included (unmapped, uses PURL type)
+#     { name: "curl", platform: "apk", ... }               # included (unmapped, uses PURL type)
+#   ]
+# }]
+```
+
+**Mapped PURL Types (in PURL_TYPE_MAPPING):**
+- `golang` → `go`
+- `maven` → `maven`
+- `npm` → `npm`
+- `cargo` → `cargo`
+- `composer` → `packagist`
+- `conan` → `conan`
+- `conda` → `conda`
+- `cran` → `cran`
+- `gem` → `rubygems`
+- `nuget` → `nuget`
+- `pypi` → `pypi`
+- `vcpkg` → `vcpkg`
+
+**Unmapped PURL Types (now included as-is):**
+- `alpine`, `apk`, `deb`, `rpm`, `bitbucket`, `github`, `docker`, and any other PURL types
+
+**Migration:**
+- If your code filters or groups by platform, be aware that new platform values may appear
+- System package types (`alpine`, `apk`, `deb`, `rpm`) will now be included in results
+- Consider whether your application needs to handle these additional platform types
+- The behavior is now more comprehensive and accurate to what's actually in SBOM files
+
+### 4. API Method Renames
 
 **What Changed:**
 - Methods containing "package_manager" have been renamed to "parser"
@@ -208,6 +267,7 @@ Bibliothecary::MultiParsers::CycloneDX.platform_name  # => "cyclonedx"
 
 - [ ] Replace `analysis[:platform]` with `analysis[:parser]`
 - [ ] Update SBOM result handling to expect a single multiple-platform analysis for an SBOM instead of multiple platform-specific results
+- [ ] Review platform filtering/grouping logic to handle new unmapped PURL types (alpine, apk, deb, rpm, etc.)
 - [ ] Rename `Bibliothecary.package_managers` to `Bibliothecary.parsers` throughout your codebase
 - [ ] Rename `Bibliothecary.applicable_package_managers` to `Bibliothecary.applicable_parsers`
 - [ ] Update `FileInfo#package_manager` to `FileInfo#parser`
@@ -218,7 +278,8 @@ Bibliothecary::MultiParsers::CycloneDX.platform_name  # => "cyclonedx"
 
 If you encounter issues during the upgrade, please:
 1. Check that all analysis result accesses use `parser` instead of `platform`
-2. Verify SBOM handling code expects single parser results
-3. Ensure all method renames are applied
+2. Verify SBOM handling code expects single parser results with all dependencies included
+3. Review platform-based filtering to handle new unmapped PURL types
+4. Ensure all method renames are applied
 
 For questions or issues, please open an issue on the GitHub repository.

@@ -51,8 +51,7 @@ module Bibliothecary
         entries = try_cache(options, options[:filename]) do
           parse_spdx_tag_value_file_contents(
             file_contents,
-            options.fetch(:filename, nil),
-            full_sbom: options.fetch(:full_sbom, false)
+            options.fetch(:filename, nil)
           )
         end
 
@@ -61,7 +60,7 @@ module Bibliothecary
         Bibliothecary::ParserResult.new(dependencies: entries.to_a)
       end
 
-      def self.parse_spdx_tag_value_file_contents(file_contents, source = nil, full_sbom: false)
+      def self.parse_spdx_tag_value_file_contents(file_contents, source = nil)
         entries = Set.new
         spdx_name = spdx_version = platform = purl_name = purl_version = purl_type = nil
 
@@ -76,7 +75,7 @@ module Bibliothecary
             # > A new package Information section is denoted by the package name (7.1) field.
             add_entry(entries: entries, platform: platform, purl_name: purl_name,
                       spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
-                      source: source, full_sbom: full_sbom, purl_type: purl_type)
+                      source: source, purl_type: purl_type)
 
             # reset for this new package
             spdx_name = spdx_version = platform = purl_name = purl_version = purl_type = nil
@@ -87,16 +86,17 @@ module Bibliothecary
             spdx_version = match[1]
           elsif (match = stripped_line.match(PURL_REGEXP))
             purl = PackageURL.parse(match[1])
-            purl_type ||= purl.type
-            platform ||= PurlUtil::PURL_TYPE_MAPPING[purl.type]
+            purl_type ||= purl&.type
+            # Use the mapped purl->bibliothecary platform, or else fall back to original platform itself.
+            platform = PurlUtil::PURL_TYPE_MAPPING.fetch(purl_type, purl_type)
             purl_name ||= PurlUtil.full_name(purl)
-            purl_version ||= purl.version
+            purl_version ||= purl&.version
           end
         end
 
         add_entry(entries: entries, platform: platform, purl_name: purl_name,
                   spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
-                  source: source, full_sbom: full_sbom, purl_type: purl_type)
+                  source: source, purl_type: purl_type)
 
         entries
       end
@@ -110,8 +110,7 @@ module Bibliothecary
         entries = try_cache(options, options[:filename]) do
           parse_spdx_json_file_contents(
             file_contents,
-            options.fetch(:filename, nil),
-            full_sbom: options.fetch(:full_sbom, false)
+            options.fetch(:filename, nil)
           )
         end
 
@@ -120,7 +119,7 @@ module Bibliothecary
         Bibliothecary::ParserResult.new(dependencies: entries.to_a)
       end
 
-      def self.parse_spdx_json_file_contents(file_contents, source = nil, full_sbom: false)
+      def self.parse_spdx_json_file_contents(file_contents, source = nil)
         entries = Set.new
         manifest = JSON.parse(file_contents)
 
@@ -131,24 +130,25 @@ module Bibliothecary
           first_purl_string = package["externalRefs"]&.find { |ref| ref["referenceType"] == "purl" }&.dig("referenceLocator")
           purl = first_purl_string && PackageURL.parse(first_purl_string)
           purl_type = purl&.type
-          platform = PurlUtil::PURL_TYPE_MAPPING[purl_type]
+          # Use the mapped purl->bibliothecary platform, or else fall back to original platform itself.
+          platform = PurlUtil::PURL_TYPE_MAPPING.fetch(purl_type, purl_type)
           purl_name = PurlUtil.full_name(purl)
           purl_version = purl&.version
 
           add_entry(entries: entries, platform: platform, purl_name: purl_name,
                     spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
-                    source: source, full_sbom: full_sbom, purl_type: purl_type)
+                    source: source, purl_type: purl_type)
         end
 
         entries
       end
 
-      def self.add_entry(entries:, platform:, purl_name:, spdx_name:, purl_version:, spdx_version:, source: nil, full_sbom: false, purl_type: nil)
+      def self.add_entry(entries:, platform:, purl_name:, spdx_name:, purl_version:, spdx_version:, source: nil, purl_type: nil)
         package_name = purl_name || spdx_name
         package_version = purl_version || spdx_version
 
         return unless package_name && package_version
-        return unless platform || full_sbom
+        return unless platform
 
         entries << Dependency.new(
           platform: platform ? platform.to_s : purl_type,

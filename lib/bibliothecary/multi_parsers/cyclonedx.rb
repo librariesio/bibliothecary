@@ -21,9 +21,8 @@ module Bibliothecary
       class ManifestEntries
         attr_reader :entries
 
-        def initialize(parse_queue:, full_sbom: false)
+        def initialize(parse_queue:)
           @entries = Set.new
-          @full_sbom = full_sbom
 
           # Instead of recursing, we'll work through a queue of components
           # to process, letting the different parser add components to the
@@ -32,8 +31,8 @@ module Bibliothecary
         end
 
         def add(purl, source = nil)
-          mapping = PurlUtil::PURL_TYPE_MAPPING[purl.type]
-          return unless mapping || @full_sbom
+          # Use the mapped purl->bibliothecary platform, or else fall back to original platform itself.
+          mapping = PurlUtil::PURL_TYPE_MAPPING.fetch(purl.type, purl.type)
 
           @entries << Dependency.new(
             name: PurlUtil.full_name(purl),
@@ -99,8 +98,7 @@ module Bibliothecary
         raise NoComponents unless manifest["components"]
 
         manifest_entries = ManifestEntries.new(
-          parse_queue: manifest["components"],
-          full_sbom: options.fetch(:full_sbom, false)
+          parse_queue: manifest["components"]
         )
 
         manifest_entries.parse!(options.fetch(:filename, nil)) do |component, parse_queue|
@@ -125,8 +123,7 @@ module Bibliothecary
         raise NoComponents unless root.locate("components").first
 
         manifest_entries = ManifestEntries.new(
-          parse_queue: root.locate("components/*"),
-          full_sbom: options.fetch(:full_sbom, false)
+          parse_queue: root.locate("components/*")
         )
 
         manifest_entries.parse!(options.fetch(:filename, nil)) do |component, parse_queue|

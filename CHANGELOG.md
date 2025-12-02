@@ -17,14 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 15.0.0 includes some breaking changes, so please see UPGRADING_TO_15_0_0.md to migrate your code.
 
-### Added
-
-- Adds a "full_sbom" option to SPDX and CycloneDX parsers, which returns all dependencies from those files regardless of platform (default: false)
-
 ### Changed
 
 - Make the MultiParsers (CycloneDX, Spdx, DependenciesCSV) classes instead of modules.
 - Moved the two parser mixins, JSONRuntime and BundlerLikeManifest, into their own Bibliothecary::ParserMixins namespace.
+- Return all dependencies from SPDX and CycloneDX files regardless of platform
 
 ### Removed
 
