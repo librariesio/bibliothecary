@@ -43,9 +43,9 @@ module Bibliothecary
         parser_result = parse_file(info.relative_path, info.contents, options: options)
         parser_result = ParserResult.new(dependencies: []) if parser_result.nil? # work around any legacy parsers that return nil
 
-        Bibliothecary::Analyser.create_analysis(platform_name, info.relative_path, kind, parser_result)
+        Bibliothecary::Analyser.create_analysis(parser_name, info.relative_path, kind, parser_result)
       rescue Bibliothecary::FileParsingError => e
-        Bibliothecary::Analyser.create_error_analysis(platform_name, info.relative_path, kind, e.message, e.location)
+        Bibliothecary::Analyser.create_error_analysis(parser_name, info.relative_path, kind, e.message, e.location)
       end
       alias analyze_contents_from_info analyse_contents_from_info
 

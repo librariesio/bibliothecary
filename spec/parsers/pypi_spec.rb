@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Pypi do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("pypi")
+    expect(described_class.parser_name).to eq("pypi")
   end
 
   it "parses dependencies from setup.py" do
     expect(described_class.analyse_contents("setup.py", load_fixture("setup.py"))).to eq({
-                                                                                           platform: "pypi",
+                                                                                           parser: "pypi",
                                                                                            path: "setup.py",
                                                                                            project_name: nil,
                                                                                            dependencies: [
@@ -40,7 +40,7 @@ describe Bibliothecary::Parsers::Pypi do
 
   it "parses dependencies from requirements.txt" do
     expect(described_class.analyse_contents("requirements.txt", load_fixture("requirements.txt"))).to eq({
-                                                                                                           platform: "pypi",
+                                                                                                           parser: "pypi",
                                                                                                            path: "requirements.txt",
                                                                                                            project_name: nil,
                                                                                                            dependencies: [
@@ -62,7 +62,7 @@ describe Bibliothecary::Parsers::Pypi do
 
   it "parses dependencies from requirements-dev.txt" do
     expect(described_class.analyse_contents("requirements-dev.txt", load_fixture("requirements-dev.txt"))).to eq({
-                                                                                                                   platform: "pypi",
+                                                                                                                   parser: "pypi",
                                                                                                                    path: "requirements-dev.txt",
                                                                                                                    project_name: nil,
                                                                                                                    dependencies: [
@@ -125,7 +125,7 @@ describe Bibliothecary::Parsers::Pypi do
 
   it "parses dependencies from requirements/test.txt" do
     expect(described_class.analyse_contents("requirements/test.txt", load_fixture("requirements/test.txt"))).to eq({
-                                                                                                                     platform: "pypi",
+                                                                                                                     parser: "pypi",
                                                                                                                      path: "requirements/test.txt",
                                                                                                                      project_name: nil,
                                                                                                                      dependencies: [
@@ -153,7 +153,7 @@ describe Bibliothecary::Parsers::Pypi do
   context "git urls" do
     it "parses dependencies from requirements-git.txt" do
       expect(described_class.analyse_contents("requirements-git.txt", load_fixture("requirements-git.txt"))).to eq({
-                                                                                                                     platform: "pypi",
+                                                                                                                     parser: "pypi",
                                                                                                                      path: "requirements-git.txt",
                                                                                                                      project_name: nil,
                                                                                                                      dependencies: [
@@ -191,7 +191,7 @@ describe Bibliothecary::Parsers::Pypi do
 
   it "parses dependencies from requirements.in" do
     expect(described_class.analyse_contents("requirements.in", load_fixture("pip-compile/requirements.in"))).to eq({
-                                                                                                                     platform: "pypi",
+                                                                                                                     parser: "pypi",
                                                                                                                      path: "requirements.in",
                                                                                                                      project_name: nil,
                                                                                                                      dependencies: [
@@ -212,7 +212,7 @@ describe Bibliothecary::Parsers::Pypi do
   end
   it "parses dependencies from requirements.txt as lockfile because of pip-compile" do
     expect(described_class.analyse_contents("requirements.txt", load_fixture("pip-compile/requirements.txt"))).to eq({
-                                                                                                                       platform: "pypi",
+                                                                                                                       parser: "pypi",
                                                                                                                        path: "requirements.txt",
                                                                                                                        project_name: nil,
                                                                                                                        dependencies: [
@@ -262,7 +262,7 @@ describe Bibliothecary::Parsers::Pypi do
 
   it "parses dependencies from pip-resolved-dependencies.txt" do
     expect(described_class.analyse_contents("pip-resolved-dependencies.txt", load_fixture("pip-resolved-dependencies.txt"))).to eq({
-                                                                                                                                     platform: "pypi",
+                                                                                                                                     parser: "pypi",
                                                                                                                                      path: "pip-resolved-dependencies.txt",
                                                                                                                                      project_name: nil,
                                                                                                                                      dependencies: [
@@ -277,7 +277,7 @@ describe Bibliothecary::Parsers::Pypi do
 
   it "parses dependencies from pip-dependency-graph.json" do
     expect(described_class.analyse_contents("pip-dependency-graph.json", load_fixture("pip-dependency-graph.json"))).to eq({
-                                                                                                                             platform: "pypi",
+                                                                                                                             parser: "pypi",
                                                                                                                              path: "pip-dependency-graph.json",
                                                                                                                              project_name: nil,
                                                                                                                              dependencies: [
@@ -328,7 +328,7 @@ describe Bibliothecary::Parsers::Pypi do
     ]
     JSON
     expect(described_class.analyse_contents("pip-dependency-graph.json", lockfile)).to eq({
-                                                                                            platform: "pypi",
+                                                                                            parser: "pypi",
                                                                                             path: "pip-dependency-graph.json",
                                                                                             project_name: nil,
                                                                                             dependencies: [
@@ -341,7 +341,7 @@ describe Bibliothecary::Parsers::Pypi do
 
   it "parses dependencies from requirements.frozen" do
     expect(described_class.analyse_contents("requirements.frozen", load_fixture("requirements.frozen"))).to eq({
-                                                                                                                 platform: "pypi",
+                                                                                                                 parser: "pypi",
                                                                                                                  path: "requirements.frozen",
                                                                                                                  project_name: nil,
                                                                                                                  dependencies: [
@@ -356,7 +356,7 @@ describe Bibliothecary::Parsers::Pypi do
 
   it "parses dependencies from Pipfile" do
     results = described_class.analyse_contents("Pipfile", load_fixture("Pipfile"))
-    expect(results[:platform]).to eq("pypi")
+    expect(results[:parser]).to eq("pypi")
     expect(results[:path]).to eq("Pipfile")
     expect(results[:kind]).to eq("manifest")
     expect(results[:project_name]).to eq(nil)
@@ -374,7 +374,7 @@ describe Bibliothecary::Parsers::Pypi do
 
   it "parses dependencies from Pipfile.lock" do
     results = described_class.analyse_contents("Pipfile.lock", load_fixture("Pipfile.lock"))
-    expect(results[:platform]).to eq("pypi")
+    expect(results[:parser]).to eq("pypi")
     expect(results[:path]).to eq("Pipfile.lock")
     expect(results[:kind]).to eq("lockfile")
     expect(results[:project_name]).to eq(nil)
@@ -399,7 +399,7 @@ describe Bibliothecary::Parsers::Pypi do
   it "parses dependencies from pylock.toml" do
     result = described_class.analyse_contents("pylock.toml", load_fixture("pylock.toml"))
 
-    expect(result[:platform]).to eq("pypi")
+    expect(result[:parser]).to eq("pypi")
     expect(result[:path]).to eq("pylock.toml")
     expect(result[:kind]).to eq("lockfile")
     expect(result[:project_name]).to eq(nil)
@@ -447,7 +447,7 @@ describe Bibliothecary::Parsers::Pypi do
 
   it "parses dependencies from pyproject.toml" do
     results = described_class.analyse_contents("pyproject.toml", load_fixture("pyproject.toml"))
-    expect(results[:platform]).to eq("pypi")
+    expect(results[:parser]).to eq("pypi")
     expect(results[:path]).to eq("pyproject.toml")
     expect(results[:kind]).to eq("manifest")
     expect(results[:project_name]).to eq(nil)
@@ -473,7 +473,7 @@ describe Bibliothecary::Parsers::Pypi do
     FILE
 
     expect(described_class.analyse_contents("pyproject.toml", source)).to eq({
-                                                                               platform: "pypi",
+                                                                               parser: "pypi",
                                                                                path: "pyproject.toml",
                                                                                project_name: nil,
                                                                                dependencies: [],
@@ -499,7 +499,7 @@ describe Bibliothecary::Parsers::Pypi do
     FILE
 
     results = described_class.analyse_contents("pyproject.toml", source)
-    expect(results[:platform]).to eq("pypi")
+    expect(results[:parser]).to eq("pypi")
     expect(results[:path]).to eq("pyproject.toml")
     expect(results[:kind]).to eq("manifest")
     expect(results[:project_name]).to eq(nil)
@@ -516,7 +516,7 @@ describe Bibliothecary::Parsers::Pypi do
 
   it "parses dependencies from Poetry.lock" do
     expect(described_class.analyse_contents("poetry.lock", load_fixture("poetry.lock"))).to eq({
-                                                                                                 platform: "pypi",
+                                                                                                 parser: "pypi",
                                                                                                  path: "poetry.lock",
                                                                                                  project_name: nil,
                                                                                                  dependencies: [

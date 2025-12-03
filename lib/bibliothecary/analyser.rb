@@ -6,9 +6,9 @@ require_relative "analyser/analysis"
 
 module Bibliothecary
   module Analyser
-    def self.create_error_analysis(platform_name, relative_path, kind, message, location = nil)
+    def self.create_error_analysis(parser_name, relative_path, kind, message, location = nil)
       {
-        platform: platform_name,
+        parser: parser_name,
         path: relative_path,
         dependencies: nil,
         kind: kind,
@@ -18,9 +18,9 @@ module Bibliothecary
       }
     end
 
-    def self.create_analysis(platform_name, relative_path, kind, parser_result)
+    def self.create_analysis(parser_name, relative_path, kind, parser_result)
       {
-        platform: platform_name,
+        parser: parser_name,
         path: relative_path,
         project_name: parser_result.project_name,
         dependencies: parser_result.dependencies,
@@ -52,13 +52,17 @@ module Bibliothecary
 
     module ClassMethods
       def platform_name
-        @platform_name ||= name.to_s.split("::").last.downcase.freeze
+        parser_name
+      end
+
+      def parser_name
+        @parser_name ||= name.to_s.split("::").last.downcase.freeze
       end
 
       def map_dependencies(hash, key, type, source = nil)
         hash.fetch(key, []).map do |name, requirement|
           Dependency.new(
-            platform: platform_name,
+            platform: parser_name,
             name: name,
             requirement: requirement,
             type: type,
@@ -67,23 +71,23 @@ module Bibliothecary
         end
       end
 
-      # Add a MultiParser module to a Parser class. This extends the
-      # self.mapping method on the parser to include the multi parser's
-      # files to watch for, and it extends the Parser class with
-      # the multi parser for you.
-      #
-      # @param klass [Class] A Bibliothecary::MultiParsers class
-      def add_multi_parser(klass)
-        raise "No mapping found! You should place the add_multi_parser call below def self.mapping." unless respond_to?(:mapping)
+      # # Add a MultiParser module to a Parser class. This extends the
+      # # self.mapping method on the parser to include the multi parser's
+      # # files to watch for, and it extends the Parser class with
+      # # the multi parser for you.
+      # #
+      # # @param klass [Class] A Bibliothecary::MultiParsers class
+      # def add_multi_parser(klass)
+      #   raise "No mapping found! You should place the add_multi_parser call below def self.mapping." unless respond_to?(:mapping)
 
-        original_mapping = mapping
+      #   original_mapping = mapping
 
-        define_singleton_method(:mapping) do
-          original_mapping.merge(klass.mapping)
-        end
+      #   define_singleton_method(:mapping) do
+      #     original_mapping.merge(klass.mapping)
+      #   end
 
-        send(:extend, klass)
-      end
+      #   send(:extend, klass)
+      # end
     end
   end
 end

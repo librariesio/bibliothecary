@@ -9,9 +9,9 @@ Warning[:experimental] = true
 
 module Bibliothecary
   module MultiParsers
-    module Spdx
+    class Spdx
       include Bibliothecary::Analyser
-      include Bibliothecary::Analyser::TryCache
+      extend Bibliothecary::Analyser::TryCache
 
       # e.g. 'SomeText:' (allowing for leading whitespace)
       WELLFORMED_LINE_REGEXP = /^\s*[a-zA-Z]+:/
@@ -43,19 +43,26 @@ module Bibliothecary
         }
       end
 
-      def parse_spdx_tag_value(file_contents, options: {})
+      def self.platform_name
+        raise "Spdx is a multi-parser and does not have a platform name."
+      end
+
+      def self.parse_spdx_tag_value(file_contents, options: {})
         entries = try_cache(options, options[:filename]) do
-          parse_spdx_tag_value_file_contents(file_contents, options.fetch(:filename, nil))
+          parse_spdx_tag_value_file_contents(
+            file_contents,
+            options.fetch(:filename, nil)
+          )
         end
 
         raise NoEntries if entries.empty?
 
-        Bibliothecary::ParserResult.new(dependencies: entries[platform_name.to_sym] || [])
+        Bibliothecary::ParserResult.new(dependencies: entries.to_a)
       end
 
-      def parse_spdx_tag_value_file_contents(file_contents, source = nil)
-        entries = {}
-        spdx_name = spdx_version = platform = purl_name = purl_version = nil
+      def self.parse_spdx_tag_value_file_contents(file_contents, source = nil)
+        entries = Set.new
+        spdx_name = spdx_version = platform = purl_name = purl_version = purl_type = nil
 
         file_contents.each_line do |line|
           stripped_line = line.strip
@@ -68,10 +75,10 @@ module Bibliothecary
             # > A new package Information section is denoted by the package name (7.1) field.
             add_entry(entries: entries, platform: platform, purl_name: purl_name,
                       spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
-                      source: source)
+                      source: source, purl_type: purl_type)
 
             # reset for this new package
-            spdx_name = spdx_version = platform = purl_name = purl_version = nil
+            spdx_name = spdx_version = platform = purl_name = purl_version = purl_type = nil
 
             # capture the new package's name
             spdx_name = match[1]
@@ -79,36 +86,41 @@ module Bibliothecary
             spdx_version = match[1]
           elsif (match = stripped_line.match(PURL_REGEXP))
             purl = PackageURL.parse(match[1])
-            platform ||= PurlUtil::PURL_TYPE_MAPPING[purl.type]
+            purl_type ||= purl&.type
+            # Use the mapped purl->bibliothecary platform, or else fall back to original platform itself.
+            platform = PurlUtil::PURL_TYPE_MAPPING.fetch(purl_type, purl_type)
             purl_name ||= PurlUtil.full_name(purl)
-            purl_version ||= purl.version
+            purl_version ||= purl&.version
           end
         end
 
         add_entry(entries: entries, platform: platform, purl_name: purl_name,
                   spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
-                  source: source)
+                  source: source, purl_type: purl_type)
 
         entries
       end
 
-      def skip_tag_value_line?(stripped_line)
+      def self.skip_tag_value_line?(stripped_line)
         # Ignore blank lines and comments
         stripped_line.empty? || stripped_line.start_with?("#")
       end
 
-      def parse_spdx_json(file_contents, options: {})
+      def self.parse_spdx_json(file_contents, options: {})
         entries = try_cache(options, options[:filename]) do
-          parse_spdx_json_file_contents(file_contents, options.fetch(:filename, nil))
+          parse_spdx_json_file_contents(
+            file_contents,
+            options.fetch(:filename, nil)
+          )
         end
 
         raise NoEntries if entries.empty?
 
-        Bibliothecary::ParserResult.new(dependencies: entries[platform_name.to_sym] || [])
+        Bibliothecary::ParserResult.new(dependencies: entries.to_a)
       end
 
-      def parse_spdx_json_file_contents(file_contents, source = nil)
-        entries = {}
+      def self.parse_spdx_json_file_contents(file_contents, source = nil)
+        entries = Set.new
         manifest = JSON.parse(file_contents)
 
         manifest["packages"]&.each do |package|
@@ -117,27 +129,29 @@ module Bibliothecary
 
           first_purl_string = package["externalRefs"]&.find { |ref| ref["referenceType"] == "purl" }&.dig("referenceLocator")
           purl = first_purl_string && PackageURL.parse(first_purl_string)
-          platform = PurlUtil::PURL_TYPE_MAPPING[purl&.type]
+          purl_type = purl&.type
+          # Use the mapped purl->bibliothecary platform, or else fall back to original platform itself.
+          platform = PurlUtil::PURL_TYPE_MAPPING.fetch(purl_type, purl_type)
           purl_name = PurlUtil.full_name(purl)
           purl_version = purl&.version
 
           add_entry(entries: entries, platform: platform, purl_name: purl_name,
                     spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
-                    source: source)
+                    source: source, purl_type: purl_type)
         end
 
         entries
       end
 
-      def add_entry(entries:, platform:, purl_name:, spdx_name:, purl_version:, spdx_version:, source: nil)
+      def self.add_entry(entries:, platform:, purl_name:, spdx_name:, purl_version:, spdx_version:, source: nil, purl_type: nil)
         package_name = purl_name || spdx_name
         package_version = purl_version || spdx_version
 
-        return unless platform && package_name && package_version
+        return unless package_name && package_version
+        return unless platform
 
-        entries[platform.to_sym] ||= []
-        entries[platform.to_sym] << Dependency.new(
-          platform: platform.to_s,
+        entries << Dependency.new(
+          platform: platform ? platform.to_s : purl_type,
           name: package_name,
           requirement: package_version,
           type: "lockfile",

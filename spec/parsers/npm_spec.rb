@@ -4,29 +4,29 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::NPM do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("npm")
+    expect(described_class.parser_name).to eq("npm")
   end
 
-  it_behaves_like "CycloneDX"
-
-  it "doesn't group dependencies.csv with other files" do
-    result = Bibliothecary.find_manifests_from_paths([
+  it "doesn't group dependencies.csv with npm files" do
+    npm_results, other_results = Bibliothecary.find_manifests_from_paths([
         "spec/fixtures/package.json",
         "spec/fixtures/package-lock.json",
         "spec/fixtures/dependencies.csv",
-    ]).find_all { |r| r.platform == "npm" }
+    ]).partition { |r| r.parser == "npm" }
 
-    expect(result.length).to eq(2)
+    expect(npm_results.length).to eq(1)
 
     expect(
-      result.find do |r|
+      npm_results.find do |r|
         r.manifests == ["spec/fixtures/package.json"] &&
         r.lockfiles == ["spec/fixtures/package-lock.json"]
       end
     ).not_to eq(nil)
 
+    expect(other_results.length).to eq(1)
+
     expect(
-      result.find do |r|
+      other_results.find do |r|
         r.manifests == [] &&
         r.lockfiles == ["spec/fixtures/dependencies.csv"]
       end
@@ -35,7 +35,7 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses dependencies from npm-ls.json" do
     expect(described_class.analyse_contents("npm-ls.json", load_fixture("npm-ls.json"))).to eq({
-                                                                                                 platform: "npm",
+                                                                                                 parser: "npm",
                                                                                                  path: "npm-ls.json",
                                                                                                  project_name: nil,
                                                                                                  dependencies: [
@@ -53,7 +53,7 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses dependencies from package.json" do
     expect(described_class.analyse_contents("package.json", load_fixture("package.json"))).to eq({
-                                                                                                   platform: "npm",
+                                                                                                   parser: "npm",
                                                                                                    path: "package.json",
                                                                                                    project_name: nil,
                                                                                                    dependencies: [
@@ -68,7 +68,7 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses dependencies from npm-shrinkwrap.json" do
     expect(described_class.analyse_contents("npm-shrinkwrap.json", load_fixture("npm-shrinkwrap.json"))).to include({
-                                                                                                                      platform: "npm",
+                                                                                                                      parser: "npm",
                                                                                                                       path: "npm-shrinkwrap.json",
                                                                                                                       kind: "lockfile",
                                                                                                                       project_name: nil,
@@ -126,7 +126,7 @@ describe Bibliothecary::Parsers::NPM do
     it "parses dependencies" do
       result = described_class.analyse_contents("yarn.lock", load_fixture("yarn.lock"))
       expect(result).to eq({
-                             platform: "npm",
+                             parser: "npm",
                              path: "yarn.lock",
                              dependencies: expected_deps,
                              kind: "lockfile",
@@ -141,7 +141,7 @@ describe Bibliothecary::Parsers::NPM do
         load_fixture("yarn.lock").gsub("\n", "\r\n")
       )
       expect(result).to eq({
-                             platform: "npm",
+                             parser: "npm",
                              path: "yarn.lock",
                              dependencies: expected_deps,
                              kind: "lockfile",
@@ -153,7 +153,7 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses git dependencies from yarn.lock" do
     expect(described_class.analyse_contents("yarn.lock", load_fixture("yarn-with-git-repo/yarn.lock"))).to eq({
-                                                                                                                platform: "npm",
+                                                                                                                parser: "npm",
                                                                                                                 path: "yarn.lock",
                                                                                                                 project_name: nil,
                                                                                                                 dependencies: [
@@ -278,7 +278,7 @@ describe Bibliothecary::Parsers::NPM do
     result = described_class.analyse_contents("pnpm-lock.yaml", load_fixture("pnpm-lockfile-version-5/pnpm-lock.yaml"))
 
     expect(result).to eq({
-                           platform: "npm",
+                           parser: "npm",
                            path: "pnpm-lock.yaml",
                            dependencies: expected_deps,
                            kind: "lockfile",
@@ -401,7 +401,7 @@ describe Bibliothecary::Parsers::NPM do
     result = described_class.analyse_contents("pnpm-lock.yaml", load_fixture("pnpm-lockfile-version-6/pnpm-lock.yaml"))
 
     expect(result).to eq({
-                           platform: "npm",
+                           parser: "npm",
                            path: "pnpm-lock.yaml",
                            dependencies: expected_deps,
                            kind: "lockfile",
@@ -524,7 +524,7 @@ describe Bibliothecary::Parsers::NPM do
     result = described_class.analyse_contents("pnpm-lock.yaml", load_fixture("pnpm-lockfile-version-9/pnpm-lock.yaml"))
 
     expect(result).to eq({
-                           platform: "npm",
+                           parser: "npm",
                            path: "pnpm-lock.yaml",
                            dependencies: expected_deps,
                            kind: "lockfile",
@@ -535,7 +535,7 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses git dependencies from package.json" do
     expect(described_class.analyse_contents("package.json", load_fixture("yarn-with-git-repo/package.json"))).to eq({
-                                                                                                                      platform: "npm",
+                                                                                                                      parser: "npm",
                                                                                                                       path: "package.json",
                                                                                                                       project_name: nil,
                                                                                                                       dependencies: [
@@ -548,7 +548,7 @@ describe Bibliothecary::Parsers::NPM do
 
   it "wont load package-lock.json from a package.json" do
     expect(described_class.analyse_contents("package.json", load_fixture("package-lock.json"))).to match({
-                                                                                                           platform: "npm",
+                                                                                                           parser: "npm",
                                                                                                            path: "package.json",
                                                                                                            dependencies: nil,
                                                                                                            kind: "manifest",
@@ -560,7 +560,7 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses dependencies from package-lock.json" do
     expect(described_class.analyse_contents("package-lock.json", load_fixture("package-lock.json"))).to eq({
-                                                                                                             platform: "npm",
+                                                                                                             parser: "npm",
                                                                                                              path: "package-lock.json",
                                                                                                              project_name: nil,
                                                                                                              dependencies: [
@@ -775,7 +775,7 @@ describe Bibliothecary::Parsers::NPM do
   context "with local path dependencies" do
     it "parses local path dependencies from package.json" do
       expect(described_class.analyse_contents("package.json", load_fixture("npm-local-file/package.json"))).to eq({
-                                                                                                                    platform: "npm",
+                                                                                                                    parser: "npm",
                                                                                                                     path: "package.json",
                                                                                                                     project_name: nil,
                                                                                                                     dependencies: [
@@ -790,7 +790,7 @@ describe Bibliothecary::Parsers::NPM do
 
     it "parses local path dependencies from package-lock.json" do
       expect(described_class.analyse_contents("package-lock.json", load_fixture("npm-local-file/package-lock.json"))).to eq({
-                                                                                                                              platform: "npm",
+                                                                                                                              parser: "npm",
                                                                                                                               path: "package-lock.json",
                                                                                                                               dependencies: [
           Bibliothecary::Dependency.new(platform: "npm", name: "js-tokens", requirement: "4.0.0", type: "runtime", local: false, source: "package-lock.json"),
@@ -808,7 +808,7 @@ describe Bibliothecary::Parsers::NPM do
 
     it "parses local path dependencies from yarn.lock" do
       expect(described_class.analyse_contents("yarn.lock", load_fixture("npm-local-file/yarn.lock"))).to eq({
-                                                                                                              platform: "npm",
+                                                                                                              parser: "npm",
                                                                                                               path: "yarn.lock",
                                                                                                               project_name: nil,
                                                                                                               dependencies: [
@@ -826,7 +826,7 @@ describe Bibliothecary::Parsers::NPM do
 
   it "does not parse self-referential dependencies from yarn.lock" do
     expect(described_class.analyse_contents("yarn.lock", load_fixture("yarn-v4-lockfile/yarn.lock"))).to eq({
-                                                                                                              platform: "npm",
+                                                                                                              parser: "npm",
                                                                                                               path: "yarn.lock",
                                                                                                               project_name: nil,
                                                                                                               dependencies: [
@@ -875,7 +875,7 @@ describe Bibliothecary::Parsers::NPM do
   it "parses newer package-lock.json with dev and integrity fields" do
     analysis = described_class.analyse_contents("2018-package-lock/package-lock.json", load_fixture("2018-package-lock/package-lock.json"))
     expect(analysis.except(:dependencies)).to eq({
-                                                   platform: "npm",
+                                                   parser: "npm",
                                                    path: "2018-package-lock/package-lock.json",
                                                    project_name: nil,
                                                    kind: "lockfile",
@@ -925,7 +925,7 @@ describe Bibliothecary::Parsers::NPM do
                                                                                                                                kind: "lockfile",
                                                                                                                                project_name: nil,
                                                                                                                                path: "package-lock.json",
-                                                                                                                               platform: "npm",
+                                                                                                                               parser: "npm",
                                                                                                                                success: true,
                                                                                                                              })
   end
@@ -940,7 +940,7 @@ describe Bibliothecary::Parsers::NPM do
                                                                                                                kind: "lockfile",
                                                                                                                path: "yarn.lock",
                                                                                                                project_name: nil,
-                                                                                                               platform: "npm",
+                                                                                                               parser: "npm",
                                                                                                                success: true,
                                                                                                              })
   end
@@ -967,7 +967,7 @@ describe Bibliothecary::Parsers::NPM do
     it "parses version 1 package-lock.json" do
       analysis = described_class.analyse_contents("npm-lockfile-version-1/package-lock.json", load_fixture("npm-lockfile-version-1/package-lock.json"))
       expect(analysis).to eq({
-                               platform: "npm",
+                               parser: "npm",
                                path: "npm-lockfile-version-1/package-lock.json",
                                project_name: nil,
                                dependencies: [
@@ -983,7 +983,7 @@ describe Bibliothecary::Parsers::NPM do
     it "parses version 2 package-lock.json" do
       analysis = described_class.analyse_contents("npm-lockfile-version-2/package-lock.json", load_fixture("npm-lockfile-version-2/package-lock.json"))
       expect(analysis).to eq({
-                               platform: "npm",
+                               parser: "npm",
                                path: "npm-lockfile-version-2/package-lock.json",
                                dependencies: [
           Bibliothecary::Dependency.new(platform: "npm", name: "find-versions", requirement: "4.0.0", type: "runtime", local: false, source: "npm-lockfile-version-2/package-lock.json"),
@@ -999,7 +999,7 @@ describe Bibliothecary::Parsers::NPM do
     it "parses version 3 package-lock.json" do
       analysis = described_class.analyse_contents("npm-lockfile-version-3/package-lock.json", load_fixture("npm-lockfile-version-3/package-lock.json"))
       expect(analysis).to eq({
-                               platform: "npm",
+                               parser: "npm",
                                path: "npm-lockfile-version-3/package-lock.json",
                                project_name: nil,
                                dependencies: [
@@ -1016,7 +1016,7 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses bun.lock dependency file" do
     expect(described_class.analyse_contents("bun.lock", load_fixture("bun.lock"))).to eq({
-                                                                                           platform: "npm",
+                                                                                           parser: "npm",
                                                                                            path: "bun.lock",
                                                                                            project_name: nil,
                                                                                            dependencies: [

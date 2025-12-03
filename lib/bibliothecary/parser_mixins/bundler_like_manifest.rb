@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Bibliothecary
-  module MultiParsers
+  module ParserMixins
     module BundlerLikeManifest
       # this takes parsed Bundler and Bundler-like (CocoaPods)
       # manifests and turns them into a list of dependencies.

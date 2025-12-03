@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Julia do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("julia")
+    expect(described_class.parser_name).to eq("julia")
   end
 
   it "parses dependencies from REQUIRE" do
     expect(described_class.analyse_contents("REQUIRE", load_fixture("REQUIRE"))).to eq({
-                                                                                         platform: "julia",
+                                                                                         parser: "julia",
                                                                                          path: "REQUIRE",
                                                                                          project_name: nil,
                                                                                          dependencies: [

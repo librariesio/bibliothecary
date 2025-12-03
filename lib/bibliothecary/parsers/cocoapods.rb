@@ -7,7 +7,7 @@ module Bibliothecary
   module Parsers
     class CocoaPods
       include Bibliothecary::Analyser
-      extend Bibliothecary::MultiParsers::BundlerLikeManifest
+      extend Bibliothecary::ParserMixins::BundlerLikeManifest
 
       NAME_VERSION = '(?! )(.*?)(?: \(([^-]*)(?:-(.*))?\))?'
       NAME_VERSION_4 = /^ {4}#{NAME_VERSION}$/
@@ -34,8 +34,6 @@ module Bibliothecary
           },
         }
       end
-
-      add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
       def self.parse_podfile_lock(file_contents, options: {})
         manifest = YAML.load file_contents

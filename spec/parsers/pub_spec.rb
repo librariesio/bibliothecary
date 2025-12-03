@@ -4,12 +4,12 @@ require "spec_helper"
 
 describe Bibliothecary::Parsers::Pub do
   it "has a platform name" do
-    expect(described_class.platform_name).to eq("pub")
+    expect(described_class.parser_name).to eq("pub")
   end
 
   it "parses dependencies from pubspec.yaml" do
     expect(described_class.analyse_contents("pubspec.yaml", load_fixture("pubspec.yaml"))).to eq({
-                                                                                                   platform: "pub",
+                                                                                                   parser: "pub",
                                                                                                    path: "pubspec.yaml",
                                                                                                    project_name: nil,
                                                                                                    dependencies: [
@@ -25,7 +25,7 @@ describe Bibliothecary::Parsers::Pub do
 
   it "parses dependencies from pubspec.lock" do
     expect(described_class.analyse_contents("pubspec.lock", load_fixture("pubspec.lock"))).to eq({
-                                                                                                   platform: "pub",
+                                                                                                   parser: "pub",
                                                                                                    path: "pubspec.lock",
                                                                                                    project_name: nil,
                                                                                                    dependencies: [
