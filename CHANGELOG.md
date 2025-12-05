@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Fix Nuget parser so it returns all target frameworks' dependencies from packages.lock.json instead of an arbitrary target framework's dependencies.
+
 ### Removed
 
 ## [15.0.0]
