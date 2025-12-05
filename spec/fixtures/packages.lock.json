@@ -3107,6 +3107,15 @@
         }
       }
     },
+    ".NETCoreApp,Version=v2.2/win-x64": {
+      "Some.Win64.Only.Dependency": {
+        "type": "Direct",
+        "requested": "[4.3.0, )",
+        "resolved": "4.3.0",
+        "contentHash": "fakehash==",
+        "dependencies": {}
+      }
+    },
     "Empty-group-later-alphabetically": {}
   }
 }

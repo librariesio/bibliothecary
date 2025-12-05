@@ -64,32 +64,32 @@ module Bibliothecary
       def self.parse_packages_lock_json(file_contents, options: {})
         manifest = JSON.parse file_contents
 
-        frameworks = {}
-        manifest.fetch("dependencies", []).each do |framework, deps|
-          frameworks[framework] = deps
-            .reject { |_name, details| details["type"] == "Project" } # Projects do not have versions
-            .map do |name, details|
-              Dependency.new(
-                name: name,
-                # 'resolved' has been set in all examples so far
-                # so fallback to requested is pure paranoia
-                requirement: details.fetch("resolved", details.fetch("requested", "*")),
-                type: "runtime",
-                source: options.fetch(:filename, nil),
-                platform: platform_name
-              )
-            end
-        end
+        # NOTE: here we are merging dependencies from potentially >1 target framework. The versions
+        # across target frameworks in package.lock.json are not guaranteed to be the same, so e.g. a
+        # single packages.lock.json may include both "Newtonsoft.Json@13.01" and "Newtonsoft.Json@12.0.3". This
+        # should be more comprehensive than just returning one arbitrary framework's deps, but we're losing the
+        # fidelity of which target framework a given dependency was used in. Someday, bibliothecary could
+        # include a new Dependency field like "architecture" or "framework" and add the metadata for each dep there.
+        dependencies = manifest
+          .fetch("dependencies", [])
+          .flat_map do |_framework, framework_dependencies|
+            framework_dependencies
+              .reject { |_name, details| details["type"] == "Project" } # Projects do not have versions
+              .map do |name, details|
+                Dependency.new(
+                  name: name,
+                  # 'resolved' has been set in all examples so far
+                  # so fallback to requested is pure paranoia
+                  requirement: details.fetch("resolved", details.fetch("requested", "*")),
+                  type: "runtime",
+                  source: options.fetch(:filename, nil),
+                  platform: platform_name
+                )
+              end
+          end
+          .uniq
 
-        unless frameworks.empty?
-          # we should really return multiple manifests, but bibliothecary doesn't
-          # do that yet so at least pick deterministically.
-
-          # Note, frameworks can be empty, so remove empty ones and then return the last sorted item if any
-          frameworks.delete_if { |_k, v| v.empty? }
-          return ParserResult.new(dependencies: frameworks[frameworks.keys.max]) unless frameworks.empty?
-        end
-        ParserResult.new(dependencies: [])
+        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_packages_config(file_contents, options: {})

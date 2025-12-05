@@ -495,6 +495,7 @@ describe Bibliothecary::Parsers::Nuget do
           Bibliothecary::Dependency.new(platform: "nuget", name: "System.Xml.XmlSerializer", requirement: "4.3.0", type: "runtime", source: "packages.lock.json"),
           Bibliothecary::Dependency.new(platform: "nuget", name: "System.Xml.XPath", requirement: "4.3.0", type: "runtime", source: "packages.lock.json"),
           Bibliothecary::Dependency.new(platform: "nuget", name: "System.Xml.XPath.XDocument", requirement: "4.3.0", type: "runtime", source: "packages.lock.json"),
+          Bibliothecary::Dependency.new(platform: "nuget", name: "Some.Win64.Only.Dependency", requirement: "4.3.0", type: "runtime", source: "packages.lock.json"),
         ],
         kind: "lockfile",
         project_name: nil,
