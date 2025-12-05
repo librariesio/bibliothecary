@@ -3112,8 +3112,12 @@
         "type": "Direct",
         "requested": "[4.3.0, )",
         "resolved": "4.3.0",
-        "contentHash": "fakehash==",
-        "dependencies": {}
+        "contentHash": "this-dep-from-another-target-framework-should-be-included-too"
+      },
+      "System.Runtime.CompilerServices.Unsafe": {
+        "type": "Transitive",
+        "resolved": "1.0.0",
+        "contentHash": "this-dep-with-a-different-version-than-the-other-one-should-be-included-too"
       }
     },
     "Empty-group-later-alphabetically": {}
