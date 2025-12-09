@@ -126,6 +126,8 @@ module Bibliothecary
           parse_spdx_1_and_2_json_file_contents(manifest, source)
         elsif manifest.key?("@context")
           parse_spdx_3_json_file_contents(manifest, source)
+        else
+          Set.new
         end
       end
 
@@ -188,7 +190,7 @@ module Bibliothecary
                       spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
                       source: source, purl_type: purl_type)
           end
-          .compact
+
         entries
       end
 
