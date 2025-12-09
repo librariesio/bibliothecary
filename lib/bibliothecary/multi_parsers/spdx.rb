@@ -120,9 +120,17 @@ module Bibliothecary
       end
 
       def self.parse_spdx_json_file_contents(file_contents, source = nil)
-        entries = Set.new
         manifest = JSON.parse(file_contents)
 
+        if manifest.key?("spdxVersion")
+          parse_spdx_1_and_2_json_file_contents(manifest, source)
+        elsif manifest.key?("@context")
+          parse_spdx_3_json_file_contents(manifest, source)
+        end
+      end
+
+      def self.parse_spdx_1_and_2_json_file_contents(manifest, source)
+        entries = Set.new
         manifest["packages"]&.each do |package|
           spdx_name = package["name"]
           spdx_version = package["versionInfo"]
@@ -139,7 +147,48 @@ module Bibliothecary
                     spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
                     source: source, purl_type: purl_type)
         end
+        entries
+      end
 
+      def self.parse_spdx_3_json_file_contents(manifest, source)
+        entries = Set.new
+        manifest.fetch("@graph", [])
+          .select do |element|
+            types = Array(element["type"] || element["@type"])
+            # "software_Package" is the common one, but these may differ and include namespaces
+            types.any? { |t| t.to_s.match?(/Package$/i) }
+          end
+          .each do |element|
+            spdx_name = element["name"]
+            spdx_version = element["software_packageVersion"] || element["packageVersion"] || element["versionInfo"]
+
+            purl_string = element["externalIdentifier"]&.find do |ext_id|
+              ext_id_type = ext_id["externalIdentifierType"] || ext_id["identifierType"]
+              ext_id_type&.match?(/purl/i)
+            end&.dig("identifier")
+
+            purl_string ||= element.fetch("externalRef", [])
+              .map { |ref| ref.fetch("locator", nil) }
+              .compact
+              .map(&:first)
+              .find { |locator| locator.start_with?("pkg:") }
+
+            purl_string ||= element.fetch("software_packageUrl", nil)
+
+            next unless purl_string
+
+            purl = PackageURL.parse(purl_string)
+            purl_type = purl&.type
+            # Use the mapped purl->bibliothecary platform, or else fall back to original platform itself.
+            platform = PurlUtil::PURL_TYPE_MAPPING.fetch(purl_type, purl_type)
+            purl_name = PurlUtil.full_name(purl)
+            purl_version = purl&.version
+
+            add_entry(entries: entries, platform: platform, purl_name: purl_name,
+                      spdx_name: spdx_name, purl_version: purl_version, spdx_version: spdx_version,
+                      source: source, purl_type: purl_type)
+          end
+          .compact
         entries
       end
 

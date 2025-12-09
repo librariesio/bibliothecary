@@ -97,7 +97,7 @@ describe Bibliothecary::MultiParsers::Spdx do
       expect { described_class.parse_spdx_json("{}") }.to raise_error(described_class::NoEntries)
     end
 
-    context "with a properly formed file" do
+    context "with a properly formed spdx 2.2 file" do
       it "parses the file" do
         contents = load_fixture("spdx2.2.json")
         result = described_class.analyse_contents("sbom.spdx.json", contents)
@@ -111,6 +111,39 @@ describe Bibliothecary::MultiParsers::Spdx do
                                                          })
         expect(dependencies[0]).to eq(Bibliothecary::Dependency.new(platform: "npm", name: "-", requirement: "0.0.1", type: "lockfile", source: "sbom.spdx.json"))
         expect(dependencies[1]).to eq(Bibliothecary::Dependency.new(platform: "npm", name: "@ampproject/remapping", requirement: "2.2.0", type: "lockfile", source: "sbom.spdx.json"))
+      end
+    end
+
+    context "with a properly formed spdx 2.3 file" do
+      it "parses the file" do
+        contents = load_fixture("spdx2.3.json")
+        result = described_class.analyse_contents("sbom.spdx.json", contents)
+        dependencies = result[:dependencies]
+
+        expect(dependencies.map(&:platform).tally).to eq({
+                                                           "npm" => 253,
+                                                           "pypi" => 15,
+                                                           "rpm" => 180,
+                                                         })
+        expect(dependencies[0]).to eq(Bibliothecary::Dependency.new(platform: "npm", name: "@babel/code-frame", requirement: "7.0.0", type: "lockfile", source: "sbom.spdx.json"))
+        expect(dependencies[1]).to eq(Bibliothecary::Dependency.new(platform: "npm", name: "ansi-styles", requirement: "3.2.1", type: "lockfile", source: "sbom.spdx.json"))
+      end
+    end
+
+    context "with a properly formed spdx 3.0 file" do
+      it "parses the file" do
+        contents = load_fixture("spdx3.0.json")
+        result = described_class.analyse_contents("sbom.spdx.json", contents)
+
+        dependencies = result[:dependencies]
+
+        expect(dependencies.map(&:platform).tally).to eq({
+                                                           "npm" => 253,
+                                                           "pypi" => 15,
+                                                           "rpm" => 161,
+                                                         })
+        expect(dependencies[0]).to eq(Bibliothecary::Dependency.new(platform: "pypi", name: "pip", requirement: "9.0.3", type: "lockfile", source: "sbom.spdx.json"))
+        expect(dependencies[1]).to eq(Bibliothecary::Dependency.new(platform: "pypi", name: "six", requirement: "1.11.0", type: "lockfile", source: "sbom.spdx.json"))
       end
     end
   end
