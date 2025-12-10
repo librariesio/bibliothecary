@@ -11,9 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Fix Nuget parser so it returns all target frameworks' dependencies from packages.lock.json instead of an arbitrary target framework's dependencies.
-
 ### Removed
+
+## [15.1.0]
+
+### Added
+
+- Add initial support for SPDX 3.0 JSON files
+
+### Changed
+
+- Treat "cyclonedx.json" and "cyclonedx.xml" matchers as suffixes instead of filenames.
+- Fix Nuget parser so it returns all target frameworks' dependencies from packages.lock.json instead of an arbitrary target framework's dependencies.
 
 ## [15.0.0]
 

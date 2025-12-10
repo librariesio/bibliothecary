@@ -63,7 +63,7 @@ module Bibliothecary
 
       def self.mapping
         {
-          match_filename("cyclonedx.json") => {
+          match_extension("cyclonedx.json") => {
             kind: "lockfile",
             parser: :parse_cyclonedx_json,
             ungroupable: true,
@@ -73,7 +73,7 @@ module Bibliothecary
             parser: :parse_cyclonedx_json,
             ungroupable: true,
           },
-          match_filename("cyclonedx.xml") => {
+          match_extension("cyclonedx.xml") => {
             kind: "lockfile",
             parser: :parse_cyclonedx_xml,
             ungroupable: true,
