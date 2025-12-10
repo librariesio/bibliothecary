@@ -123,7 +123,7 @@ module Bibliothecary
         manifest = JSON.parse(file_contents)
 
         if manifest.key?("spdxVersion")
-          parse_spdx_1_and_2_json_file_contents(manifest, source)
+          parse_spdx_2_json_file_contents(manifest, source)
         elsif manifest.key?("@context")
           parse_spdx_3_json_file_contents(manifest, source)
         else
@@ -131,7 +131,7 @@ module Bibliothecary
         end
       end
 
-      def self.parse_spdx_1_and_2_json_file_contents(manifest, source)
+      def self.parse_spdx_2_json_file_contents(manifest, source)
         entries = Set.new
         manifest["packages"]&.each do |package|
           spdx_name = package["name"]
