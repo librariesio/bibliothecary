@@ -4,7 +4,7 @@ class DockerfileParser
   end
 
   def parse
-    fromlines = @file_contents.split("\n").select { |line| line.strip =~ /^\FROM/i }
+    fromlines = @file_contents.split("\n").select { |line| line.strip =~ /^FROM/i }
     
     fromlines.map do |line|
       line = line.strip.split(' ')

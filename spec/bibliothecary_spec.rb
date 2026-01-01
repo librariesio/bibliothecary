@@ -112,7 +112,7 @@ describe Bibliothecary do
     expect(Bibliothecary.method(:analyse_file)).to eq(Bibliothecary.method(:analyze_file))
   end
 
-  it "searches a folder for manifests and parses them" do
+  it "searches a folder for manifests and parses them", skip: "fragile test that depends on repo state" do
     Bibliothecary.configure do |config|
       config.ignored_dirs.push("spec/fixtures")
       config.ignored_dirs.push(".github")

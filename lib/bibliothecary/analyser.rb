@@ -78,6 +78,7 @@ module Bibliothecary
 
         original_mapping = mapping
 
+        singleton_class.remove_method(:mapping)
         define_singleton_method(:mapping) do
           original_mapping.merge(klass.mapping)
         end
