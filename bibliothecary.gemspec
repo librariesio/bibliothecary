@@ -7,7 +7,7 @@ require "bibliothecary/version"
 Gem::Specification.new do |spec|
   spec.required_ruby_version = ">= 3.4.0"
 
-  spec.name          = "bibliothecary"
+  spec.name          = "ecosystems-bibliothecary"
   spec.version       = Bibliothecary::VERSION
   spec.authors       = ["Andrew Nesbitt"]
   spec.email         = ["andrewnez@gmail.com"]
