@@ -13,7 +13,7 @@ Requires Ruby 3.4 or above.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem "bibliothecary", git: "https://github.com/ecosyste-ms/bibliothecary.git"
+gem "ecosystems-bibliothecary", git: "https://github.com/ecosyste-ms/bibliothecary.git", require: "bibliothecary"
 ```
 
 And then execute:
