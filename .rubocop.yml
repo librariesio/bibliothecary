@@ -7,7 +7,7 @@ inherit_mode:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.4.7
+  TargetRubyVersion: 4.0
   Exclude:
     - spec/fixtures/**/*
     - vendor/bundle/**/* # This is actually needed for CI, not for biblio itself
