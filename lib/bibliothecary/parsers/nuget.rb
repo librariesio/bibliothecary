@@ -201,7 +201,7 @@ module Bibliothecary
 
       def self.parse_paket_lock(file_contents, options: {})
         lines = file_contents.split("\n")
-        package_version_re = /\s+(?<name>\S+)\s\((?<version>\d+\.\d+[.\d+[.\d+]*]*)\)/
+        package_version_re = /\s+(?<name>\S+)\s\((?<version>\d+(?:\.\d+)+)\)/
         packages = lines.select { |line| package_version_re.match(line) }.map { |line| package_version_re.match(line) }.map do |match|
           Dependency.new(
             name: match[:name].strip,

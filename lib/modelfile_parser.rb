@@ -4,10 +4,10 @@ class ModelfileParser
   end
 
   def parse
-    fromlines = @file_contents.split("\n").select { |line| line.strip =~ /^\FROM/i }
+    fromlines = @file_contents.split("\n").select { |line| line.strip =~ /^FROM/i }
 
     fromlines.map do |line|
-      line = line.strip.split(' ')
+      line = line.strip.split
 
       # Remove the FROM keyword
       line.shift
@@ -23,19 +23,19 @@ class ModelfileParser
       model_ref = line[0]
 
       # Check if it's a file path (local GGUF or directory)
-      if model_ref =~ /\.(gguf|safetensors)$/i || model_ref.start_with?('./', '/')
+      if model_ref =~ /\.(gguf|safetensors)$/i || model_ref.start_with?("./", "/")
         {
           name: File.basename(model_ref),
-          requirement: 'local',
-          type: 'runtime'
+          requirement: "local",
+          type: "runtime",
         }
       else
         # It's a registry model (e.g., llama3.2 or llama3.2:latest)
-        parts = model_ref.split(':')
+        parts = model_ref.split(":")
         {
           name: parts[0],
-          requirement: parts[1] || 'latest',
-          type: 'runtime'
+          requirement: parts[1] || "latest",
+          type: "runtime",
         }
       end
     end
