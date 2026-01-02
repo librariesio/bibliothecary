@@ -384,4 +384,26 @@ describe Bibliothecary::Parsers::Conan do
   it "matches valid conanfile.py filepaths" do
     expect(described_class.match?("conanfile.py")).to be_truthy
   end
+
+  it "parses dependencies from conanfile.txt with multiple packages" do
+    result = described_class.analyse_contents("conanfile.txt", load_fixture("conan/conanfile.txt"))
+
+    expect(result[:parser]).to eq("conan")
+    expect(result[:path]).to eq("conanfile.txt")
+    expect(result[:kind]).to eq("manifest")
+    expect(result[:success]).to be true
+
+    deps = result[:dependencies]
+    expect(deps.length).to eq(8)
+
+    # Check some specific dependencies
+    boost_dep = deps.find { |d| d.name == "boost" }
+    expect(boost_dep).not_to be_nil
+    expect(boost_dep.requirement).to eq("1.72.0")
+    expect(boost_dep.type).to eq("runtime")
+
+    eigen_dep = deps.find { |d| d.name == "eigen" }
+    expect(eigen_dep).not_to be_nil
+    expect(eigen_dep.requirement).to eq("3.3.7")
+  end
 end
