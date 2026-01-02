@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+
+## [15.1.1]
+
+### Changed
+
+- Fix support for parsing conanfile.txt
+
 ## [15.1.0]
 
 ### Added

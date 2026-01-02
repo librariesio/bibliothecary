@@ -69,7 +69,7 @@ module Bibliothecary
           # Parse dependencies in [requires] and [build_requires] sections
           next unless %w[requires build_requires].include?(current_section)
 
-          reference = parse_conan_reference(manifest_dep)
+          reference = parse_conan_reference(line)
           next if reference[:name].nil? || reference[:name].empty?
 
           dependencies << Dependency.new(
