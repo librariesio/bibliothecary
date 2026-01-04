@@ -52,12 +52,14 @@ module Bibliothecary
         first_matching_mapping_details(info).any?
       end
 
-      private
-
+      # Get mapping details for this file, using cache if available.
+      # The cache is stored on the FileInfo object to avoid repeated lookups.
       def first_matching_mapping_details(info)
-        mapping
-          .find { |matcher, details| mapping_entry_match?(matcher, details, info) }
-          &.last || {}
+        info.cached_mapping_details(self) do
+          mapping
+            .find { |matcher, details| mapping_entry_match?(matcher, details, info) }
+            &.last || {}
+        end
       end
     end
   end

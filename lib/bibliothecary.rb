@@ -100,19 +100,16 @@ module Bibliothecary
   end
 
   def self.runner
-    configuration
-    @runner
+    @runner ||= Runner.new(configuration)
   end
 
   def self.configuration
     @configuration ||= Configuration.new
-    @runner = Runner.new(@configuration)
-    @configuration
   end
 
   def self.reset
-    @configuration = Configuration.new
-    @runner = Runner.new(@configuration)
+    @configuration = nil
+    @runner = nil
   end
 
   def self.configure

@@ -1,0 +1,386 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "bibliothecary"
+require "benchmark"
+require "optparse"
+
+class InfrastructureBenchmark
+  FIXTURES_DIR = File.expand_path("../spec/fixtures", __dir__)
+
+  def initialize(iterations: 100)
+    @iterations = iterations
+  end
+
+  def run
+    puts "Infrastructure Benchmark"
+    puts "=" * 60
+    puts "Iterations: #{@iterations}"
+    puts
+
+    # Prepare test data - mix of different file types
+    test_files = prepare_test_files
+    puts "Test files: #{test_files.length}"
+    puts
+
+    benchmark_package_managers
+    benchmark_matching_overhead
+    benchmark_load_file_info_list_from_contents(test_files)
+    benchmark_analyse_file(test_files)
+  end
+
+  def prepare_test_files
+    files = []
+    # Get a representative sample of fixtures
+    %w[package.json Gemfile.lock Cargo.toml pom.xml requirements.txt go.mod].each do |name|
+      path = Dir.glob("#{FIXTURES_DIR}/**/#{name}").first
+      next unless path
+
+      files << { file_path: path.sub("#{FIXTURES_DIR}/", ""), contents: File.read(path) }
+    end
+    files
+  end
+
+  def benchmark_package_managers
+    puts "package_managers method:"
+    puts "-" * 40
+
+    runner = Bibliothecary.runner
+
+    # Warm up
+    5.times { runner.package_managers }
+
+    time = Benchmark.measure do
+      @iterations.times { runner.package_managers }
+    end
+
+    printf "  %d calls: %.3f ms total, %.4f ms/call\n",
+           @iterations, time.real * 1000, (time.real / @iterations) * 1000
+    puts
+  end
+
+  def benchmark_load_file_info_list_from_contents(test_files)
+    puts "load_file_info_list_from_contents:"
+    puts "-" * 40
+
+    runner = Bibliothecary.runner
+
+    # Warm up
+    5.times { runner.load_file_info_list_from_contents(test_files) }
+
+    time = Benchmark.measure do
+      @iterations.times { runner.load_file_info_list_from_contents(test_files) }
+    end
+
+    total_files = test_files.length * @iterations
+    printf "  %d calls (%d files each): %.3f ms total\n",
+           @iterations, test_files.length, time.real * 1000
+    printf "  %.4f ms/call, %.4f ms/file\n",
+           (time.real / @iterations) * 1000,
+           (time.real / total_files) * 1000
+    puts
+  end
+
+  def benchmark_analyse_file(test_files)
+    puts "analyse_file (full pipeline):"
+    puts "-" * 40
+
+    runner = Bibliothecary.runner
+
+    test_files.each do |file|
+      # Warm up
+      3.times { runner.analyse_file(file[:file_path], file[:contents]) }
+
+      time = Benchmark.measure do
+        @iterations.times { runner.analyse_file(file[:file_path], file[:contents]) }
+      end
+
+      printf "  %-30s %.4f ms/call\n",
+             File.basename(file[:file_path]),
+             (time.real / @iterations) * 1000
+    end
+    puts
+  end
+
+  def benchmark_matching_overhead
+    puts "Matching overhead breakdown:"
+    puts "-" * 40
+
+    runner = Bibliothecary.runner
+    pms = runner.package_managers
+
+    # Test with a simple package.json
+    test_file = { file_path: "package.json", contents: '{"dependencies":{}}' }
+    info = Bibliothecary::FileInfo.new(nil, test_file[:file_path], test_file[:contents])
+
+    # Benchmark match_info? across all parsers
+    time = Benchmark.measure do
+      @iterations.times do
+        pms.each { |pm| pm.match_info?(info) }
+      end
+    end
+    printf "  match_info? x %d parsers: %.4f ms/file\n",
+           pms.length, (time.real / @iterations) * 1000
+
+    # Benchmark just the npm parser's match_info?
+    npm = pms.find { |pm| pm.platform_name == "npm" }
+    time = Benchmark.measure do
+      @iterations.times { npm.match_info?(info) }
+    end
+    printf "  npm.match_info? alone:    %.4f ms/call\n",
+           (time.real / @iterations) * 1000
+
+    # Benchmark first_matching_mapping_details (called multiple times per file)
+    time = Benchmark.measure do
+      @iterations.times do
+        npm.send(:first_matching_mapping_details, info)
+      end
+    end
+    printf "  first_matching_mapping_details: %.4f ms/call\n",
+           (time.real / @iterations) * 1000
+
+    puts
+  end
+end
+
+class ParserBenchmark
+  FIXTURES_DIR = File.expand_path("../spec/fixtures", __dir__)
+
+  # Parser methods that require remote services
+  REMOTE_PARSERS = {
+    "swiftpm" => [:parse_package_swift],
+    "hackage" => [:parse_cabal],
+    "hex" => [:parse_mix, :parse_mix_lock],
+    "carthage" => [:parse_cartfile, :parse_cartfile_private, :parse_cartfile_resolved],
+    "clojars" => [:parse_manifest],
+  }.freeze
+
+  # Multi-parser methods shared across many package managers
+  MULTI_PARSER_METHODS = %i[
+    parse_cyclonedx_json
+    parse_cyclonedx_xml
+    parse_spdx_json
+    parse_spdx_tag_value
+    parse_dependencies_csv
+  ].freeze
+
+  def initialize(options = {})
+    @iterations = options.fetch(:iterations, 100)
+    @parser_filter = options[:parser]
+    @verbose = options[:verbose]
+    @native_only = options[:native_only]
+    @results = {}
+  end
+
+  def run
+    puts "Bibliothecary Parser Benchmark"
+    puts "=" * 60
+    puts "Iterations per file: #{@iterations}"
+    puts "Fixtures directory: #{FIXTURES_DIR}"
+    puts
+
+    parsers = filtered_parsers
+    puts "Running benchmarks for #{parsers.length} parser(s)..."
+    puts
+
+    parsers.each do |parser|
+      benchmark_parser(parser)
+    end
+
+    print_summary
+  end
+
+  def filtered_parsers
+    all_parsers = Bibliothecary.package_managers
+    return all_parsers unless @parser_filter
+
+    matching = all_parsers.select do |pm|
+      pm.platform_name.downcase.include?(@parser_filter.downcase)
+    end
+
+    if matching.empty?
+      puts "No parser matching '#{@parser_filter}' found."
+      puts "Available parsers: #{all_parsers.map(&:platform_name).join(', ')}"
+      exit 1
+    end
+
+    matching
+  end
+
+  def benchmark_parser(parser)
+    platform = parser.platform_name
+    mapping = parser.mapping
+    fixtures = find_fixtures_for_parser(mapping, platform)
+
+    if fixtures.empty?
+      puts "#{platform}: no matching fixtures found"
+      puts if @verbose
+      return
+    end
+
+    puts "#{platform} (#{fixtures.length} files)"
+    puts "-" * 40
+
+    parser_total = 0
+    file_results = []
+
+    fixtures.each do |fixture_path, mapping_entry|
+      contents = File.read(fixture_path)
+      filename = File.basename(fixture_path)
+      relative = fixture_path.sub("#{FIXTURES_DIR}/", "")
+
+      begin
+        time = Benchmark.measure do
+          @iterations.times do
+            parser.send(mapping_entry[:parser], contents, options: { filename: filename })
+          end
+        end
+
+        avg_ms = (time.real / @iterations) * 1000
+        parser_total += time.real
+
+        file_results << {
+          file: relative,
+          total: time.real,
+          avg_ms: avg_ms,
+          kind: mapping_entry[:kind],
+        }
+
+        if @verbose
+          printf "  %-40s %8.3f ms/call (%s)\n", relative, avg_ms, mapping_entry[:kind]
+        end
+      rescue Bibliothecary::RemoteParsingError => e
+        puts "  #{relative}: skipped (remote parser unavailable)"
+      rescue => e
+        puts "  #{relative}: error - #{e.class}: #{e.message}"
+      end
+    end
+
+    unless @verbose
+      file_results.sort_by { |r| -r[:avg_ms] }.first(3).each do |r|
+        printf "  %-40s %8.3f ms/call\n", r[:file], r[:avg_ms]
+      end
+      puts "  ..." if file_results.length > 3
+    end
+
+    avg_total = (parser_total / fixtures.length / @iterations) * 1000
+    printf "  Total: %.3f ms avg per file\n", avg_total
+    puts
+
+    @results[platform] = {
+      files: fixtures.length,
+      total_time: parser_total,
+      avg_per_file: avg_total,
+      file_results: file_results,
+    }
+  end
+
+  def find_fixtures_for_parser(mapping, platform_name)
+    fixtures = []
+    remote_methods = REMOTE_PARSERS[platform_name] || []
+
+    all_fixtures.each do |fixture_path|
+      filename = File.basename(fixture_path)
+      relative_path = fixture_path.sub("#{FIXTURES_DIR}/", "")
+
+      mapping.each do |matcher, entry|
+        next unless entry[:parser]
+        next if remote_methods.include?(entry[:parser])
+        next if @native_only && MULTI_PARSER_METHODS.include?(entry[:parser])
+
+        if matcher_matches?(matcher, filename, fixture_path)
+          fixtures << [fixture_path, entry]
+          break
+        end
+      end
+    end
+
+    fixtures
+  end
+
+  def matcher_matches?(matcher, filename, full_path)
+    relative_path = full_path.sub("#{FIXTURES_DIR}/", "")
+
+    case matcher
+    when Regexp
+      filename.match?(matcher)
+    when String
+      filename == matcher
+    when Proc
+      matcher.call(relative_path)
+    else
+      false
+    end
+  end
+
+  def all_fixtures
+    @all_fixtures ||= Dir.glob("#{FIXTURES_DIR}/**/*")
+      .select { |f| File.file?(f) }
+      .reject { |f| f.include?("/broken/") }
+  end
+
+  def print_summary
+    return if @results.empty?
+
+    puts "=" * 60
+    puts "Summary (sorted by avg time per file)"
+    puts "=" * 60
+
+    sorted = @results.sort_by { |_, v| -v[:avg_per_file] }
+
+    printf "%-20s %10s %12s\n", "Parser", "Files", "Avg ms/file"
+    printf "%-20s %10s %12s\n", "-" * 20, "-" * 10, "-" * 12
+
+    sorted.each do |platform, data|
+      printf "%-20s %10d %12.3f\n", platform, data[:files], data[:avg_per_file]
+    end
+
+    puts
+    total_files = @results.values.sum { |v| v[:files] }
+    total_time = @results.values.sum { |v| v[:total_time] }
+    puts "Total: #{total_files} files, #{(total_time * 1000).round(1)} ms total time"
+  end
+end
+
+options = {
+  iterations: 100,
+  verbose: false,
+  mode: :parsers,
+}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: bin/benchmark [options]"
+
+  opts.on("-p", "--parser NAME", "Only benchmark parsers matching NAME") do |p|
+    options[:parser] = p
+  end
+
+  opts.on("-n", "--iterations N", Integer, "Number of iterations per file (default: 100)") do |n|
+    options[:iterations] = n
+  end
+
+  opts.on("-v", "--verbose", "Show all files, not just slowest") do
+    options[:verbose] = true
+  end
+
+  opts.on("--native-only", "Exclude shared multi-parsers (CycloneDX, SPDX, CSV)") do
+    options[:native_only] = true
+  end
+
+  opts.on("--infra", "Benchmark infrastructure (load_file_info_list, etc)") do
+    options[:mode] = :infra
+  end
+
+  opts.on("-h", "--help", "Show this help") do
+    puts opts
+    exit
+  end
+end.parse!
+
+case options[:mode]
+when :infra
+  InfrastructureBenchmark.new(iterations: options[:iterations]).run
+else
+  ParserBenchmark.new(options).run
+end

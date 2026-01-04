@@ -40,7 +40,7 @@ module Bibliothecary
         # If your Parser needs to return multiple responses for one file, please override this method
         # For example see conda.rb
         kind = determine_kind_from_info(info)
-        parser_result = parse_file(info.relative_path, info.contents, options: options)
+        parser_result = parse_file_info(info, options: options)
         parser_result = ParserResult.new(dependencies: []) if parser_result.nil? # work around any legacy parsers that return nil
 
         Bibliothecary::Analyser.create_analysis(platform_name, info.relative_path, kind, parser_result)
@@ -52,26 +52,31 @@ module Bibliothecary
       # Call the matching parse class method for this file with
       # these contents
       def parse_file(filename, contents, options: {})
-        details = first_matching_mapping_details(FileInfo.new(nil, filename, contents))
+        parse_file_info(FileInfo.new(nil, filename, contents), options: options)
+      end
+
+      # Parse a file using its FileInfo object, reusing cached mapping details.
+      def parse_file_info(info, options: {})
+        details = first_matching_mapping_details(info)
 
         # this can be raised if we don't check match?/match_info?,
         # OR don't have the file contents when we check them, so
         # it turns out for example that a .xml file isn't a
         # manifest after all.
-        raise Bibliothecary::FileParsingError.new("No parser for this file type", filename) unless details[:parser]
+        raise Bibliothecary::FileParsingError.new("No parser for this file type", info.relative_path) unless details[:parser]
 
         # The `parser` method should raise an exception if the file is malformed,
         # should return empty [] if the file is fine but simply doesn't contain
         # any dependencies, and should never return nil. At the time of writing
         # this comment, some of the parsers return [] or nil to mean an error
         # which is confusing to users.
-        send(details[:parser], contents, options: options.merge(filename: filename))
+        send(details[:parser], info.contents, options: options.merge(filename: info.relative_path))
       rescue Exception => e # default is StandardError but C bindings throw Exceptions # rubocop:disable Lint/RescueException
         # the C xml parser also puts a newline at the end of the message
         location = e.backtrace_locations[0]
           .to_s
           .then { |l| l =~ /bibliothecary\// ? l.split("bibliothecary/").last : l.split("gems/").last }
-        raise Bibliothecary::FileParsingError.new(e.message.strip, filename, location)
+        raise Bibliothecary::FileParsingError.new(e.message.strip, info.relative_path, location)
       end
 
       private

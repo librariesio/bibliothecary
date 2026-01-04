@@ -7,6 +7,7 @@ gem "strings-ansi", ref: "35d0c9430cf0a8022dc12bdab005bce296cb9f00", github: "pi
 
 # Ruby 3.4+ no longer includes these as default gems
 gem "base64"
+gem "benchmark"
 gem "bigdecimal"
 gem "csv"
 gem "logger"

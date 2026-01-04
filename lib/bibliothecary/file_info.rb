@@ -46,10 +46,17 @@ module Bibliothecary
       @contents = contents
 
       @package_manager = nil
+      @mapping_cache = {}
     end
 
     def groupable?
       @package_manager&.groupable?(self)
+    end
+
+    # Cache and retrieve mapping details for a given package manager class.
+    # This avoids repeatedly calling first_matching_mapping_details.
+    def cached_mapping_details(package_manager_class)
+      @mapping_cache[package_manager_class] ||= yield
     end
   end
 end
