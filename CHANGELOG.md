@@ -13,6 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [14.3.0]
+
+### Added
+
+- Added `bin/benchmark` script for performance testing.
+
+### Changed
+
+- Fixed bug where Runner was recreated on every Bibliothecary method call, causing repeated index rebuilding.
+- Memoized package_managers array in Runner.
+- Added filename/extension index for O(1) parser lookup instead of O(n) linear scan through all parsers.
+- Optimized `identify_manifests` to use filename index directly (~139x faster).
+- Optimized `analyse_file` to use filename index for candidate filtering (~16x faster).
+- Added per-file caching of mapping details in FileInfo to avoid repeated lookups.
+- Added `parse_file_info` method to reuse FileInfo objects during parsing.
+
 ## [14.2.0]
 
 ### Added
