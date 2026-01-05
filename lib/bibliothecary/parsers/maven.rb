@@ -195,15 +195,22 @@ module Bibliothecary
 
       def self.parse_gradle_resolved(file_contents, options: {})
         current_type = nil
+        source = options.fetch(:filename, nil)
+        dependencies = []
 
-        dependencies = file_contents.split("\n").map do |line|
-          current_type_match = GRADLE_TYPE_REGEXP.match(line)
-          current_type = current_type_match.captures[0] if current_type_match
+        file_contents.each_line do |line|
+          line = line.chomp
 
-          gradle_dep_match = GRADLE_DEP_REGEXP.match(line)
-          next unless gradle_dep_match
+          # Check if this is a type header line (starts with word character)
+          # e.g. "annotationProcessor - Annotation processors..."
+          if line[0] =~ /\w/
+            current_type = line[GRADLE_TYPE_REGEXP, 1]
+            next
+          end
 
-          split = gradle_dep_match.captures[0]
+          # Check for dependency line (contains +--- or \---)
+          split_match = line[GRADLE_DEP_REGEXP, 1]
+          next unless split_match
 
           # gradle can import on-disk projects and deps will be listed under them, e.g. `+--- project :test:integration`,
           # so we treat these projects as "internal" deps with requirement of "1.0.0"
@@ -217,7 +224,7 @@ module Bibliothecary
           end
 
           dep = line
-            .split(split)[1]
+            .split(split_match)[1]
             .sub(GRADLE_LINE_ENDING_REGEXP, "")
             .sub(/ FAILED$/, "") # dependency could not be resolved (but still may have a version)
             .sub(" -> ", ":") # handle version arrow syntax
@@ -230,45 +237,50 @@ module Bibliothecary
 
           if dep.count == 6
             # get name from renamed package resolution "org:name:version -> renamed_org:name:version"
-            Dependency.new(
+            dependencies << Dependency.new(
               original_name: dep[0, 2].join(":"),
               original_requirement: dep[2],
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
               type: current_type,
-              source: options.fetch(:filename, nil),
+              source: source,
               platform: platform_name
             )
           elsif dep.count == 5
             # get name from renamed package resolution "org:name -> renamed_org:name:version"
-            Dependency.new(
+            dependencies << Dependency.new(
               original_name: dep[0, 2].join(":"),
               original_requirement: "*",
               name: dep[-3..-2].join(":"),
               requirement: dep[-1],
               type: current_type,
-              source: options.fetch(:filename, nil),
+              source: source,
               platform: platform_name
             )
           else
             # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
-            Dependency.new(
+            dependencies << Dependency.new(
               name: dep[0..1].join(":"),
               requirement: dep[-1],
               type: current_type,
-              source: options.fetch(:filename, nil),
+              source: source,
               platform: platform_name
             )
           end
         end
-          .compact
-          .uniq { |item| [item.name, item.requirement, item.type, item.original_name, item.original_requirement] }
+
+        dependencies.uniq! { |item| [item.name, item.requirement, item.type, item.original_name, item.original_requirement] }
         ParserResult.new(dependencies: dependencies)
       end
 
+      def self.strip_ansi(string)
+        return string unless string.include?("\033")
+
+        string.gsub(ANSI_MATCHER, "")
+      end
+
       def self.parse_maven_resolved(file_contents, options: {})
-        dependencies = file_contents
-          .gsub(ANSI_MATCHER, "")
+        dependencies = strip_ansi(file_contents)
           .split("\n")
           .map { |line| parse_resolved_dep_line(line, options: options) }
           .compact
@@ -281,11 +293,12 @@ module Bibliothecary
       # The depth-0 items are the (sub)project names
       # These are in the original order, with no de-duplication.
       def self.parse_maven_tree_items_with_depths(file_contents)
-        file_contents
-          .gsub(ANSI_MATCHER, "")
-          .encode(universal_newline: true)
-          # capture two groups; one is the ASCII art telling us the tree depth,
-          # and two is the actual dependency
+        content = strip_ansi(file_contents)
+        content = content.gsub("\r\n", "\n").gsub("\r", "\n") if content.include?("\r")
+
+        # capture two groups; one is the ASCII art telling us the tree depth,
+        # and two is the actual dependency
+        content
           .scan(/^\[INFO\]\s((?:[-+|\\]|\s)*)((?:[\w.-]+:)+[\w.\-${}]+)/)
           # lines that start with "-" aren't part of the tree, example: "[INFO] --- dependency:3.8.1:tree"
           .reject { |(tree_ascii_art, _dep_info)| tree_ascii_art.start_with?("-") }

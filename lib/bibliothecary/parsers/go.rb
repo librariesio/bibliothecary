@@ -132,8 +132,20 @@ module Bibliothecary
       end
 
       def self.parse_dep_lockfile(file_contents, options: {})
-        manifest = Tomlrb.parse file_contents
-        dependencies = map_dependencies(manifest, "projects", "name", "revision", "runtime", options.fetch(:filename, nil))
+        dependencies = []
+        # Split into [[projects]] blocks and extract fields from each
+        file_contents.split(/\[\[projects\]\]/).drop(1).each do |block|
+          name = block[/name\s*=\s*"([^"]+)"/, 1]
+          revision = block[/revision\s*=\s*"([^"]+)"/, 1]
+
+          dependencies << Dependency.new(
+            platform: platform_name,
+            name: name,
+            requirement: revision,
+            type: "runtime",
+            source: options.fetch(:filename, nil)
+          )
+        end
         ParserResult.new(dependencies: dependencies)
       end
 

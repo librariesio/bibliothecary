@@ -1,0 +1,116 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "bibliothecary"
+require "benchmark"
+
+FIXTURES = File.expand_path("../spec/fixtures", __dir__)
+
+def find_lockfiles
+  lockfiles = []
+
+  Bibliothecary.package_managers.each do |pm|
+    pm.mapping.each do |matcher, details|
+      next unless details[:kind] == "lockfile"
+      next unless details[:parser]
+
+      Dir.glob("#{FIXTURES}/**/*").each do |path|
+        next unless File.file?(path)
+
+        filename = File.basename(path)
+        relative = path.sub("#{FIXTURES}/", "")
+
+        matched = case matcher
+                  when Proc then matcher.call(relative)
+                  when Regexp then filename.match?(matcher)
+                  when String then filename == matcher
+                  else false
+                  end
+
+        if matched
+          lockfiles << {
+            path: path,
+            relative: relative,
+            parser: details[:parser],
+            pm: pm,
+            platform: pm.platform_name,
+          }
+        end
+      end
+    end
+  end
+
+  lockfiles.uniq { |l| l[:path] }
+end
+
+def benchmark_lockfiles(lockfiles, iterations: 50)
+  results = []
+
+  lockfiles.each do |lf|
+    contents = File.read(lf[:path])
+
+    # Warm up and skip files that error
+    begin
+      3.times { lf[:pm].send(lf[:parser], contents, options: { filename: lf[:relative] }) }
+    rescue StandardError
+      next
+    end
+
+    time = Benchmark.measure do
+      iterations.times { lf[:pm].send(lf[:parser], contents, options: { filename: lf[:relative] }) }
+    end
+
+    avg_ms = (time.real / iterations) * 1000
+    lines = contents.lines.count
+
+    results << {
+      file: lf[:relative],
+      platform: lf[:platform],
+      ms: avg_ms,
+      lines: lines,
+      ms_per_1k_lines: lines > 0 ? (avg_ms / lines * 1000) : 0,
+    }
+  end
+
+  results.sort_by { |r| -r[:ms] }
+end
+
+def print_results(results, limit: 100)
+  puts "Slowest Lockfiles (by total time)"
+  puts "=" * 90
+  printf "%-45s %8s %8s %12s %s\n", "File", "ms", "Lines", "ms/1k lines", "Platform"
+  printf "%-45s %8s %8s %12s %s\n", "-" * 45, "-" * 8, "-" * 8, "-" * 12, "-" * 10
+
+  results.first(limit).each do |r|
+    file = r[:file].length > 45 ? "..." + r[:file][-42..] : r[:file]
+    printf "%-45s %8.2f %8d %12.2f %s\n", file, r[:ms], r[:lines], r[:ms_per_1k_lines], r[:platform]
+  end
+
+  puts
+  puts "Slowest Lockfiles (by ms per 1k lines - parsing efficiency)"
+  puts "=" * 90
+  printf "%-45s %8s %8s %12s %s\n", "File", "ms", "Lines", "ms/1k lines", "Platform"
+  printf "%-45s %8s %8s %12s %s\n", "-" * 45, "-" * 8, "-" * 8, "-" * 12, "-" * 10
+
+  # Filter out tiny files and remote parsers, sort by efficiency
+  efficiency_sorted = results
+    .reject { |r| r[:lines] < 50 } # Skip tiny files
+    .reject { |r| r[:ms] > 50 } # Skip remote parsers
+    .sort_by { |r| -r[:ms_per_1k_lines] }
+
+  efficiency_sorted.first(limit).each do |r|
+    file = r[:file].length > 45 ? "..." + r[:file][-42..] : r[:file]
+    printf "%-45s %8.2f %8d %12.2f %s\n", file, r[:ms], r[:lines], r[:ms_per_1k_lines], r[:platform]
+  end
+end
+
+puts "Finding lockfiles..."
+lockfiles = find_lockfiles
+puts "Found #{lockfiles.length} lockfiles\n\n"
+
+puts "Benchmarking (50 iterations each)..."
+results = benchmark_lockfiles(lockfiles)
+puts
+
+print_results(results)

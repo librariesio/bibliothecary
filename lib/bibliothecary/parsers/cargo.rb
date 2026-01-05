@@ -48,19 +48,24 @@ module Bibliothecary
       end
 
       def self.parse_lockfile(file_contents, options: {})
-        manifest = Tomlrb.parse(file_contents)
-        dependencies = manifest.fetch("package", []).map do |dependency|
-          next if !dependency["source"] || !dependency["source"].start_with?("registry+")
+        dependencies = []
+        # Split into [[package]] blocks and extract fields from each
+        file_contents.split(/\[\[package\]\]/).drop(1).each do |block|
+          name = block[/name\s*=\s*"([^"]+)"/, 1]
+          version = block[/version\s*=\s*"([^"]+)"/, 1]
+          source = block[/source\s*=\s*"([^"]+)"/, 1]
 
-          Dependency.new(
-            name: dependency["name"],
-            requirement: dependency["version"],
+          # Skip packages without a registry source (local/workspace packages)
+          next unless source&.start_with?("registry+")
+
+          dependencies << Dependency.new(
+            name: name,
+            requirement: version,
             type: "runtime",
             source: options.fetch(:filename, nil),
             platform: platform_name
           )
         end
-          .compact
         ParserResult.new(dependencies: dependencies)
       end
     end

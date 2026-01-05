@@ -1,0 +1,148 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require "tomlrb"
+require "yaml"
+require "benchmark"
+
+FIXTURES = File.expand_path("../spec/fixtures", __dir__)
+
+# Regex-based parsers for lockfiles
+
+def parse_cargo_lock_regex(contents)
+  deps = []
+  contents.scan(/\[\[package\]\]\s*name\s*=\s*"([^"]+)"\s*version\s*=\s*"([^"]+)"/m) do |name, version|
+    deps << { name: name, version: version }
+  end
+  deps
+end
+
+def parse_cargo_lock_toml(contents)
+  parsed = Tomlrb.parse(contents)
+  (parsed["package"] || []).map do |pkg|
+    { name: pkg["name"], version: pkg["version"] }
+  end
+end
+
+def parse_poetry_lock_regex(contents)
+  deps = []
+  contents.scan(/\[\[package\]\]\s*name\s*=\s*"([^"]+)"\s*version\s*=\s*"([^"]+)"/m) do |name, version|
+    deps << { name: name, version: version }
+  end
+  deps
+end
+
+def parse_poetry_lock_toml(contents)
+  parsed = Tomlrb.parse(contents)
+  (parsed["package"] || []).map do |pkg|
+    { name: pkg["name"], version: pkg["version"] }
+  end
+end
+
+def parse_uv_lock_regex(contents)
+  deps = []
+  contents.scan(/\[\[package\]\]\s*name\s*=\s*"([^"]+)"\s*version\s*=\s*"([^"]+)"/m) do |name, version|
+    deps << { name: name, version: version }
+  end
+  deps
+end
+
+def parse_uv_lock_toml(contents)
+  parsed = Tomlrb.parse(contents)
+  (parsed["package"] || []).map do |pkg|
+    { name: pkg["name"], version: pkg["version"] }
+  end
+end
+
+def parse_gopkg_lock_regex(contents)
+  deps = []
+  # Split into [[projects]] blocks, then extract name and version/revision from each
+  contents.split(/\[\[projects\]\]/).drop(1).each do |block|
+    name = block[/name\s*=\s*"([^"]+)"/, 1]
+    version = block[/version\s*=\s*"([^"]+)"/, 1]
+    revision = block[/revision\s*=\s*"([^"]+)"/, 1]
+    deps << { name: name, version: version || revision } if name
+  end
+  deps
+end
+
+def parse_gopkg_lock_toml(contents)
+  parsed = Tomlrb.parse(contents)
+  (parsed["projects"] || []).map do |pkg|
+    { name: pkg["name"], version: pkg["version"] || pkg["revision"] }
+  end
+end
+
+def parse_pnpm_lock_regex(contents)
+  deps = []
+  # Match package entries like: /@babel/types/7.28.1: or /acorn/5.7.4:
+  contents.scan(%r{^\s{2}/((?:@[^/]+/)?[^/]+)/([^/:]+):}m) do |name, version|
+    deps << { name: name, version: version }
+  end
+  deps.uniq { |d| [d[:name], d[:version]] }
+end
+
+def parse_pnpm_lock_yaml(contents)
+  parsed = YAML.safe_load(contents)
+  packages = parsed["packages"] || {}
+  packages.map do |path, _info|
+    if path =~ %r{^/((?:@[^/]+/)?[^/]+)/(.+)$}
+      { name: $1, version: $2 }
+    end
+  end.compact
+end
+
+def benchmark_parser(name, contents, regex_method, toml_method, iterations: 100)
+  puts "\n#{name} (#{contents.lines.count} lines)"
+  puts "-" * 50
+
+  # Verify both produce same results
+  regex_result = send(regex_method, contents)
+  toml_result = send(toml_method, contents)
+
+  puts "  Regex found: #{regex_result.length} packages"
+  puts "  TOML found:  #{toml_result.length} packages"
+
+  # Warm up
+  5.times { send(regex_method, contents) }
+  5.times { send(toml_method, contents) }
+
+  # Benchmark
+  regex_time = Benchmark.measure { iterations.times { send(regex_method, contents) } }
+  toml_time = Benchmark.measure { iterations.times { send(toml_method, contents) } }
+
+  regex_ms = (regex_time.real / iterations) * 1000
+  toml_ms = (toml_time.real / iterations) * 1000
+  speedup = toml_ms / regex_ms
+
+  printf "  Regex: %.3f ms/call\n", regex_ms
+  printf "  TOML:  %.3f ms/call\n", toml_ms
+  printf "  Speedup: %.1fx faster with regex\n", speedup
+end
+
+puts "=" * 60
+puts "Regex vs Full Parser Benchmark"
+puts "=" * 60
+
+# Cargo.lock
+cargo = File.read("#{FIXTURES}/Cargo.lock")
+benchmark_parser("Cargo.lock", cargo, :parse_cargo_lock_regex, :parse_cargo_lock_toml)
+
+# poetry.lock
+poetry = File.read("#{FIXTURES}/poetry.lock")
+benchmark_parser("poetry.lock", poetry, :parse_poetry_lock_regex, :parse_poetry_lock_toml)
+
+# uv.lock
+uv = File.read("#{FIXTURES}/uv.lock")
+benchmark_parser("uv.lock", uv, :parse_uv_lock_regex, :parse_uv_lock_toml)
+
+# Gopkg.lock
+gopkg = File.read("#{FIXTURES}/Gopkg.lock")
+benchmark_parser("Gopkg.lock", gopkg, :parse_gopkg_lock_regex, :parse_gopkg_lock_toml)
+
+# pnpm-lock.yaml
+pnpm = File.read("#{FIXTURES}/pnpm-lockfile-version-5/pnpm-lock.yaml")
+benchmark_parser("pnpm-lock.yaml", pnpm, :parse_pnpm_lock_regex, :parse_pnpm_lock_yaml)
+
+puts "\n" + "=" * 60

@@ -93,29 +93,38 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::Spdx)
 
       def self.parser_pylock(file_contents, options: {})
-        lockfile = Tomlrb.parse(file_contents)
-        dependencies = lockfile["packages"].map do |d|
-          is_local = true if d.key?("archive") || d.key?("directory")
-          Dependency.new(
+        dependencies = []
+        # Split into [[packages]] blocks and extract fields from each
+        file_contents.split(/\[\[packages\]\]/).drop(1).each do |block|
+          name = block[/^name\s*=\s*"([^"]+)"/m, 1]
+          version = block[/^version\s*=\s*"([^"]+)"/m, 1]
+          # Local packages have [packages.archive] or [packages.directory] sections
+          is_local = block.include?("[packages.archive]") || block.include?("[packages.directory]")
+
+          dependencies << Dependency.new(
             platform: platform_name,
-            name: d["name"],
+            name: name,
             type: "runtime",
             source: options.fetch(:filename, nil),
-            requirement: d["version"] || "*",
-            local: is_local
+            requirement: version || "*",
+            local: is_local || nil
           )
         end
         ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_uv_lock(file_contents, options: {})
-        manifest = Tomlrb.parse(file_contents)
         source = options.fetch(:filename, nil)
-        dependencies = manifest.fetch("package", []).map do |package|
-          Dependency.new(
+        dependencies = []
+        # Split into [[package]] blocks and extract fields from each
+        file_contents.split(/\[\[package\]\]/).drop(1).each do |block|
+          name = block[/name\s*=\s*"([^"]+)"/, 1]
+          version = block[/version\s*=\s*"([^"]+)"/, 1]
+
+          dependencies << Dependency.new(
             platform: platform_name,
-            name: package["name"],
-            requirement: map_requirements(package),
+            name: name,
+            requirement: version,
             type: "runtime", # All dependencies are considered runtime
             source: source
           )
@@ -230,32 +239,43 @@ module Bibliothecary
       end
 
       def self.parse_poetry_lock(file_contents, options: {})
-        manifest = Tomlrb.parse(file_contents)
         deps = []
-        manifest["package"].each do |package|
-          # next if group == "_meta"
+        # Split into [[package]] blocks and extract fields from each
+        file_contents.split(/\[\[package\]\]/).drop(1).each do |block|
+          name = block[/^name\s*=\s*"([^"]+)"/m, 1]
+          version = block[/^version\s*=\s*"([^"]+)"/m, 1]
 
           # Poetry <1.2.0 used singular "category" for kind
           # Poetry >=1.2.0 uses plural "groups" field for kind(s)
-          groups = package.values_at("category", "groups").flatten.compact
-            .map do |g|
-              if g == "dev"
-                "develop"
-              else
-                (g == "main" ? "runtime" : g)
-              end
+          # Use ^ anchor to avoid matching commented lines
+          category = block[/^category\s*=\s*"([^"]+)"/m, 1]
+          groups_match = block[/^groups\s*=\s*\[([^\]]+)\]/m, 1]
+          groups = if groups_match
+                     groups_match.scan(/"([^"]+)"/).flatten
+                   elsif category
+                     [category]
+                   else
+                     []
+                   end
+
+          groups = groups.map do |g|
+            if g == "dev"
+              "develop"
+            else
+              (g == "main" ? "runtime" : g)
             end
+          end
 
           groups = ["runtime"] if groups.empty?
 
           groups.each do |group|
-            # Poetry lockfiles should already contain normalizated names, but we'll
+            # Poetry lockfiles should already contain normalized names, but we'll
             # apply it here as well just to be consistent with pyproject.toml parsing.
-            normalized_name = normalize_name(package["name"])
+            normalized_name = normalize_name(name)
             deps << Dependency.new(
               name: normalized_name,
-              original_name: normalized_name == package["name"] ? nil : package["name"],
-              requirement: map_requirements(package),
+              original_name: normalized_name == name ? nil : name,
+              requirement: version,
               type: group,
               source: options.fetch(:filename, nil),
               platform: platform_name
@@ -314,7 +334,8 @@ module Bibliothecary
       # Invalid lines in requirements.txt are skipped.
       def self.parse_requirements_txt(file_contents, options: {})
         deps = []
-        type = case options[:filename]
+        source = options.fetch(:filename, nil)
+        type = case source
                when /dev/ || /docs/ || /tools/
                  "development"
                when /test/
@@ -323,21 +344,22 @@ module Bibliothecary
                  "runtime"
                end
 
-        file_contents.split("\n").each do |line|
-          if line["://"]
+        file_contents.each_line do |line|
+          line = line.chomp
+          if line.include?("://")
             begin
-              result = parse_requirements_txt_url(line, type, options.fetch(:filename, nil))
+              result = parse_requirements_txt_url(line, type, source)
             rescue URI::Error, NoEggSpecified
               next
             end
 
             deps << result
-          elsif (match = line.delete(" ").match(REQUIREMENTS_REGEXP))
+          elsif (match = line.tr(" ", "").match(REQUIREMENTS_REGEXP))
             deps << Dependency.new(
               name: match[1],
               requirement: match[-1],
               type: type,
-              source: options.fetch(:filename, nil),
+              source: source,
               platform: platform_name
             )
           end

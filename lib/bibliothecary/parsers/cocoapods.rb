@@ -39,18 +39,24 @@ module Bibliothecary
       add_multi_parser(Bibliothecary::MultiParsers::DependenciesCSV)
 
       def self.parse_podfile_lock(file_contents, options: {})
-        manifest = YAML.load file_contents
-        dependencies = manifest["PODS"].map do |row|
-          pod = row.is_a?(String) ? row : row.keys.first
-          match = pod.match(/(.+?)\s\((.+?)\)/i)
-          Dependency.new(
+        source = options.fetch(:filename, nil)
+        dependencies = []
+
+        # Match pod entries: "  - Name (version)" or "  - Name/Subspec (version)"
+        # Only process lines in PODS section (before DEPENDENCIES section)
+        pods_section = file_contents.split(/^DEPENDENCIES:/)[0]
+        pods_section.scan(/^  - ([^\s(]+(?:\/[^\s(]+)?)\s+\(([^)]+)\)/) do |name, version|
+          # Take only the base package name (before any /)
+          base_name = name.split("/").first
+          dependencies << Dependency.new(
             platform: platform_name,
-            name: match[1].split("/").first,
-            requirement: match[2],
+            name: base_name,
+            requirement: version,
             type: "runtime",
-            source: options.fetch(:filename, nil)
+            source: source
           )
-        end.compact
+        end
+
         ParserResult.new(dependencies: dependencies)
       end
 

@@ -11,7 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Optimized Maven text parsers: lazy ANSI stripping (only when escape sequences present), skip newline normalization when not needed, and reduced per-line regex overhead in gradle-dependencies-q.txt parser. Results in 10-20% faster parsing.
+- Optimized yarn.lock v1 parser with lazy newline normalization (16% faster).
+- Optimized requirements.txt parser with each_line iteration and cached source lookup (10% faster).
+
 ### Removed
+
+## [14.4.0]
+
+### Changed
+
+- Switched Cargo.lock, poetry.lock, uv.lock, Gopkg.lock, and pylock.toml parsers from full TOML parsing to regex-based parsing for 50-250x faster lockfile parsing on these formats.
+- Switched Gemfile.lock parser from Bundler::LockfileParser to regex-based parsing for 6x faster parsing.
+- Switched Podfile.lock parser from YAML to regex-based parsing for 5x faster parsing.
+- Switched yarn.lock v2+ parser from YAML to regex-based parsing for 14x faster parsing.
 
 ## [14.3.0]
 

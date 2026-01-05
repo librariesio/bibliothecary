@@ -203,65 +203,56 @@ module Bibliothecary
       #   version: "1.2.0",
       # }, ...]
       def self.parse_v1_yarn_lock(contents, source = nil)
-        contents
-          .encode(universal_newline: true)
-          .gsub(/^#.*/, "")
-          .strip
-          .split("\n\n")
-          .map do |chunk|
-            requirements = chunk
-              .lines
-              .find { |l| !l.start_with?(" ") && l.strip.end_with?(":") } # first line, eg: '"@bar/foo@1.0.0", "@bar/foo@^1.0.1":'
-              .strip
-              .gsub(/"|:$/, "") # don't need quotes or trailing colon
-              .split(",") # split the list of requirements
+        deps = []
+        # Normalize line endings only if needed
+        contents = contents.gsub("\r\n", "\n").gsub("\r", "\n") if contents.include?("\r")
 
-            name, alias_name = yarn_strip_npm_protocol(requirements.first) # if a package is aliased, strip the alias and return the real package name
-            name = name.strip.split(/(?<!^)@/).first
-            requirements = requirements.map { |d| d.strip.split(/(?<!^)@/, 2) } # split each requirement on name/version "@"", not on leading namespace "@"
-            version = chunk.match(/version "?([^"]*)"?/)[1]
+        # Match package blocks: header line(s) ending with ":" followed by version line
+        # Header examples: 'package@version:' or '"package@version", "package@version2":'
+        contents.scan(/^([^\s#][^\n]*?):\s*\r?\n\s+version "?([^"\n]+)"?/m) do |header, version|
+          # Parse requirements from header (remove quotes and trailing colon)
+          requirements = header.gsub(/"/, "").split(",").map(&:strip)
 
-            {
-              name: name,
-              original_name: alias_name,
-              requirements: requirements.map { |x| x[1] },
-              original_requirement: alias_name.nil? ? nil : version,
-              version: version,
-              source: source,
-            }
-          end
+          name, alias_name = yarn_strip_npm_protocol(requirements.first)
+          name = name.strip.split(/(?<!^)@/).first
+          req_versions = requirements.map { |d| d.strip.split(/(?<!^)@/, 2) }
+
+          deps << {
+            name: name,
+            original_name: alias_name,
+            requirements: req_versions.map { |x| x[1] },
+            original_requirement: alias_name.nil? ? nil : version,
+            version: version,
+            source: source,
+          }
+        end
+        deps
       end
 
       def self.parse_v2_yarn_lock(contents, source = nil)
-        parsed = YAML.load(contents)
-        parsed = parsed.except("__metadata")
-        parsed
-          .reject do |packages, info|
-            # yarn v4+ creates a lockfile entry: "myproject@workspace" with a "use.local" version
-            #   this lockfile entry is a reference to the project to which the lockfile belongs
-            # skip this self-referential package
-            (info["version"].to_s.include?("use.local") && packages.include?("workspace")) ||
-              # yarn allows users to insert patches to their dependencies from within their project
-              # these patches are marked as a separate entry in the lock file but do not represent a new dependency
-              # and should be skipped here
-              # https://yarnpkg.com/protocol/patch
-              packages.include?("@patch:")
-          end
-          .map do |packages, info|
-            packages = packages.split(", ")
-            # use first requirement's name, assuming that deps will always resolve from deps of the same name
-            name, alias_name = yarn_strip_npm_protocol(packages.first.rpartition("@").first)
-            requirements = packages.map { |p| p.rpartition("@").last.gsub(/^.*:/, "") }
+        deps = []
+        # Match package blocks: "package@npm:req": followed by version: x.y.z
+        # Examples: "js-tokens@npm:^3.0.0 || ^4.0.0": or "pkg1@npm:req1, pkg2@npm:req2":
+        contents.scan(/^"([^"]+)":\s*\n\s+version:\s*([^\n]+)/m) do |packages_str, version|
+          # Skip workspace/local packages and patches
+          next if version.include?("use.local") && packages_str.include?("workspace")
+          next if packages_str.include?("@patch:")
 
-            {
-              name: name,
-              original_name: alias_name,
-              requirements: requirements,
-              original_requirement: alias_name.nil? ? nil : info["version"].to_s,
-              version: info["version"].to_s,
-              source: source,
-            }
-          end
+          packages = packages_str.split(", ")
+          # use first requirement's name, assuming that deps will always resolve from deps of the same name
+          name, alias_name = yarn_strip_npm_protocol(packages.first.rpartition("@").first)
+          requirements = packages.map { |p| p.rpartition("@").last.gsub(/^.*:/, "") }
+
+          deps << {
+            name: name,
+            original_name: alias_name,
+            requirements: requirements,
+            original_requirement: alias_name.nil? ? nil : version.to_s,
+            version: version.to_s,
+            source: source,
+          }
+        end
+        deps
       end
 
       def self.parse_v5_pnpm_lock(parsed_contents, source = nil)
