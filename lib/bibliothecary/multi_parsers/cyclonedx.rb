@@ -63,22 +63,22 @@ module Bibliothecary
 
       def self.mapping
         {
-          match_extension("cyclonedx.json") => {
+          match_extension("cyclonedx.json", case_insensitive: true) => {
             kind: "lockfile",
             parser: :parse_cyclonedx_json,
             ungroupable: true,
           },
-          match_extension("cdx.json") => {
+          match_extension("cdx.json", case_insensitive: true) => {
             kind: "lockfile",
             parser: :parse_cyclonedx_json,
             ungroupable: true,
           },
-          match_extension("cyclonedx.xml") => {
+          match_extension("cyclonedx.xml", case_insensitive: true) => {
             kind: "lockfile",
             parser: :parse_cyclonedx_xml,
             ungroupable: true,
           },
-          match_extension(".cdx.xml") => {
+          match_extension("cdx.xml", case_insensitive: true) => {
             kind: "lockfile",
             parser: :parse_cyclonedx_xml,
             ungroupable: true,

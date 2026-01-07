@@ -1,0 +1,37 @@
+SPDXVersion: SPDX-2.0
+SPDXID: SPDXRef-DOCUMENT
+DataLicense: CC0-1.0
+DocumentName: some-project
+DocumentNamespace: https://test.com
+DocumentComment: <text>some comment</text>
+
+
+Creator: Tool: Test tool
+Creator: Organization: Test tool
+Created: #{Time.now}
+
+
+Relationship: SPDXRef-DOCUMENT CONTAINS SPDXRef-Package
+Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-Package
+
+##### Package: package1
+
+PackageName: package1
+SPDXID: SPDXRef-pkg-npm-package1-1.0.0
+PackageVersion: 1.0.0
+PackageSupplier: Person: someuser
+PackageDownloadLocation: https://registry.npmjs.org/package1/-/package1-1.0.0.tgz
+PackageLicenseConcluded: MIT
+PackageLicenseDeclared: MIT
+ExternalRef: PACKAGE-MANAGER purl pkg:npm/package1@1.0.0
+
+##### Package: package2
+
+PackageName: package2
+SPDXID: SPDXRef-pkg-npm-package2-1.0.1
+PackageVersion: 1.0.1
+PackageSupplier: Person: someuser1
+PackageDownloadLocation: https://registry.npmjs.org/package2/-/package2-1.0.1.tgz
+PackageLicenseConcluded: MIT
+PackageLicenseDeclared: MIT
+ExternalRef: PACKAGE_MANAGER purl pkg:npm/package2@1.0.1

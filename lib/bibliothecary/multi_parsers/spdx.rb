@@ -30,12 +30,12 @@ module Bibliothecary
 
       def self.mapping
         {
-          match_extension(".spdx") => {
+          match_extension("spdx", case_insensitive: true) => {
             kind: "lockfile",
             parser: :parse_spdx_tag_value,
             ungroupable: true,
           },
-          match_extension(".spdx.json") => {
+          match_extension("spdx.json", case_insensitive: true) => {
             kind: "lockfile",
             parser: :parse_spdx_json,
             ungroupable: true,
