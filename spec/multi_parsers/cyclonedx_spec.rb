@@ -5,6 +5,38 @@ require "spec_helper"
 describe Bibliothecary::MultiParsers::CycloneDX do
   let(:unmapped_component) { "pkg:deb/debian/krita@5.0.5" }
 
+  it "matches json filenames" do
+    %w[
+      cyclonedx.json
+      cycloneDX.JSON
+      cdx.json
+      CDX.JSON
+      as-a-suffix-cyclonedx.json
+      as-a-suffix-cycloneDX.json
+      as-a-suffix-cdx.json
+      as-a-suffix-CDX.json
+    ].each do |filename|
+      result = described_class.analyse_contents(filename, '{ "components": [] }')
+      expect(result[:success]).to eq(true), "#{filename} should match but did not."
+    end
+  end
+
+  it "matches xml filenames" do
+    %w[
+      cyclonedx.xml
+      cycloneDX.XML
+      cdx.xml
+      CDX.XML
+      as-a-suffix-cyclonedx.xml
+      as-a-suffix-cycloneDX.XML
+      as-a-suffix-cdx.xml
+      as-a-suffix-CDX.XML
+    ].each do |filename|
+      result = described_class.analyse_contents(filename, '<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components></components></bom>')
+      expect(result[:success]).to eq(true), "#{filename} should match but did not."
+    end
+  end
+
   it "handles malformed json" do
     expect { described_class.parse_cyclonedx_json("{}") }.to raise_error(described_class::NoComponents)
   end

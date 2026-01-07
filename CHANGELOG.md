@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [15.1.2]
+
+### Changed
+
+- Make SPDX and CycloneDX filename matchers case-insensitive.
 
 ## [15.1.1]
 

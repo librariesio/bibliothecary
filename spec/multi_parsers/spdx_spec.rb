@@ -3,6 +3,30 @@
 require "spec_helper"
 
 describe Bibliothecary::MultiParsers::Spdx do
+  it "matches tag/value filenames" do
+    %w[
+      spdx
+      my.spdx
+      my.SPDX
+      as-a-suffix.spdx
+      as-a-suffix.SPDX
+    ].each do |filename|
+      result = described_class.analyse_contents(filename, load_fixture("tagvalue.spdx"))
+      expect(result[:success]).to eq(true), "#{filename} should match but did not."
+    end
+  end
+  it "matches json filenames" do
+    %w[
+      spdx.json
+      SPDX.JSON
+      as-a-suffix-spdx.json
+      as-a-suffix-SPDX.JSON
+    ].each do |filename|
+      result = described_class.analyse_contents(filename, load_fixture("spdx2.2.json"))
+      expect(result[:success]).to eq(true), "#{filename} should match but did not."
+    end
+  end
+
   it "has a platform name" do
     expect(described_class.parser_name).to eq("spdx")
   end
@@ -40,47 +64,7 @@ describe Bibliothecary::MultiParsers::Spdx do
     end
 
     context "with a properly formed file" do
-      let(:file) do
-        <<~SPDX
-          SPDXVersion: SPDX-2.0
-          SPDXID: SPDXRef-DOCUMENT
-          DataLicense: CC0-1.0
-          DocumentName: some-project
-          DocumentNamespace: https://test.com
-          DocumentComment: <text>some comment</text>
-
-
-          Creator: Tool: Test tool
-          Creator: Organization: Test tool
-          Created: #{Time.now}
-
-
-          Relationship: SPDXRef-DOCUMENT CONTAINS SPDXRef-Package
-          Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-Package
-
-          ##### Package: package1
-
-          PackageName: package1
-          SPDXID: SPDXRef-pkg-npm-package1-1.0.0
-          PackageVersion: 1.0.0
-          PackageSupplier: Person: someuser
-          PackageDownloadLocation: https://registry.npmjs.org/package1/-/package1-1.0.0.tgz
-          PackageLicenseConcluded: MIT
-          PackageLicenseDeclared: MIT
-          ExternalRef: PACKAGE-MANAGER purl pkg:npm/package1@1.0.0
-
-          ##### Package: package2
-
-          PackageName: package2
-          SPDXID: SPDXRef-pkg-npm-package2-1.0.1
-          PackageVersion: 1.0.1
-          PackageSupplier: Person: someuser1
-          PackageDownloadLocation: https://registry.npmjs.org/package2/-/package2-1.0.1.tgz
-          PackageLicenseConcluded: MIT
-          PackageLicenseDeclared: MIT
-          ExternalRef: PACKAGE_MANAGER purl pkg:npm/package2@1.0.1
-        SPDX
-      end
+      let(:file) { load_fixture("tagvalue.spdx") }
 
       it "parses the file" do
         result = described_class.analyse_contents("sbom.spdx", file)
