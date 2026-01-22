@@ -93,53 +93,6 @@ describe Bibliothecary::Parsers::Go do
                                                                                                     })
   end
 
-  it "parses depenencies from go.sum" do
-    expect(described_class.analyse_contents("go.sum", load_fixture("go.sum"))).to eq({
-                                                                                       parser: "go",
-                                                                                       path: "go.sum",
-                                                                                       project_name: nil,
-                                                                                       dependencies: [
-        Bibliothecary::Dependency.new(platform: "go",
-                                      name: "github.com/go-check/check",
-                                      requirement: "v0.0.0-20180628173108-788fd7840127",
-                                      type: "runtime",
-                                      source: "go.sum"),
-        Bibliothecary::Dependency.new(platform: "go",
-                                      name: "github.com/gomodule/redigo",
-                                      requirement: "v2.0.0+incompatible",
-                                      type: "runtime",
-                                      source: "go.sum"),
-        Bibliothecary::Dependency.new(platform: "go",
-                                      name: "github.com/kr/pretty",
-                                      requirement: "v0.1.0",
-                                      type: "runtime",
-                                      source: "go.sum"),
-        Bibliothecary::Dependency.new(platform: "go",
-                                      name: "github.com/kr/pty",
-                                      requirement: "v1.1.1",
-                                      type: "runtime",
-                                      source: "go.sum"),
-        Bibliothecary::Dependency.new(platform: "go",
-                                      name: "github.com/kr/text",
-                                      requirement: "v0.1.0",
-                                      type: "runtime",
-                                      source: "go.sum"),
-        Bibliothecary::Dependency.new(platform: "go",
-                                      name: "github.com/replicon/fast-archiver",
-                                      requirement: "v0.0.0-20121220195659-060bf9adec25",
-                                      type: "runtime",
-                                      source: "go.sum"),
-        Bibliothecary::Dependency.new(platform: "go",
-                                      name: "gopkg.in/yaml.v1",
-                                      requirement: "v1.0.0-20140924161607-9f9df34309c0",
-                                      type: "runtime",
-                                      source: "go.sum"),
-      ],
-                                                                                       kind: "lockfile",
-                                                                                       success: true,
-                                                                                     })
-  end
-
   it "parses dependencies from glide.yaml" do
     expect(described_class.analyse_contents("glide.yaml", load_fixture("glide.yaml"))).to eq({
                                                                                                parser: "go",
@@ -609,7 +562,7 @@ describe Bibliothecary::Parsers::Go do
 
   it "matches valid manifest filepaths" do
     expect(described_class.match?("go.mod")).to be_truthy
-    expect(described_class.match?("go.sum")).to be_truthy
+    expect(described_class.match?("go.sum")).to be_falsey # FTR, go.sum is not a lockfile
     expect(described_class.match?("Godeps/Godeps.json")).to be_truthy
     expect(described_class.match?("vendor/manifest")).to be_truthy
     expect(described_class.match?("glide.yaml")).to be_truthy

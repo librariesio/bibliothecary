@@ -25,10 +25,6 @@ module Bibliothecary
             kind: "manifest",
             parser: :parse_go_mod,
           },
-          match_filename("go.sum") => {
-            kind: "lockfile",
-            parser: :parse_go_sum,
-          },
           # Glide (unmaintained: https://github.com/Masterminds/glide#go-modules)
           match_filename("glide.yaml") => {
             kind: "manifest",
@@ -180,23 +176,6 @@ module Bibliothecary
             end
           end
         categorized_deps
-      end
-
-      def self.parse_go_sum(file_contents, options: {})
-        deps = []
-        file_contents.lines.map(&:strip).each do |line|
-          next unless (match = line.match(GOSUM_REGEXP))
-
-          deps << Dependency.new(
-            name: match[1].strip,
-            requirement: match[2].strip.split("/").first,
-            type: "runtime",
-            source: options.fetch(:filename, nil),
-            platform: platform_name
-          )
-        end
-        dependencies = deps.uniq
-        ParserResult.new(dependencies: dependencies)
       end
 
       def self.parse_go_resolved(file_contents, options: {})

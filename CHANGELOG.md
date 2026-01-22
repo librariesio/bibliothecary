@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- Remove "go.sum" as a lockfile for Golang because it is not a lockfile.
+
 ## [15.1.2]
 
 ### Changed
