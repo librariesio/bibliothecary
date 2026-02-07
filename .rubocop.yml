@@ -1,5 +1,4 @@
 ---
-
 # Without this, CI might pickup nested dep's rubocop files in vendor/
 inherit_mode:
   merge:
@@ -11,7 +10,6 @@ AllCops:
   Exclude:
     - spec/fixtures/**/*
     - vendor/bundle/**/* # This is actually needed for CI, not for biblio itself
-
 
 Metrics/BlockLength:
   Max: 100
@@ -67,3 +65,5 @@ Style/IfUnlessModifier:
   Enabled: false
 Layout/BlockAlignment:
   EnforcedStyleAlignWith: start_of_block
+Style/EmptyClassDefinition:
+  Enabled: false
