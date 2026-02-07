@@ -55,7 +55,7 @@ describe Bibliothecary::Parsers::NPM do
     expect(described_class.analyse_contents("package.json", load_fixture("package.json"))).to eq({
                                                                                                    parser: "npm",
                                                                                                    path: "package.json",
-                                                                                                   project_name: nil,
+                                                                                                   project_name: "librarian",
                                                                                                    dependencies: [
         Bibliothecary::Dependency.new(platform: "npm", name: "babel", requirement: "^4.6.6", type: "runtime", local: false, source: "package.json"),
         Bibliothecary::Dependency.new(platform: "npm", name: "@some-scope/actual-package", requirement: "^1.1.3", original_name: "alias-package-name", original_requirement: "^1.1.3", type: "runtime", local: false, source: "package.json"),
@@ -537,7 +537,7 @@ describe Bibliothecary::Parsers::NPM do
     expect(described_class.analyse_contents("package.json", load_fixture("yarn-with-git-repo/package.json"))).to eq({
                                                                                                                       parser: "npm",
                                                                                                                       path: "package.json",
-                                                                                                                      project_name: nil,
+                                                                                                                      project_name: "fake-yarn",
                                                                                                                       dependencies: [
         Bibliothecary::Dependency.new(platform: "npm", name: "vue", requirement: "https://github.com/vuejs/vue.git#v2.6.12", type: "runtime", local: false, source: "package.json"),
       ],
@@ -777,7 +777,7 @@ describe Bibliothecary::Parsers::NPM do
       expect(described_class.analyse_contents("package.json", load_fixture("npm-local-file/package.json"))).to eq({
                                                                                                                     parser: "npm",
                                                                                                                     path: "package.json",
-                                                                                                                    project_name: nil,
+                                                                                                                    project_name: "npm-bad",
                                                                                                                     dependencies: [
           Bibliothecary::Dependency.new(platform: "npm", name: "left-pad", requirement: "^1.3.0", type: "runtime", local: false, source: "package.json"),
           Bibliothecary::Dependency.new(platform: "npm", name: "other-package", requirement: "file:src/other-package", type: "runtime", local: true, source: "package.json"),
@@ -1040,10 +1040,10 @@ describe Bibliothecary::Parsers::NPM do
 
   it "parses bun.lock workspace dependency file" do
     expect(described_class.analyse_contents("bun.lock", load_fixture("bun-workspace/bun.lock"))).to eq({
-                                                                                           parser: "npm",
-                                                                                           path: "bun.lock",
-                                                                                           project_name: nil,
-                                                                                           dependencies: [
+                                                                                                         parser: "npm",
+                                                                                                         path: "bun.lock",
+                                                                                                         project_name: nil,
+                                                                                                         dependencies: [
 
        Bibliothecary::Dependency.new(platform: "npm", name: "@types/node", requirement: "25.2.1", type: "runtime", local: false, source: "bun.lock"),
        Bibliothecary::Dependency.new(platform: "npm", name: "@workspace/package-a", requirement: "workspace:packages/package-a", type: "runtime", local: false, source: "bun.lock"),
@@ -1053,8 +1053,8 @@ describe Bibliothecary::Parsers::NPM do
        Bibliothecary::Dependency.new(platform: "npm", name: "sprintf-js", requirement: "1.1.3", type: "runtime", local: false, source: "bun.lock"),
        Bibliothecary::Dependency.new(platform: "npm", name: "undici-types", requirement: "7.16.0", type: "runtime", local: false, source: "bun.lock"),
      ],
-                                                                                           kind: "lockfile",
-                                                                                           success: true,
-                                                                                         })
+                                                                                                         kind: "lockfile",
+                                                                                                         success: true,
+                                                                                                       })
   end
 end
