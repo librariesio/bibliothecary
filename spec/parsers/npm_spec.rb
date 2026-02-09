@@ -1050,6 +1050,7 @@ describe Bibliothecary::Parsers::NPM do
        Bibliothecary::Dependency.new(platform: "npm", name: "@workspace/package-b", requirement: "workspace:packages/package-b", type: "runtime", local: false, source: "bun.lock"),
        Bibliothecary::Dependency.new(platform: "npm", name: "bun-types", requirement: "1.3.8", type: "development", local: false, source: "bun.lock"),
        Bibliothecary::Dependency.new(platform: "npm", name: "chalk", requirement: "5.6.2", type: "runtime", local: false, source: "bun.lock"),
+       Bibliothecary::Dependency.new(platform: "npm", name: "lodash", requirement: "github:lodash/lodash#35bb1d9", type: "runtime", local: false, source: "bun.lock"),
        Bibliothecary::Dependency.new(platform: "npm", name: "sprintf-js", requirement: "1.1.3", type: "runtime", local: false, source: "bun.lock"),
        Bibliothecary::Dependency.new(platform: "npm", name: "undici-types", requirement: "7.16.0", type: "runtime", local: false, source: "bun.lock"),
      ],
