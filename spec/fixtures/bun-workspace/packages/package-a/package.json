@@ -1,0 +1,14 @@
+{
+    "name": "@workspace/package-a",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "./src/index.ts",
+    "scripts": {
+        "dev": "bun run src/index.ts",
+        "build": "bun build src/index.ts --outdir dist"
+    },
+    "dependencies": {
+        "chalk": "^5.3.0",
+        "lodash": "git+https://github.com/lodash/lodash.git#4.17.23"
+    }
+}

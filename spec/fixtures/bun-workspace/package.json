@@ -1,0 +1,16 @@
+{
+    "name": "bun-workspaces",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "bun run --filter '*' build",
+        "test": "bun test",
+        "dev": "bun run --filter '*' dev"
+    },
+    "devDependencies": {
+        "bun-types": "latest"
+    }
+}

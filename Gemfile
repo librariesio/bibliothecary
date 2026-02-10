@@ -11,7 +11,7 @@ end
 
 group :development, :test do
   gem "rake", "~> 12.0"
-  gem "rubocop", "~> 1.71"
+  gem "rubocop", "~> 1.84"
   gem "rubocop-rails"
   gem "rubocop-rake" # This is needed by packageurl-ruby, until it reclassifies it as a dev dependency.
 end
