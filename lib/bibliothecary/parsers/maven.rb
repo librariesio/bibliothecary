@@ -196,10 +196,9 @@ module Bibliothecary
         project_name = nil
 
         dependencies = file_contents.split("\n").map do |line|
-          if project_name.nil?
-            project_name_match = GRADLE_PROJECT_REGEXP.match(line)
-            project_name = project_name_match.captures[0] if project_name_match
-            next unless project_name.nil?
+          if project_name.nil? && (project_name_match = GRADLE_PROJECT_REGEXP.match(line))
+            project_name = project_name_match.captures[0]
+            next
           end
 
           current_type_match = GRADLE_TYPE_REGEXP.match(line)
