@@ -21,10 +21,12 @@ module Bibliothecary
       # e.g. "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEXP = /(\+---|\\---){1}/
 
+      GRADLE_PROJECT_REGEXP = /\s*Project '?:?([^\s']+)'?/
+
       # Dependencies that are on-disk projects, eg:
       # e.g. "\--- project :api:my-internal-project"
       # e.g. "+--- my-group:my-alias:1.2.3 -> project :client (*)"
-      GRADLE_PROJECT_REGEXP = /project :(\S+)?/
+      GRADLE_DEPENDENCY_PROJECT_REGEXP = /project :(\S+)?/
 
       # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
       # e.g. the "(n)" in "+--- my-group:my-name:1.2.3 (n)"
@@ -191,8 +193,15 @@ module Bibliothecary
 
       def self.parse_gradle_resolved(file_contents, options: {})
         current_type = nil
+        project_name = nil
 
         dependencies = file_contents.split("\n").map do |line|
+          if project_name.nil?
+            project_name_match = GRADLE_PROJECT_REGEXP.match(line)
+            project_name = project_name_match.captures[0] if project_name_match
+            next unless project_name.nil?
+          end
+
           current_type_match = GRADLE_TYPE_REGEXP.match(line)
           current_type = current_type_match.captures[0] if current_type_match
 
@@ -203,13 +212,13 @@ module Bibliothecary
 
           # gradle can import on-disk projects and deps will be listed under them, e.g. `+--- project :test:integration`,
           # so we treat these projects as "internal" deps with requirement of "1.0.0"
-          if (project_match = line.match(GRADLE_PROJECT_REGEXP))
+          if (project_match = line.match(GRADLE_DEPENDENCY_PROJECT_REGEXP))
             # an empty project name is self-referential (i.e. a cycle), and we don't need to track the manifest's project itself, e.g. "+--- project :"
             next if project_match[1].nil?
 
             # project names can have colons (e.g. for gradle projects in subfolders), which breaks maven artifact naming assumptions, so just replace them with hyphens.
             project_name = project_match[1].gsub(":", "-")
-            line = line.sub(GRADLE_PROJECT_REGEXP, "internal:#{project_name}:1.0.0")
+            line = line.sub(GRADLE_DEPENDENCY_PROJECT_REGEXP, "internal:#{project_name}:1.0.0")
           end
 
           dep = line
@@ -259,7 +268,10 @@ module Bibliothecary
         end
           .compact
           .uniq { |item| [item.name, item.requirement, item.type, item.original_name, item.original_requirement] }
-        ParserResult.new(dependencies: dependencies)
+        ParserResult.new(
+          project_name: project_name,
+          dependencies: dependencies
+        )
       end
 
       def self.parse_maven_resolved(file_contents, options: {})
