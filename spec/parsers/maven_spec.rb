@@ -888,6 +888,19 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         ],
                             })
     end
+
+    it "parses root project name from gradle-dependencies-q.txt, generated from a multi-project Gradle build" do
+      lockfile = <<~FILE
+        ------------------------------------------------------------
+        Root project 'build-logic'
+        ------------------------------------------------------------
+      FILE
+
+      results = described_class.analyse_contents("gradle-dependencies-q.txt", lockfile)
+      puts results
+      expect(results[:success]).to be true
+      expect(results[:project_name]).to eq("build-logic")
+    end
   end
 
   describe "parse_pom_manifests" do

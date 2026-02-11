@@ -21,7 +21,8 @@ module Bibliothecary
       # e.g. "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEXP = /(\+---|\\---){1}/
 
-      GRADLE_PROJECT_REGEXP = /\s*Project '?:?([^\s']+)'?/
+      # The name of the project containing the given dependencies
+      GRADLE_PROJECT_REGEXP = /\s*(Root p|P)roject '?:?([^\s']+)'?/
 
       # Dependencies that are on-disk projects, eg:
       # e.g. "\--- project :api:my-internal-project"
@@ -197,7 +198,7 @@ module Bibliothecary
 
         dependencies = file_contents.split("\n").map do |line|
           if project_name.nil? && (project_name_match = GRADLE_PROJECT_REGEXP.match(line))
-            project_name = project_name_match.captures[0]
+            project_name = project_name_match.captures[1]
             next
           end
 
