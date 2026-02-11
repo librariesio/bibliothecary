@@ -598,7 +598,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     it "parses dependencies from gradle-dependencies-q.txt" do
       deps = described_class.analyse_contents("gradle-dependencies-q.txt", load_fixture("gradle-dependencies-q.txt"))
       expect(deps[:kind]).to eq "lockfile"
-      guavas = deps[:dependencies].select { |item| item.name == "com.google.guava:guava" && item.type == "api" }
+      guavas = deps[:dependencies].select { |item| item.name == "com.google.guava:guava" && item.type == "compileClasspath" }
       expect(guavas.length).to eq 1
       expect(guavas[0].requirement).to eq "25.1-jre"
     end
@@ -652,15 +652,15 @@ RSpec.describe Bibliothecary::Parsers::Maven do
         .to eq(Bibliothecary::ParserResult.new(dependencies: []))
     end
 
-    it "includes local projects as deps with 'internal' group and '1.0.0' requirement" do
-      expect(described_class.parse_gradle_resolved("+--- project :api:my-internal-project"))
+    it "includes local projects as deps with '*' requirement" do
+      expect(described_class.parse_gradle_resolved("+--- project :acme:my-internal-project"))
         .to eq(Bibliothecary::ParserResult.new(
-                 project_name: "api-my-internal-project",
+                 project_name: nil,
                  dependencies: [
                    Bibliothecary::Dependency.new(
                      platform: "maven",
-                     name: "internal:api-my-internal-project",
-                     requirement: "1.0.0",
+                     name: ":acme:my-internal-project",
+                     requirement: "*",
                      type: nil
                    ),
                ]
@@ -670,12 +670,12 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     it "includes aliases to local projects" do
       expect(described_class.parse_gradle_resolved("|    +--- my-group:common-job-update-gateway-compress:5.0.2 -> project :client (*)"))
         .to eq(Bibliothecary::ParserResult.new(
-                 project_name: "client",
+                 project_name: nil,
                  dependencies: [
                    Bibliothecary::Dependency.new(
                      platform: "maven",
-                     name: "internal:client",
-                     requirement: "1.0.0",
+                     name: ":client",
+                     requirement: "*",
                      original_name: "my-group:common-job-update-gateway-compress",
                      original_requirement: "5.0.2",
                      type: nil
@@ -843,14 +843,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(results).to eq({
                               parser: "maven",
                               path: "gradle-dependencies-q.txt",
-                              project_name: "list",
+                              project_name: "utilities",
                               kind: "lockfile",
                               success: true,
                               dependencies: [
-          Bibliothecary::Dependency.new(name: "internal:list", requirement: "1.0.0", type: "compileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
+          Bibliothecary::Dependency.new(name: ":list", requirement: "*", type: "compileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.fusesource.jansi:jansi", requirement: "2.4.1", type: "compileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
-          Bibliothecary::Dependency.new(name: "org.fusesource.jansi:jansi", requirement: "2.4.1", type: "implementation", platform: "maven", source: "gradle-dependencies-q.txt"),
-          Bibliothecary::Dependency.new(name: "internal:list", requirement: "1.0.0", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
+          Bibliothecary::Dependency.new(name: ":list", requirement: "*", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.guava:guava", requirement: "33.0.0-jre", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.guava:failureaccess", requirement: "1.0.2", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.guava:listenablefuture", requirement: "9999.0-empty-to-avoid-conflict-with-guava", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
@@ -858,7 +857,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
           Bibliothecary::Dependency.new(name: "org.checkerframework:checker-qual", requirement: "3.41.0", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.errorprone:error_prone_annotations", requirement: "2.23.0", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.fusesource.jansi:jansi", requirement: "2.4.1", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
-          Bibliothecary::Dependency.new(name: "internal:list", requirement: "1.0.0", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
+          Bibliothecary::Dependency.new(name: ":list", requirement: "*", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.fusesource.jansi:jansi", requirement: "2.4.1", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.junit.jupiter:junit-jupiter", requirement: "5.12.1", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.junit:junit-bom", requirement: "5.12.1", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
@@ -867,8 +866,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
           Bibliothecary::Dependency.new(name: "org.junit.platform:junit-platform-commons", requirement: "1.12.1", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.opentest4j:opentest4j", requirement: "1.3.0", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.apiguardian:apiguardian-api", requirement: "1.1.2", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
-          Bibliothecary::Dependency.new(name: "org.junit.jupiter:junit-jupiter", requirement: "5.12.1", type: "testImplementation", platform: "maven", source: "gradle-dependencies-q.txt"),
-          Bibliothecary::Dependency.new(name: "internal:list", requirement: "1.0.0", type: "testRuntimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
+          Bibliothecary::Dependency.new(name: ":list", requirement: "*", type: "testRuntimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.guava:guava", requirement: "33.0.0-jre", type: "testRuntimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.guava:failureaccess", requirement: "1.0.2", type: "testRuntimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.guava:listenablefuture", requirement: "9999.0-empty-to-avoid-conflict-with-guava", type: "testRuntimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
