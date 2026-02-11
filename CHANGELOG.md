@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Start collecting "project_name" from gradle-dependencies-q.txt lockfiles.
 - Start collecting "project_name" from package.json manifests.
 
+### Changed
+
+- Bibliothecary::Parsers::Maven's GRADLE_PROJECT_REGEXP constant was renamed to GRADLE_DEPENDENCY_PROJECT_REGEXP.
+
 ### Removed
 
 - Remove "go.sum" as a lockfile for Golang because it is not a lockfile.
