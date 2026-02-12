@@ -29,7 +29,7 @@ module Bibliothecary
       # Dependencies that are on-disk projects, eg:
       # e.g. "\--- project :api:my-internal-project"
       # e.g. "+--- my-group:my-alias:1.2.3 -> project :client (*)"
-      GRADLE_DEPENDENCY_SUB_PROJECT_REGEXP = /project :?(\S+)?/
+      GRADLE_DEPENDENCY_PROJECT_REGEXP = /project :?(\S+)?/
 
       # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
       # e.g. the "(n)" in "+--- my-group:my-name:1.2.3 (n)"
@@ -48,8 +48,6 @@ module Bibliothecary
       GRADLE_GAV_REGEXP = /([\w.-]+):([\w.-]+)(?::(#{GRADLE_VERSION_REGEXP}|#{GRADLE_VAR_INTERPOLATION_REGEXP}|#{GRADLE_CODE_INTERPOLATION_REGEXP}))?/ # e.g. "group:artifactId:1.2.3"
       GRADLE_GROOVY_SIMPLE_REGEXP = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(?\s*['"]#{GRADLE_GAV_REGEXP}['"]/m
       GRADLE_KOTLIN_SIMPLE_REGEXP = /(#{GRADLE_DEPENDENCY_METHODS.join('|')})\s*\(\s*"#{GRADLE_GAV_REGEXP}"/m
-
-      GRADLE_RESOLVED_DEPENDENCY_REGEXP = /^([\w.-]+(?::[\w.-]+)?)(?::([\w.-]+))?$/ # either 1 capture (version) or 2 captures (name, version)
 
       MAVEN_PROPERTY_REGEXP = /\$\{(.+?)\}/
       MAX_DEPTH = 5
@@ -197,11 +195,12 @@ module Bibliothecary
       end
 
       def self.parse_gradle_resolved(file_contents, options: {})
+        keep_subprojects = options.fetch(:keep_subprojects_in_maven_tree, false)
         current_type = nil
         project_name = nil
 
         dependencies = file_contents.lines.filter_map do |line|
-          next if line.strip.end_with?("(n)") # unresolved or already-resolved dependencies
+          next if line.strip.end_with?("(n)") # skip unresolved or already-resolved dependencies
 
           if project_name.nil? && (project_name_match = GRADLE_PROJECT_REGEXP.match(line))
             project_name = project_name_match.captures[1]
@@ -214,8 +213,10 @@ module Bibliothecary
           gradle_dep_match = GRADLE_DEP_REGEXP.match(line)
           next unless gradle_dep_match
 
-          # support gradle multi-project build dependencies
-          if (project_match = line.match(GRADLE_DEPENDENCY_SUB_PROJECT_REGEXP))
+          # omit Gradle project dependencies
+          if (project_match = line.match(GRADLE_DEPENDENCY_PROJECT_REGEXP))
+            next unless keep_subprojects
+
             # an empty project name is self-referential (i.e. a cycle), and we don't need to track the manifest's
             # project itself, e.g. "+--- project :"
             next if project_match[1].nil?
@@ -223,7 +224,7 @@ module Bibliothecary
             sub_project_name = project_match[1]
             # gradle sub-project versions cannot be specified when including them (gradle just uses whichever version is in the
             # codebase), and their versions are 'unspecified' if not set, so just use a wildcard placeholder since it doesn't matter.
-            line = line.sub(GRADLE_DEPENDENCY_SUB_PROJECT_REGEXP, ":#{sub_project_name}:*")
+            line = line.sub(GRADLE_DEPENDENCY_PROJECT_REGEXP, ":#{sub_project_name}:*")
           end
 
           cleaned_line = line

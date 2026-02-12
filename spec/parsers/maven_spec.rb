@@ -604,7 +604,11 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     end
 
     it "has the correct sections and dependencies from gradle-dependencies-q.txt" do
-      deps = described_class.analyse_contents("gradle-dependencies-q.txt", load_fixture("gradle-dependencies-q.txt"))
+      deps = described_class.analyse_contents(
+        "gradle-dependencies-q.txt",
+        load_fixture("gradle-dependencies-q.txt"),
+        options: { keep_subprojects_in_maven_tree: true }
+      )
 
       compile_classpath = deps[:dependencies].select { |item| item.type == "compileClasspath" }
       expect(compile_classpath.length).to eq 158
@@ -653,7 +657,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     end
 
     it "includes local projects as deps with '*' requirement" do
-      expect(described_class.parse_gradle_resolved("+--- project :acme:my-internal-project"))
+      expect(described_class.parse_gradle_resolved("+--- project :acme:my-internal-project", options: { keep_subprojects_in_maven_tree: true }))
         .to eq(Bibliothecary::ParserResult.new(
                  project_name: nil,
                  dependencies: [
@@ -667,8 +671,16 @@ RSpec.describe Bibliothecary::Parsers::Maven do
                ))
     end
 
+    it "excludes local projects when keep_subprojects_in_maven_tree is not true" do
+      expect(described_class.parse_gradle_resolved("+--- project :acme:my-internal-project"))
+        .to eq(Bibliothecary::ParserResult.new(
+                 project_name: nil,
+                 dependencies: []
+               ))
+    end
+
     it "includes aliases to local projects" do
-      expect(described_class.parse_gradle_resolved("|    +--- my-group:common-job-update-gateway-compress:5.0.2 -> project :client (*)"))
+      expect(described_class.parse_gradle_resolved("|    +--- my-group:common-job-update-gateway-compress:5.0.2 -> project :client (*)", options: { keep_subprojects_in_maven_tree: true }))
         .to eq(Bibliothecary::ParserResult.new(
                  project_name: nil,
                  dependencies: [
@@ -839,7 +851,11 @@ RSpec.describe Bibliothecary::Parsers::Maven do
     end
 
     it "parses dependencies from gradle-dependencies-q.txt, generated from a multi-project Gradle build" do
-      results = described_class.analyse_contents("gradle-dependencies-q.txt", load_fixture("gradle_multi_project/gradle-dependencies-q.txt"))
+      results = described_class.analyse_contents(
+        "gradle-dependencies-q.txt",
+        load_fixture("gradle_multi_project/gradle-dependencies-q.txt"),
+        options: { keep_subprojects_in_maven_tree: true }
+      )
       expect(results).to eq({
                               parser: "maven",
                               path: "gradle-dependencies-q.txt",

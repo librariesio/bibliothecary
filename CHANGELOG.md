@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Exclude sub-projects in gradle-dependencies-q.txt unless keep_subprojects_in_maven_tree is true.
 - The format of Gradle sub-project GAVs that were found in a dependency tree has changed from "internal:my-subproject:1.0.0" to ":my-subproject:*".
 - Gradle dependencies in gradle-dependencies-q.txt with "(n)" suffix will be ignored in favor of their resolved dependencies, so the full dependency list could now be smaller but still correct.
 
