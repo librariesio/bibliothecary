@@ -21,12 +21,15 @@ module Bibliothecary
       # e.g. "|    \\--- com.google.guava:guava:23.5-jre (*)"
       GRADLE_DEP_REGEXP = /(\+---|\\---){1}/
 
-      GRADLE_PROJECT_REGEXP = /\s*Project '?:?([^\s']+)'?/
+      GRADLE_ARROW_REGEXP = / -> /
+
+      # The name of the project containing the given dependencies
+      GRADLE_PROJECT_REGEXP = /\s*(Root p|P)roject '?:?([^\s']+)'?/
 
       # Dependencies that are on-disk projects, eg:
       # e.g. "\--- project :api:my-internal-project"
       # e.g. "+--- my-group:my-alias:1.2.3 -> project :client (*)"
-      GRADLE_DEPENDENCY_PROJECT_REGEXP = /project :(\S+)?/
+      GRADLE_DEPENDENCY_PROJECT_REGEXP = /project :?(\S+)?/
 
       # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
       # e.g. the "(n)" in "+--- my-group:my-name:1.2.3 (n)"
@@ -192,12 +195,15 @@ module Bibliothecary
       end
 
       def self.parse_gradle_resolved(file_contents, options: {})
+        keep_subprojects = options.fetch(:keep_subprojects_in_maven_tree, false)
         current_type = nil
         project_name = nil
 
-        dependencies = file_contents.split("\n").map do |line|
+        dependencies = file_contents.lines.filter_map do |line|
+          next if line.strip.end_with?("(n)") # skip unresolved or already-resolved dependencies
+
           if project_name.nil? && (project_name_match = GRADLE_PROJECT_REGEXP.match(line))
-            project_name = project_name_match.captures[0]
+            project_name = project_name_match.captures[1]
             next
           end
 
@@ -207,66 +213,68 @@ module Bibliothecary
           gradle_dep_match = GRADLE_DEP_REGEXP.match(line)
           next unless gradle_dep_match
 
-          split = gradle_dep_match.captures[0]
-
-          # gradle can import on-disk projects and deps will be listed under them, e.g. `+--- project :test:integration`,
-          # so we treat these projects as "internal" deps with requirement of "1.0.0"
+          # omit Gradle project dependencies
           if (project_match = line.match(GRADLE_DEPENDENCY_PROJECT_REGEXP))
-            # an empty project name is self-referential (i.e. a cycle), and we don't need to track the manifest's project itself, e.g. "+--- project :"
+            next unless keep_subprojects
+
+            # an empty project name is self-referential (i.e. a cycle), and we don't need to track the manifest's
+            # project itself, e.g. "+--- project :"
             next if project_match[1].nil?
 
-            # project names can have colons (e.g. for gradle projects in subfolders), which breaks maven artifact naming assumptions, so just replace them with hyphens.
-            project_name = project_match[1].gsub(":", "-")
-            line = line.sub(GRADLE_DEPENDENCY_PROJECT_REGEXP, "internal:#{project_name}:1.0.0")
+            sub_project_name = project_match[1]
+            # gradle sub-project versions cannot be specified when including them (gradle just uses whichever version is in the
+            # codebase), and their versions are 'unspecified' if not set, so just use a wildcard placeholder since it doesn't matter.
+            line = line.sub(GRADLE_DEPENDENCY_PROJECT_REGEXP, ":#{sub_project_name}:*")
           end
 
-          dep = line
-            .split(split)[1]
+          cleaned_line = line
+            .split(gradle_dep_match.captures[0])[1]
             .sub(GRADLE_LINE_ENDING_REGEXP, "")
             .sub(/ FAILED$/, "") # dependency could not be resolved (but still may have a version)
-            .sub(" -> ", ":") # handle version arrow syntax
             .strip
-            .split(":")
 
-          # A testImplementation line can look like this so just skip those
-          # \--- org.springframework.security:spring-security-test (n)
-          next unless dep.length >= 3
+          # " -> " is either for an aliased dependency, or a version that was resolved from a different requirement or no requirement.
+          if cleaned_line =~ GRADLE_ARROW_REGEXP
+            original_depstring, resolved_depstring = *cleaned_line.split(GRADLE_ARROW_REGEXP, 2)
 
-          if dep.count == 6
-            # get name from renamed package resolution "org:name:version -> renamed_org:name:version"
-            Dependency.new(
-              original_name: dep[0, 2].join(":"),
-              original_requirement: dep[2],
-              name: dep[-3..-2].join(":"),
-              requirement: dep[-1],
-              type: current_type,
-              source: options.fetch(:filename, nil),
-              platform: platform_name
-            )
-          elsif dep.count == 5
-            # get name from renamed package resolution "org:name -> renamed_org:name:version"
-            Dependency.new(
-              original_name: dep[0, 2].join(":"),
-              original_requirement: "*",
-              name: dep[-3..-2].join(":"),
-              requirement: dep[-1],
-              type: current_type,
-              source: options.fetch(:filename, nil),
-              platform: platform_name
-            )
+            parts = original_depstring.split(":")
+            original_name = parts[0..1].join(":") # original at minimum will have a 2-part name
+            original_requirement = parts[2] || "*"
+
+            parts = resolved_depstring.split(":")
+            resolved_requirement = parts.pop # resolved at minimum will have a 1-part version
+            resolved_name = parts.join(":")
+
+            # this case is not an actual alias, just a different version was resolved, so won't keep track of original
+            if resolved_name.empty? && !original_name.empty?
+              resolved_name = original_name
+              original_name = nil
+              original_requirement = nil
+            end
           else
-            # get name from version conflict resolution ("org:name:version -> version") and no-resolution ("org:name:version")
-            Dependency.new(
-              name: dep[0..1].join(":"),
-              requirement: dep[-1],
-              type: current_type,
-              source: options.fetch(:filename, nil),
-              platform: platform_name
-            )
+            original_name = nil
+            original_requirement = nil
+
+            # handle simple resolved dep
+            parts = cleaned_line.split(":")
+            next if parts.size < 3 # we didn't get a full name and version, so skip it
+
+            resolved_requirement = parts.pop
+            resolved_name = parts.join(":")
           end
+
+          Dependency.new(
+            original_name: original_name,
+            original_requirement: original_requirement,
+            name: resolved_name,
+            requirement: resolved_requirement,
+            type: current_type,
+            source: options.fetch(:filename, nil),
+            platform: platform_name
+          )
         end
-          .compact
           .uniq { |item| [item.name, item.requirement, item.type, item.original_name, item.original_requirement] }
+
         ParserResult.new(
           project_name: project_name,
           dependencies: dependencies
