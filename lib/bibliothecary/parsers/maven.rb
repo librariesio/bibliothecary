@@ -195,89 +195,93 @@ module Bibliothecary
       end
 
       def self.parse_gradle_resolved(file_contents, options: {})
-        keep_subprojects = options.fetch(:keep_subprojects_in_maven_tree, false)
         current_type = nil
         project_name = nil
 
-        dependencies = file_contents.lines.filter_map do |line|
-          next if line.strip.end_with?("(n)") # skip unresolved or already-resolved dependencies
-
-          if project_name.nil? && (project_name_match = GRADLE_PROJECT_REGEXP.match(line))
-            project_name = project_name_match.captures[1]
-            next
-          end
-
-          current_type_match = GRADLE_TYPE_REGEXP.match(line)
-          current_type = current_type_match.captures[0] if current_type_match
-
-          gradle_dep_match = GRADLE_DEP_REGEXP.match(line)
-          next unless gradle_dep_match
-
-          # omit Gradle project dependencies
-          if (project_match = line.match(GRADLE_DEPENDENCY_PROJECT_REGEXP))
-            next unless keep_subprojects
-
-            # an empty project name is self-referential (i.e. a cycle), and we don't need to track the manifest's
-            # project itself, e.g. "+--- project :"
-            next if project_match[1].nil?
-
-            sub_project_name = project_match[1]
-            # gradle sub-project versions cannot be specified when including them (gradle just uses whichever version is in the
-            # codebase), and their versions are 'unspecified' if not set, so just use a wildcard placeholder since it doesn't matter.
-            line = line.sub(GRADLE_DEPENDENCY_PROJECT_REGEXP, ":#{sub_project_name}:*")
-          end
-
-          cleaned_line = line
-            .split(gradle_dep_match.captures[0])[1]
-            .sub(GRADLE_LINE_ENDING_REGEXP, "")
-            .sub(/ FAILED$/, "") # dependency could not be resolved (but still may have a version)
-            .strip
-
-          # " -> " is either for an aliased dependency, or a version that was resolved from a different requirement or no requirement.
-          if cleaned_line =~ GRADLE_ARROW_REGEXP
-            original_depstring, resolved_depstring = *cleaned_line.split(GRADLE_ARROW_REGEXP, 2)
-
-            parts = original_depstring.split(":")
-            original_name = parts[0..1].join(":") # original at minimum will have a 2-part name
-            original_requirement = parts[2] || "*"
-
-            parts = resolved_depstring.split(":")
-            resolved_requirement = parts.pop # resolved at minimum will have a 1-part version
-            resolved_name = parts.join(":")
-
-            # this case is not an actual alias, just a different version was resolved, so won't keep track of original
-            if resolved_name.empty? && !original_name.empty?
-              resolved_name = original_name
-              original_name = nil
-              original_requirement = nil
+        dependencies = file_contents.lines
+          .filter_map do |line|
+            if project_name.nil? && (project_name_match = GRADLE_PROJECT_REGEXP.match(line))
+              project_name = project_name_match.captures[1]
+              nil
+            elsif (current_type_match = GRADLE_TYPE_REGEXP.match(line))
+              current_type = current_type_match.captures[0] if current_type_match
+              nil
+            else
+              parse_resolved_gradle_dep_line(line, current_type: current_type, options: options)
             end
-          else
-            original_name = nil
-            original_requirement = nil
-
-            # handle simple resolved dep
-            parts = cleaned_line.split(":")
-            next if parts.size < 3 # we didn't get a full name and version, so skip it
-
-            resolved_requirement = parts.pop
-            resolved_name = parts.join(":")
           end
-
-          Dependency.new(
-            original_name: original_name,
-            original_requirement: original_requirement,
-            name: resolved_name,
-            requirement: resolved_requirement,
-            type: current_type,
-            source: options.fetch(:filename, nil),
-            platform: platform_name
-          )
-        end
           .uniq { |item| [item.name, item.requirement, item.type, item.original_name, item.original_requirement] }
 
         ParserResult.new(
           project_name: project_name,
           dependencies: dependencies
+        )
+      end
+
+      def self.parse_resolved_gradle_dep_line(line, current_type: nil, options: {})
+        return if line.strip.end_with?("(n)") # skip unresolved or already-resolved dependencies
+
+        gradle_dep_match = GRADLE_DEP_REGEXP.match(line)
+        return unless gradle_dep_match
+
+        # omit Gradle project dependencies
+        if (project_match = line.match(GRADLE_DEPENDENCY_PROJECT_REGEXP))
+          return unless options.fetch(:keep_subprojects_in_maven_tree, false)
+
+          # an empty project name is self-referential (i.e. a cycle), and we don't need to track the manifest's
+          # project itself, e.g. "+--- project :"
+          return if project_match[1].nil?
+
+          sub_project_name = project_match[1]
+          # gradle sub-project versions cannot be specified when including them (gradle just uses whichever version is in the
+          # codebase), and their versions are 'unspecified' if not set, so just use a wildcard placeholder since it doesn't matter.
+          line = line.sub(GRADLE_DEPENDENCY_PROJECT_REGEXP, ":#{sub_project_name}:*")
+        end
+
+        cleaned_line = line
+          .split(gradle_dep_match.captures[0])[1]
+          .sub(GRADLE_LINE_ENDING_REGEXP, "")
+          .sub(/ FAILED$/, "") # dependency could not be resolved (but still may have a version)
+          .strip
+
+        # " -> " is either for an aliased dependency, or a version that was resolved from a different requirement or no requirement.
+        if cleaned_line =~ GRADLE_ARROW_REGEXP
+          original_depstring, resolved_depstring = *cleaned_line.split(GRADLE_ARROW_REGEXP, 2)
+
+          parts = original_depstring.split(":")
+          original_name = parts[0..1].join(":") # original at minimum will have a 2-part name
+          original_requirement = parts[2] || "*"
+
+          parts = resolved_depstring.split(":")
+          resolved_requirement = parts.pop # resolved at minimum will have a 1-part version
+          resolved_name = parts.join(":")
+
+          # this case is not an actual alias, just a different version was resolved, so won't keep track of original
+          if resolved_name.empty? && !original_name.empty?
+            resolved_name = original_name
+            original_name = nil
+            original_requirement = nil
+          end
+        else
+          original_name = nil
+          original_requirement = nil
+
+          # handle simple resolved dep
+          parts = cleaned_line.split(":")
+          return if parts.size < 3 # we didn't get a full name and version, so skip it
+
+          resolved_requirement = parts.pop
+          resolved_name = parts.join(":")
+        end
+
+        Dependency.new(
+          original_name: original_name,
+          original_requirement: original_requirement,
+          name: resolved_name,
+          requirement: resolved_requirement,
+          type: current_type,
+          source: options.fetch(:filename, nil),
+          platform: platform_name
         )
       end
 
