@@ -195,11 +195,14 @@ module Bibliothecary
       end
 
       def self.parse_gradle_resolved(file_contents, options: {})
+        keep_subprojects = options.fetch(:keep_subprojects_in_maven_tree, false)
+        source = options.fetch(:filename, nil)
         current_type = nil
         project_name = nil
 
         dependencies = file_contents.lines
           .filter_map do |line|
+            line = line.strip
             if project_name.nil? && (project_name_match = GRADLE_PROJECT_REGEXP.match(line))
               project_name = project_name_match.captures[1]
               nil
@@ -207,7 +210,7 @@ module Bibliothecary
               current_type = current_type_match.captures[0] if current_type_match
               nil
             else
-              parse_resolved_gradle_dep_line(line, current_type: current_type, options: options)
+              parse_resolved_gradle_dep_line(line, current_type: current_type, keep_subprojects: keep_subprojects, source: source)
             end
           end
           .uniq { |item| [item.name, item.requirement, item.type, item.original_name, item.original_requirement] }
@@ -218,15 +221,15 @@ module Bibliothecary
         )
       end
 
-      def self.parse_resolved_gradle_dep_line(line, current_type: nil, options: {})
-        return if line.strip.end_with?("(n)") # skip unresolved or already-resolved dependencies
+      def self.parse_resolved_gradle_dep_line(line, current_type: nil, keep_subprojects: false, source: nil)
+        return if line.end_with?("(n)") # skip unresolved or already-resolved dependencies
 
         gradle_dep_match = GRADLE_DEP_REGEXP.match(line)
         return unless gradle_dep_match
 
         # omit Gradle project dependencies
         if (project_match = line.match(GRADLE_DEPENDENCY_PROJECT_REGEXP))
-          return unless options.fetch(:keep_subprojects_in_maven_tree, false)
+          return unless keep_subprojects
 
           # an empty project name is self-referential (i.e. a cycle), and we don't need to track the manifest's
           # project itself, e.g. "+--- project :"
@@ -235,7 +238,7 @@ module Bibliothecary
           sub_project_name = project_match[1]
           # gradle sub-project versions cannot be specified when including them (gradle just uses whichever version is in the
           # codebase), and their versions are 'unspecified' if not set, so just use a wildcard placeholder since it doesn't matter.
-          line = line.sub(GRADLE_DEPENDENCY_PROJECT_REGEXP, ":#{sub_project_name}:*")
+          line = line.sub(project_match[0], ":#{sub_project_name}:*")
         end
 
         cleaned_line = line
@@ -245,8 +248,8 @@ module Bibliothecary
           .strip
 
         # " -> " is either for an aliased dependency, or a version that was resolved from a different requirement or no requirement.
-        if cleaned_line =~ GRADLE_ARROW_REGEXP
-          original_depstring, resolved_depstring = *cleaned_line.split(GRADLE_ARROW_REGEXP, 2)
+        if cleaned_line.include?(" -> ")
+          original_depstring, resolved_depstring = cleaned_line.split(" -> ", 2)
 
           parts = original_depstring.split(":")
           original_name = parts[0..1].join(":") # original at minimum will have a 2-part name
@@ -280,7 +283,7 @@ module Bibliothecary
           name: resolved_name,
           requirement: resolved_requirement,
           type: current_type,
-          source: options.fetch(:filename, nil),
+          source: source,
           platform: platform_name
         )
       end

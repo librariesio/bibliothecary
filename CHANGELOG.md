@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Adds a new Bibliothecary::Parsers::Maven.parse_resolved_gradle_dep_line() method for parsing a single line in gradle-dependencies-q.txt.
+- Adds a new Bibliothecary::Parsers::Maven.parse_resolved_gradle_dep_line() method for parsing a single line in gradle-dependencies-q.txt, and optimize it a bit.
 
 ## [15.2.1]
 
