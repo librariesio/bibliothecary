@@ -664,7 +664,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
                    Bibliothecary::Dependency.new(
                      platform: "maven",
                      name: ":acme:my-internal-project",
-                     requirement: "*",
+                     requirement: "0.0.0",
                      type: nil
                    ),
                ]
@@ -687,7 +687,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
                    Bibliothecary::Dependency.new(
                      platform: "maven",
                      name: ":client",
-                     requirement: "*",
+                     requirement: "0.0.0",
                      original_name: "my-group:common-job-update-gateway-compress",
                      original_requirement: "5.0.2",
                      type: nil
@@ -734,7 +734,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       GRADLE
 
       expect(described_class.parse_gradle_resolved(gradle_dependencies_out)).to eq Bibliothecary::ParserResult.new(
-        project_name: "submodules:test",
+        project_name: ":submodules:test",
         dependencies: []
       )
     end
@@ -859,13 +859,13 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(results).to eq({
                               parser: "maven",
                               path: "gradle-dependencies-q.txt",
-                              project_name: "utilities",
+                              project_name: ":utilities",
                               kind: "lockfile",
                               success: true,
                               dependencies: [
-          Bibliothecary::Dependency.new(name: ":list", requirement: "*", type: "compileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
+          Bibliothecary::Dependency.new(name: ":list", requirement: "0.0.0", type: "compileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.fusesource.jansi:jansi", requirement: "2.4.1", type: "compileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
-          Bibliothecary::Dependency.new(name: ":list", requirement: "*", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
+          Bibliothecary::Dependency.new(name: ":list", requirement: "0.0.0", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.guava:guava", requirement: "33.0.0-jre", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.guava:failureaccess", requirement: "1.0.2", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.guava:listenablefuture", requirement: "9999.0-empty-to-avoid-conflict-with-guava", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
@@ -873,7 +873,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
           Bibliothecary::Dependency.new(name: "org.checkerframework:checker-qual", requirement: "3.41.0", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.errorprone:error_prone_annotations", requirement: "2.23.0", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.fusesource.jansi:jansi", requirement: "2.4.1", type: "runtimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
-          Bibliothecary::Dependency.new(name: ":list", requirement: "*", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
+          Bibliothecary::Dependency.new(name: ":list", requirement: "0.0.0", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.fusesource.jansi:jansi", requirement: "2.4.1", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.junit.jupiter:junit-jupiter", requirement: "5.12.1", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.junit:junit-bom", requirement: "5.12.1", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
@@ -882,7 +882,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
           Bibliothecary::Dependency.new(name: "org.junit.platform:junit-platform-commons", requirement: "1.12.1", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.opentest4j:opentest4j", requirement: "1.3.0", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "org.apiguardian:apiguardian-api", requirement: "1.1.2", type: "testCompileClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
-          Bibliothecary::Dependency.new(name: ":list", requirement: "*", type: "testRuntimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
+          Bibliothecary::Dependency.new(name: ":list", requirement: "0.0.0", type: "testRuntimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.guava:guava", requirement: "33.0.0-jre", type: "testRuntimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.guava:failureaccess", requirement: "1.0.2", type: "testRuntimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
           Bibliothecary::Dependency.new(name: "com.google.guava:listenablefuture", requirement: "9999.0-empty-to-avoid-conflict-with-guava", type: "testRuntimeClasspath", platform: "maven", source: "gradle-dependencies-q.txt"),
