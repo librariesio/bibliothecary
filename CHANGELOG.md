@@ -19,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Return the leading ":" with Gradle project names from gradle-dependencies-q.txt, and use "0.0.0" for a version instead of "*" since this is a lockfie.
 
-
 ### Added
 
 - Adds a new Bibliothecary::Parsers::Maven.parse_resolved_gradle_dep_line() method for parsing a single line in gradle-dependencies-q.txt, and optimize it a bit.
