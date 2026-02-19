@@ -6,6 +6,8 @@ describe Bibliothecary::MultiParsers::CycloneDX do
   let(:unmapped_component) { "pkg:deb/debian/krita@5.0.5" }
 
   it "matches json filenames" do
+    input = '{ "components": [] }'
+
     %w[
       cyclonedx.json
       cycloneDX.JSON
@@ -16,12 +18,14 @@ describe Bibliothecary::MultiParsers::CycloneDX do
       as-a-suffix-cdx.json
       as-a-suffix-CDX.json
     ].each do |filename|
-      result = described_class.analyse_contents(filename, '{ "components": [] }')
+      result = described_class.analyse_contents(filename, input)
       expect(result[:success]).to eq(true), "#{filename} should match but did not."
     end
   end
 
   it "matches xml filenames" do
+    input = '<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components></components></bom>'
+
     %w[
       cyclonedx.xml
       cycloneDX.XML
@@ -32,61 +36,85 @@ describe Bibliothecary::MultiParsers::CycloneDX do
       as-a-suffix-cdx.xml
       as-a-suffix-CDX.XML
     ].each do |filename|
-      result = described_class.analyse_contents(filename, '<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components></components></bom>')
+      result = described_class.analyse_contents(filename, input)
       expect(result[:success]).to eq(true), "#{filename} should match but did not."
     end
   end
 
   it "handles malformed json" do
-    expect { described_class.parse_cyclonedx_json("{}") }.to raise_error(described_class::NoComponents)
+    input = "{}"
+
+    expect { described_class.parse_cyclonedx_json(input) }.to raise_error(described_class::NoComponents)
   end
 
   it "handles malformed xml" do
-    expect { described_class.parse_cyclonedx_xml('<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"></bom>') }.to raise_error(described_class::NoComponents)
+    input = '<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"></bom>'
+
+    expect { described_class.parse_cyclonedx_xml(input) }.to raise_error(described_class::NoComponents)
   end
 
   it "handles empty json components" do
-    expect(described_class.parse_cyclonedx_json('{ "components": [] }')).to eq(Bibliothecary::ParserResult.new(dependencies: []))
+    input = '{ "components": [] }'
+
+    expect(described_class.parse_cyclonedx_json(input)).to eq(
+      Bibliothecary::ParserResult.new(dependencies: [])
+    )
   end
 
   it "handles empty xml components" do
-    expect(described_class.parse_cyclonedx_xml('<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components></components></bom>')).to eq(Bibliothecary::ParserResult.new(dependencies: []))
+    input = '<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components></components></bom>'
+
+    expect(described_class.parse_cyclonedx_xml(input)).to eq(
+      Bibliothecary::ParserResult.new(dependencies: [])
+    )
   end
 
   it "handles unmapped json component" do
-    expect(described_class.parse_cyclonedx_json(%({ "components": [{ "purl": "#{unmapped_component}" }] }), options: { filename: "test-full-sbom.json" })).to eq(Bibliothecary::ParserResult.new(dependencies: [
-      Bibliothecary::Dependency.new(
-        platform: "deb",
-        name: "debian/krita",
-        requirement: "5.0.5",
-        type: "lockfile",
-        source: "test-full-sbom.json"
-      ),
-    ]))
+    input = %({ "components": [{ "purl": "#{unmapped_component}" }] })
+
+    expect(described_class.parse_cyclonedx_json(input, options: { filename: "test-full-sbom.json" })).to eq(
+      Bibliothecary::ParserResult.new(dependencies: [
+            Bibliothecary::Dependency.new(
+              platform: "deb",
+              name: "debian/krita",
+              requirement: "5.0.5",
+              type: "lockfile",
+              source: "test-full-sbom.json"
+            ),
+          ])
+    )
   end
 
   it "handles unmapped xml component" do
-    expect(described_class.parse_cyclonedx_xml(%(<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>), options: { filename: "cyclonedx.xml" })).to eq(Bibliothecary::ParserResult.new(dependencies: [
-      Bibliothecary::Dependency.new(
-        platform: "deb",
-        name: "debian/krita",
-        requirement: "5.0.5",
-        type: "lockfile",
-        source: "cyclonedx.xml"
-      ),
-    ]))
+    input = %(<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>)
+
+    expect(described_class.parse_cyclonedx_xml(input, options: { filename: "cyclonedx.xml" })).to eq(
+      Bibliothecary::ParserResult.new(dependencies: [
+            Bibliothecary::Dependency.new(
+              platform: "deb",
+              name: "debian/krita",
+              requirement: "5.0.5",
+              type: "lockfile",
+              source: "cyclonedx.xml"
+            ),
+          ])
+    )
   end
 
   it "handles no xml pragma" do
-    expect(described_class.parse_cyclonedx_xml(%(<bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>), options: { filename: "cyclonedx.xml" })).to eq(Bibliothecary::ParserResult.new(dependencies: [
-      Bibliothecary::Dependency.new(
-        platform: "deb",
-        name: "debian/krita",
-        requirement: "5.0.5",
-        type: "lockfile",
-        source: "cyclonedx.xml"
-      ),
-    ]))
+    input = %(<bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>)
+
+    expect(described_class.parse_cyclonedx_xml(input, options: { filename: "cyclonedx.xml" })).to eq(
+      Bibliothecary::ParserResult.new(dependencies: [
+            Bibliothecary::Dependency.new(
+              platform: "deb",
+              name: "debian/krita",
+              requirement: "5.0.5",
+              type: "lockfile",
+              source: "cyclonedx.xml"
+            ),
+          ])
+    )
   end
 
   describe "ManifestEntries#parse!" do
@@ -108,83 +136,102 @@ describe Bibliothecary::MultiParsers::CycloneDX do
   end
 
   it "handles empty json components" do
-    expect(described_class.analyse_contents("cyclonedx.json", '{ "components": [] }')).to eq({
-                                                                                               parser: "cyclonedx",
-                                                                                               path: "cyclonedx.json",
-                                                                                               project_name: nil,
-                                                                                               dependencies: [],
-                                                                                               kind: "lockfile",
-                                                                                               success: true,
-                                                                                             })
+    input = '{ "components": [] }'
+
+    expect(described_class.analyse_contents("cyclonedx.json", input)).to eq(
+      {
+        parser: "cyclonedx",
+        path: "cyclonedx.json",
+        project_name: nil,
+        dependencies: [],
+        kind: "lockfile",
+        success: true,
+      }
+    )
   end
 
   it "handles empty xml components" do
-    expect(described_class.analyse_contents("cyclonedx.xml", '<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components></components></bom>')).to eq({
-                                                                                                                                                                                                parser: "cyclonedx",
-                                                                                                                                                                                                path: "cyclonedx.xml",
-                                                                                                                                                                                                project_name: nil,
-                                                                                                                                                                                                dependencies: [],
-                                                                                                                                                                                                kind: "lockfile",
-                                                                                                                                                                                                success: true,
-                                                                                                                                                                                              })
+    input = '<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components></components></bom>'
+
+    expect(described_class.analyse_contents("cyclonedx.xml", input)).to eq(
+      {
+        parser: "cyclonedx",
+        path: "cyclonedx.xml",
+        project_name: nil,
+        dependencies: [],
+        kind: "lockfile",
+        success: true,
+      }
+    )
   end
 
   it "handles unmapped json component" do
-    expect(described_class.analyse_contents("cyclonedx.json", %({ "components": [{ "purl": "#{unmapped_component}" }] }))).to eq({
-                                                                                                                                   parser: "cyclonedx",
-                                                                                                                                   path: "cyclonedx.json",
-                                                                                                                                   project_name: nil,
-                                                                                                                                   dependencies: [
-                                                                                                                                    Bibliothecary::Dependency.new(
-                                                                                                                                      platform: "deb",
-                                                                                                                                      name: "debian/krita",
-                                                                                                                                      requirement: "5.0.5",
-                                                                                                                                      type: "lockfile",
-                                                                                                                                      source: "cyclonedx.json"
-                                                                                                                                    ),
-                                                                                                                                   ],
-                                                                                                                                   kind: "lockfile",
-                                                                                                                                   success: true,
-                                                                                                                                 })
+    input = %({ "components": [{ "purl": "#{unmapped_component}" }] })
+
+    expect(described_class.analyse_contents("cyclonedx.json", input)).to eq(
+      {
+        parser: "cyclonedx",
+        path: "cyclonedx.json",
+        project_name: nil,
+        dependencies: [
+          Bibliothecary::Dependency.new(
+            platform: "deb",
+            name: "debian/krita",
+            requirement: "5.0.5",
+            type: "lockfile",
+            source: "cyclonedx.json"
+          ),
+        ],
+        kind: "lockfile",
+        success: true,
+      }
+    )
   end
 
   it "handles unmapped xml component" do
-    expect(described_class.analyse_contents("cyclonedx.xml", %(<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>))).to eq({
-                                                                                                                                                                                                                                                          parser: "cyclonedx",
-                                                                                                                                                                                                                                                          path: "cyclonedx.xml",
-                                                                                                                                                                                                                                                          project_name: nil,
-                                                                                                                                                                                                                                                          dependencies: [
-                                                                                                                                                                                                                                                            Bibliothecary::Dependency.new(
-                                                                                                                                                                                                                                                              platform: "deb",
-                                                                                                                                                                                                                                                              name: "debian/krita",
-                                                                                                                                                                                                                                                              requirement: "5.0.5",
-                                                                                                                                                                                                                                                              type: "lockfile",
-                                                                                                                                                                                                                                                              source: "cyclonedx.xml"
-                                                                                                                                                                                                                                                            ),
+    input = %(<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>)
 
-                                                                                                                                                                                                                                                          ],
-                                                                                                                                                                                                                                                          kind: "lockfile",
-                                                                                                                                                                                                                                                          success: true,
-                                                                                                                                                                                                                                                        })
+    expect(described_class.analyse_contents("cyclonedx.xml", input)).to eq(
+      {
+        parser: "cyclonedx",
+        path: "cyclonedx.xml",
+        project_name: nil,
+        dependencies: [
+          Bibliothecary::Dependency.new(
+            platform: "deb",
+            name: "debian/krita",
+            requirement: "5.0.5",
+            type: "lockfile",
+            source: "cyclonedx.xml"
+          ),
+        ],
+        kind: "lockfile",
+        success: true,
+      }
+    )
   end
 
   it "handles no xml pragma" do
-    expect(described_class.analyse_contents("cyclonedx.xml", %(<bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>))).to eq({
-                                                                                                                                                                                                                    parser: "cyclonedx",
-                                                                                                                                                                                                                    path: "cyclonedx.xml",
-                                                                                                                                                                                                                    project_name: nil,
-                                                                                                                                                                                                                    dependencies: [
-                                                                                                                                                                                                                      Bibliothecary::Dependency.new(
-                                                                                                                                                                                                                        platform: "deb",
-                                                                                                                                                                                                                        name: "debian/krita",
-                                                                                                                                                                                                                        requirement: "5.0.5",
-                                                                                                                                                                                                                        type: "lockfile",
-                                                                                                                                                                                                                        source: "cyclonedx.xml"
-                                                                                                                                                                                                                      ),
-                                                                                                                                                                                                                    ],
-                                                                                                                                                                                                                    kind: "lockfile",
-                                                                                                                                                                                                                    success: true,
-                                                                                                                                                                                                                  })
+    input = %(<bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>)
+
+    expect(described_class.analyse_contents("cyclonedx.xml", input)).to eq(
+      {
+        parser: "cyclonedx",
+        path: "cyclonedx.xml",
+        project_name: nil,
+        dependencies: [
+        Bibliothecary::Dependency.new(
+          platform: "deb",
+          name: "debian/krita",
+          requirement: "5.0.5",
+          type: "lockfile",
+          source: "cyclonedx.xml"
+        ),
+],
+        kind: "lockfile",
+        success: true,
+      }
+    )
   end
 
   describe "ManifestEntries#parse!" do
@@ -233,13 +280,15 @@ describe Bibliothecary::MultiParsers::CycloneDX do
     result = described_class.analyse_contents("cyclonedx.json", load_fixture("cyclonedx.json"))
 
     artifactory_dependencies.each do |dependency|
-      expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(Bibliothecary::Dependency.new(
-                                                                                     platform: dependency[:platform].to_s,
-                                                                                     name: dependency[:name],
-                                                                                     requirement: dependency[:version],
-                                                                                     type: "lockfile",
-                                                                                     source: "cyclonedx.json"
-                                                                                   ))
+      expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(
+        Bibliothecary::Dependency.new(
+          platform: dependency[:platform].to_s,
+          name: dependency[:name],
+          requirement: dependency[:version],
+          type: "lockfile",
+          source: "cyclonedx.json"
+        )
+      )
     end
   end
 
@@ -247,13 +296,15 @@ describe Bibliothecary::MultiParsers::CycloneDX do
     result = described_class.analyse_contents("cyclonedx.json", load_fixture("cyclonedx-nested.json"))
 
     artifactory_dependencies.each do |dependency|
-      expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(Bibliothecary::Dependency.new(
-                                                                                     platform: dependency[:platform].to_s,
-                                                                                     name: dependency[:name],
-                                                                                     requirement: dependency[:version],
-                                                                                     type: "lockfile",
-                                                                                     source: "cyclonedx.json"
-                                                                                   ))
+      expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(
+        Bibliothecary::Dependency.new(
+          platform: dependency[:platform].to_s,
+          name: dependency[:name],
+          requirement: dependency[:version],
+          type: "lockfile",
+          source: "cyclonedx.json"
+        )
+      )
     end
   end
 
@@ -261,13 +312,15 @@ describe Bibliothecary::MultiParsers::CycloneDX do
     result = described_class.analyse_contents("cyclonedx.xml", load_fixture("cyclonedx.xml"))
 
     artifactory_dependencies.each do |dependency|
-      expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(Bibliothecary::Dependency.new(
-                                                                                     platform: dependency[:platform].to_s,
-                                                                                     name: dependency[:name],
-                                                                                     requirement: dependency[:version],
-                                                                                     type: "lockfile",
-                                                                                     source: "cyclonedx.xml"
-                                                                                   ))
+      expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(
+        Bibliothecary::Dependency.new(
+          platform: dependency[:platform].to_s,
+          name: dependency[:name],
+          requirement: dependency[:version],
+          type: "lockfile",
+          source: "cyclonedx.xml"
+        )
+      )
     end
   end
 
@@ -275,13 +328,15 @@ describe Bibliothecary::MultiParsers::CycloneDX do
     result = described_class.analyse_contents("cyclonedx.xml", load_fixture("cyclonedx-nested.xml"))
 
     artifactory_dependencies.each do |dependency|
-      expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(Bibliothecary::Dependency.new(
-                                                                                     platform: dependency[:platform].to_s,
-                                                                                     name: dependency[:name],
-                                                                                     requirement: dependency[:version],
-                                                                                     type: "lockfile",
-                                                                                     source: "cyclonedx.xml"
-                                                                                   ))
+      expect(result[:dependencies].find { |d| d.name == dependency[:name] }).to eq(
+        Bibliothecary::Dependency.new(
+          platform: dependency[:platform].to_s,
+          name: dependency[:name],
+          requirement: dependency[:version],
+          type: "lockfile",
+          source: "cyclonedx.xml"
+        )
+      )
     end
   end
 
