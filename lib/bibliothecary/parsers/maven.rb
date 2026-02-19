@@ -24,12 +24,12 @@ module Bibliothecary
       GRADLE_ARROW_REGEXP = / -> /
 
       # The name of the project containing the given dependencies
-      GRADLE_PROJECT_REGEXP = /\s*(Root p|P)roject '?:?([^\s']+)'?/
+      GRADLE_PROJECT_REGEXP = /\s*(Root p|P)roject '?(:?[^\s']+)'?/
 
       # Dependencies that are on-disk projects, eg:
       # e.g. "\--- project :api:my-internal-project"
       # e.g. "+--- my-group:my-alias:1.2.3 -> project :client (*)"
-      GRADLE_DEPENDENCY_PROJECT_REGEXP = /project :?(\S+)?/
+      GRADLE_DEPENDENCY_PROJECT_REGEXP = /project (:?\S+)?/
 
       # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
       # e.g. the "(n)" in "+--- my-group:my-name:1.2.3 (n)"
@@ -238,7 +238,7 @@ module Bibliothecary
           sub_project_name = project_match[1]
           # gradle sub-project versions cannot be specified when including them (gradle just uses whichever version is in the
           # codebase), and their versions are 'unspecified' if not set, so just use a wildcard placeholder since it doesn't matter.
-          line = line.sub(project_match[0], ":#{sub_project_name}:*")
+          line = line.sub(project_match[0], "#{sub_project_name}:*")
         end
 
         cleaned_line = line

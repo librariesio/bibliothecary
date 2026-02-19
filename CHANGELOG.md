@@ -13,7 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-## [15.2.1]
+## [15.3.0]
+
+### Changed
+
+- Return the leading ":" with Gradle project names from gradle-dependencies-q.txt.
 
 ### Added
 

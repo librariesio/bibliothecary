@@ -734,7 +734,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       GRADLE
 
       expect(described_class.parse_gradle_resolved(gradle_dependencies_out)).to eq Bibliothecary::ParserResult.new(
-        project_name: "submodules:test",
+        project_name: ":submodules:test",
         dependencies: []
       )
     end
@@ -859,7 +859,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
       expect(results).to eq({
                               parser: "maven",
                               path: "gradle-dependencies-q.txt",
-                              project_name: "utilities",
+                              project_name: ":utilities",
                               kind: "lockfile",
                               success: true,
                               dependencies: [
