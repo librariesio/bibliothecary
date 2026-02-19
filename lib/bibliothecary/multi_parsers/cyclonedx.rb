@@ -30,13 +30,13 @@ module Bibliothecary
           @parse_queue = parse_queue.dup
         end
 
-        def add(purl, source = nil)
+        def add(purl, version = nil, source = nil)
           # Use the mapped purl->bibliothecary platform, or else fall back to original platform itself.
           mapping = PurlUtil::PURL_TYPE_MAPPING.fetch(purl.type, purl.type)
 
           @entries << Dependency.new(
             name: PurlUtil.full_name(purl),
-            requirement: purl.version,
+            requirement: version || purl.version,
             platform: mapping ? mapping.to_s : purl.type,
             type: "lockfile",
             source: source
@@ -45,18 +45,28 @@ module Bibliothecary
 
         # Iterates over each manifest entry in the parse_queue, and accepts a block which will
         # be called on each component. The block has two jobs: 1) add more sub-components
-        # to parse (if they exist), and 2) return the components purl.
+        # to parse (if they exist), and 2) return the components purl and version.
         def parse!(source = nil, &block)
           until @parse_queue.empty?
             component = @parse_queue.shift
 
-            purl_text = block.call(component, @parse_queue)
+            result = block.call(component, @parse_queue)
+
+            next unless result
+
+            if result.is_a?(Hash)
+              purl_text = result[:purl]
+              version = result[:version]
+            else
+              purl_text = result
+              version = nil
+            end
 
             next unless purl_text
 
             purl = PackageURL.parse(purl_text)
 
-            add(purl, source)
+            add(purl, version, source)
           end
         end
       end
@@ -104,7 +114,7 @@ module Bibliothecary
         manifest_entries.parse!(options.fetch(:filename, nil)) do |component, parse_queue|
           parse_queue.concat(component["components"]) if component["components"]
 
-          component["purl"]
+          { purl: component["purl"], version: component["version"] }
         end
 
         ParserResult.new(dependencies: manifest_entries.entries.to_a)
@@ -131,7 +141,10 @@ module Bibliothecary
           # always safely concatenate it to the parse queue.
           parse_queue.concat(component.locate("components/*"))
 
-          component.locate("purl").first&.text
+          purl_text = component.locate("purl").first&.text
+          version = component.locate("version").first&.text
+
+          { purl: purl_text, version: version }
         end
 
         ParserResult.new(dependencies: manifest_entries.entries.to_a)

@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [15.2.1]
+
+### Changed
+
+- Prefer component version field over purl version in CycloneDX parser.
+
 ## [15.2.0]
 
 ### Changed

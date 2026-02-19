@@ -86,7 +86,7 @@ describe Bibliothecary::MultiParsers::CycloneDX do
   end
 
   it "handles unmapped xml component" do
-    input = %(<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>)
+    input = %(<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl><version>5.0.5</version></component></components></bom>)
 
     expect(described_class.parse_cyclonedx_xml(input, options: { filename: "cyclonedx.xml" })).to eq(
       Bibliothecary::ParserResult.new(dependencies: [
@@ -102,7 +102,7 @@ describe Bibliothecary::MultiParsers::CycloneDX do
   end
 
   it "handles no xml pragma" do
-    input = %(<bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>)
+    input = %(<bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl><version>5.0.5</version></component></components></bom>)
 
     expect(described_class.parse_cyclonedx_xml(input, options: { filename: "cyclonedx.xml" })).to eq(
       Bibliothecary::ParserResult.new(dependencies: [
@@ -166,7 +166,7 @@ describe Bibliothecary::MultiParsers::CycloneDX do
   end
 
   it "handles unmapped json component" do
-    input = %({ "components": [{ "purl": "#{unmapped_component}" }] })
+    input = %({ "components": [{ "purl": "#{unmapped_component}", "version": "5.0.5" }] })
 
     expect(described_class.analyse_contents("cyclonedx.json", input)).to eq(
       {
@@ -189,7 +189,7 @@ describe Bibliothecary::MultiParsers::CycloneDX do
   end
 
   it "handles unmapped xml component" do
-    input = %(<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>)
+    input = %(<?xml version="1.0" encoding="UTF-8"?><bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl><version>5.0.5</version></component></components></bom>)
 
     expect(described_class.analyse_contents("cyclonedx.xml", input)).to eq(
       {
@@ -212,7 +212,7 @@ describe Bibliothecary::MultiParsers::CycloneDX do
   end
 
   it "handles no xml pragma" do
-    input = %(<bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl></component></components></bom>)
+    input = %(<bom xmlns="http://cyclonedx.org/schema/bom/1.4"><components><component><purl>#{unmapped_component}</purl><version>5.0.5</version></component></components></bom>)
 
     expect(described_class.analyse_contents("cyclonedx.xml", input)).to eq(
       {
