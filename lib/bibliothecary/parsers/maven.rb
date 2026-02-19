@@ -237,8 +237,8 @@ module Bibliothecary
 
           sub_project_name = project_match[1]
           # gradle sub-project versions cannot be specified when including them (gradle just uses whichever version is in the
-          # codebase), and their versions are 'unspecified' if not set, so just use a wildcard placeholder since it doesn't matter.
-          line = line.sub(project_match[0], "#{sub_project_name}:*")
+          # codebase), and their versions are 'unspecified' if not set, so just use a placeholder version since it doesn't matter.
+          line = line.sub(project_match[0], "#{sub_project_name}:0.0.0")
         end
 
         cleaned_line = line

@@ -17,7 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Return the leading ":" with Gradle project names from gradle-dependencies-q.txt.
+- Return the leading ":" with Gradle project names from gradle-dependencies-q.txt, and use "0.0.0" for a version instead of "*" since this is a lockfie.
+
 
 ### Added
 
