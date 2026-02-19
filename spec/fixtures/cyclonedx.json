@@ -21,6 +21,14 @@
   },
   "components": [
     {
+      "type": "library",
+      "bom-ref": "pkg:rpm/redhat/nginx-core@1.26.3-1.el10?arch=x86_64&distro=redhat-10.1&epoch=2",
+      "name": "nginx-core",
+      "version": "2:1.26.3-1.el10",
+      "licenses": [{ "license": { "id": "BSD-2-Clause" } }],
+      "purl": "pkg:rpm/redhat/nginx-core@1.26.3-1.el10?arch=x86_64&distro=redhat-10.1&epoch=2"
+    },
+    {
       "bom-ref": "pkg:golang/../access-go-client?syft-id=7911d0d6beeef730",
       "type": "library",
       "name": "../access-go-client",

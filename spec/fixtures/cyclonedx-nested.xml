@@ -6,14 +6,17 @@
       <components>
         <component type="library">
           <name>1to2</name>
+          <version>1.0.0</version>
           <purl>pkg:npm/1to2@1.0.0</purl>
           <components>
             <component type="library">
               <name>go</name>
+              <version>v0.38.0</version>
               <purl>pkg:golang/cloud.google.com/go@v0.38.0</purl>
               <components>
                 <component type="library">
                   <name>HdrHistogram</name>
+                  <version>2.1.9</version>
                   <purl>pkg:maven/org.hdrhistogram/HdrHistogram@2.1.9</purl>
                 </component>
               </components>
