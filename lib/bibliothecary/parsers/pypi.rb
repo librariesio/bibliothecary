@@ -76,6 +76,10 @@ module Bibliothecary
             kind: "lockfile",
             parser: :parse_poetry_lock,
           },
+          match_filename("uv.lock") => {
+            kind: "lockfile",
+            parser: :parse_uv_lock,
+          },
           # PEP-751: official python lockfile format (https://peps.python.org/pep-0751/)
           ->(p) { PEP_751_LOCKFILE_REGEXP.match(p) } => {
             kind: "lockfile",
@@ -98,6 +102,43 @@ module Bibliothecary
           )
         end
         ParserResult.new(dependencies: dependencies)
+      end
+
+      def self.parse_uv_lock(file_contents, options: {})
+        lockfile = Tomlrb.parse(file_contents)
+        packages = lockfile.fetch("package", [])
+
+        # Build a map of package name -> group type from the root project's dev-dependencies
+        dev_dep_types = {}
+        root_project = packages.find { |pkg| pkg.fetch("source", {}).key?("virtual") }
+        root_project&.fetch("dev-dependencies", {})&.each do |group_name, group_deps|
+          group_deps.each do |dep|
+            dev_dep_types[normalize_name(dep["name"])] = group_name
+          end
+        end
+
+        project_name = root_project&.[]("name")
+
+        dependencies = packages.filter_map do |pkg|
+          source = pkg.fetch("source", {})
+
+          # Skip the root project (virtual source means the project itself)
+          next if source.key?("virtual")
+
+          is_local = true if source.key?("path")
+          normalized_name = normalize_name(pkg["name"])
+          type = dev_dep_types[normalized_name] || "runtime"
+
+          Dependency.new(
+            platform: platform_name,
+            name: normalized_name,
+            requirement: pkg["version"] || "*",
+            type: type,
+            source: options.fetch(:filename, nil),
+            local: is_local
+          )
+        end
+        ParserResult.new(project_name: project_name, dependencies: dependencies)
       end
 
       def self.parse_pipfile(file_contents, options: {})
@@ -130,12 +171,22 @@ module Bibliothecary
         pep621_deps = pep621_manifest.fetch("dependencies", []).map { |d| parse_pep_508_dep_spec(d) }
         deps += map_dependencies(pep621_deps, "runtime", options.fetch(:filename, nil))
 
+        # Parse PEP 735 [dependency-groups] (used by uv and other tools)
+        file_contents
+          .fetch("dependency-groups", {})
+          .each_pair do |group_name, group_deps|
+            parsed_deps = group_deps.select { |d| d.is_a?(String) }.map { |d| parse_pep_508_dep_spec(d) }
+            deps += map_dependencies(parsed_deps, group_name, options.fetch(:filename, nil))
+          end
+
         # We're combining both poetry+PEP621 deps instead of making them mutually exclusive, until we
         # find a reason not to ingest them both.
         deps = deps.uniq
 
         # Poetry normalizes names in lockfiles but doesn't provide the original, so we need to keep
         # track of the original name so the dep is connected between manifest+lockfile.
+        project_name = pep621_manifest["name"] || poetry_manifest["name"]
+
         dependencies = deps.map do |dep|
           normalized_name = normalize_name(dep.name)
           Dependency.new(
@@ -144,7 +195,7 @@ module Bibliothecary
             original_name: normalized_name == dep.name ? nil : dep.name
           )
         end
-        ParserResult.new(dependencies: dependencies)
+        ParserResult.new(project_name: project_name, dependencies: dependencies)
       end
 
       def self.map_dependencies(packages, type, source = nil)

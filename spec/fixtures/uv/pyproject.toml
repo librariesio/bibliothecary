@@ -1,0 +1,25 @@
+[project]
+name = "my-uv-project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "black",
+    "charset-normalizer",
+    "pandas>=3.0.1",
+    "requests>=2.32.5",
+    "urllib3>=2.5.0",
+]
+
+[tool.uv.sources]
+black = { git = "https://github.com/psf/black.git", tag = "26.1.0" }
+charset-normalizer = { path = "wheels/charset_normalizer-3.4.4-py3-none-any.whl" }
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+]
+lint = [
+    "ruff>=0.15.2",
+]
