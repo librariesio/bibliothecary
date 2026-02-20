@@ -428,6 +428,58 @@ describe Bibliothecary::Parsers::Pypi do
       ])
   end
 
+  it "parses dependencies from uv pyproject.toml" do
+    results = described_class.analyse_contents("uv/pyproject.toml", load_fixture("uv/pyproject.toml"))
+    expect(results[:parser]).to eq("pypi")
+    expect(results[:path]).to eq("uv/pyproject.toml")
+    expect(results[:kind]).to eq("manifest")
+    expect(results[:project_name]).to eq("my-uv-project")
+    expect(results[:success]).to eq(true)
+    expect(results[:dependencies]).to match_array([
+      Bibliothecary::Dependency.new(platform: "pypi", name: "black", requirement: "*", type: "runtime", source: "uv/pyproject.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "charset-normalizer", requirement: "*", type: "runtime", source: "uv/pyproject.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "pandas", requirement: ">=3.0.1", type: "runtime", source: "uv/pyproject.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "requests", requirement: ">=2.32.5", type: "runtime", source: "uv/pyproject.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "urllib3", requirement: ">=2.5.0", type: "runtime", source: "uv/pyproject.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "pytest", requirement: ">=9.0.2", type: "dev", source: "uv/pyproject.toml"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "ruff", requirement: ">=0.15.2", type: "lint", source: "uv/pyproject.toml"),
+    ])
+  end
+
+  it "parses dependencies from uv.lock" do
+    results = described_class.analyse_contents("uv/uv.lock", load_fixture("uv/uv.lock"))
+    expect(results[:parser]).to eq("pypi")
+    expect(results[:path]).to eq("uv/uv.lock")
+    expect(results[:kind]).to eq("lockfile")
+    expect(results[:project_name]).to eq("my-uv-project")
+    expect(results[:success]).to eq(true)
+    expect(results[:dependencies]).to match_array([
+      Bibliothecary::Dependency.new(platform: "pypi", name: "black", requirement: "26.1.0", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "certifi", requirement: "2025.8.3", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "charset-normalizer", requirement: "3.4.4", type: "runtime", source: "uv/uv.lock", local: true),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "click", requirement: "8.3.1", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "colorama", requirement: "0.4.6", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "idna", requirement: "3.10", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "iniconfig", requirement: "2.3.0", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "mypy-extensions", requirement: "1.1.0", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "numpy", requirement: "2.4.2", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "packaging", requirement: "26.0", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "pandas", requirement: "3.0.1", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "pathspec", requirement: "1.0.4", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "platformdirs", requirement: "4.9.2", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "pluggy", requirement: "1.6.0", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "pygments", requirement: "2.19.2", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "pytest", requirement: "9.0.2", type: "dev", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "python-dateutil", requirement: "2.9.0.post0", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "pytokens", requirement: "0.4.1", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "requests", requirement: "2.32.5", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "ruff", requirement: "0.15.2", type: "lint", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "six", requirement: "1.17.0", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "tzdata", requirement: "2025.3", type: "runtime", source: "uv/uv.lock"),
+      Bibliothecary::Dependency.new(platform: "pypi", name: "urllib3", requirement: "2.5.0", type: "runtime", source: "uv/uv.lock"),
+    ])
+  end
+
   it "matches valid manifest filepaths" do
     expect(described_class.match?("requirements.txt")).to be_truthy
     expect(described_class.match?("requirements-dev.txt")).to be_truthy
@@ -450,7 +502,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(results[:parser]).to eq("pypi")
     expect(results[:path]).to eq("pyproject.toml")
     expect(results[:kind]).to eq("manifest")
-    expect(results[:project_name]).to eq(nil)
+    expect(results[:project_name]).to eq("tidelift")
     expect(results[:success]).to eq(true)
     expect(results[:dependencies]).to match_array([
       Bibliothecary::Dependency.new(platform: "pypi", name: "python", requirement: "^3.7", type: "runtime", source: "pyproject.toml"),
@@ -502,7 +554,7 @@ describe Bibliothecary::Parsers::Pypi do
     expect(results[:parser]).to eq("pypi")
     expect(results[:path]).to eq("pyproject.toml")
     expect(results[:kind]).to eq("manifest")
-    expect(results[:project_name]).to eq(nil)
+    expect(results[:project_name]).to eq("a_pep621_project")
     expect(results[:success]).to eq(true)
     expect(results[:dependencies]).to eq([
         Bibliothecary::Dependency.new(platform: "pypi", name: "black", requirement: "*", type: "runtime", source: "pyproject.toml"),

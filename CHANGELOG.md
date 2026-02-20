@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [15.4.0]
+
+### Added
+
+- Add support to Bibliothecary::Parsers::Pypi for parsing uv.lock lockfiles.
+
 ## [15.3.1]
 
 ### Changed
