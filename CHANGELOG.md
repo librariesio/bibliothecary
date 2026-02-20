@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [15.3.1]
+
+### Changed
+
+- Return a leading "subproject" prefix with Gradle project names from gradle-dependencies-q.txt too.
+
 ## [15.3.0]
 
 ### Changed
