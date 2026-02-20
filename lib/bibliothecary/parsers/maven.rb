@@ -205,6 +205,8 @@ module Bibliothecary
             line = line.strip
             if project_name.nil? && (project_name_match = GRADLE_PROJECT_REGEXP.match(line))
               project_name = project_name_match.captures[1]
+              project_name = ":#{project_name}" unless project_name.start_with?(":")
+              project_name = "subproject#{project_name}"
               nil
             elsif (current_type_match = GRADLE_TYPE_REGEXP.match(line))
               current_type = current_type_match.captures[0] if current_type_match
@@ -238,7 +240,8 @@ module Bibliothecary
           sub_project_name = project_match[1]
           # gradle sub-project versions cannot be specified when including them (gradle just uses whichever version is in the
           # codebase), and their versions are 'unspecified' if not set, so just use a placeholder version since it doesn't matter.
-          line = line.sub(project_match[0], "#{sub_project_name}:0.0.0")
+          # the name also doesn't include a project, so we use "subproject:" prefix to denote that these are subproject deps.
+          line = line.sub(project_match[0], "subproject#{sub_project_name}:0.0.0")
         end
 
         cleaned_line = line
