@@ -18,22 +18,64 @@ module Bibliothecary
       # e.g. "annotationProcessor - Annotation processors and their dependencies for source set 'main'."
       GRADLE_TYPE_REGEXP = /^(\w+)/
 
-      # e.g. "|    \\--- com.google.guava:guava:23.5-jre (*)"
-      GRADLE_DEP_REGEXP = /(\+---|\\---){1}/
-
-      GRADLE_ARROW_REGEXP = / -> /
-
       # The name of the project containing the given dependencies
       GRADLE_PROJECT_REGEXP = /\s*(Root p|P)roject '?(:?[^\s']+)'?/
 
-      # Dependencies that are on-disk projects, eg:
-      # e.g. "\--- project :api:my-internal-project"
-      # e.g. "+--- my-group:my-alias:1.2.3 -> project :client (*)"
-      GRADLE_DEPENDENCY_PROJECT_REGEXP = /project (:?\S+)?/
+      # Matches a single dependency line from `gradle dependencies -q` output and extracts
+      # named captures for all relevant fields. Handles these line shapes:
+      #   +--- group:artifact:version                          (simple dep)
+      #   +--- group:artifact:version (*)                      (already resolved elsewhere)
+      #   +--- group:artifact:version (c)                      (dependency constraint)
+      #   +--- group:artifact:v1 -> v2                         (version override)
+      #   +--- group:artifact:[1.0, 2.0) -> 1.5               (version range override)
+      #   +--- group:artifact -> v2                            (version resolved via BOM/constraint)
+      #   +--- g1:a1:v1 -> g2:a2:v2                           (coordinate alias)
+      #   +--- g1:a1 -> g2:a2:v2                              (alias, no original version)
+      #   +--- group:artifact:version FAILED                   (resolution failed, version present)
+      #   +--- project :path                                   (project dependency)
+      #   +--- project :path -> project :other                 (project-to-project redirect)
+      #   +--- g:a:v -> project :name                          (alias to project)
+      #
+      # Lines ending with (n) are excluded by omitting "n" from the suffix pattern,
+      # so they naturally fail to match. Lines like "group:artifact FAILED" (no version)
+      # also fail because the simple-dep branch requires 3+ colon-separated parts.
+      #
+      # Named captures: orig_name, orig_ver, res_name, res_ver, project
+      #
+      # Version part: either a simple token ([^\s:]+) or a bracket-delimited range like [1.0, 2.0)
+      # Maven ranges can use [ or ( for open and ] or ) for close, e.g. [3.0.4, 3.5.0)
+      GRADLE_VERSION_PART = /[^\s:]+|[\[(][^\])]*[\])]/
+      GRADLE_DEP_LINE_REGEXP = /
+        (?:\+---|\\---)                                                   # tree connector
+        \s+                                                               # whitespace after connector
+        (?:
+          # Project -> project redirect
+          project\s+\S+                                                   # left-side project (not captured)
+          \s+->\s+                                                        # arrow
+          project\s+(?<project>:?\S+)                                     # right-side project
 
-      # line ending legend: (c) means a dependency constraint, (n) means not resolved, or (*) means resolved previously, e.g. org.springframework.boot:spring-boot-starter-web:2.1.0.M3 (*)
-      # e.g. the "(n)" in "+--- my-group:my-name:1.2.3 (n)"
-      GRADLE_LINE_ENDING_REGEXP = /(\((c|n|\*)\))$/
+        |
+          # Arrow: original -> resolved
+          (?<orig_name>[^\s:]+:[^\s:]+)(?::(?<orig_ver>#{GRADLE_VERSION_PART}))?  # original dep (group:artifact[:version])
+          \s+->\s+                                                         # arrow
+          (?:
+            project\s+(?<project>:?\S+)                                    # -> project
+            |
+            (?<res_name>[^\s:]+:[^\s:]+(?::[^\s:]+)*):(?<res_ver>[^\s:]+)  # -> full coordinate (g:a:v)
+            |
+            (?<res_ver>[^\s:]+)                                            # -> version only
+          )
+        |
+          # Standalone project dependency
+          project\s+(?<project>:?\S+)
+        |
+          # Simple dependency (requires 3+ colon parts: group:artifact:version)
+          (?<res_name>[^\s:]+:[^\s:]+(?::[^\s:]+)*):(?<res_ver>[^\s:]+)
+        )
+        (?:\s+FAILED)?                                                     # optional FAILED suffix
+        (?:\s*\([c*]\))?                                                   # optional (c) or (*) suffix; (n) excluded
+        \s*$                                                               # end of line
+      /x
 
       # Builtin methods: https://docs.gradle.org/current/userguide/java_plugin.html#tab:configurations
       # Deprecated methods: https://docs.gradle.org/current/userguide/upgrading_version_6.html#sec:configuration_removal
@@ -224,60 +266,32 @@ module Bibliothecary
       end
 
       def self.parse_resolved_gradle_dep_line(line, current_type: nil, keep_subprojects: false, source: nil)
-        return if line.end_with?("(n)") # skip unresolved or already-resolved dependencies
+        m = GRADLE_DEP_LINE_REGEXP.match(line)
+        return unless m
 
-        gradle_dep_match = GRADLE_DEP_REGEXP.match(line)
-        return unless gradle_dep_match
-
-        # omit Gradle project dependencies
-        if (project_match = line.match(GRADLE_DEPENDENCY_PROJECT_REGEXP))
+        if m[:project]
           return unless keep_subprojects
 
           # an empty project name is self-referential (i.e. a cycle), and we don't need to track the manifest's
           # project itself, e.g. "+--- project :"
-          return if project_match[1].nil?
+          return if m[:project].nil?
 
-          sub_project_name = project_match[1]
-          # gradle sub-project versions cannot be specified when including them (gradle just uses whichever version is in the
-          # codebase), and their versions are 'unspecified' if not set, so just use a placeholder version since it doesn't matter.
-          # the name also doesn't include a project, so we use "subproject:" prefix to denote that these are subproject deps.
-          line = line.sub(project_match[0], "subproject#{sub_project_name}:0.0.0")
-        end
-
-        cleaned_line = line
-          .split(gradle_dep_match.captures[0])[1]
-          .sub(GRADLE_LINE_ENDING_REGEXP, "")
-          .sub(/ FAILED$/, "") # dependency could not be resolved (but still may have a version)
-          .strip
-
-        # " -> " is either for an aliased dependency, or a version that was resolved from a different requirement or no requirement.
-        if cleaned_line.include?(" -> ")
-          original_depstring, resolved_depstring = cleaned_line.split(" -> ", 2)
-
-          parts = original_depstring.split(":")
-          original_name = parts[0..1].join(":") # original at minimum will have a 2-part name
-          original_requirement = parts[2] || "*"
-
-          parts = resolved_depstring.split(":")
-          resolved_requirement = parts.pop # resolved at minimum will have a 1-part version
-          resolved_name = parts.join(":")
-
-          # this case is not an actual alias, just a different version was resolved, so won't keep track of original
-          if resolved_name.empty? && !original_name.empty?
-            resolved_name = original_name
-            original_name = nil
-            original_requirement = nil
-          end
+          resolved_name = "subproject#{m[:project]}"
+          resolved_requirement = "0.0.0"
+          original_name = m[:orig_name]
+          original_requirement = m[:orig_ver] || "*" if original_name
+        elsif m[:res_name]
+          # full coordinate on resolved side — true alias if orig_name is present
+          resolved_name = m[:res_name]
+          resolved_requirement = m[:res_ver]
+          original_name = m[:orig_name]
+          original_requirement = m[:orig_ver] || "*" if original_name
         else
+          # version-only resolve (g:a:v1 -> v2) or simple dep (g:a:v) — not a true alias
+          resolved_name = m[:orig_name] || m[:res_name]
+          resolved_requirement = m[:res_ver]
           original_name = nil
           original_requirement = nil
-
-          # handle simple resolved dep
-          parts = cleaned_line.split(":")
-          return if parts.size < 3 # we didn't get a full name and version, so skip it
-
-          resolved_requirement = parts.pop
-          resolved_name = parts.join(":")
         end
 
         Dependency.new(

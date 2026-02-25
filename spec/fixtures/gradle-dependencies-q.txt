@@ -1012,6 +1012,8 @@ runtimeClasspath - Runtime classpath of source set 'main'.
 +--- org.aspectj:aspectjrt:1.9.1
 +--- org.aspectj:aspectjweaver:1.9.1
 \--- javax.validation:validation-api:2.0.1.Final
++--- org.codehaus.woodstox:stax2-api:[3.0.4, 3.5.0) -> 3.1.4
++--- project :private:old-it-utils:it-plugins -> project :private:it-utils:it-plugins
 
 runtimeElements - Elements of runtime for main. (n)
 No dependencies

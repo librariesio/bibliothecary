@@ -616,7 +616,7 @@ RSpec.describe Bibliothecary::Parsers::Maven do
 
       runtime_classpath = deps[:dependencies].select { |item| item.type == "runtimeClasspath" }
 
-      expect(runtime_classpath.length).to eq 159
+      expect(runtime_classpath.length).to eq 161
       expect(runtime_classpath.select { |item| item.name == "com.google.guava:guava" }.length).to eq 1
 
       # test rename resolutions
@@ -750,6 +750,38 @@ RSpec.describe Bibliothecary::Parsers::Maven do
                    type: nil
                  )]
                ))
+    end
+
+    it "parses version range to resolved version syntax" do
+      version_range = "+--- org.codehaus.woodstox:stax2-api:[3.0.4, 3.5.0) -> 3.1.4"
+      expect(described_class.parse_gradle_resolved(version_range))
+        .to eq(Bibliothecary::ParserResult.new(
+                 dependencies: [Bibliothecary::Dependency.new(
+                   platform: "maven",
+                   name: "org.codehaus.woodstox:stax2-api",
+                   requirement: "3.1.4",
+                   type: nil
+                 )]
+               ))
+    end
+
+    it "parses project-to-project redirects" do
+      project_redirect = "+--- project :private:old-it-utils:it-plugins -> project :private:it-utils:it-plugins"
+      expect(described_class.parse_gradle_resolved(project_redirect, options: { keep_subprojects_in_maven_tree: true }))
+        .to eq(Bibliothecary::ParserResult.new(
+                 dependencies: [Bibliothecary::Dependency.new(
+                   platform: "maven",
+                   name: "subproject:private:it-utils:it-plugins",
+                   requirement: "0.0.0",
+                   type: nil
+                 )]
+               ))
+    end
+
+    it "excludes project-to-project redirects when keep_subprojects is false" do
+      project_redirect = "+--- project :private:it-branch:it-plugins -> project :private:it-alm:it-plugins"
+      expect(described_class.parse_gradle_resolved(project_redirect))
+        .to eq(Bibliothecary::ParserResult.new(dependencies: []))
     end
 
     def is_self_dep?(dep)

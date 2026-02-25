@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [15.5.0]
+
+### Changed
+
+- Massive improvement in Bibliothecary::Parsers::Maven.parse_resolved_gradle_dep_line() by moving all the GAV parsing to a regular expression.
+
 ## [15.4.0]
 
 ### Added
