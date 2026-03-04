@@ -267,7 +267,7 @@ module Bibliothecary
       end
 
       def self.parse_resolved_gradle_dep_line(line, current_type: nil, keep_subprojects: false, source: nil)
-        return if line.end_with?("(n)")
+        return if line.end_with?("(n)") # skip unresolved or already-resolved dependencies
 
         m = GRADLE_DEP_LINE_REGEXP.match(line)
         return unless m
