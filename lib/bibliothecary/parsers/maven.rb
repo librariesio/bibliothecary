@@ -21,16 +21,42 @@ module Bibliothecary
       # The name of the project containing the given dependencies
       GRADLE_PROJECT_REGEXP = /\s*(Root p|P)roject '?(:?[^\s']+)'?/
 
+      # Version: simple token or bracket-delimited range like [1.0, 2.0)
+      GRADLE_VERSION_PART = /[^\s:]+|[\[(][^\])]*[\])]/
+
+      # --- Individual branch patterns (each handles one line shape) ---
+
+      # project :foo -> project :bar
+      GRADLE_PROJECT_REDIRECT = /project\s+\S+\s+->\s+project\s+(?<project>:?\S+)/
+
+      # group:artifact[:version] -> (project | g:a:v | version)
+      GRADLE_ARROW_DEP = /
+        (?<orig_name>[^\s:]+:[^\s:]+)(?::(?<orig_ver>#{GRADLE_VERSION_PART}))?
+        \s+->\s+
+        (?:
+          project\s+(?<project>:?\S+)
+        | (?<res_name>[^\s:]+:[^\s:]+(?::[^\s:]+)*):(?<res_ver>[^\s:]+)
+        | (?<res_ver>[^\s:]+)
+        )
+      /x
+
+      # project :foo (standalone)
+      GRADLE_STANDALONE_PROJECT = /project\s+(?<project>:?\S+)/
+
+      # group:artifact:version (simple dependency, 3+ colon-separated parts)
+      GRADLE_SIMPLE_DEP = /(?<res_name>[^\s:]+:[^\s:]+(?::[^\s:]+)*):(?<res_ver>[^\s:]+)/
+
+      # --- Composed full-line pattern ---
       # Matches a single dependency line from `gradle dependencies -q` output and extracts
       # named captures for all relevant fields. Handles these line shapes:
       #   +--- group:artifact:version                          (simple dep)
       #   +--- group:artifact:version (*)                      (already resolved elsewhere)
       #   +--- group:artifact:version (c)                      (dependency constraint)
       #   +--- group:artifact:v1 -> v2                         (version override)
-      #   +--- group:artifact:[1.0, 2.0) -> 1.5               (version range override)
+      #   +--- group:artifact:[1.0, 2.0) -> 1.5                (version range override)
       #   +--- group:artifact -> v2                            (version resolved via BOM/constraint)
-      #   +--- g1:a1:v1 -> g2:a2:v2                           (coordinate alias)
-      #   +--- g1:a1 -> g2:a2:v2                              (alias, no original version)
+      #   +--- g1:a1:v1 -> g2:a2:v2                            (coordinate alias)
+      #   +--- g1:a1 -> g2:a2:v2                               (alias, no original version)
       #   +--- group:artifact:version FAILED                   (resolution failed, version present)
       #   +--- project :path                                   (project dependency)
       #   +--- project :path -> project :other                 (project-to-project redirect)
@@ -44,37 +70,12 @@ module Bibliothecary
       #
       # Version part: either a simple token ([^\s:]+) or a bracket-delimited range like [1.0, 2.0)
       # Maven ranges can use [ or ( for open and ] or ) for close, e.g. [3.0.4, 3.5.0)
-      GRADLE_VERSION_PART = /[^\s:]+|[\[(][^\])]*[\])]/
       GRADLE_DEP_LINE_REGEXP = /
-        (?:\+---|\\---)                                                   # tree connector
-        \s+                                                               # whitespace after connector
-        (?:
-          # Project -> project redirect
-          project\s+\S+                                                   # left-side project (not captured)
-          \s+->\s+                                                        # arrow
-          project\s+(?<project>:?\S+)                                     # right-side project
-
-        |
-          # Arrow: original -> resolved
-          (?<orig_name>[^\s:]+:[^\s:]+)(?::(?<orig_ver>#{GRADLE_VERSION_PART}))?  # original dep (group:artifact[:version])
-          \s+->\s+                                                         # arrow
-          (?:
-            project\s+(?<project>:?\S+)                                    # -> project
-            |
-            (?<res_name>[^\s:]+:[^\s:]+(?::[^\s:]+)*):(?<res_ver>[^\s:]+)  # -> full coordinate (g:a:v)
-            |
-            (?<res_ver>[^\s:]+)                                            # -> version only
-          )
-        |
-          # Standalone project dependency
-          project\s+(?<project>:?\S+)
-        |
-          # Simple dependency (requires 3+ colon parts: group:artifact:version)
-          (?<res_name>[^\s:]+:[^\s:]+(?::[^\s:]+)*):(?<res_ver>[^\s:]+)
-        )
-        (?:\s+FAILED)?                                                     # optional FAILED suffix
-        (?:\s*\([c*]\))?                                                   # optional (c) or (*) suffix; (n) excluded
-        \s*$                                                               # end of line
+        (?:\+---|\\---)\s+
+        (?:#{GRADLE_PROJECT_REDIRECT}|#{GRADLE_ARROW_DEP}|#{GRADLE_STANDALONE_PROJECT}|#{GRADLE_SIMPLE_DEP})
+        (?:\s+FAILED)?
+        (?:\s*\([c*]\))?
+        \s*$
       /x
 
       # Builtin methods: https://docs.gradle.org/current/userguide/java_plugin.html#tab:configurations
@@ -266,6 +267,8 @@ module Bibliothecary
       end
 
       def self.parse_resolved_gradle_dep_line(line, current_type: nil, keep_subprojects: false, source: nil)
+        return if line.end_with?("(n)")
+
         m = GRADLE_DEP_LINE_REGEXP.match(line)
         return unless m
 

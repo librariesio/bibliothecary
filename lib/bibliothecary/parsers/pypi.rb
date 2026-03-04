@@ -175,7 +175,7 @@ module Bibliothecary
         file_contents
           .fetch("dependency-groups", {})
           .each_pair do |group_name, group_deps|
-            parsed_deps = group_deps.select { |d| d.is_a?(String) }.map { |d| parse_pep_508_dep_spec(d) }
+            parsed_deps = group_deps.grep(String).map { |d| parse_pep_508_dep_spec(d) }
             deps += map_dependencies(parsed_deps, group_name, options.fetch(:filename, nil))
           end
 
