@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [15.5.0]
+
+### Changed
+
+- Fix Nuget parser so it returns all target frameworks' dependencies from project.assets.json instead of an arbitrary target framework's dependencies.
+
 ## [15.4.0]
 
 ### Added
