@@ -652,6 +652,7 @@ describe Bibliothecary::Parsers::Nuget do
       parser: "nuget",
       path: "project.assets.json",
       dependencies: [
+        Bibliothecary::Dependency.new(platform: "nuget", name: "c", requirement: "1.0.0", type: "runtime", source: "project.assets.json"),
         Bibliothecary::Dependency.new(platform: "nuget", name: "a", requirement: "1.0.0", type: "runtime", source: "project.assets.json"),
         Bibliothecary::Dependency.new(platform: "nuget", name: "b", requirement: "1.0.0", type: "runtime", source: "project.assets.json"),
       ],

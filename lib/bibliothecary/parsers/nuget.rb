@@ -215,31 +215,31 @@ module Bibliothecary
       def self.parse_project_assets_json(file_contents, options: {})
         manifest = JSON.parse file_contents
 
-        frameworks = {}
-        manifest.fetch("targets", []).each do |framework, deps|
-          frameworks[framework] = deps
-            .select { |_name, details| details["type"] == "package" }
-            .map do |name, _details|
-              name_split = name.split("/")
-              Dependency.new(
-                name: name_split[0],
-                requirement: name_split[1],
-                type: "runtime",
-                source: options.fetch(:filename, nil),
-                platform: platform_name
-              )
-            end
-        end
+        # NOTE: here we are merging dependencies from potentially >1 target framework. The versions
+        # across target frameworks in project.assets.json are not guaranteed to be the same, so e.g. a
+        # single project.assets.json may include both "Newtonsoft.Json@13.01" and "Newtonsoft.Json@12.0.3". This
+        # should be more comprehensive than just returning one arbitrary framework's deps, but we're losing the
+        # fidelity of which target framework a given dependency was used in. Someday, bibliothecary could
+        # include a new Dependency field like "architecture" or "framework" and add the metadata for each dep there.
+        dependencies = manifest
+          .fetch("targets", [])
+          .flat_map do |_framework, framework_dependencies|
+            framework_dependencies
+              .select { |_name, details| details["type"] == "package" }
+              .map do |name, _details|
+                name_split = name.split("/")
+                Dependency.new(
+                  name: name_split[0],
+                  requirement: name_split[1],
+                  type: "runtime",
+                  source: options.fetch(:filename, nil),
+                  platform: platform_name
+                )
+              end
+          end
+          .uniq
 
-        unless frameworks.empty?
-          # we should really return multiple manifests, but bibliothecary doesn't
-          # do that yet so at least pick deterministically.
-
-          # Note, frameworks can be empty, so remove empty ones and then return the last sorted item if any
-          frameworks.delete_if { |_k, v| v.empty? }
-          return ParserResult.new(dependencies: frameworks[frameworks.keys.max]) unless frameworks.empty?
-        end
-        ParserResult.new(dependencies: [])
+        ParserResult.new(dependencies: dependencies)
       end
     end
   end
