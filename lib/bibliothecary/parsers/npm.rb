@@ -439,8 +439,8 @@ module Bibliothecary
       end
 
       def self.lockfile_preference_order(file_infos)
-        files = file_infos.each_with_object({}) do |file_info, obj|
-          obj[File.basename(file_info.full_path)] = file_info
+        files = file_infos.to_h do |file_info|
+          [File.basename(file_info.full_path), file_info]
         end
 
         if files["npm-shrinkwrap.json"]
