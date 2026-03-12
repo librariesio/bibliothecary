@@ -1038,7 +1038,7 @@ describe Bibliothecary::Parsers::NPM do
                                                                                          })
   end
 
-  it "parses bun.lock workspace dependency file" do
+  it "parses bun.lock workspace lock file" do
     expect(described_class.analyse_contents("bun.lock", load_fixture("bun-workspace/bun.lock"))).to eq({
                                                                                                          parser: "npm",
                                                                                                          path: "bun.lock",
@@ -1057,5 +1057,54 @@ describe Bibliothecary::Parsers::NPM do
                                                                                                          kind: "lockfile",
                                                                                                          success: true,
                                                                                                        })
+  end
+
+  it "parses yarn.lock workspace lock file" do
+    expect(described_class.analyse_contents("yarn.lock", load_fixture("yarn-workspace/yarn.lock"))).to eq({
+                                                                                                            parser: "npm",
+                                                                                                            path: "yarn.lock",
+                                                                                                            project_name: nil,
+                                                                                                            dependencies: [
+          Bibliothecary::Dependency.new(platform: "npm", name: "chalk", requirement: "5.6.2", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "debug", requirement: "4.4.0", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "lodash-es", requirement: "4.17.23", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "lodash", requirement: "4.17.23", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "minimist", requirement: "1.2.8", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "ms", requirement: "2.1.3", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "sprintf-js", requirement: "1.1.3", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "typescript", requirement: "5.9.3", type: nil, local: false, source: "yarn.lock"),
+     ],
+                                                                                                            kind: "lockfile",
+                                                                                                            success: true,
+                                                                                                          })
+  end
+
+  it "emits a deprecation warning when parsing yarn.lock workspace lock file without yarn_workspace_dependencies option" do
+    expect do
+      described_class.analyse_contents("yarn.lock", load_fixture("yarn-workspace/yarn.lock"))
+    end.to output(/Skipping yarn workspace dependencies is deprecated/).to_stderr
+  end
+
+  it "parses yarn.lock workspace lock file including workspace dependencies when yarn_workspace_dependencies: true" do
+    expect(described_class.analyse_contents("yarn.lock", load_fixture("yarn-workspace/yarn.lock"), options: { yarn_workspace_dependencies: true })).to eq({
+                                                                                                                                                            parser: "npm",
+                                                                                                                                                            path: "yarn.lock",
+                                                                                                                                                            project_name: nil,
+                                                                                                                                                            dependencies: [
+          Bibliothecary::Dependency.new(platform: "npm", name: "@workspace/package-a", requirement: "0.0.0-use.local", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "@workspace/package-b", requirement: "0.0.0-use.local", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "chalk", requirement: "5.6.2", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "debug", requirement: "4.4.0", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "lodash-es", requirement: "4.17.23", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "lodash", requirement: "4.17.23", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "minimist", requirement: "1.2.8", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "ms", requirement: "2.1.3", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "sprintf-js", requirement: "1.1.3", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "typescript", requirement: "5.9.3", type: nil, local: false, source: "yarn.lock"),
+          Bibliothecary::Dependency.new(platform: "npm", name: "yarn-4-workspaces", requirement: "0.0.0-use.local", type: nil, local: false, source: "yarn.lock"),
+     ],
+                                                                                                                                                            kind: "lockfile",
+                                                                                                                                                            success: true,
+                                                                                                                                                          })
   end
 end

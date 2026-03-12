@@ -174,13 +174,13 @@ module Bibliothecary
       end
 
       def self.parse_yarn_lock(file_contents, options: {})
-        dep_hash = if file_contents.match(/__metadata:/)
-                     parse_v2_yarn_lock(file_contents, options.fetch(:filename, nil))
-                   else
-                     parse_v1_yarn_lock(file_contents, options.fetch(:filename, nil))
-                   end
+        dep_hashes = if file_contents.match(/__metadata:/)
+                       parse_v2_yarn_lock(file_contents, options.fetch(:filename, nil), yarn_workspace_dependencies: options.fetch(:yarn_workspace_dependencies, false))
+                     else
+                       parse_v1_yarn_lock(file_contents, options.fetch(:filename, nil))
+                     end
 
-        dependencies = dep_hash.map do |dep|
+        dependencies = dep_hashes.map do |dep|
           Dependency.new(
             name: dep[:name],
             original_name: dep[:original_name],
@@ -195,12 +195,7 @@ module Bibliothecary
         ParserResult.new(dependencies: dependencies)
       end
 
-      # Returns a hash representation of the deps in yarn.lock, eg:
-      # [{
-      #   name: "foo",
-      #   requirements: [["foo", "^1.0.0"], ["foo", "^1.0.1"]],
-      #   version: "1.2.0",
-      # }, ...]
+      # v1 yarn lockfiles have no __metadata section and have a custom format
       def self.parse_v1_yarn_lock(contents, source = nil)
         contents
           .encode(universal_newline: true)
@@ -231,20 +226,26 @@ module Bibliothecary
           end
       end
 
-      def self.parse_v2_yarn_lock(contents, source = nil)
+      # v2+ yarn lockfiles have a __metadata section and are YAML-compatible
+      def self.parse_v2_yarn_lock(contents, source = nil, yarn_workspace_dependencies: false)
         parsed = YAML.load(contents)
         parsed = parsed.except("__metadata")
+
+        if !yarn_workspace_dependencies && parsed.any? { |packages, info| info["version"].to_s.include?("use.local") && packages.include?("workspace") }
+          warn "[bibliothecary] Skipping yarn workspace dependencies is deprecated and the option will eventually be removed. Pass `yarn_workspace_dependencies: true` to include them."
+        end
+
         parsed
           .reject do |packages, info|
-            # yarn v4+ creates a lockfile entry: "myproject@workspace" with a "use.local" version
-            #   this lockfile entry is a reference to the project to which the lockfile belongs
-            # skip this self-referential package
-            (info["version"].to_s.include?("use.local") && packages.include?("workspace")) ||
-              # yarn allows users to insert patches to their dependencies from within their project
-              # these patches are marked as a separate entry in the lock file but do not represent a new dependency
-              # and should be skipped here
-              # https://yarnpkg.com/protocol/patch
-              packages.include?("@patch:")
+            # yarn allows users to insert patches to their dependencies from within their project
+            # these patches are marked as a separate entry in the lock file but do not represent a new dependency
+            # and should be skipped here
+            # https://yarnpkg.com/protocol/patch
+            next true if packages.include?("@patch:")
+
+            # yarn v4+ creates lockfile entries for workspace packages (local monorepo packages) with a "use.local" version
+            # when yarn_workspace_dependencies is true, include these entries; otherwise skip them
+            !yarn_workspace_dependencies && info["version"].to_s.include?("use.local") && packages.include?("workspace")
           end
           .map do |packages, info|
             packages = packages.split(", ")
@@ -439,8 +440,8 @@ module Bibliothecary
       end
 
       def self.lockfile_preference_order(file_infos)
-        files = file_infos.each_with_object({}) do |file_info, obj|
-          obj[File.basename(file_info.full_path)] = file_info
+        files = file_infos.to_h do |file_info|
+          [File.basename(file_info.full_path), file_info]
         end
 
         if files["npm-shrinkwrap.json"]
