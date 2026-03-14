@@ -231,7 +231,7 @@ module Bibliothecary
         parsed = YAML.load(contents)
         parsed = parsed.except("__metadata")
 
-        if !yarn_workspace_dependencies && parsed.any? { |packages, info| info["version"].to_s.include?("use.local") && packages.include?("workspace") }
+        if !yarn_workspace_dependencies && parsed.any? { |packages, info| info["version"] == "0.0.0-use.local" && packages.include?("workspace") }
           warn "[bibliothecary] Skipping yarn workspace dependencies is deprecated and the option will eventually be removed. Pass `yarn_workspace_dependencies: true` to include them."
         end
 
@@ -245,7 +245,7 @@ module Bibliothecary
 
             # yarn v4+ creates lockfile entries for workspace packages (local monorepo packages) with a "use.local" version
             # when yarn_workspace_dependencies is true, include these entries; otherwise skip them
-            !yarn_workspace_dependencies && info["version"].to_s.include?("use.local") && packages.include?("workspace")
+            !yarn_workspace_dependencies && info["version"].to_s.include?("0.0.0-use.local") && packages.include?("workspace:")
           end
           .map do |packages, info|
             packages = packages.split(", ")
