@@ -9,11 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Added 'yarn_workspace_dependencies' option to the yarn.lock parser. When enabled, includes workspace projects as dependencies. Defaults to false, but will eventually be enabled for all in the next major version.
-
 ### Changed
 
 ### Removed
+
+## [15.5.0]
+
+### Added
+
+- Added 'yarn_workspace_dependencies' option to the yarn.lock parser. When enabled, includes workspace projects as dependencies. Defaults to false, but will eventually be enabled for all in the next major version.
 
 ## [15.4.0]
 
